@@ -30,7 +30,8 @@ http://www.gnu.org/copyleft/gpl.txt.
 #include "vtxStringHelper.h"
 #include "vtxSubshapeResource.h"
 
-#define DEBUG_OUTPUT_PATH "C:/vektrix_debug/"
+//#define DEBUG_FLASH_SHAPES
+//#define DEBUG_OUTPUT_PATH "C:/vektrix_debug/"
 
 namespace vtx
 {
@@ -206,7 +207,7 @@ namespace vtx
 				line = line->next;
 			} // while(line)
 
-#ifdef _DEBUG
+#ifdef DEBUG_FLASH_SHAPES
 			// DEBUG
 			char filename[512];
 			sprintf_s(filename, "%sfillstyles.txt", DEBUG_OUTPUT_PATH);
@@ -317,7 +318,7 @@ namespace vtx
 
 			std::cout << "Num Elements: " << count << std::endl;
 
-#ifdef _DEBUG
+#ifdef DEBUG_FLASH_SHAPES
 			// DEBUG
 			char filename[512];
 			sprintf_s(filename, "%sall_elements.txt", DEBUG_OUTPUT_PATH);
@@ -382,7 +383,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void ShapeHandler::debug_element(const ContourElement& element, FILE* file)
 		{
-#ifdef _DEBUG
+#ifdef DEBUG_FLASH_SHAPES
 			switch(element.type)
 			{
 			//case CID_MOVE:
@@ -419,7 +420,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void ShapeHandler::debug_shape_element(const SubshapeResource::ShapeElement& element, FILE* file)
 		{
-#ifdef _DEBUG
+#ifdef DEBUG_FLASH_SHAPES
 			switch(element.type)
 			{
 			case SubshapeResource::ShapeElement::SID_MOVE_TO:
@@ -538,7 +539,7 @@ namespace vtx
 				//std::cout << "ELEMENTS LEFT: " << chunks.size() << std::endl;
 				assert("There should be no elements left here" && !chunks.size());
 
-#ifdef _DEBUG
+#ifdef DEBUG_FLASH_SHAPES
 				char filename[512];
 				sprintf_s(filename, "%ssubshapes_%d.txt", DEBUG_OUTPUT_PATH, fill_it->first);
 				FILE* file = fopen(filename, "w");
