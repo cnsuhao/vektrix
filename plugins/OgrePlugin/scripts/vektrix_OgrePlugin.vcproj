@@ -92,7 +92,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(OutDir)\$(TargetFileName) $(OGRE_HOME)\Samples\Common\bin\$(ConfigurationName);&#x0D;&#x0A;copy $(OutDir)\vektrix_d.dll $(OGRE_HOME)\Samples\Common\bin\vektrix_d.dll"
+				CommandLine="copy $(OutDir)\$(TargetFileName) $(OGRE_HOME)\Samples\Common\bin\$(ConfigurationName);&#x0D;&#x0A;copy $(OutDir)\vektrix_d.dll $(OGRE_HOME)\Samples\Common\bin\Debug\vektrix_d.dll&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
