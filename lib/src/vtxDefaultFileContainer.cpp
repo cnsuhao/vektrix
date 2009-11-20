@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -53,7 +53,6 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	FileStream* DefaultFileContainer::openFile(const String& filename)
 	{
-
 		return (FileStream*)new DefaultFileStream(mLocation, filename);
 	}
 	//-----------------------------------------------------------------------

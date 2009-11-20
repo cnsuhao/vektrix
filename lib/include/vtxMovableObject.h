@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -35,17 +35,23 @@ namespace vtx
 	public:
 		MovableObject(Resource* resource);
 
-		virtual void setMatrix(const Matrix& m) = 0;
-		virtual void setCXForm(const CXForm& cx) = 0;
-		virtual void setLayer(uint layer);
+		virtual void setMatrix(const Matrix& m);
+		virtual void setCXForm(const CXForm& cx);
+		//virtual void setLayer(uint layer);
+		//uint getLayer();
 
+		const Matrix& _getWorldMatrix() const;
+
+		virtual void _update(const float& delta_time = 0.0f);
 		virtual BoundingBox& getWorldBoundingBox() const = 0;
 
-		uint getLayer();
-
 	protected:
-		uint mLayer;
-		//Matrix mMatrix;
-		//CXForm mCXForm;
+		bool mNeedsUpdate;
+		DisplayObjectContainer* mParentContainer;
+
+		// properties
+		Matrix mMatrix;
+		Matrix mWorldMatrix;
+		CXForm mCXForm;
 	};
 }

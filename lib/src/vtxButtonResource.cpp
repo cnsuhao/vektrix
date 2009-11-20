@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -30,9 +30,10 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	ButtonResource::ButtonResource(const String& id) 
 		: Resource(id), 
-		mDefault(NULL), 
+		mUp(NULL), 
 		mOver(NULL), 
-		mPressed(NULL)
+		mDown(NULL), 
+		mHitArea(NULL)
 	{
 
 	}
@@ -47,9 +48,9 @@ namespace vtx
 	{
 		switch(id)
 		{
-		case SID_DEFAULT:
+		case SID_UP:
 			{
-				mDefault = state;
+				mUp = state;
 			}
 			break;
 
@@ -59,9 +60,15 @@ namespace vtx
 			}
 		    break;
 
-		case SID_PRESSED:
+		case SID_DOWN:
 			{
-				mPressed = state;
+				mDown = state;
+			}
+			break;
+
+		case SID_HIT_AREA:
+			{
+				mHitArea = state;
 			}
 			break;
 
@@ -77,9 +84,9 @@ namespace vtx
 	{
 		switch(id)
 		{
-		case SID_DEFAULT:
+		case SID_UP:
 			{
-				return mDefault;
+				return mUp;
 			}
 			break;
 
@@ -89,9 +96,15 @@ namespace vtx
 			}
 			break;
 
-		case SID_PRESSED:
+		case SID_DOWN:
 			{
-				return mPressed;
+				return mDown;
+			}
+			break;
+
+		case SID_HIT_AREA:
+			{
+				return mHitArea;
 			}
 		    break;
 

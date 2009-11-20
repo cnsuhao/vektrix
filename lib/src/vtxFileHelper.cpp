@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -38,7 +38,7 @@ namespace vtx
 	{
 		struct stat buf;
 		stat(name.c_str(), &buf);
-		return (buf.st_mode & S_IFDIR);
+		return (buf.st_mode & S_IFDIR) != 0;
 	}
 	//-----------------------------------------------------------------------
 }

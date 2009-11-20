@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -33,9 +33,10 @@ namespace vtx
 	public:
 		enum StateID
 		{
-			SID_DEFAULT = 0,
+			SID_UP = 0,
 			SID_OVER, 
-			SID_PRESSED
+			SID_DOWN, 
+			SID_HIT_AREA, 
 		};
 
 		ButtonResource(const String& id);
@@ -46,8 +47,11 @@ namespace vtx
 		ButtonState* getState(const StateID& id);
 
 	protected:
-		ButtonState* mDefault;
+		ButtonState* mUp;
 		ButtonState* mOver;
-		ButtonState* mPressed;
+		ButtonState* mDown;
+
+		// special "state" for checking mouse states
+		ButtonState* mHitArea;
 	};
 }

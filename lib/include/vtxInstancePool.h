@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -32,6 +32,9 @@ namespace vtx
 	public:
 		typedef std::stack<Instance*> Pool;
 		typedef std::map<String, Pool*> PoolMap;
+
+		InstancePool();
+		virtual ~InstancePool();
 
 		void push(Instance* inst);
 		Instance* pop(const String& id);

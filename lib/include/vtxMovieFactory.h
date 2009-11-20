@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -37,11 +37,12 @@ namespace vtx
 		typedef std::map<String, RenderStrategy*> DataPoolMap;
 
 		MovieFactory();
+		virtual ~MovieFactory();
+
 		const String& getType() const;
 
 		RenderStrategy* getDataPool(File* file);
 
-		ButtonFactory* getButtonFactory();
 		ShapeFactory* getShapeFactory();
 		TextureFactory* getTextureFactory();
 
@@ -50,7 +51,6 @@ namespace vtx
 		DataPoolMap mDataPools;
 
 		// factories
-		ButtonFactory* mButtonFactory;
 		ShapeFactory* mShapeFactory;
 		TextureFactory* mTextureFactory;
 

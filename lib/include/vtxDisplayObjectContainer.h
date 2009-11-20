@@ -21,28 +21,33 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 -----------------------------------------------------------------------------
 */
-#pragma once
+#ifndef __vtxDisplayObjectContainer_H__
+#define __vtxDisplayObjectContainer_H__
 
-#pragma warning (disable : 4275)
-
-#if defined VEKTRIX_OGREPLUGIN_EXPORTS
-#   define vtxopExport __declspec(dllexport)
-#else
-#   define vtxopExport __declspec(dllimport)
-#endif
+#include "vtxPrerequesites.h"
+#include "vtxInteractiveObject.h"
 
 namespace vtx
 {
-	namespace ogre
+	class vtxExport DisplayObjectContainer : public InteractiveObject
 	{
-		// instances
-		class OgreShape;
-		class OgreShapeFactory;
-		class OgreTexture;
-		class OgreTextureFactory;
+	public:
+		typedef std::map<uint, MovableObject*> Layers;
 
-		// movies
-		class MovableMovieFactory;
-		class TextureMovieFactory;
-	}
+		DisplayObjectContainer(Resource* resource);
+		virtual ~DisplayObjectContainer();
+
+		void addChild(MovableObject* object);
+		bool addChildAt(MovableObject* object, uint layer);
+		MovableObject* getChildAt(uint layer);
+		bool removeChildAt(uint layer);
+		void clearLayers();
+
+		virtual void _update(const float& delta_time = 0.0f);
+
+	protected:
+		Layers mLayers;
+	};
 }
+
+#endif

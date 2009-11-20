@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -23,6 +23,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "vtxCreateObjectEvent.h"
 
+#include "vtxDisplayObjectContainer.h"
 #include "vtxFile.h"
 #include "vtxMovableObject.h"
 #include "vtxMovie.h"
@@ -61,24 +62,24 @@ namespace vtx
 	{
 		//VTX_LOG("Movie \"%s\": CreateObjectEvent", mParentMovie->getName().c_str());
 
-		mObject = dynamic_cast<MovableObject*>(mParentMovie->getInstance(mID));
+		mObject = dynamic_cast<MovableObject*>(mObjectContainer->getParent()->getInstance(mID));
 
 		if(!mObject)
 		{
-			VTX_EXCEPT("%s: CreateObjectEvent requested an object (id: \"%s\") that is not a MovableObject.", mParentMovie->getFile()->getFilename().c_str(), mID.c_str());
+			VTX_EXCEPT("%s: CreateObjectEvent requested an object (id: \"%s\") that is not a MovableObject.", 
+				mObjectContainer->getParent()->getFile()->getFilename().c_str(), mID.c_str());
 		}
 
-		//mParentMovie->setObjectToLayer(mLayer, mObject);
 		mObject->setMatrix(mMatrix);
 		mObject->setCXForm(mCXForm);
-		mObject->setLayer(mLayer);
+		mObjectContainer->addChildAt(mObject, mLayer);
 	}
 	//-----------------------------------------------------------------------
-	void CreateObjectEvent::_setParentMovie(Movie* parent)
+	void CreateObjectEvent::setObjectContainer(DisplayObjectContainer* container)
 	{
-		FrameEvent::_setParentMovie(parent);
+		FrameEvent::setObjectContainer(container);
 
-		ShapeResource* shape = dynamic_cast<ShapeResource*>(parent->getFile()->getResource(mID));
+		ShapeResource* shape = dynamic_cast<ShapeResource*>(mObjectContainer->getParent()->getFile()->getResource(mID));
 
 		if(shape)
 		{

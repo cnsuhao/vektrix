@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -21,90 +21,82 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 -----------------------------------------------------------------------------
 */
-#include "vtxCanvas.h"
+#include "vtxMovieClip.h"
 
-#include "vtxLogManager.h"
-#include "vtxMovableObject.h"
-#include "vtxMovie.h"
+#include "vtxBoundingBox.h"
+#include "vtxMovieClipResource.h"
+#include "vtxTimeline.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	Canvas::Canvas(Movie* parent) 
-		: mParent(parent)
+	MovieClip::MovieClip(Resource* resource) 
+		: DisplayObjectContainer(resource), 
+		mTimeline(NULL)
 	{
 
 	}
 	//-----------------------------------------------------------------------
-	bool Canvas::setObjectToLayer(uint layer, MovableObject* object)
+	MovieClip::~MovieClip()
 	{
-		mLayers.insert(CanvasLayers::value_type(0, NULL));
 
-		CanvasLayers::iterator it = mLayers.find(layer);
+	}
+	//-----------------------------------------------------------------------
+	const String& MovieClip::getType() const
+	{
+		static String type = "MovieClip";
+		return type;
+	}
+	//-----------------------------------------------------------------------
+	void MovieClip::play()
+	{
+		mTimeline->play();
+	}
+	//-----------------------------------------------------------------------
+	void MovieClip::stop()
+	{
+		mTimeline->stop();
+	}
+	//-----------------------------------------------------------------------
+	bool MovieClip::goto_frame(uint frame)
+	{
+		return mTimeline->goto_frame(frame);
+	}
+	//-----------------------------------------------------------------------
+	bool MovieClip::goto_time(const float& time)
+	{
+		return mTimeline->goto_time(time);
+	}
+	//-----------------------------------------------------------------------
+	void MovieClip::_update(const float& delta_time)
+	{
+		DisplayObjectContainer::_update(delta_time);
 
-		if(it != mLayers.end())
+		mTimeline->addTime(delta_time);
+	}
+	//-----------------------------------------------------------------------
+	BoundingBox& MovieClip::getWorldBoundingBox() const
+	{
+		// TODO
+		static BoundingBox bb;
+		return bb;
+	}
+	//-----------------------------------------------------------------------
+	void MovieClip::_setParent(Movie* parent)
+	{
+		Instance::_setParent(parent);
+
+		MovieClipResource* movieclip_res = dynamic_cast<MovieClipResource*>(mResource);
+
+		if(movieclip_res)
 		{
-			// target layer is not free
-			VTX_EXCEPT("Target Layer %u is not free.", layer);
-			return false;
-		}
-
-		uint old_layer = object->getLayer();
-
-		it = mLayers.find(old_layer);
-
-		if(it != mLayers.end())
-		{
-			if(it->second == object)
+			if(mTimeline)
 			{
-				mLayers.erase(it);
+				delete mTimeline;
 			}
+
+			mTimeline = movieclip_res->getTimeline()->clone(this);
 		}
-
-		mLayers.insert(CanvasLayers::value_type(layer, object));
-
-		return true;
 	}
 	//-----------------------------------------------------------------------
-	MovableObject* Canvas::getObjectFromLayer(uint layer)
-	{
-		CanvasLayers::iterator it = mLayers.find(layer);
-
-		if(it != mLayers.end())
-		{
-			return it->second;
-		}
-
-		return NULL;
-	}
-	//-----------------------------------------------------------------------
-	bool Canvas::removeObjectFromLayer(uint layer)
-	{
-		CanvasLayers::iterator it = mLayers.find(layer);
-
-		if(it != mLayers.end())
-		{
-			mLayers.erase(it);
-			return true;
-		}
-
-		return false;
-	}
-	//-----------------------------------------------------------------------
-	void Canvas::clearLayers()
-	{
-		CanvasLayers::iterator it = mLayers.begin();
-
-		for( ; it != mLayers.end(); ++it)
-		{
-			if(it->second)
-			{
-				mParent->releaseInstance(it->second);
-			}
-		}
-
-		mLayers.clear();
-	}
-	//-----------------------------------------------------------------------
-
 }

@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -45,7 +45,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	const uint EventContainer::getEventCount() const
 	{
-		return mEvents.size();
+		return (uint)mEvents.size();
 	}
 	//-----------------------------------------------------------------------
 	void EventContainer::clear()
@@ -63,12 +63,12 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	void EventContainer::_setParentMovie(Movie* parent)
+	void EventContainer::setTargetContainer(DisplayObjectContainer* container)
 	{
 		EventContainer::EventList::iterator it = mEvents.begin();
 		for( ; it != mEvents.end(); ++it)
 		{
-			(*it)->_setParentMovie(parent);
+			(*it)->setObjectContainer(container);
 		}
 	}
 	//-----------------------------------------------------------------------

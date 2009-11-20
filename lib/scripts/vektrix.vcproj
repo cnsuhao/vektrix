@@ -408,34 +408,6 @@
 					>
 				</File>
 			</Filter>
-			<Filter
-				Name="Canvas"
-				>
-				<File
-					RelativePath="..\src\vtxCanvas.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxCanvas.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxMovableCanvas.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxMovableCanvas.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxMovableObject.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxMovableObject.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Resources"
@@ -501,6 +473,18 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxButtonResource.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="MovieClip"
+				>
+				<File
+					RelativePath="..\src\vtxMovieClipResource.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxMovieClipResource.h"
 					>
 				</File>
 			</Filter>
@@ -721,7 +705,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Button"
+				Name="General"
 				>
 				<File
 					RelativePath="..\src\vtxButton.cpp"
@@ -732,19 +716,35 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\vtxButtonFactory.cpp"
+					RelativePath="..\src\vtxDisplayObjectContainer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\include\vtxButtonFactory.h"
+					RelativePath="..\include\vtxDisplayObjectContainer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\src\vtxButtonManager.cpp"
+					RelativePath="..\src\vtxInteractiveObject.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\include\vtxButtonManager.h"
+					RelativePath="..\include\vtxInteractiveObject.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxMovableObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxMovableObject.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxMovieClip.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxMovieClip.h"
 					>
 				</File>
 			</Filter>

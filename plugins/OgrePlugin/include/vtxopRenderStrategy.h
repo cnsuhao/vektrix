@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -24,6 +24,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #pragma once
 
 #include "defines.h"
+#include "vtxPrerequesites.h"
 
 #include "vtxRenderStrategy.h"
 

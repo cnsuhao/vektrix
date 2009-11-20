@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -32,6 +32,14 @@ http://www.gnu.org/copyleft/lesser.txt.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	String StringHelper::versionString(const uint& version)
+	{
+		return 
+			StringHelper::toString((version>>16)) + "." + 
+			StringHelper::toString((version>>8)&255) + "." + 
+			StringHelper::toString((version>>0)&255);
+	}
+	//-----------------------------------------------------------------------
 	StringList StringHelper::splitString(const String& str)
 	{
 		StringList list;
@@ -40,7 +48,7 @@ namespace vtx
 		start = 0;
 		do 
 		{
-			pos = str.find_first_of(' ', start);
+			pos = (uint)str.find_first_of(' ', start);
 
 			if(pos == start)
 			{
@@ -56,7 +64,7 @@ namespace vtx
 				list.push_back(str.substr(start, pos - start));
 				start = pos + 1;
 			}
-			start = str.find_first_not_of(' ', start);
+			start = (uint)str.find_first_not_of(' ', start);
 
 		}while(pos != String::npos);
 
@@ -65,7 +73,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	String StringHelper::getFileExtension(const String& str)
 	{
-		uint dotPos = str.find_last_of('.');
+		uint dotPos = (uint)str.find_last_of('.');
 
 		if(dotPos != String::npos)
 		{
@@ -171,8 +179,8 @@ namespace vtx
 	{
 		std::ostringstream stream;
 		stream << 
-			val.sx << " " << val.cx << " " << val.tx << "\n" << 
-			val.cy << " " << val.sy << " " << val.ty;
+			val.m[0][0] << " " << val.m[0][1] << " " << val.m[0][2] << "\n" << 
+			val.m[1][0] << " " << val.m[1][1] << " " << val.m[1][2];
 
 		return stream.str();
 	}

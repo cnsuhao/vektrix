@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -110,7 +110,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void LogManager::file(const String& source)
 	{
-		uint pos = source.find_last_of('\\')+1;
+		uint pos = (uint)source.find_last_of('\\')+1;
 		mFilename = source.substr(pos, source.length()-pos);
 	}
 	//-----------------------------------------------------------------------

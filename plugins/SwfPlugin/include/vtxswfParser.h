@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -23,8 +23,10 @@ http://www.gnu.org/copyleft/gpl.txt.
 */
 #pragma once
 
+#include "vtxPrerequesites.h"
 #include "vtxFileParser.h"
 
+#include "vtxswfButtonHandler.h"
 #include "vtxswfShapeHandler.h"
 #include "vtxswfTimelineHandler.h"
 
@@ -39,6 +41,7 @@ namespace vtx
 			File* parse(FileStream* stream);
 
 		protected:
+			ButtonHandler mButtonHandler;
 			ShapeHandler mShapeHandler;
 			TimelineHandler mTimelineHandler;
 		};

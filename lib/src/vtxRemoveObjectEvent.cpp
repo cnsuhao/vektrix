@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -23,6 +23,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "vtxRemoveObjectEvent.h"
 
+#include "vtxDisplayObjectContainer.h"
 #include "vtxLogManager.h"
 #include "vtxMovie.h"
 
@@ -45,13 +46,13 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void RemoveObjectEvent::execute(void)
 	{
-		Instance* inst = (Instance*)mParentMovie->getObjectFromLayer(mLayer);
+		Instance* inst = (Instance*)mObjectContainer->getChildAt(mLayer);
 
-		mParentMovie->removeObjectFromLayer(mLayer);
+		mObjectContainer->removeChildAt(mLayer);
 
 		if(inst)
 		{
-			mParentMovie->releaseInstance(inst);
+			mObjectContainer->getParent()->releaseInstance(inst);
 		}
 		else
 		{

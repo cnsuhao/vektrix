@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -32,7 +32,8 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	File::File(const String& filename) 
-		: mFilename(filename)
+		: mFilename(filename), 
+		mMainMovieClip(NULL)
 	{
 
 	}
@@ -57,24 +58,15 @@ namespace vtx
 		return mHeader;
 	}
 	//-----------------------------------------------------------------------
-	void File::setTimeline(Timeline timeline)
+	void File::setMainMovieClip(MovieClipResource* movieclip)
 	{
-		mTimeline = timeline;
+		mMainMovieClip = movieclip;
 	}
 	//-----------------------------------------------------------------------
-	Timeline& File::getTimeline()
+	MovieClipResource* File::getMainMovieClip()
 	{
-		return mTimeline;
+		return mMainMovieClip;
 	}
-	//-----------------------------------------------------------------------
-	// TODO: remove
-	//void File::setAtlasSize(uint size)
-	//{
-	//	if(mAtlasPacker->getSize() < size)
-	//	{
-	//		mAtlasPacker->setSize(size);
-	//	}
-	//}
 	//-----------------------------------------------------------------------
 	void File::addResource(Resource* res)
 	{
@@ -111,17 +103,6 @@ namespace vtx
 	const File::ShapeResourceList& File::getShapeResourceList() const
 	{
 		return mShapes;
-	}
-	//-----------------------------------------------------------------------
-	void File::startedLoading()
-	{
-
-	}
-	//-----------------------------------------------------------------------
-	void File::finishedLoading()
-	{
-		//mAtlasPacker->packAtlas();
-		//mAtlasPacker->renderAtlas();
 	}
 	//-----------------------------------------------------------------------
 }

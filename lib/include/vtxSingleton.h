@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -23,30 +23,32 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #pragma once
 
+#include "vtxPrerequesites.h"
+
 namespace vtx
 {
 	template <typename T>
 	class Singleton
 	{
 	public:
-		virtual ~Singleton(void)
+		Singleton()
 		{
+			assert(!sInstance);
+			sInstance = (T*)this;
+		}
+
+		virtual ~Singleton()
+		{
+			assert(sInstance);
 			sInstance = 0;
 		}
 
 		static T* getSingletonPtr()
 		{
-			if(!sInstance)
-				sInstance = new T();
-
 			return sInstance;
 		}
 
 	protected:
-		Singleton(void)
-		{
-		}
-
 		static T* sInstance;
 	};
 }

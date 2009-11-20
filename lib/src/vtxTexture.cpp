@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -33,9 +33,9 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	Texture::Texture(uint size) 
 		: mSize(size), 
-		mRoot(new AtlasNode(Rect(0, 0, size, size), this))
+		mRoot(NULL)
 	{
-
+		mRoot = new AtlasNode(Rect(0, 0, size, size), this);
 	}
 	//-----------------------------------------------------------------------
 	Texture::~Texture()

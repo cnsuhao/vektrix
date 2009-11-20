@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -66,10 +66,10 @@ namespace vtx
 			// the file header
 			File::FileHeader header;
 
-			header.fps    = swfDefinition.frameRate/256.0;
+			header.fps    = (uint)(swfDefinition.frameRate/256.0);
 			header.frames = swfDefinition.frameCount;
-			header.width  =	(swfDefinition.movieSize.xmax - swfDefinition.movieSize.xmin)/20.0f;
-			header.height = (swfDefinition.movieSize.ymax - swfDefinition.movieSize.ymin)/20.0f;
+			header.width  =	(uint)((swfDefinition.movieSize.xmax - swfDefinition.movieSize.xmin)/20.0f);
+			header.height = (uint)((swfDefinition.movieSize.ymax - swfDefinition.movieSize.ymin)/20.0f);
 			header.version = "test_version";
 
 			// background color
@@ -107,6 +107,26 @@ namespace vtx
 					VTX_LOG("BEFORE SHAPE PARSE");
 					mShapeHandler.handleShape(swfTag, file);
 					VTX_LOG("AFTER SHAPE PARSE");
+					//handleShape(swfTag, mOutputFile);
+				}
+
+				swfTag = swfTag->next;
+			}
+
+
+			// reset the tag
+			swfTag = swfDefinition.firstTag;
+
+			//---------------//
+			// parse buttons //
+			//---------------//
+			while(swfTag)
+			{
+				//tag contains vector-data
+				if(swfTag->id == ST_DEFINEBUTTON || 
+					swfTag->id == ST_DEFINEBUTTON2)
+				{
+					mButtonHandler.handleButton(swfTag, file);
 					//handleShape(swfTag, mOutputFile);
 				}
 

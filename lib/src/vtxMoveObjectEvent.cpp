@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -23,6 +23,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "vtxMoveObjectEvent.h"
 
+#include "vtxDisplayObjectContainer.h"
 #include "vtxFile.h"
 #include "vtxLogManager.h"
 #include "vtxMovableObject.h"
@@ -50,7 +51,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void MoveObjectEvent::execute(void)
 	{
-		mObject = mParentMovie->getObjectFromLayer(mLayer);
+		mObject = mObjectContainer->getChildAt(mLayer);
 		mObject->setMatrix(mMatrix);
 		mObject->setCXForm(mCXForm);
 		//mObject->setLayer(mLayer);
@@ -58,9 +59,9 @@ namespace vtx
 		//VTX_LOG("MoveObjectEvent");
 	}
 	//-----------------------------------------------------------------------
-	void MoveObjectEvent::_setParentMovie(Movie* parent)
+	void MoveObjectEvent::setObjectContainer(DisplayObjectContainer* container)
 	{
-		FrameEvent::_setParentMovie(parent);
+		FrameEvent::setObjectContainer(container);
 
 		//ShapeResource* shape = dynamic_cast<ShapeResource*>(parent->getFile()->getResource(mID));
 

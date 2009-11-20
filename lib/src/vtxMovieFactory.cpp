@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -23,7 +23,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "vtxMovieFactory.h"
 
-#include "vtxButtonManager.h"
 #include "vtxFile.h"
 #include "vtxRenderStrategy.h"
 #include "vtxShapeManager.h"
@@ -33,10 +32,20 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	MovieFactory::MovieFactory() 
-		: mButtonFactory(NULL), 
-		mShapeFactory(NULL), 
+		: mShapeFactory(NULL), 
 		mTextureFactory(NULL)
 	{
+	}
+	//-----------------------------------------------------------------------
+	MovieFactory::~MovieFactory()
+	{
+		DataPoolMap::iterator it = mDataPools.begin();
+		DataPoolMap::iterator end = mDataPools.end();
+		while(it != end)
+		{
+			delete it->second;
+			++it;
+		}
 	}
 	//-----------------------------------------------------------------------
 	const String& MovieFactory::getType() const
@@ -60,11 +69,6 @@ namespace vtx
 		return dataPool;
 	}
 	//-----------------------------------------------------------------------
-	ButtonFactory* MovieFactory::getButtonFactory()
-	{
-		return mButtonFactory;
-	}
-	//-----------------------------------------------------------------------
 	ShapeFactory* MovieFactory::getShapeFactory()
 	{
 		return mShapeFactory;
@@ -77,7 +81,6 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void MovieFactory::_initialize()
 	{
-		mButtonFactory = ButtonManager::getSingletonPtr()->getFactory(_getButtonFactoryName());
 		mShapeFactory = ShapeManager::getSingletonPtr()->getFactory(_getShapeFactoryName());
 		mTextureFactory = TextureManager::getSingletonPtr()->getFactory(_getTextureFactoryName());
 	}

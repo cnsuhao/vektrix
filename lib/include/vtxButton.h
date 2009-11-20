@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -24,35 +24,28 @@ http://www.gnu.org/copyleft/lesser.txt.
 #pragma once
 
 #include "vtxPrerequesites.h"
-
-#include "vtxMovableCanvas.h"
+#include "vtxDisplayObjectContainer.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	class vtxExport Button : public MovableObject
+	class vtxExport Button : public DisplayObjectContainer
 	{
 	public:
 		Button(Resource* resource);
 
 		const String& getType() const;
 
-		void _setParentMovie(Movie* parent);
+		// overridden
+		virtual void _update(const float& delta_time);
+		BoundingBox& getWorldBoundingBox() const;
+
+		virtual void _setParent(Movie* parent);
 
 	protected:
-		ButtonState* mDefault;
+		ButtonState* mUp;
 		ButtonState* mOver;
-		ButtonState* mPressed;
-	};
-	//-----------------------------------------------------------------------
-	class vtxExport DefaultButton : public Button
-	{
-	public:
-		DefaultButton(Resource* resource);
-
-		void setMatrix(const Matrix& m);
-		void setCXForm(const CXForm& cx);
-		BoundingBox& getWorldBoundingBox() const;
+		ButtonState* mDown;
 	};
 	//-----------------------------------------------------------------------
 }

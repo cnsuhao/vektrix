@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -38,6 +38,9 @@ namespace vtx
 		typedef std::map<String, File*> FileMap;
 		typedef std::map<String, FileContainer*> FileContainerMap;
 		typedef std::map<String, FileParser*> FileParserMap;
+
+		FileManager();
+		virtual ~FileManager();
 
 		File* getFile(const String& filename);
 		FileStream* getFileStream(const String& filename);

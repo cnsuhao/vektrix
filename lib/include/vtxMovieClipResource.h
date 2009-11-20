@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -24,26 +24,21 @@ http://www.gnu.org/copyleft/lesser.txt.
 #pragma once
 
 #include "vtxPrerequesites.h"
-
-#include "vtxInstanceFactory.h"
+#include "vtxResource.h"
 
 namespace vtx
 {
-	//-----------------------------------------------------------------------
-	class vtxExport ButtonFactory : public InstanceFactory<Button>
+	class vtxExport MovieClipResource : public Resource
 	{
 	public:
-		const String& getType() const;
+		MovieClipResource(const String& id);
+
+		const String& getType(void) const;
+
+		void setTimeline(Timeline* timeline);
+		Timeline* getTimeline();
+
+	protected:
+		Timeline* mTimeline;
 	};
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
-	class vtxExport DefaultButtonFactory : public ButtonFactory
-	{
-	public:
-		const String& getName() const;
-		Button* createObject(vtx::Movie* movie, vtx::Resource* resource);    
-		void destroyObject(Button* instance);
-	};
-	//-----------------------------------------------------------------------
 }

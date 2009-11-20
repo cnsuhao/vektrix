@@ -2,7 +2,12 @@
 
 int main(int argc, char* argv[])
 {
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	vtxDemoApplication app;
+
+	// start vektrix
+	new vtx::Root();
 
 	try
 	{
@@ -17,6 +22,10 @@ int main(int argc, char* argv[])
 			e.getFullDescription().c_str() << std::endl;
 #endif
 	}
+
+	delete vtx::Root::getSingletonPtr();
+
+	//_CrtDumpMemoryLeaks();
 
 	return 0;
 }

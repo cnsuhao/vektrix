@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -22,6 +22,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 -----------------------------------------------------------------------------
 */
 #include "vtxMovableObject.h"
+#include "vtxDisplayObjectContainer.h"
 #include "vtxMovie.h"
 
 namespace vtx
@@ -29,22 +30,61 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	MovableObject::MovableObject(Resource* resource) 
 		: Instance(resource), 
-		mLayer(0)
+		mNeedsUpdate(true), 
+		mParentContainer(NULL)
 	{
 
 	}
 	//-----------------------------------------------------------------------
-	void MovableObject::setLayer(uint layer)
+	void MovableObject::setMatrix(const Matrix& m)
 	{
-		if(mParentMovie->setObjectToLayer(layer, this))
+		mMatrix = m;
+
+		mNeedsUpdate = true;
+
+		// TODO: remove this
+		_update();
+	}
+	//-----------------------------------------------------------------------
+	void MovableObject::setCXForm(const CXForm& cx)
+	{
+		mCXForm = cx;
+
+		mNeedsUpdate = true;
+
+		// TODO: remove this
+		_update();
+	}
+	//-----------------------------------------------------------------------
+	const Matrix& MovableObject::_getWorldMatrix() const
+	{
+		return mWorldMatrix;
+	}
+	//-----------------------------------------------------------------------
+	void MovableObject::_update(const float& delta_time)
+	{
+		if(mParentContainer)
 		{
-			mLayer = layer;
+			mWorldMatrix = mParentContainer->_getWorldMatrix() * mMatrix;
+		}
+		else
+		{
+			mWorldMatrix = mMatrix;
 		}
 	}
 	//-----------------------------------------------------------------------
-	uint MovableObject::getLayer()
-	{
-		return mLayer;
-	}
-	//-----------------------------------------------------------------------
+	////-----------------------------------------------------------------------
+	//void MovableObject::setLayer(uint layer)
+	//{
+	//	if(mParentMovie->setObjectToLayer(layer, this))
+	//	{
+	//		mLayer = layer;
+	//	}
+	//}
+	////-----------------------------------------------------------------------
+	//uint MovableObject::getLayer()
+	//{
+	//	return mLayer;
+	//}
+	////-----------------------------------------------------------------------
 }

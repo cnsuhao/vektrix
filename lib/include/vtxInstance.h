@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -36,7 +36,8 @@ namespace vtx
 		const String& getID(void);
 		virtual const String& getType() const = 0;
 
-		void _setParent(Movie* parent);
+		virtual void _setParent(Movie* parent);
+		Movie* getParent();
 
 	protected:
 		Resource* mResource;

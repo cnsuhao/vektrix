@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -37,20 +37,31 @@ namespace vtx
 {
 	namespace ogre
 	{
-		OgrePlugin::OgrePlugin()
+		OgrePlugin::OgrePlugin() 
+			: mShapeFactory(new OgreShapeFactory), 
+			mTextureFactory(new OgreTextureFactory), 
+			mMovableMovie(new MovableMovieFactory), 
+			mTextureMovie(new TextureMovieFactory)
 		{
 			// InstanceFactories
-			vtx::ShapeManager::getSingletonPtr()->addFactory(new OgreShapeFactory);
-			vtx::TextureManager::getSingletonPtr()->addFactory(new OgreTextureFactory);
+			vtx::ShapeManager::getSingletonPtr()->addFactory(mShapeFactory);
+			vtx::TextureManager::getSingletonPtr()->addFactory(mTextureFactory);
 
 			// MovieFactories
-			vtx::Root::getSingletonPtr()->addFactory(new MovableMovieFactory);
-			vtx::Root::getSingletonPtr()->addFactory(new TextureMovieFactory);
+			vtx::Root::getSingletonPtr()->addFactory(mMovableMovie);
+			vtx::Root::getSingletonPtr()->addFactory(mTextureMovie);
 		}
 
 		OgrePlugin::~OgrePlugin()
 		{
+			vtx::TextureManager::getSingletonPtr()->removeFactory(mTextureFactory);
+			vtx::ShapeManager::getSingletonPtr()->removeFactory(mShapeFactory);
 
+			delete mTextureMovie;
+			delete mMovableMovie;
+
+			delete mTextureFactory;
+			delete mShapeFactory;
 		}
 	}
 }

@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -120,26 +120,47 @@ namespace vtx
 			return movable->queryLights();
 		}
 		//-----------------------------------------------------------------------
-		void OgreShape::setMatrix(const vtx::Matrix& m)
+		//void OgreShape::setMatrix(const vtx::Matrix& m)
+		//{
+		//	mTransform = Ogre::Matrix4(
+		//		m.sx, m.cx, 0,  m.tx, 
+		//		m.cy, m.sy, 0, -m.ty, 
+		//		0,    0,    1,     0,
+		//		0,    0,    0,     1);
+		//	//mPosition.x = m.tx;
+		//	//mPosition.y = m.ty;
+		//	//mPosition.z = 0;
+
+		//	//mScale.x = m.sx;
+		//	//mScale.y = m.sy;
+		//	//mScale.z = 1;
+		//}
+		//-----------------------------------------------------------------------
+		//void OgreShape::setCXForm(const vtx::CXForm& cx)
+		//{
+		//	mMULcolor = Ogre::ColourValue(cx.mul_red, cx.mul_green, cx.mul_blue, cx.mul_alpha);
+		//	mADDcolor = Ogre::ColourValue(cx.add_red, cx.add_green, cx.add_blue, cx.add_alpha);
+		//}
+		//-----------------------------------------------------------------------
+		void OgreShape::_update(const float& delta_time)
 		{
 			mTransform = Ogre::Matrix4(
-				m.sx, m.cx, 0,  m.tx, 
-				m.cy, m.sy, 0, -m.ty, 
-				0,    0,    1,     0,
-				0,    0,    0,     1);
-			//mPosition.x = m.tx;
-			//mPosition.y = m.ty;
-			//mPosition.z = 0;
+				mMatrix.m[0][0], mMatrix.m[0][1], 0,  mMatrix.m[0][2], 
+				mMatrix.m[1][0], mMatrix.m[1][1], 0, -mMatrix.m[1][2], 
+				0,			  0,			   1,					0,
+				0,			  0,			   0,					1);
 
-			//mScale.x = m.sx;
-			//mScale.y = m.sy;
-			//mScale.z = 1;
-		}
-		//-----------------------------------------------------------------------
-		void OgreShape::setCXForm(const vtx::CXForm& cx)
-		{
-			mMULcolor = Ogre::ColourValue(cx.mul_red, cx.mul_green, cx.mul_blue, cx.mul_alpha);
-			mADDcolor = Ogre::ColourValue(cx.add_red, cx.add_green, cx.add_blue, cx.add_alpha);
+			mMULcolor = Ogre::ColourValue(
+				mCXForm.mul_red, 
+				mCXForm.mul_green, 
+				mCXForm.mul_blue, 
+				mCXForm.mul_alpha);
+
+			mADDcolor = Ogre::ColourValue(
+				mCXForm.add_red, 
+				mCXForm.add_green, 
+				mCXForm.add_blue, 
+				mCXForm.add_alpha);
 		}
 		//-----------------------------------------------------------------------
 		BoundingBox& OgreShape::getWorldBoundingBox() const

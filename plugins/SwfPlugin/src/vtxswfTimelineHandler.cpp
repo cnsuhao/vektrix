@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -27,6 +27,7 @@ http://www.gnu.org/copyleft/gpl.txt.
 #include "vtxFile.h"
 #include "vtxLogManager.h"
 #include "vtxMatrix.h"
+#include "vtxMovieClipResource.h"
 #include "vtxMoveObjectEvent.h"
 #include "vtxCreateObjectEvent.h"
 #include "vtxStringHelper.h"
@@ -37,7 +38,6 @@ namespace vtx
 	{
 		//-----------------------------------------------------------------------
 		TimelineHandler::TimelineHandler() 
-			: mKeyframe(NULL)
 		{
 
 		}
@@ -52,16 +52,22 @@ namespace vtx
 			bool isMovieClip = false;
 			size_t frameIndex = 0;
 
-			mTimeline.clear();
-			//mKeyframe->clear();
-			mKeyframe = new Keyframe;
+			//timeline->clear();
+			//keyframe->clear();
+
+			Keyframe* keyframe = new Keyframe;
+			Timeline* timeline = new Timeline;
+
+			MovieClipResource* main_movieclip = new MovieClipResource("__RESERVED__");
 
 			while(swfTag)
 			{
+				// following tags belong to a movieclip
 				if(swfTag->id == ST_DEFINESPRITE)
 				{
 					isMovieClip = true;
 				}
+				// movieclip tags finished
 				else if(swfTag->id == ST_END)
 				{
 					isMovieClip = false;
@@ -72,22 +78,18 @@ namespace vtx
 					{
 						++frameIndex;
 
-						if(mKeyframe->getEventCount())
+						if(keyframe->getEventCount())
 						{
-							mKeyframe->setIndex(frameIndex);
-							mTimeline.addKeyframe(mKeyframe);
+							keyframe->setIndex(frameIndex);
+							timeline->addKeyframe(keyframe);
 
-							// DEBUG
-							//VTX_LOG("SWF DEBUG: added keyframe with index %d and %u events", frameIndex, mKeyframe.getEventCount());
-
-							//mKeyframe->clear();
-							mKeyframe = new Keyframe;
+							keyframe = new Keyframe;
 						}
 					}
 					else if(swfTag->id == ST_PLACEOBJECT2 || swfTag->id == ST_PLACEOBJECT3)
 					{
 						// get layer
-						size_t layer = swf_GetDepth(swfTag);
+						uint layer = swf_GetDepth(swfTag);
 
 						// reset tag reading position
 						swf_SetTagPos(swfTag, 0);
@@ -123,17 +125,14 @@ namespace vtx
 						if(swfTag->data[0]&1)
 						{
 							// move
-							mKeyframe->addEvent(new MoveObjectEvent(layer, matrix, cxform));
+							keyframe->addEvent(new MoveObjectEvent(layer, matrix, cxform));
 						}
 						else if(swfTag->data[0]&2)
 						{
 							// place
 							std::string id = StringHelper::toString(swf_GetPlaceID(swfTag));
 
-							// DEBUG
-							//VTX_LOG("SWF DEBUG: placeobject %s", id.c_str());
-
-							mKeyframe->addEvent(new CreateObjectEvent(id, layer, matrix, cxform));
+							keyframe->addEvent(new CreateObjectEvent(id, layer, matrix, cxform));
 						}
 					}
 				}
@@ -141,7 +140,10 @@ namespace vtx
 				swfTag = swfTag->next;
 			}// while(swfTag)
 
-			file->setTimeline(mTimeline);
+			//file->setTimeline(timeline);
+
+			main_movieclip->setTimeline(timeline);
+			file->setMainMovieClip(main_movieclip);
 		}
 		//-----------------------------------------------------------------------
 	}

@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -28,12 +28,38 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxFileStream.h"
 #include "vtxFileContainerFactory.h"
 #include "vtxLogManager.h"
+#include "vtxMovieClipResource.h"
 #include "vtxStringHelper.h"
+#include "vtxTimeline.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
 	template<> FileManager* Singleton<FileManager>::sInstance = 0;
+	//-----------------------------------------------------------------------
+	FileManager::FileManager()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	FileManager::~FileManager()
+	{
+		FileContainerMap::iterator cont_it = mContainers.begin();
+		FileContainerMap::iterator cont_end = mContainers.end();
+		while(cont_it != cont_end)
+		{
+			delete cont_it->second;
+			++cont_it;
+		}
+
+		FileMap::iterator it = mLoadedFiles.begin();
+		FileMap::iterator end = mLoadedFiles.end();
+		while(it != end)
+		{
+			delete it->second;
+			++it;
+		}
+	}
 	//-----------------------------------------------------------------------
 	File* FileManager::getFile(const String& filename)
 	{
@@ -77,11 +103,11 @@ namespace vtx
 			VTX_EXCEPT("An unknown error occured during parsing the file \"%s\".", filename.c_str());
 		}
 
-		file->startedLoading();
-
 		// DEBUG / TODO: implement this more beautifully
 		// how to pass the framerate from fileheader to the timeline
-		file->getTimeline().setFrameRate(file->getHeader().fps);
+		// Answer: movieclips retrieve the framerate automatically from
+		// their parent movie
+		file->getMainMovieClip()->getTimeline()->setFrameRate(file->getHeader().fps);
 
 		//XMLParser movie_parser(file);
 
@@ -117,10 +143,9 @@ namespace vtx
 
 		// TODO: implement FileStreamPtr, so we don't need to destroy instances by hand ?
 		stream->close();
+		delete stream;
 
 		mLoadedFiles.insert(FileMap::value_type(filename, file));
-
-		file->finishedLoading();
 
 		VTX_LOG("Successfully loaded '%s'.", filename.c_str());
 

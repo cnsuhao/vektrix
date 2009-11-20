@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -25,20 +25,17 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "vtxPrerequesites.h"
 #include "vtxInstancePool.h"
-#include "vtxTimeline.h"
 #include "vtxVector2.h"
 
 namespace vtx
 {
-	class vtxExport Movie/* : public InstancePool*/
+	class vtxExport Movie
 	{
 	public:
 		friend class MovieFactory;
 		friend class Root;
 
 		virtual ~Movie();
-
-		typedef std::map<uint, MovableObject*> CanvasLayers;
 
 		const String& getName();
 		File* getFile();
@@ -52,15 +49,10 @@ namespace vtx
 		void play();
 		void stop();
 		bool goto_frame(uint frame);
-		bool goto_time(float time);
+		bool goto_time(const float& time);
 
 		virtual Instance* getInstance(const String& id);
 		virtual void releaseInstance(Instance* instance);
-
-		bool setObjectToLayer(uint layer, MovableObject* object);
-		MovableObject* getObjectFromLayer(uint layer);
-		bool removeObjectFromLayer(uint layer);
-		void clearLayers();
 
 	protected:
 		Movie(const String& name, File* file, MovieFactory* creator);
@@ -69,11 +61,10 @@ namespace vtx
 		File* mFile;
 		MovieFactory* mCreator;
 		RenderStrategy* mDataPool;
-		Timeline mTimeline;
-		CanvasLayers mLayers;
 		Vector2 mMousePosition;
 
-		//void _initialize(File* file);
+		MovieClip* mMainMovieClip;
+
 		void _initialize(RenderStrategy* dataPool);
 		void _setCreator(MovieFactory* factory);
 	};

@@ -72,7 +72,8 @@ protected:
 		vtx::Root* root = vtx::Root::getSingletonPtr();
 		vtx::LogManager::getSingletonPtr()->logToCout(true);
 
-		vtx::FileContainer* container = vtx::FileManager::getSingletonPtr()->addFileContainer("../../../Media/vektrix");
+		vtx::FileManager::getSingletonPtr()->addFileContainer("../demos/Ogre3D/media");
+		//vtx::FileManager::getSingletonPtr()->addFileContainer("../../../Media/vektrix");
 
 #ifdef _DEBUG
 		root->loadPlugin("vektrix_SwfPlugin_d");
@@ -84,11 +85,16 @@ protected:
 		root->loadPlugin("vektrix_OgrePlugin");
 #endif
 
-		movie = (vtx::ogre::MovableMovie*)root->createMovie("swf_movie", "shape_test.swf", "OgreMovableMovie");
+		movie = (vtx::ogre::MovableMovie*)root->createMovie("swf_movie", "button.swf", "OgreMovableMovie");
 		movie->play();
 
 		movie_node = mSceneMgr->getRootSceneNode()->createChildSceneNode();
 		movie_node->attachObject(movie);
 		movie_node->setPosition(0, 0, -100);
+	}
+
+	void destroyScene()
+	{
+		movie_node->detachAllObjects();
 	}
 };

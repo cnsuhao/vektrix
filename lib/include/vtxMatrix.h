@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -30,14 +30,18 @@ namespace vtx
 	class vtxExport Matrix
 	{
 	public:
-		float 
-			sx, cx, tx, 
-			cy, sy, ty;
+		//float 
+		//	sx, cx, tx, 
+		//	cy, sy, ty;
+
+		float m[2][3];
 
 		Matrix(
 			float _sx = 1.0f, float _cx = 0.0f, float _tx = 0.0f, 
 			float _cy = 0.0f, float _sy = 1.0f, float _ty = 0.0f);
 
 		Vector2 getScale() const;
+
+		Matrix operator*(const Matrix& matrix) const;
 	};
 }

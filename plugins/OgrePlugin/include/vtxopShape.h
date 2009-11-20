@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -24,6 +24,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #pragma once
 
 #include "defines.h"
+#include "vtxPrerequesites.h"
 
 #include "vtxAtlasPacker.h"
 #include "vtxRect.h"
@@ -51,8 +52,9 @@ namespace vtx
 			Ogre::Real getSquaredViewDepth(const Ogre::Camera* cam) const;
 			const Ogre::LightList& getLights(void) const;
 
-			void setMatrix(const vtx::Matrix& m);
-			void setCXForm(const vtx::CXForm& cx);
+			//void setMatrix(const vtx::Matrix& m);
+			//void setCXForm(const vtx::CXForm& cx);
+			void _update(const float& delta_time);
 			BoundingBox& getWorldBoundingBox() const;
 
 			void setAtlasQuad(const AtlasPacker::PackResult& quad);

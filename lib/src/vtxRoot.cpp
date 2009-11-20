@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -21,6 +21,7 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 -----------------------------------------------------------------------------
 */
+
 #include "vtxRoot.h"
 
 #include "vtxDynLib.h"
@@ -30,7 +31,14 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxMovie.h"
 #include "vtxMovieFactory.h"
 #include "vtxPlugin.h"
+#include "vtxStringHelper.h"
 #include "vtxTextureFactory.h"
+
+#include "vtxAtlasRastarizer.h"
+
+#include "vtxMaterialManager.h"
+#include "vtxShapeManager.h"
+#include "vtxTextureManager.h"
 
 namespace vtx
 {
@@ -39,9 +47,45 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	Root::Root()
 	{
-		VTX_LOG(" -------------------------------");
-		VTX_LOG("|     VEKTRIX 0.0.1 started     |");
-		VTX_LOG(" -------------------------------");
+		new LogManager();
+
+		VTX_LOG("<< vektrix %s started >>", StringHelper::versionString(VEKTRIX_VERSION).c_str());
+		VTX_LOG("<< Codename: %s >>", VEKTRIX_VERSION_NAME);
+
+		new MaterialManager();
+		new ShapeManager();
+		new TextureManager();
+
+		new FileManager();
+
+		// TODO: move this into plugin
+		new AtlasRasterizer();
+	}
+	//-----------------------------------------------------------------------
+	Root::~Root()
+	{
+		VTX_LOG("<< shutting down vektrix... >>");
+
+		MovieMap::iterator it = mMovies.begin();
+		MovieMap::iterator end = mMovies.end();
+		while(it != end)
+		{
+			delete it->second;
+			++it;
+		}
+
+		delete AtlasRasterizer::getSingletonPtr();
+		delete FileManager::getSingletonPtr();
+
+		unloadAllPlugins();
+
+		delete MaterialManager::getSingletonPtr();
+		delete ShapeManager::getSingletonPtr();
+		delete TextureManager::getSingletonPtr();
+
+		VTX_LOG("<< vektrix successfully shut down >>");
+
+		delete LogManager::getSingletonPtr();
 	}
 	//-----------------------------------------------------------------------
 	bool Root::addFactory(MovieFactory* factory)
@@ -85,6 +129,22 @@ namespace vtx
 			delete it->second;
 			mLibraries.erase(it);
 		}
+	}
+	//-----------------------------------------------------------------------
+	void Root::unloadAllPlugins()
+	{
+		DynLibMap::iterator it = mLibraries.begin();
+		DynLibMap::iterator end = mLibraries.end();
+		while(it != end)
+		{
+			STOP_PLUGIN_FUNCTION stopPlugin = (STOP_PLUGIN_FUNCTION)it->second->getSymbol("stopPlugin");
+			stopPlugin();
+			it->second->unload();
+			delete it->second;
+			++it;
+		}
+
+		mLibraries.clear();
 	}
 	//-----------------------------------------------------------------------
 	Movie* Root::createMovie(const String& name, const String& filename, const String& factoryname)

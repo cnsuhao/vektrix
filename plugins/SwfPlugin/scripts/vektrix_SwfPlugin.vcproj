@@ -204,6 +204,26 @@
 			<Filter
 				Name="Handlers"
 				>
+				<File
+					RelativePath="..\include\handle_timeline.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxswfButtonHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxswfButtonHandler.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxswfTimelineHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxswfTimelineHandler.h"
+					>
+				</File>
 				<Filter
 					Name="Shape"
 					>
@@ -288,22 +308,6 @@
 						>
 					</File>
 				</Filter>
-				<Filter
-					Name="Timeline"
-					>
-					<File
-						RelativePath="..\include\handle_timeline.h"
-						>
-					</File>
-					<File
-						RelativePath="..\src\vtxswfTimelineHandler.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxswfTimelineHandler.h"
-						>
-					</File>
-				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -327,6 +331,10 @@
 			</File>
 			<File
 				RelativePath="..\swftools\mem.h"
+				>
+			</File>
+			<File
+				RelativePath="..\swftools\os.cpp"
 				>
 			</File>
 			<File

@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -40,7 +40,7 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		OgreTexture::OgreTexture(size_t size) 
+		OgreTexture::OgreTexture(uint size) 
 			: Texture(size)
 		{
 			mTexture = Ogre::TextureManager::getSingletonPtr()->createManual(

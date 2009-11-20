@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -25,7 +25,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "vtxAtlasPacker.h"
 #include "vtxButton.h"
-#include "vtxButtonFactory.h"
 #include "vtxInstance.h"
 #include "vtxInstancePool.h"
 #include "vtxLogManager.h"
@@ -62,6 +61,9 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		RenderStrategy::~RenderStrategy()
 		{
+			delete mPacker;
+			mPacker = NULL;
+
 			delete mPool;
 			mPool = NULL;
 		}
@@ -108,10 +110,15 @@ namespace vtx
 			{
 				if(mFactory)
 				{
-					VTX_LOG("Movie \"%s\" CREATED Button with id %s, using ButtonFactory %s", movie->getName().c_str(), id.c_str(), mFactory->getButtonFactory()->getName().c_str());
+					VTX_LOG("Movie \"%s\" CREATED Button with id %s", movie->getName().c_str(), id.c_str());
 
-					Button* button_inst = mFactory->getButtonFactory()->createObject(movie, resource);
+					//Button* button_inst = mFactory->getButtonFactory()->createObject(movie, resource);
+					//button_inst->_setParent(movie);
+
+					Button* button_inst = new Button(resource);
 					button_inst->_setParent(movie);
+					// DEBUG
+					//button_inst->_setParentMovie(movie);
 
 					return button_inst;
 				}

@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -24,6 +24,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #pragma once
 
 #include <stdarg.h>
+#include <assert.h>
 
 #include <algorithm>
 #include <fstream>
@@ -35,10 +36,28 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <string>
 #include <vector>
 
-#pragma warning (disable : 4251)
-#pragma warning (disable : 4661)
+//#include <stdlib.h>
+//#include <crtdbg.h>
+
+//#ifdef _DEBUG
+//#define new new( _NORMAL_BLOCK, __FILE__, __LINE__)
+//// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
+////allocations to be of _CLIENT_BLOCK type
+//#define malloc(x) _malloc_dbg(x, 1, __FILE__, __LINE__);
+//#endif
+
+#pragma warning (disable : 4251) // disable "dll-interface" warning
+#pragma warning (disable : 4661) // disable singleton include warning
 #pragma warning (disable : 4996) // disable "vsprintf" warning
 #pragma warning (disable : 4482) // disable enum "used in qualified name" warning
+
+// version
+#define VEKTRIX_VERSION_MAJOR 0
+#define VEKTRIX_VERSION_MINOR 0
+#define VEKTRIX_VERSION_PATCH 1
+#define VEKTRIX_VERSION_NAME "Valus"
+
+#define VEKTRIX_VERSION ((VEKTRIX_VERSION_MAJOR << 16) | (VEKTRIX_VERSION_MINOR << 8) | VEKTRIX_VERSION_PATCH)
 
 #ifndef F_OK
 # define F_OK 0
@@ -78,14 +97,13 @@ namespace vtx
 	class AtlasPacker;
 	class BoundingBox;
 	class Button;
-	class ButtonFactory;
 	class ButtonResource;
 	class ButtonState;
 	class Color;
 	class CXForm;
-	class DefaultButton;
 	class DefaultFileContainer;
 	class DefaultFileContainerFactory;
+	class DisplayObjectContainer;
 	class DynLib;
 	class EventContainer;
 	class File;
@@ -97,6 +115,7 @@ namespace vtx
 	class FrameEvent;
 	class Instance;
 	class InstancePool;
+	class InteractiveObject;
 	class Keyframe;
 	class LogManager;
 	class Material;
@@ -104,6 +123,8 @@ namespace vtx
 	class Matrix;
 	class MovableObject;
 	class Movie;
+	class MovieClip;
+	class MovieClipResource;
 	class RenderStrategy;
 	class MovieFactory;
 	class Rect;

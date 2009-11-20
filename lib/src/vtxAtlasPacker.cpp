@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -44,7 +44,13 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	AtlasPacker::~AtlasPacker()
 	{
-
+		AtlasTextureList::iterator it = mTextures.begin();
+		AtlasTextureList::iterator end = mTextures.end();
+		while(it != end)
+		{
+			mTextureFactory->destroyObject(*it);
+			++it;
+		}
 	}
 	//-----------------------------------------------------------------------
 	bool AtlasPacker::sortShape(ShapeResource* shape1, ShapeResource* shape2)

@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -41,7 +41,7 @@ namespace vtx
 
 		void execute();
 
-		virtual void _setParentMovie(Movie* parent);
+		virtual void setTargetContainer(DisplayObjectContainer* container);
 
 	protected:
 		EventList mEvents;

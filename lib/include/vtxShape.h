@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -36,8 +36,6 @@ namespace vtx
 		Shape(Resource* resource);
 
 		const String& getType() const;
-
-		//virtual bool supportsAlpha() const = 0;
 	};
 	//-----------------------------------------------------------------------
 	class vtxExport DefaultShape : public Shape
@@ -45,9 +43,7 @@ namespace vtx
 	public:
 		DefaultShape(Resource* resource);
 
-		void setMatrix(const Matrix& m);
-		void setCXForm(const CXForm& cx);
-
+		void _update(const float& delta_time);
 		BoundingBox& getWorldBoundingBox() const;
 	};
 	//-----------------------------------------------------------------------

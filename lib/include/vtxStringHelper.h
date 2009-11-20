@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -30,6 +30,8 @@ namespace vtx
 	class vtxExport StringHelper
 	{
 	public:
+		static String versionString(const uint& version);
+
 		static StringList splitString(const String& str);
 		static String getFileExtension(const String& str);
 

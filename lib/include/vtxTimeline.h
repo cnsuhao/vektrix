@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -35,7 +35,7 @@ namespace vtx
 		Timeline(void);
 		virtual ~Timeline(void);
 
-		Timeline clone(Movie* parent);
+		Timeline* clone(DisplayObjectContainer* container);
 
 		void addKeyframe(Keyframe* frame);
 		void clear();
@@ -54,6 +54,6 @@ namespace vtx
 		uint mFrameRate;
 		uint mCurrentFrame;
 		KeyframeList mKeyframes;
-		Movie* mParent;
+		DisplayObjectContainer* mObjectContainer;
 	};
 }

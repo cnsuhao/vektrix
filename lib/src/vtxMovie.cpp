@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -29,13 +29,14 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxInstanceFactory.h"
 #include "vtxLogManager.h"
 #include "vtxMovableObject.h"
+#include "vtxMovieClip.h"
+#include "vtxMovieClipResource.h"
 #include "vtxRenderStrategy.h"
 #include "vtxResource.h"
 #include "vtxRoot.h"
 #include "vtxShapeManager.h"
 #include "vtxStringHelper.h"
 #include "vtxTextureManager.h"
-#include "vtxTimeline.h"
 
 namespace vtx
 {
@@ -44,9 +45,11 @@ namespace vtx
 		: mName(name), 
 		mFile(file), 
 		mCreator(creator), 
-		mMousePosition(0.0f, 0.0f)
+		mMousePosition(0.0f, 0.0f), 
+		mMainMovieClip(NULL)
 	{
-		mTimeline = mFile->getTimeline().clone(this);
+		mMainMovieClip = new MovieClip(mFile->getMainMovieClip());
+		mMainMovieClip->_setParent(this);
 	}
 	//-----------------------------------------------------------------------
 	Movie::~Movie()
@@ -66,7 +69,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Movie::addTime(float delta_time)
 	{
-		mTimeline.addTime(delta_time);
+		//mTimeline->addTime(delta_time);
+		mMainMovieClip->_update(delta_time);
 	}
 	//-----------------------------------------------------------------------
 	void Movie::setMouseAbs(uint x, uint y)
@@ -93,33 +97,33 @@ namespace vtx
 		if(y < 0.0f) y = 0.0f;
 		else if(y > 1.0f) y = 1.0f;
 
-		setMouseAbs(x * mFile->getHeader().width, y * mFile->getHeader().height);
+		setMouseAbs((uint)(x * mFile->getHeader().width), (uint)(y * mFile->getHeader().height));
 	}
 	//-----------------------------------------------------------------------
 	void Movie::play()
 	{
-		mTimeline.play();
+		mMainMovieClip->play();
 	}
 	//-----------------------------------------------------------------------
 	void Movie::stop()
 	{
-		mTimeline.stop();
+		mMainMovieClip->stop();
 	}
 	//-----------------------------------------------------------------------
 	bool Movie::goto_frame(uint frame)
 	{
-		return mTimeline.goto_frame(frame);
+		return mMainMovieClip->goto_frame(frame);
 	}
 	//-----------------------------------------------------------------------
-	bool Movie::goto_time(float time)
+	bool Movie::goto_time(const float& time)
 	{
-		return mTimeline.goto_time(time);
+		return mMainMovieClip->goto_time(time);
 	}
 	//-----------------------------------------------------------------------
 	Instance* Movie::getInstance(const String& id)
 	{
 		Instance* inst = mDataPool->shareInstance(id, this);
-		//VTX_LOG("SHARED instance with id %s", id.c_str());
+		VTX_LOG("SHARED instance with id %s", id.c_str());
 		return inst;
 	}
 	//-----------------------------------------------------------------------
@@ -128,86 +132,9 @@ namespace vtx
 		if(instance)
 		{
 			mDataPool->storeInstance(instance);
-			//VTX_LOG("STORED instance with id %s", instance->getID().c_str());
+			VTX_LOG("STORED instance with id %s", instance->getID().c_str());
 		}
 	}
-	//-----------------------------------------------------------------------
-	bool Movie::setObjectToLayer(uint layer, MovableObject* object)
-	{
-		mLayers.insert(CanvasLayers::value_type(0, NULL));
-
-		CanvasLayers::iterator it = mLayers.find(layer);
-
-		if(it != mLayers.end())
-		{
-			// target layer is not free
-			VTX_EXCEPT("Movie \"%s\": Target Layer %u is not free.", mName.c_str(), layer);
-			return false;
-		}
-
-		uint old_layer = object->getLayer();
-
-		it = mLayers.find(old_layer);
-
-		if(it != mLayers.end())
-		{
-			if(it->second == object)
-			{
-				mLayers.erase(it);
-			}
-		}
-
-		mLayers.insert(CanvasLayers::value_type(layer, object));
-
-		return true;
-	}
-	//-----------------------------------------------------------------------
-	MovableObject* Movie::getObjectFromLayer(uint layer)
-	{
-		CanvasLayers::iterator it = mLayers.find(layer);
-
-		if(it != mLayers.end())
-		{
-			return it->second;
-		}
-
-		return NULL;
-	}
-	//-----------------------------------------------------------------------
-	bool Movie::removeObjectFromLayer(uint layer)
-	{
-		CanvasLayers::iterator it = mLayers.find(layer);
-
-		if(it != mLayers.end())
-		{
-			mLayers.erase(it);
-			return true;
-		}
-
-		return false;
-	}
-	//-----------------------------------------------------------------------
-	void Movie::clearLayers()
-	{
-		CanvasLayers::iterator it = mLayers.begin();
-
-		for( ; it != mLayers.end(); ++it)
-		{
-			if(it->second)
-			{
-				releaseInstance(it->second);
-			}
-		}
-
-		mLayers.clear();
-	}
-	//-----------------------------------------------------------------------
-	//void Movie::_initialize(File* file)
-	//{
-	//	mFile = file;
-	//	//mTimeline = Timeline(mFile->getTimeline(), this);
-	//	mTimeline = mFile->getTimeline().clone(this);
-	//}
 	//-----------------------------------------------------------------------
 	void Movie::_initialize(RenderStrategy* dataPool)
 	{

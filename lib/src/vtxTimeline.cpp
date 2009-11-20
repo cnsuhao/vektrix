@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -23,9 +23,10 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "vtxTimeline.h"
 
+#include "vtxDisplayObjectContainer.h"
 #include "vtxKeyframe.h"
 #include "vtxLogManager.h"
-#include "vtxMovie.h"
+//#include "vtxMovie.h"
 
 namespace vtx
 {
@@ -35,30 +36,36 @@ namespace vtx
 		mPosition(0.0f), 
 		mFrameRate(12), 
 		mCurrentFrame(0), 
-		mParent(NULL)
+		mObjectContainer(NULL)
 	{
 
 	}
 	//-----------------------------------------------------------------------
 	Timeline::~Timeline(void)
 	{
-
+		KeyframeList::iterator it = mKeyframes.begin();
+		KeyframeList::iterator end = mKeyframes.end();
+		while(it != end)
+		{
+			delete *it;
+			++it;
+		}
 	}
 	//-----------------------------------------------------------------------
-	Timeline Timeline::clone(Movie* parent)
+	Timeline* Timeline::clone(DisplayObjectContainer* container)
 	{
-		Timeline clonedTimeline;
-		clonedTimeline.mFrameRate = mFrameRate;
-		clonedTimeline.mParent = parent;
+		Timeline* clonedTimeline = new Timeline;
+		clonedTimeline->mFrameRate = mFrameRate;
+		clonedTimeline->mObjectContainer = container;
 
 		KeyframeList::iterator it = mKeyframes.begin();
 
 		for( ; it != mKeyframes.end(); ++it)
 		{
 			Keyframe* frame = (*it)->clone();
-			frame->_setParentMovie(parent);
+			frame->setTargetContainer(container);
 
-			clonedTimeline.mKeyframes.push_back(frame);
+			clonedTimeline->mKeyframes.push_back(frame);
 		}
 
 		return clonedTimeline;
@@ -87,7 +94,7 @@ namespace vtx
 		mPosition += delta_time;
 
 		// the frame index which is about to be displayed
-		uint frame = mPosition * (float)mFrameRate;
+		uint frame = (uint)(mPosition * mFrameRate);
 
 		Keyframe* currentFrame = mKeyframes.at(mCurrentFrame);
 		if(frame >= currentFrame->getIndex())
@@ -98,7 +105,7 @@ namespace vtx
 
 		if(mCurrentFrame == mKeyframes.size() && mKeyframes.size() > 1)
 		{
-			mParent->clearLayers();
+			mObjectContainer->clearLayers();
 
 			mCurrentFrame = 0;
 			mPosition = 1.0f / (float)mFrameRate;

@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -24,6 +24,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #pragma once
 
 #include "defines.h"
+#include "vtxPrerequesites.h"
 
 #include "vtxTexture.h"
 
@@ -37,7 +38,7 @@ namespace vtx
 		class vtxopExport OgreTexture : public vtx::Texture
 		{
 		public:
-			OgreTexture(size_t size = 1024);
+			OgreTexture(uint size = 1024);
 			virtual ~OgreTexture();
 
 			void paintPixelsToRect(const vtx::Rect& coordinates, unsigned char* pixelData);

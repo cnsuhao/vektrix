@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------
 This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
-For the latest info, see http://www.fuse-software.com/vektrix
+For the latest info, see http://www.fuse-software.com/
 
 Copyright (c) 2009 Fuse-Software (tm)
 
@@ -31,15 +31,16 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	Button::Button(Resource* resource) 
-		: MovableObject(resource)
+		: DisplayObjectContainer(resource)
 	{
 		ButtonResource* button_res = dynamic_cast<ButtonResource*>(resource);
 
 		if(button_res)
 		{
-			mDefault = button_res->getState(ButtonResource::SID_DEFAULT)->clone();
+			mUp = button_res->getState(ButtonResource::SID_UP)->clone();
 			mOver = button_res->getState(ButtonResource::SID_OVER)->clone();
-			mPressed = button_res->getState(ButtonResource::SID_PRESSED)->clone();
+			mDown = button_res->getState(ButtonResource::SID_DOWN)->clone();
+			//mPressed = button_res->getState(ButtonResource::SID_PRESSED)->clone();
 		}
 	}
 	//-----------------------------------------------------------------------
@@ -49,35 +50,31 @@ namespace vtx
 		return type;
 	}
 	//-----------------------------------------------------------------------
-	void Button::_setParentMovie(Movie* parent)
-	{
-		mDefault->_setParentMovie(parent);
-		mOver->_setParentMovie(parent);
-		mPressed->_setParentMovie(parent);
-	}
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
-	DefaultButton::DefaultButton(Resource* resource) 
-		: Button(resource)
+	void Button::_update(const float& delta_time)
 	{
 
 	}
 	//-----------------------------------------------------------------------
-	void DefaultButton::setMatrix(const Matrix& m)
-	{
-
-	}
-	//-----------------------------------------------------------------------
-	void DefaultButton::setCXForm(const CXForm& cx)
-	{
-
-	}
-	//-----------------------------------------------------------------------
-	BoundingBox& DefaultButton::getWorldBoundingBox() const
+	BoundingBox& Button::getWorldBoundingBox() const
 	{
 		static BoundingBox bb;
 		return bb;
+	}
+	//-----------------------------------------------------------------------
+	void Button::_setParent(Movie* parent)
+	{
+		DisplayObjectContainer::_setParent(parent);
+
+		mUp->setTargetContainer(this);
+		mOver->setTargetContainer(this);
+		mDown->setTargetContainer(this);
+		//mPressed->setTargetContainer(parent);
+
+		// DEBUG ONLY
+		mOver->execute();
+
+		clearLayers();
+		mUp->execute();
 	}
 	//-----------------------------------------------------------------------
 }
