@@ -55,4 +55,12 @@ namespace vtx
 		return mParentMovie;
 	}
 	//-----------------------------------------------------------------------
+	void Instance::_initScriptObject(const String& name)
+	{
+		//if(mParentMovie->getScriptEngine())
+		//{
+		//	mScriptObject = mParentMovie->getScriptEngine()->createObject(name?, getType());
+		//}
+	}
+	//-----------------------------------------------------------------------
 }

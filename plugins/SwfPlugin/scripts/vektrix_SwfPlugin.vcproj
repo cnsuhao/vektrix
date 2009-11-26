@@ -217,6 +217,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\vtxswfScriptHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxswfScriptHandler.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\vtxswfTimelineHandler.cpp"
 					>
 				</File>
@@ -365,6 +373,10 @@
 				RelativePath="..\swftools\modules\swftools.cpp"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Scripting"
+			>
 		</Filter>
 		<File
 			RelativePath="..\include\vtxswfStdHeader.h"

@@ -37,6 +37,11 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
+	MaterialResource::~MaterialResource()
+	{
+
+	}
+	//-----------------------------------------------------------------------
 	const String& MaterialResource::getType(void) const
 	{
 		static String type = "Material";

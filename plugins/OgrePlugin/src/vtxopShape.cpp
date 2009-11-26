@@ -144,11 +144,15 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void OgreShape::_update(const float& delta_time)
 		{
+			Shape::_update(delta_time);
+
+			const Matrix& mat = _getWorldMatrix();
+
 			mTransform = Ogre::Matrix4(
-				mMatrix.m[0][0], mMatrix.m[0][1], 0,  mMatrix.m[0][2], 
-				mMatrix.m[1][0], mMatrix.m[1][1], 0, -mMatrix.m[1][2], 
-				0,			  0,			   1,					0,
-				0,			  0,			   0,					1);
+				mat.m[0][0], mat.m[0][1], 0,  mat.m[0][2], 
+				mat.m[1][0], mat.m[1][1], 0, -mat.m[1][2], 
+				0,		  0,		   1,				0,
+				0,		  0,		   0,				1);
 
 			mMULcolor = Ogre::ColourValue(
 				mCXForm.mul_red, 
@@ -161,12 +165,6 @@ namespace vtx
 				mCXForm.add_green, 
 				mCXForm.add_blue, 
 				mCXForm.add_alpha);
-		}
-		//-----------------------------------------------------------------------
-		BoundingBox& OgreShape::getWorldBoundingBox() const
-		{
-			static BoundingBox bb;
-			return bb;
 		}
 		//-----------------------------------------------------------------------
 		void OgreShape::setAtlasQuad(const AtlasPacker::PackResult& quad)

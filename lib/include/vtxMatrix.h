@@ -40,6 +40,7 @@ namespace vtx
 			float _sx = 1.0f, float _cx = 0.0f, float _tx = 0.0f, 
 			float _cy = 0.0f, float _sy = 1.0f, float _ty = 0.0f);
 
+		Vector2 getTrans() const;
 		Vector2 getScale() const;
 
 		Matrix operator*(const Matrix& matrix) const;

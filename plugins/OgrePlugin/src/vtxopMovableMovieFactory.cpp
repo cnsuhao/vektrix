@@ -23,6 +23,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "vtxopMovableMovieFactory.h"
 
+#include "vtxopMovableMovieDebugger.h"
 #include "vtxopMovableMovie.h"
 #include "vtxopRenderStrategy.h"
 
@@ -69,6 +70,11 @@ namespace vtx
 		vtx::RenderStrategy* MovableMovieFactory::_createDataPool(File* file)
 		{
 			return new ogre::RenderStrategy(this, file);
+		}
+		//-----------------------------------------------------------------------
+		MovieDebugger* MovableMovieFactory::_newDebugger(Movie* movie)
+		{
+			return new MovableMovieDebugger(movie);
 		}
 		//-----------------------------------------------------------------------
 	}

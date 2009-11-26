@@ -27,6 +27,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxFileContainerFactory.h"
 #include "vtxFileStream.h"
 #include "vtxMathHelper.h"
+#include "vtxSubshapeResource.h"
 
 namespace vtx
 {
@@ -37,6 +38,17 @@ namespace vtx
 		mMaximumScale(Vector2(1, 1))
 	{
 
+	}
+	//-----------------------------------------------------------------------
+	ShapeResource::~ShapeResource()
+	{
+		SubshapeList::iterator it = mSubshapes.begin();
+		SubshapeList::iterator end = mSubshapes.end();
+		while(it != end)
+		{
+			delete *it;
+			++it;
+		}
 	}
 	//-----------------------------------------------------------------------
 	bool ShapeResource::operator<(const ShapeResource& shape) const

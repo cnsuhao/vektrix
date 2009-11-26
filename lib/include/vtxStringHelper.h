@@ -58,5 +58,8 @@ namespace vtx
 
 		static String toString(Rect val);
 		static Rect toRect(const String& str);
+
+		static String toString(BoundingBox val);
+		static BoundingBox toBoundingBox(const String& str);
 	};
 }

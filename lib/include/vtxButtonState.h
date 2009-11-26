@@ -31,6 +31,9 @@ namespace vtx
 	class vtxExport ButtonState : public EventContainer
 	{
 	public:
-		ButtonState* clone();
+		ButtonState();
+		virtual ~ButtonState();
+
+		ButtonState* clone(DisplayObjectContainer* container);
 	};
 }

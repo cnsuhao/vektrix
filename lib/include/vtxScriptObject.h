@@ -27,14 +27,11 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace vtx
 {
-	class vtxExport FileContainer
+	class vtxExport ScriptObject
 	{
 	public:
-		FileContainer(){}
-		virtual ~FileContainer(){}
+		ScriptObject();
 
-		virtual FileStream* openFile(const String& filename) = 0;
-		virtual bool hasFile(const String& filename) = 0;
+	protected:
 	};
-
 }

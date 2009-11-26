@@ -36,15 +36,16 @@ namespace vtx
 		{
 		public:
 			const std::string& getName() const;
-			vtx::Movie* createObject(std::string name, vtx::File* file);
-			void destroyObject(vtx::Movie* instance);
+			Movie* createObject(std::string name, File* file);
+			void destroyObject(Movie* instance);
 
 		protected:
 			const std::string& _getButtonFactoryName() const;
 			const std::string& _getShapeFactoryName() const;
 			const std::string& _getTextureFactoryName() const;
 
-			vtx::RenderStrategy* _createDataPool(File* file);
+			RenderStrategy* _createDataPool(File* file);
+			MovieDebugger* _newDebugger(Movie* movie);
 		};
 	}
 }

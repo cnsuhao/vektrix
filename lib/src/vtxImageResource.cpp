@@ -34,6 +34,11 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
+	ImageResource::~ImageResource()
+	{
+
+	}
+	//-----------------------------------------------------------------------
 	const String& ImageResource::getType(void) const
 	{
 		static String type = "Image";

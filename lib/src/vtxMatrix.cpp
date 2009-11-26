@@ -25,6 +25,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "vtxVector2.h"
 
+#include "vtxLogManager.h"
+#include "vtxStringHelper.h"
+
 namespace vtx
 {
 	//-----------------------------------------------------------------------
@@ -49,6 +52,11 @@ namespace vtx
 		m[1][2] = ty;
 	}
 	//-----------------------------------------------------------------------
+	Vector2 Matrix::getTrans() const
+	{
+		return Vector2(m[0][2], m[1][2]);
+	}
+	//-----------------------------------------------------------------------
 	Vector2 Matrix::getScale() const
 	{
 		return Vector2(m[0][0], m[1][1]);
@@ -67,6 +75,10 @@ namespace vtx
 		product.m[1][0] = m[1][0] * matrix.m[1][0] + m[1][1] * matrix.m[1][0];
 		product.m[1][1] = m[1][0] * matrix.m[1][1] + m[1][1] * matrix.m[1][1];
 		product.m[1][2] = m[1][0] * matrix.m[1][2] + m[1][1] * matrix.m[1][2] + m[1][2];
+
+		//VTX_LOG("m1: \n%s\n", StringHelper::toString(*this).c_str());
+		//VTX_LOG("m2: \n%s\n", StringHelper::toString(matrix).c_str());
+		//VTX_LOG("product: \n%s\n", StringHelper::toString(product).c_str());
 
 		return product;
 	}

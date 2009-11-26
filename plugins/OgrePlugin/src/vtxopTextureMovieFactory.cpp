@@ -70,5 +70,10 @@ namespace vtx
 			return NULL;
 		}
 		//-----------------------------------------------------------------------
+		MovieDebugger* TextureMovieFactory::_newDebugger(Movie* movie)
+		{
+			return NULL;
+		}
+		//-----------------------------------------------------------------------
 	}
 }

@@ -23,7 +23,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "vtxMovieClipResource.h"
 
-#include "vtxLogManager.h"
+#include "vtxTimeline.h"
 
 namespace vtx
 {
@@ -33,6 +33,11 @@ namespace vtx
 		mTimeline(NULL)
 	{
 
+	}
+	//-----------------------------------------------------------------------
+	MovieClipResource::~MovieClipResource()
+	{
+		delete mTimeline;
 	}
 	//-----------------------------------------------------------------------
 	const String& MovieClipResource::getType(void) const

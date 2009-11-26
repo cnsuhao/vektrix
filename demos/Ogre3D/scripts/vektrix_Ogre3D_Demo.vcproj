@@ -25,6 +25,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -93,7 +94,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) &quot;$(OGRE_HOME)\Samples\Common\bin\$(ConfigurationName)&quot;&#x0D;&#x0A;mkdir  &quot;$(OGRE_HOME)\Samples\Media\vektrix\&quot;;&#x0D;&#x0A;copy &quot;..\media\*&quot; &quot;$(OGRE_HOME)\Samples\Media\vektrix\&quot;;&#x0D;&#x0A;copy $(OutDir)\vektrix_d.dll $(OGRE_HOME)\Samples\Common\bin\Debug\vektrix_d.dll;&#x0D;&#x0A;copy $(OutDir)\vektrix.dll $(OGRE_HOME)\Samples\Common\bin\Release\vektrix.dll;&#x0D;&#x0A;"
+				CommandLine="copy $(OGRE_HOME)\lib\OgreMain.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\lib\OgreMain_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_Direct3D9.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_Direct3D9_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_GL.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_GL_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(OGRE_HOME)\Samples\Common\bin\Release\OIS.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\Samples\Common\bin\Debug\OIS_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(CAIRO_HOME)\bin\libcairo-2.dll $(OutDir)"
 			/>
 		</Configuration>
 		<Configuration
@@ -106,6 +107,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -172,7 +174,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) &quot;$(OGRE_HOME)\Samples\Common\bin\$(ConfigurationName)&quot;&#x0D;&#x0A;mkdir  &quot;$(OGRE_HOME)\Samples\Media\vektrix\&quot;;&#x0D;&#x0A;copy &quot;..\media\*&quot; &quot;$(OGRE_HOME)\Samples\Media\vektrix\&quot;;&#x0D;&#x0A;copy $(OutDir)\vektrix_d.dll $(OGRE_HOME)\Samples\Common\bin\Debug\vektrix_d.dll;&#x0D;&#x0A;copy $(OutDir)\vektrix.dll $(OGRE_HOME)\Samples\Common\bin\Release\vektrix.dll;&#x0D;&#x0A;"
+				CommandLine="copy $(OGRE_HOME)\lib\OgreMain.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\lib\OgreMain_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_Direct3D9.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_Direct3D9_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_GL.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_GL_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(OGRE_HOME)\Samples\Common\bin\Release\OIS.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\Samples\Common\bin\Debug\OIS_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(CAIRO_HOME)\bin\libcairo-2.dll $(OutDir)"
 			/>
 		</Configuration>
 	</Configurations>

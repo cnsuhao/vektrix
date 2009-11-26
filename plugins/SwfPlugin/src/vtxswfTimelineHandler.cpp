@@ -37,16 +37,6 @@ namespace vtx
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		TimelineHandler::TimelineHandler() 
-		{
-
-		}
-		//-----------------------------------------------------------------------
-		TimelineHandler::~TimelineHandler()
-		{
-
-		}
-		//-----------------------------------------------------------------------
 		void TimelineHandler::handleTimeline(TAG* swfTag, File* file)
 		{
 			bool isMovieClip = false;
@@ -54,6 +44,8 @@ namespace vtx
 
 			//timeline->clear();
 			//keyframe->clear();
+
+			const uint& frameCount = file->getHeader().frames;
 
 			Keyframe* keyframe = new Keyframe;
 			Timeline* timeline = new Timeline;
@@ -82,8 +74,12 @@ namespace vtx
 						{
 							keyframe->setIndex(frameIndex);
 							timeline->addKeyframe(keyframe);
+							keyframe = NULL;
 
-							keyframe = new Keyframe;
+							if(frameIndex < frameCount)
+							{
+								keyframe = new Keyframe;
+							}
 						}
 					}
 					else if(swfTag->id == ST_PLACEOBJECT2 || swfTag->id == ST_PLACEOBJECT3)
@@ -122,17 +118,23 @@ namespace vtx
 								cx.r1/256.0f, cx.g1/256.0f, cx.b1/256.0f, cx.a1/256.0f);
 						}
 
+						String name = "";
+						if(swf_GetName(swfTag))
+						{
+							name = swf_GetName(swfTag);
+						}
+
 						if(swfTag->data[0]&1)
 						{
 							// move
-							keyframe->addEvent(new MoveObjectEvent(layer, matrix, cxform));
+							keyframe->addEvent(new MoveObjectEvent(NULL, layer, matrix, cxform));
 						}
 						else if(swfTag->data[0]&2)
 						{
 							// place
 							std::string id = StringHelper::toString(swf_GetPlaceID(swfTag));
 
-							keyframe->addEvent(new CreateObjectEvent(id, layer, matrix, cxform));
+							keyframe->addEvent(new CreateObjectEvent(NULL, id, layer, matrix, cxform, name));
 						}
 					}
 				}

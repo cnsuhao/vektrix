@@ -36,12 +36,7 @@ namespace vtx
 		class ButtonHandler
 		{
 		public:
-			ButtonHandler();
-			virtual ~ButtonHandler();
-
 			void handleButton(TAG* swfTag, File* file);
-
-		protected:
 		};
 	}
 }

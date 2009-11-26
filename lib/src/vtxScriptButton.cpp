@@ -21,20 +21,9 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 -----------------------------------------------------------------------------
 */
-#pragma once
-
-#include "vtxPrerequesites.h"
+#include "vtxScriptButton.h"
 
 namespace vtx
 {
-	class vtxExport FileContainer
-	{
-	public:
-		FileContainer(){}
-		virtual ~FileContainer(){}
-
-		virtual FileStream* openFile(const String& filename) = 0;
-		virtual bool hasFile(const String& filename) = 0;
-	};
 
 }

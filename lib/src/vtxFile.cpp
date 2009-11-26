@@ -25,6 +25,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "vtxAtlasPacker.h"
 #include "vtxLogManager.h"
+#include "vtxMovieClipResource.h"
 #include "vtxResource.h"
 #include "vtxShapeResource.h"
 
@@ -40,7 +41,15 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	File::~File()
 	{
+		delete mMainMovieClip;
 
+		ResourceMap::iterator it = mResources.begin();
+		ResourceMap::iterator end = mResources.end();
+		while(it != end)
+		{
+			delete it->second;
+			++it;
+		}
 	}
 	//-----------------------------------------------------------------------
 	const String& File::getFilename()

@@ -77,8 +77,8 @@ namespace vtx
 			file->addResource(mShapeResource);
 
 			BoundingBox box(
-				Vector2(shape.bbox->xmax/20.0f, shape.bbox->ymax/20.0f), 
-				Vector2(shape.bbox->xmin/20.0f, shape.bbox->ymin/20.0f));
+				Vector2(shape.bbox->xmin/20.0f, shape.bbox->ymin/20.0f), 
+				Vector2(shape.bbox->xmax/20.0f, shape.bbox->ymax/20.0f));
 
 			mShapeResource->setBoundingBox(box);
 
@@ -149,6 +149,8 @@ namespace vtx
 			//{
 			//	write_subline(*it, file);
 			//}
+
+			swf_Shape2Free(&shape);
 
 			mFlashID = 0;
 			mCurrentFile = NULL;

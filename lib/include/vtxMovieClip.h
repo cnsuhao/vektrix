@@ -43,7 +43,7 @@ namespace vtx
 		bool goto_time(const float& time);
 
 		void _update(const float& delta_time);
-		BoundingBox& getWorldBoundingBox() const;
+		const BoundingBox& getBoundingBox() const;
 
 		virtual void _setParent(Movie* parent);
 

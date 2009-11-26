@@ -264,18 +264,6 @@
 					>
 				</File>
 			</Filter>
-			<Filter
-				Name="Strategies"
-				>
-				<File
-					RelativePath="..\src\vtxopRenderStrategy.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxopRenderStrategy.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Plugin"
@@ -294,6 +282,30 @@
 			</File>
 			<File
 				RelativePath="..\include\vtxopPlugin.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Debuggers"
+			>
+			<File
+				RelativePath="..\src\vtxopMovableMovieDebugger.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxopMovableMovieDebugger.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Strategies"
+			>
+			<File
+				RelativePath="..\src\vtxopRenderStrategy.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxopRenderStrategy.h"
 				>
 			</File>
 		</Filter>

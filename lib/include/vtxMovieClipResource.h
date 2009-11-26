@@ -32,6 +32,7 @@ namespace vtx
 	{
 	public:
 		MovieClipResource(const String& id);
+		virtual ~MovieClipResource();
 
 		const String& getType(void) const;
 

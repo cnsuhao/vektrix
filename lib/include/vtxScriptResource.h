@@ -24,17 +24,20 @@ http://www.gnu.org/copyleft/lesser.txt.
 #pragma once
 
 #include "vtxPrerequesites.h"
+#include "vtxResource.h"
 
 namespace vtx
 {
-	class vtxExport FileContainer
+	class vtxExport ScriptResource : public Resource
 	{
 	public:
-		FileContainer(){}
-		virtual ~FileContainer(){}
+		ScriptResource(const String& id, const char* code, uint len);
+		virtual ~ScriptResource();
 
-		virtual FileStream* openFile(const String& filename) = 0;
-		virtual bool hasFile(const String& filename) = 0;
+		const String& getType(void) const;
+
+	protected:
+		uint mLength;
+		const char* mCodeBuffer;
 	};
-
 }

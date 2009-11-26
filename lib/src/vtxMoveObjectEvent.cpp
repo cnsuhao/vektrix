@@ -33,20 +33,19 @@ http://www.gnu.org/copyleft/lesser.txt.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	MoveObjectEvent::MoveObjectEvent(const uint& layer, const Matrix& matrix, const CXForm& cxform) 
-		: mLayer(layer), 
+	MoveObjectEvent::MoveObjectEvent(DisplayObjectContainer* object_container, 
+		const uint& layer, const Matrix& matrix, const CXForm& cxform) 
+		: FrameEvent(object_container), 
+		mLayer(layer), 
 		mMatrix(matrix), 
 		mCXForm(cxform)
 	{
 
 	}
 	//-----------------------------------------------------------------------
-	FrameEvent* MoveObjectEvent::clone()
+	FrameEvent* MoveObjectEvent::clone(DisplayObjectContainer* container)
 	{
-		MoveObjectEvent* clonedEvent = new MoveObjectEvent(mLayer, mMatrix, mCXForm);
-		//clonedEvent->mParentMovie = parent;
-
-		return clonedEvent;
+		return new MoveObjectEvent(container, mLayer, mMatrix, mCXForm);
 	}
 	//-----------------------------------------------------------------------
 	void MoveObjectEvent::execute(void)
@@ -54,21 +53,6 @@ namespace vtx
 		mObject = mObjectContainer->getChildAt(mLayer);
 		mObject->setMatrix(mMatrix);
 		mObject->setCXForm(mCXForm);
-		//mObject->setLayer(mLayer);
-
-		//VTX_LOG("MoveObjectEvent");
-	}
-	//-----------------------------------------------------------------------
-	void MoveObjectEvent::setObjectContainer(DisplayObjectContainer* container)
-	{
-		FrameEvent::setObjectContainer(container);
-
-		//ShapeResource* shape = dynamic_cast<ShapeResource*>(parent->getFile()->getResource(mID));
-
-		//if(shape)
-		//{
-		//	shape->_injectScale(mMatrix.getScale());
-		//}
 	}
 	//-----------------------------------------------------------------------
 }

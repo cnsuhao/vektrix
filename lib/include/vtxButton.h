@@ -33,16 +33,21 @@ namespace vtx
 	{
 	public:
 		Button(Resource* resource);
+		virtual ~Button();
 
 		const String& getType() const;
 
 		// overridden
-		virtual void _update(const float& delta_time);
-		BoundingBox& getWorldBoundingBox() const;
+		virtual void _update(const float& delta_time = 0.0f);
+		const BoundingBox& getBoundingBox() const;
 
 		virtual void _setParent(Movie* parent);
 
 	protected:
+		bool mMouseDown;
+		bool mMouseOver;
+		BoundingBox mBB;
+
 		ButtonState* mUp;
 		ButtonState* mOver;
 		ButtonState* mDown;

@@ -23,18 +23,29 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #pragma once
 
+#include "defines.h"
 #include "vtxPrerequesites.h"
+
+#include "vtxMovieDebugger.h"
+
+#include "OgrePrerequisites.h"
 
 namespace vtx
 {
-	class vtxExport FileContainer
+	namespace ogre
 	{
-	public:
-		FileContainer(){}
-		virtual ~FileContainer(){}
+		class MovableMovieDebugger : public MovieDebugger
+		{
+		public:
+			MovableMovieDebugger(Movie* parent);
+			virtual ~MovableMovieDebugger();
 
-		virtual FileStream* openFile(const String& filename) = 0;
-		virtual bool hasFile(const String& filename) = 0;
-	};
+			void preDebug();
+			void debugObjectBoundingBox(const BoundingBox& bb);
 
+		protected:
+			Ogre::ManualObject* mManualObject;
+			Ogre::SceneNode* mNode;
+		};
+	}
 }

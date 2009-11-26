@@ -30,18 +30,16 @@ http://www.gnu.org/copyleft/lesser.txt.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	RemoveObjectEvent::RemoveObjectEvent(const uint& layer) 
-		: mLayer(layer)
+	RemoveObjectEvent::RemoveObjectEvent(DisplayObjectContainer* object_container, const uint& layer) 
+		: FrameEvent(object_container), 
+		mLayer(layer)
 	{
 
 	}
 	//-----------------------------------------------------------------------
-	FrameEvent* RemoveObjectEvent::clone()
+	FrameEvent* RemoveObjectEvent::clone(DisplayObjectContainer* container)
 	{
-		RemoveObjectEvent* clonedEvent = new RemoveObjectEvent(mLayer);
-		//clonedEvent->mParentMovie = parent;
-
-		return clonedEvent;
+		return new RemoveObjectEvent(container, mLayer);
 	}
 	//-----------------------------------------------------------------------
 	void RemoveObjectEvent::execute(void)
@@ -58,8 +56,6 @@ namespace vtx
 		{
 			VTX_WARN("Can't release Instance from layer %u, layer is empty!", mLayer);
 		}
-
-		//VTX_LOG("RemoveObjectEvent");
 	}
 	//-----------------------------------------------------------------------
 }

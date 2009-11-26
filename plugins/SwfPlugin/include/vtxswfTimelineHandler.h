@@ -37,9 +37,6 @@ namespace vtx
 		class TimelineHandler
 		{
 		public:
-			TimelineHandler();
-			virtual ~TimelineHandler();
-
 			void handleTimeline(TAG* swfTag, File* file);
 		};
 	}

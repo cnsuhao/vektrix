@@ -25,16 +25,16 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "vtxPrerequesites.h"
 
+#include "vtxScriptObject.h"
+
 namespace vtx
 {
-	class vtxExport FileContainer
+	class vtxExport ScriptButton : public ScriptObject
 	{
 	public:
-		FileContainer(){}
-		virtual ~FileContainer(){}
+		ScriptButton(Button* button);
 
-		virtual FileStream* openFile(const String& filename) = 0;
-		virtual bool hasFile(const String& filename) = 0;
+	protected:
+		Button* mButton;
 	};
-
 }

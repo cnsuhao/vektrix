@@ -28,14 +28,24 @@ http://www.gnu.org/copyleft/lesser.txt.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	ButtonState* ButtonState::clone()
+	ButtonState::ButtonState()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	ButtonState::~ButtonState()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	ButtonState* ButtonState::clone(DisplayObjectContainer* container)
 	{
 		ButtonState* clonedButtonState = new ButtonState;
 
 		EventContainer::EventList::iterator it = mEvents.begin();
 		for( ; it != mEvents.end(); ++it)
 		{
-			FrameEvent* event = (*it)->clone();
+			FrameEvent* event = (*it)->clone(container);
 			clonedButtonState->mEvents.push_back(event);
 		}
 

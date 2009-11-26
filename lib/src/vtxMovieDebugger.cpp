@@ -21,9 +21,20 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 -----------------------------------------------------------------------------
 */
-#include "vtxFileParser.h"
+#include "vtxMovieDebugger.h"
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
+	MovieDebugger::MovieDebugger(Movie* parent) 
+		: mParent(parent)
+	{
 
+	}
+	//-----------------------------------------------------------------------
+	MovieDebugger::~MovieDebugger()
+	{
+
+	}
+	//-----------------------------------------------------------------------
 }

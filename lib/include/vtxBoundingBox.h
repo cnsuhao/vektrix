@@ -31,19 +31,55 @@ namespace vtx
 	class vtxExport BoundingBox
 	{
 	public:
+		enum Extent
+		{
+			EXTENT_NULL,
+			EXTENT_FINITE,
+			EXTENT_INFINITE
+		};
+
 		BoundingBox();
-		BoundingBox(const Vector2& max, const Vector2& min);
+		BoundingBox(const Vector2& min, const Vector2& max);
+
+		BoundingBox& operator=(const BoundingBox& bb)
+		{
+			setExtents(bb.getMin(), bb.getMax());
+			return *this;
+		}
+
+		inline BoundingBox operator + (const Vector2& vec) const
+		{
+			return BoundingBox(
+				Vector2(mMin.x+vec.x, mMin.y+vec.y), 
+				Vector2(mMax.x+vec.x, mMax.y+vec.y));
+		}
+
+		inline void setExtents(const Vector2& min, const Vector2& max)
+		{
+			mExtent = EXTENT_FINITE;
+			mMin = min;
+			mMax = max;
+		}
+
+		void reset();
+		void extend(const BoundingBox& bb);
 
 		const float getWidth() const;
 		const float getHeight() const;
 
-		const float getMinX() const;
-		const float getMaxX() const;
+		const Vector2& getMin() const;
+		const Vector2& getMax() const;
 
-		const float getMinY() const;
-		const float getMaxY() const;
+		const float& getMinX() const;
+		const float& getMaxX() const;
+
+		const float& getMinY() const;
+		const float& getMaxY() const;
+
+		Vector2 getHalf() const;
 
 	protected:
+		Extent mExtent;
 		Vector2 mMax, mMin;
 	};
 }

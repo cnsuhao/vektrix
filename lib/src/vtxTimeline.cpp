@@ -62,9 +62,7 @@ namespace vtx
 
 		for( ; it != mKeyframes.end(); ++it)
 		{
-			Keyframe* frame = (*it)->clone();
-			frame->setTargetContainer(container);
-
+			Keyframe* frame = (*it)->clone(container);
 			clonedTimeline->mKeyframes.push_back(frame);
 		}
 

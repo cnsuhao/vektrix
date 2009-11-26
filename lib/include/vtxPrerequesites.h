@@ -36,14 +36,15 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <string>
 #include <vector>
 
-//#include <stdlib.h>
-//#include <crtdbg.h>
-
-//#ifdef _DEBUG
-//#define new new( _NORMAL_BLOCK, __FILE__, __LINE__)
-//// Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
-////allocations to be of _CLIENT_BLOCK type
-//#define malloc(x) _malloc_dbg(x, 1, __FILE__, __LINE__);
+//#ifdef DEBUG
+//	#define _CRTDBG_MAP_ALLOC
+//	#include <stdlib.h>
+//	#include <crtdbg.h>
+//
+//	#ifdef _DEBUG
+//	#define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+//	#define malloc(x) _malloc_dbg(x, _NORMAL_BLOCK, __FILE__, __LINE__);
+//	#endif
 //#endif
 
 #pragma warning (disable : 4251) // disable "dll-interface" warning
@@ -125,6 +126,7 @@ namespace vtx
 	class Movie;
 	class MovieClip;
 	class MovieClipResource;
+	class MovieDebugger;
 	class RenderStrategy;
 	class MovieFactory;
 	class Rect;
@@ -132,6 +134,8 @@ namespace vtx
 	class RenderStrategy;
 	class Resource;
 	class Root;
+	class ScriptEngine;
+	class ScriptObject;
 	class Shape;
 	class ShapeFactory;
 	class ShapeResource;

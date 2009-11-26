@@ -36,7 +36,7 @@ namespace vtx
 	public:
 		Keyframe();
 		virtual ~Keyframe();
-		Keyframe* clone();
+		Keyframe* clone(DisplayObjectContainer* container);
 
 		bool operator<(const Keyframe& keyframe) const;
 

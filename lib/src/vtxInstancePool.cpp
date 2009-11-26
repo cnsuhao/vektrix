@@ -24,6 +24,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxInstancePool.h"
 #include "vtxInstance.h"
 
+#include "vtxLogManager.h"
+
 namespace vtx
 {
 	//-----------------------------------------------------------------------
@@ -34,43 +36,61 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	InstancePool::~InstancePool()
 	{
+		uint numDeletes = 0;
+
 		PoolMap::iterator it = mPoolMap.begin();
 		PoolMap::iterator end = mPoolMap.end();
 		while(it != end)
 		{
+			while(it->second->size())
+			{
+				++numDeletes;
+				delete it->second->top();
+				it->second->pop();
+			}
+
 			delete it->second;
 			++it;
 		}
+
+		VTX_LOG("InstancePool: destroyed %d instances", numDeletes);
 	}
 	//-----------------------------------------------------------------------
 	void InstancePool::push(Instance* inst)
 	{
-		String id = inst->getID();
-		Pool* pool = mPoolMap[id];
-
-		if(!pool)
-		{
-			mPoolMap[id] = new Pool;
-		}
-
-		mPoolMap[id]->push(inst);
+		_getPool(inst->getID())->push(inst);
 	}
 	//-----------------------------------------------------------------------
 	Instance* InstancePool::pop(const String& id)
 	{
-		Pool* pool = mPoolMap[id];
+		Pool* pool = _getPool(id);
 
-		if(pool)
+		if(pool->size())
 		{
-			if(pool->size())
-			{
-				Instance* inst = pool->top();
-				pool->pop();
-				return inst;
-			}
+			Instance* inst = pool->top();
+			pool->pop();
+			return inst;
 		}
 
 		return NULL;
+	}
+	//-----------------------------------------------------------------------
+	InstancePool::Pool* InstancePool::_getPool(const String& id)
+	{
+		Pool* pool = NULL;
+
+		PoolMap::iterator it = mPoolMap.find(id);
+		if(it != mPoolMap.end())
+		{
+			pool = it->second;
+		}
+		else
+		{
+			pool = new Pool;
+			mPoolMap.insert(std::make_pair(id, pool));
+		}
+
+		return pool;
 	}
 	//-----------------------------------------------------------------------
 }

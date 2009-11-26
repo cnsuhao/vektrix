@@ -43,7 +43,16 @@ public:
 
 		const OIS::MouseState& state = mMouse->getMouseState();
 
-		movie->setMouseAbs(state.X.abs, state.Y.abs);
+		movie->setMouseRel(state.X.abs/(float)mWindow->getWidth(), state.Y.abs/(float)mWindow->getHeight());
+
+		if(state.buttonDown(OIS::MB_Left))
+		{
+			movie->mouseDown();
+		}
+		else 
+		{
+			movie->mouseUp();
+		}
 
 		vtx::Root::getSingletonPtr()->update(evt.timeSinceLastFrame);
 
@@ -73,7 +82,6 @@ protected:
 		vtx::LogManager::getSingletonPtr()->logToCout(true);
 
 		vtx::FileManager::getSingletonPtr()->addFileContainer("../demos/Ogre3D/media");
-		//vtx::FileManager::getSingletonPtr()->addFileContainer("../../../Media/vektrix");
 
 #ifdef _DEBUG
 		root->loadPlugin("vektrix_SwfPlugin_d");
@@ -91,6 +99,8 @@ protected:
 		movie_node = mSceneMgr->getRootSceneNode()->createChildSceneNode();
 		movie_node->attachObject(movie);
 		movie_node->setPosition(0, 0, -100);
+
+		movie->enableDebugger(true);
 	}
 
 	void destroyScene()

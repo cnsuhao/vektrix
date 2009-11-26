@@ -23,6 +23,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "vtxStringHelper.h"
 
+#include "vtxBoundingBox.h"
 #include "vtxColor.h"
 #include "vtxCXForm.h"
 #include "vtxMatrix.h"
@@ -268,6 +269,32 @@ namespace vtx
 		else
 		{
 			return Rect();
+		}
+	}
+	//-----------------------------------------------------------------------
+	String StringHelper::toString(BoundingBox val)
+	{
+		std::ostringstream stream;
+		stream << "Min: " << toString(val.getMin()) << 
+			" Max: " << toString(val.getMax());
+
+		return stream.str();
+	}
+	//-----------------------------------------------------------------------
+	BoundingBox StringHelper::toBoundingBox(const String& str)
+	{
+		StringList list = splitString(str);
+
+		if(list.size() == 6)
+		{
+			return BoundingBox(
+				toVector2(list[1] + " " + list[2]), 
+				toVector2(list[4] + " " + list[5])
+				);
+		}
+		else
+		{
+			return BoundingBox();
 		}
 	}
 	//-----------------------------------------------------------------------

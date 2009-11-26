@@ -34,6 +34,16 @@ namespace vtx
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
+		SwfParser::SwfParser()
+		{
+
+		}
+		//-----------------------------------------------------------------------
+		SwfParser::~SwfParser()
+		{
+
+		}
+		//-----------------------------------------------------------------------
 		const std::string& SwfParser::getExtension() const
 		{
 			static std::string ext = ".swf";
@@ -141,6 +151,24 @@ namespace vtx
 			//----------------//
 			mTimelineHandler.handleTimeline(swfTag, file);
 
+			// reset the tag
+			swfTag = swfDefinition.firstTag;
+
+			//---------------//
+			// parse scripts //
+			//---------------//
+			while(swfTag)
+			{
+				if(swfTag->id == ST_DOABC || 
+					swfTag->id == ST_RAWABC)
+				{
+					mScriptHandler.handleScript(swfTag, file);
+				}
+
+				swfTag = swfTag->next;
+			}
+
+
 			// DEBUG
 			VTX_LOG("SWF_DEBUG: Flash Version %u", swfDefinition.fileVersion);
 			VTX_LOG("SWF_DEBUG: Frame Rate %u", (size_t)(swfDefinition.frameRate/256.0));
@@ -149,6 +177,10 @@ namespace vtx
 			VTX_LOG("SWF_DEBUG: height %u", (size_t)((swfDefinition.movieSize.ymax - swfDefinition.movieSize.ymin)/20.0));
 
 			delete[] file_data;
+
+			swf_FreeTags(&swfDefinition);
+
+			swfReader.dealloc(&swfReader);
 
 			return file;
 		}

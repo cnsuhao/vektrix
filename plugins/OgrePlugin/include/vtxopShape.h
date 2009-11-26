@@ -55,7 +55,6 @@ namespace vtx
 			//void setMatrix(const vtx::Matrix& m);
 			//void setCXForm(const vtx::CXForm& cx);
 			void _update(const float& delta_time);
-			BoundingBox& getWorldBoundingBox() const;
 
 			void setAtlasQuad(const AtlasPacker::PackResult& quad);
 

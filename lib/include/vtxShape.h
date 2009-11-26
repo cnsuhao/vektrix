@@ -34,8 +34,13 @@ namespace vtx
 	{
 	public:
 		Shape(Resource* resource);
+		virtual ~Shape();
 
 		const String& getType() const;
+		const BoundingBox& getBoundingBox() const;
+
+	protected:
+		BoundingBox mBB;
 	};
 	//-----------------------------------------------------------------------
 	class vtxExport DefaultShape : public Shape
@@ -44,7 +49,6 @@ namespace vtx
 		DefaultShape(Resource* resource);
 
 		void _update(const float& delta_time);
-		BoundingBox& getWorldBoundingBox() const;
 	};
 	//-----------------------------------------------------------------------
 }

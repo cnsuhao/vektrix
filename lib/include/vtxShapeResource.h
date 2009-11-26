@@ -35,6 +35,8 @@ namespace vtx
 		typedef std::vector<SubshapeResource*> SubshapeList;
 
 		ShapeResource(const String& id, const String& file);
+		virtual ~ShapeResource();
+
 		bool operator<(const ShapeResource& shape) const;
 		bool operator>(const ShapeResource& shape) const;
 

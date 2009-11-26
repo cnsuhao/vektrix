@@ -40,6 +40,7 @@ namespace vtx
 		};
 
 		MaterialResource(const String& id, const MaterialType& type);
+		virtual ~MaterialResource();
 
 		const String& getType(void) const;
 

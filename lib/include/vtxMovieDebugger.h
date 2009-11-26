@@ -21,20 +21,25 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 -----------------------------------------------------------------------------
 */
-#pragma once
+#ifndef __vtxMovieDebugger_H__
+#define __vtxMovieDebugger_H__
 
 #include "vtxPrerequesites.h"
 
 namespace vtx
 {
-	class vtxExport FileContainer
+	class vtxExport MovieDebugger
 	{
 	public:
-		FileContainer(){}
-		virtual ~FileContainer(){}
+		MovieDebugger(Movie* parent);
+		virtual ~MovieDebugger();
 
-		virtual FileStream* openFile(const String& filename) = 0;
-		virtual bool hasFile(const String& filename) = 0;
+		virtual void preDebug() = 0;
+		virtual void debugObjectBoundingBox(const BoundingBox& bb) = 0;
+
+	protected:
+		Movie* mParent;
 	};
-
 }
+
+#endif

@@ -30,12 +30,10 @@ namespace vtx
 	class vtxExport FrameEvent
 	{
 	public:
-		FrameEvent() : mObjectContainer(NULL){}
+		FrameEvent(DisplayObjectContainer* object_container) : mObjectContainer(object_container){}
 
-		virtual FrameEvent* clone() = 0;
+		virtual FrameEvent* clone(DisplayObjectContainer* container) = 0;
 		virtual void execute(void) = 0;
-
-		virtual void setObjectContainer(DisplayObjectContainer* container) { mObjectContainer = container; }
 
 	protected:
 		DisplayObjectContainer* mObjectContainer;

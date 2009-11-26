@@ -216,10 +216,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\vtxFileParser.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\include\vtxFileParser.h"
 					>
 				</File>
@@ -485,6 +481,18 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxMovieClipResource.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Script"
+				>
+				<File
+					RelativePath="..\src\vtxScriptResource.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxScriptResource.h"
 					>
 				</File>
 			</Filter>
@@ -758,6 +766,46 @@
 			</File>
 			<File
 				RelativePath="..\include\vtxRenderStrategy.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Debugging"
+			>
+			<File
+				RelativePath="..\src\vtxMovieDebugger.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxMovieDebugger.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Scripting"
+			>
+			<File
+				RelativePath="..\src\vtxScriptButton.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxScriptButton.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxScriptEngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxScriptEngine.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxScriptObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxScriptObject.h"
 				>
 			</File>
 		</Filter>

@@ -35,7 +35,13 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	EventContainer::~EventContainer()
 	{
-
+		EventList::iterator it = mEvents.begin();
+		EventList::iterator end = mEvents.end();
+		while(it != end)
+		{
+			delete *it;
+			++it;
+		}
 	}
 	//-----------------------------------------------------------------------
 	void EventContainer::addEvent(FrameEvent* event)
@@ -60,15 +66,6 @@ namespace vtx
 		for( ; it != mEvents.end(); ++it)
 		{
 			(*it)->execute();
-		}
-	}
-	//-----------------------------------------------------------------------
-	void EventContainer::setTargetContainer(DisplayObjectContainer* container)
-	{
-		EventContainer::EventList::iterator it = mEvents.begin();
-		for( ; it != mEvents.end(); ++it)
-		{
-			(*it)->setObjectContainer(container);
 		}
 	}
 	//-----------------------------------------------------------------------

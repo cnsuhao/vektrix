@@ -46,9 +46,19 @@ namespace vtx
 			return Vector2(x + vec.x, y + vec.y);
 		}
 
-		inline Vector2 operator *(const Vector2& vec) const
+		inline Vector2 operator - (const Vector2& vec) const
+		{
+			return Vector2(x - vec.x, y - vec.y);
+		}
+
+		inline Vector2 operator * (const Vector2& vec) const
 		{
 			return Vector2(x * vec.x, y * vec.y);
+		}
+
+		inline Vector2 operator * (const float& scalar) const
+		{
+			return Vector2(x * scalar, y * scalar);
 		}
 
 		float x, y;

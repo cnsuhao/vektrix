@@ -40,6 +40,7 @@ namespace vtx
 			typedef std::map<OgreShape*, OgreShape*> ShapeList;
 
 			MovableMovie(const std::string& name, vtx::File* file, MovieFactory* creator);
+			virtual ~MovableMovie();
 
 			vtx::Instance* getInstance(const std::string& id);
 			void releaseInstance(vtx::Instance* instance);

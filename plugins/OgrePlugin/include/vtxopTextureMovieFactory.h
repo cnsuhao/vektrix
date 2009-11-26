@@ -45,6 +45,7 @@ namespace vtx
 			const std::string& _getTextureFactoryName() const;
 
 			RenderStrategy* _createDataPool(File* file);
+			MovieDebugger* _newDebugger(Movie* movie);
 		};
 	}
 }

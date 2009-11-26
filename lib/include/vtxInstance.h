@@ -39,8 +39,11 @@ namespace vtx
 		virtual void _setParent(Movie* parent);
 		Movie* getParent();
 
+		void _initScriptObject(const String& name);
+
 	protected:
-		Resource* mResource;
 		Movie* mParentMovie;
+		Resource* mResource;
+		ScriptObject* mScriptObject;
 	};
 }

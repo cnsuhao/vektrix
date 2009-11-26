@@ -36,6 +36,11 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
+	MovableObject::~MovableObject()
+	{
+
+	}
+	//-----------------------------------------------------------------------
 	void MovableObject::setMatrix(const Matrix& m)
 	{
 		mMatrix = m;
@@ -56,9 +61,39 @@ namespace vtx
 		_update();
 	}
 	//-----------------------------------------------------------------------
+	void MovableObject::setParentContainer(DisplayObjectContainer* parent)
+	{
+		mParentContainer = parent;
+		_update(0);
+	}
+	//-----------------------------------------------------------------------
+	bool MovableObject::isPointInside(const Vector2& coord)
+	{
+		if(coord.x >= mWorldBB.getMinX() && 
+			coord.x <= mWorldBB.getMaxX() && 
+			coord.y >= mWorldBB.getMinY() && 
+			coord.y <= mWorldBB.getMaxY())
+		{
+			// point inside WorldBB
+			// DEBUG
+			return true;
+		}
+		else
+		{
+			// point outside WorldBB
+		}
+
+		return false;
+	}
+	//-----------------------------------------------------------------------
 	const Matrix& MovableObject::_getWorldMatrix() const
 	{
 		return mWorldMatrix;
+	}
+	//-----------------------------------------------------------------------
+	const BoundingBox& MovableObject::_getWorldBoundingBox() const
+	{
+		return mWorldBB;
 	}
 	//-----------------------------------------------------------------------
 	void MovableObject::_update(const float& delta_time)
@@ -71,6 +106,8 @@ namespace vtx
 		{
 			mWorldMatrix = mMatrix;
 		}
+
+		mWorldBB = getBoundingBox() + mWorldMatrix.getTrans();
 	}
 	//-----------------------------------------------------------------------
 	////-----------------------------------------------------------------------

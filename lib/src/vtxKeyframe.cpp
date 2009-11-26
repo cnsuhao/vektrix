@@ -36,16 +36,10 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	Keyframe::~Keyframe()
 	{
-		EventList::iterator it = mEvents.begin();
-		EventList::iterator end = mEvents.end();
-		while(it != end)
-		{
-			delete *it;
-			++it;
-		}
+
 	}
 	//-----------------------------------------------------------------------
-	Keyframe* Keyframe::clone()
+	Keyframe* Keyframe::clone(DisplayObjectContainer* container)
 	{
 		Keyframe* clonedKeyframe = new Keyframe;
 
@@ -54,7 +48,7 @@ namespace vtx
 		EventContainer::EventList::iterator it = mEvents.begin();
 		for( ; it != mEvents.end(); ++it)
 		{
-			FrameEvent* event = (*it)->clone();
+			FrameEvent* event = (*it)->clone(container);
 			clonedKeyframe->mEvents.push_back(event);
 		}
 

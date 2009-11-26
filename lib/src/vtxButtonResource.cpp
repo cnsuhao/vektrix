@@ -23,19 +23,35 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "vtxButtonResource.h"
 
-#include "vtxLogManager.h"
+#include "vtxButtonState.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
 	ButtonResource::ButtonResource(const String& id) 
-		: Resource(id), 
-		mUp(NULL), 
-		mOver(NULL), 
-		mDown(NULL), 
-		mHitArea(NULL)
+		: Resource(id)
 	{
+		mStates[0] = NULL;
+		mStates[1] = NULL;
+		mStates[2] = NULL;
+		mStates[3] = NULL;
+	}
+	//-----------------------------------------------------------------------
+	ButtonResource::~ButtonResource()
+	{
+		delete mStates[0];
 
+		if(mStates[1] != mStates[0])
+			delete mStates[1];
+
+		if(mStates[2] != mStates[0] && 
+			mStates[2] != mStates[1])
+			delete mStates[2];
+
+		if(mStates[3] != mStates[0] && 
+			mStates[3] != mStates[1] && 
+			mStates[3] != mStates[2])
+			delete mStates[3];
 	}
 	//-----------------------------------------------------------------------
 	const String& ButtonResource::getType(void) const
@@ -46,74 +62,12 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void ButtonResource::setState(ButtonState* state, const StateID& id)
 	{
-		switch(id)
-		{
-		case SID_UP:
-			{
-				mUp = state;
-			}
-			break;
-
-		case SID_OVER:
-			{
-				mOver = state;
-			}
-		    break;
-
-		case SID_DOWN:
-			{
-				mDown = state;
-			}
-			break;
-
-		case SID_HIT_AREA:
-			{
-				mHitArea = state;
-			}
-			break;
-
-		default:
-			{
-				VTX_WARN("Tried to add ButtonState with unknown StateID!");
-			}
-		    break;
-		}
+		mStates[id] = state;
 	}
 	//-----------------------------------------------------------------------
 	ButtonState* ButtonResource::getState(const StateID& id)
 	{
-		switch(id)
-		{
-		case SID_UP:
-			{
-				return mUp;
-			}
-			break;
-
-		case SID_OVER:
-			{
-				return mOver;
-			}
-			break;
-
-		case SID_DOWN:
-			{
-				return mDown;
-			}
-			break;
-
-		case SID_HIT_AREA:
-			{
-				return mHitArea;
-			}
-		    break;
-
-		default:
-			{
-				return NULL;
-			}
-		    break;
-		}
+		return mStates[id];
 	}
 	//-----------------------------------------------------------------------
 }

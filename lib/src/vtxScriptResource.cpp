@@ -21,20 +21,28 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 -----------------------------------------------------------------------------
 */
-#pragma once
-
-#include "vtxPrerequesites.h"
+#include "vtxScriptResource.h"
 
 namespace vtx
 {
-	class vtxExport FileContainer
+	//-----------------------------------------------------------------------
+	ScriptResource::ScriptResource(const String& id, const char* code, uint len)
+		: Resource(id), 
+		mLength(len), 
+		mCodeBuffer(code)
 	{
-	public:
-		FileContainer(){}
-		virtual ~FileContainer(){}
 
-		virtual FileStream* openFile(const String& filename) = 0;
-		virtual bool hasFile(const String& filename) = 0;
-	};
-
+	}
+	//-----------------------------------------------------------------------
+	ScriptResource::~ScriptResource()
+	{
+		free((void*)mCodeBuffer);
+	}
+	//-----------------------------------------------------------------------
+	const String& ScriptResource::getType(void) const
+	{
+		static String type = "Script";
+		return type;
+	}
+	//-----------------------------------------------------------------------
 }

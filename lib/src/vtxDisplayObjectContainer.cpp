@@ -37,7 +37,13 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	DisplayObjectContainer::~DisplayObjectContainer()
 	{
+		//// DEBUG
+		//if(!getParent())
+		//{
+		//	VTX_LOG("DisplayObjectContainer got no parent at shutdown!");
+		//}
 
+		clearLayers();
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObjectContainer::addChild(MovableObject* object)
@@ -122,6 +128,12 @@ namespace vtx
 		{
 			if(it->second && mParentMovie)
 			{
+				DisplayObjectContainer* child = dynamic_cast<DisplayObjectContainer*>(it->second);
+				if(child)
+				{
+					child->clearLayers();
+				}
+
 				mParentMovie->releaseInstance(it->second);
 			}
 
@@ -133,6 +145,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void DisplayObjectContainer::_update(const float& delta_time)
 	{
+		InteractiveObject::_update(delta_time);
+
 		Layers::iterator it = mLayers.begin();
 		Layers::iterator end = mLayers.end();
 

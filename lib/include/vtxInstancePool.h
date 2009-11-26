@@ -43,5 +43,7 @@ namespace vtx
 		//std::stack<Instance*> mOccupied;
 		//std::stack<Instance*> mFree;
 		PoolMap mPoolMap;
+
+		Pool* _getPool(const String& id);
 	};
 }

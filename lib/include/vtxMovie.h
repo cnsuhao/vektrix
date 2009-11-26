@@ -45,6 +45,13 @@ namespace vtx
 		void setMouseAbs(uint x, uint y);
 		void setMouseRel(float x, float y);
 
+		const Vector2& getMouseAbs() const;
+
+		void mouseDown();
+		void mouseUp();
+
+		const bool& isMouseDown() const;
+
 		// timeline functions
 		void play();
 		void stop();
@@ -54,16 +61,24 @@ namespace vtx
 		virtual Instance* getInstance(const String& id);
 		virtual void releaseInstance(Instance* instance);
 
+		void enableDebugger(const bool& enable);
+
 	protected:
 		Movie(const String& name, File* file, MovieFactory* creator);
 
 		String mName;
 		File* mFile;
+		bool mMouseDown;
 		MovieFactory* mCreator;
 		RenderStrategy* mDataPool;
 		Vector2 mMousePosition;
 
+		MovieDebugger* mDebugger;
 		MovieClip* mMainMovieClip;
+
+		Shape* mMouseArrow;
+		Shape* mMouseHand;
+		Shape* mMouseTextCursor;
 
 		void _initialize(RenderStrategy* dataPool);
 		void _setCreator(MovieFactory* factory);

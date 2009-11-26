@@ -52,6 +52,14 @@ namespace vtx
 			++cont_it;
 		}
 
+		FileParserMap::iterator pars_it = mParsers.begin();
+		FileParserMap::iterator pars_end = mParsers.end();
+		while(pars_it != pars_end)
+		{
+			delete pars_it->second;
+			++pars_it;
+		}
+
 		FileMap::iterator it = mLoadedFiles.begin();
 		FileMap::iterator end = mLoadedFiles.end();
 		while(it != end)
@@ -89,11 +97,9 @@ namespace vtx
 
 		if(!parser)
 		{
-			// no container found
+			// no parser found
 			VTX_EXCEPT("Unable to find parser to handle a file with extension '%s'.", file_extension.c_str());
 		}
-
-		//File* file = new File(filename);
 
 		File* file = parser->parse(stream);
 
@@ -108,38 +114,6 @@ namespace vtx
 		// Answer: movieclips retrieve the framerate automatically from
 		// their parent movie
 		file->getMainMovieClip()->getTimeline()->setFrameRate(file->getHeader().fps);
-
-		//XMLParser movie_parser(file);
-
-		////std::list<String> test = {"baba", "gaga"};
-		////String test[] = {"baba", "gaga"};
-
-		//String hdrDH[] = 
-		//{
-		//	"vectrix|header|"
-		//};
-		//movie_parser.addDataHandler(hdrDH, size_of(hdrDH), new HeaderDataHandler);
-
-		//String rscsDH[] = 
-		//{
-		//	"vectrix|resources|image|", 
-		//	"vectrix|resources|material|", 
-		//	"vectrix|resources|sound|", 
-		//	"vectrix|resources|shape|", 
-		//	"vectrix|resources|button|", 
-		//	"vectrix|resources|movieclip|"
-		//};
-		//movie_parser.addDataHandler(rscsDH, size_of(rscsDH), new ResourcesDataHandler);
-
-		//String tmlnDH[] = 
-		//{
-		//	"vectrix|timeline|", 
-		//	"vectrix|timeline|keyframe|", 
-		//	"vectrix|timeline|keyframe|event|"
-		//};
-		//movie_parser.addDataHandler(tmlnDH, size_of(tmlnDH), new TimelineDataHandler);
-
-		//movie_parser.parse(stream);
 
 		// TODO: implement FileStreamPtr, so we don't need to destroy instances by hand ?
 		stream->close();
@@ -199,20 +173,18 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	FileContainer* FileManager::addFileContainer(const String& name, const String& type)
 	{
-		//FactoryMap::iterator factory_it = mFactories.find(type);
 		FileContainerFactory* factory = getFactory(type);
 
 		if(factory)
 		{
 			if(mContainers.find(name) == mContainers.end())
 			{
-				FileContainer* temp = factory->createObject(name);
-				mContainers.insert(FileContainerMap::value_type(name, temp));
-				return temp;
+				FileContainer* container = factory->createObject(name);
+				mContainers.insert(FileContainerMap::value_type(name, container));
+				return container;
 			}
 
-			// LOG: name already exists
-			VTX_EXCEPT("A movie with the name '%s' already exists!", name.c_str());
+			VTX_EXCEPT("A container with the name '%s' already exists!", name.c_str());
 			return NULL;
 		}
 

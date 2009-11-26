@@ -41,8 +41,6 @@ namespace vtx
 
 		void execute();
 
-		virtual void setTargetContainer(DisplayObjectContainer* container);
-
 	protected:
 		EventList mEvents;
 	};

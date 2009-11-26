@@ -32,6 +32,7 @@ namespace vtx
 	class vtxExport MovieFactory : public Factory<Movie, String, File*>
 	{
 	public:
+		friend class Movie;
 		friend class Root;
 		// <"MovieDefinitionName", DataPoolPtr>
 		typedef std::map<String, RenderStrategy*> DataPoolMap;
@@ -59,6 +60,7 @@ namespace vtx
 		virtual const String& _getTextureFactoryName() const = 0;
 
 		virtual RenderStrategy* _createDataPool(File* file) = 0;
+		virtual MovieDebugger* _newDebugger(Movie* movie) = 0;
 
 		void _initialize();
 	};

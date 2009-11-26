@@ -21,34 +21,39 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/gpl.txt.
 -----------------------------------------------------------------------------
 */
-#pragma once
 
-#include "vtxPrerequesites.h"
-#include "vtxFileParser.h"
-
-#include "vtxswfButtonHandler.h"
 #include "vtxswfScriptHandler.h"
-#include "vtxswfShapeHandler.h"
-#include "vtxswfTimelineHandler.h"
+
+#include "vtxFile.h"
+#include "vtxScriptResource.h"
 
 namespace vtx
 {
 	namespace swf
 	{
-		class SwfParser : public FileParser
+		//-----------------------------------------------------------------------
+		void ScriptHandler::handleScript(TAG* swfTag, File* file)
 		{
-		public:
-			SwfParser();
-			virtual ~SwfParser();
+			if(swfTag->id == ST_DOABC)
+			{
+				U32 flags = swf_GetU32(swfTag);
+				swf_GetString(swfTag);
 
-			const std::string& getExtension() const;
-			File* parse(FileStream* stream);
+				uint len = swfTag->len - swfTag->pos;
 
-		protected:
-			ButtonHandler mButtonHandler;
-			ScriptHandler mScriptHandler;
-			ShapeHandler mShapeHandler;
-			TimelineHandler mTimelineHandler;
-		};
+				char* buf = (char*)malloc(len);
+				swf_GetBlock(swfTag, (U8*)buf, len);
+
+				std::cout << "LENGTH: " << len << std::endl;
+
+				std::ofstream debug;
+				debug.open("abc_dump.abc", std::ios::binary);
+				debug.write(buf, len);
+				debug.close();
+
+				file->addResource(new ScriptResource("Script", buf, len));
+			}
+		}
+		//-----------------------------------------------------------------------
 	}
 }

@@ -26,22 +26,38 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxBoundingBox.h"
 #include "vtxButtonResource.h"
 #include "vtxButtonState.h"
+#include "vtxMovie.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
 	Button::Button(Resource* resource) 
-		: DisplayObjectContainer(resource)
+		: DisplayObjectContainer(resource), 
+		mMouseDown(false), 
+		mMouseOver(false), 
+		mUp(NULL), 
+		mOver(NULL), 
+		mDown(NULL)
 	{
 		ButtonResource* button_res = dynamic_cast<ButtonResource*>(resource);
 
 		if(button_res)
 		{
-			mUp = button_res->getState(ButtonResource::SID_UP)->clone();
-			mOver = button_res->getState(ButtonResource::SID_OVER)->clone();
-			mDown = button_res->getState(ButtonResource::SID_DOWN)->clone();
+			if(button_res->getState(ButtonResource::SID_UP))
+				mUp = button_res->getState(ButtonResource::SID_UP)->clone(this);
+			if(button_res->getState(ButtonResource::SID_OVER))
+				mOver = button_res->getState(ButtonResource::SID_OVER)->clone(this);
+			if(button_res->getState(ButtonResource::SID_DOWN))
+				mDown = button_res->getState(ButtonResource::SID_DOWN)->clone(this);
 			//mPressed = button_res->getState(ButtonResource::SID_PRESSED)->clone();
 		}
+	}
+	//-----------------------------------------------------------------------
+	Button::~Button()
+	{
+		delete mDown;
+		delete mOver;
+		delete mUp;
 	}
 	//-----------------------------------------------------------------------
 	const String& Button::getType() const
@@ -52,29 +68,72 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Button::_update(const float& delta_time)
 	{
+		//DisplayObjectContainer::_update(delta_time);
 
+		// DEBUGGING only, implement more beautifully
+		if(isPointInside(getParent()->getMouseAbs()))
+		{
+			if(getParent()->isMouseDown())
+			{
+				if(!mMouseDown && mDown)
+				{
+					clearLayers();
+					mDown->execute();
+					mMouseDown = true;
+				}
+			}
+			else
+			{
+				if(mMouseDown && mOver)
+				{
+					clearLayers();
+					mOver->execute();
+					mMouseDown = false;
+				}
+			}
+
+			if(!mMouseOver && mOver)
+			{
+				clearLayers();
+				mOver->execute();
+				mMouseOver = true;
+			}
+		}
+		else
+		{
+			if(mMouseOver && mUp)
+			{
+				clearLayers();
+				mUp->execute();
+				mMouseOver = false;
+			}
+		}
+
+		DisplayObjectContainer::_update(delta_time);
+
+		mWorldBB.reset();
+
+		Layers::iterator it = mLayers.begin();
+		Layers::iterator end = mLayers.end();
+		while(it != end)
+		{
+			mWorldBB.extend(it->second->_getWorldBoundingBox());
+			++it;
+		}
 	}
 	//-----------------------------------------------------------------------
-	BoundingBox& Button::getWorldBoundingBox() const
+	const BoundingBox& Button::getBoundingBox() const
 	{
-		static BoundingBox bb;
-		return bb;
+		// DEBUG
+		return mBB;
 	}
 	//-----------------------------------------------------------------------
 	void Button::_setParent(Movie* parent)
 	{
 		DisplayObjectContainer::_setParent(parent);
 
-		mUp->setTargetContainer(this);
-		mOver->setTargetContainer(this);
-		mDown->setTargetContainer(this);
-		//mPressed->setTargetContainer(parent);
-
-		// DEBUG ONLY
-		mOver->execute();
-
-		clearLayers();
-		mUp->execute();
+		//clearLayers();
+		//mUp->execute();
 	}
 	//-----------------------------------------------------------------------
 }

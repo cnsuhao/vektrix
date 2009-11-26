@@ -31,37 +31,35 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxLogManager.h"
 #include "vtxShapeResource.h"
 
+#include "vtxStringHelper.h"
+
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	CreateObjectEvent::CreateObjectEvent(const String& id, const uint& layer, const Matrix& matrix, const CXForm& cxform) 
-		: mID(id), 
+	CreateObjectEvent::CreateObjectEvent(DisplayObjectContainer* object_container, 
+		const String& id, const uint& layer, const Matrix& matrix, const CXForm& cxform, const String& name) 
+		: FrameEvent(object_container), 
+		mID(id), 
 		mLayer(layer), 
 		mMatrix(matrix), 
-		mCXForm(cxform)
+		mCXForm(cxform), 
+		mName(name)
 	{
-
-	}
-	//-----------------------------------------------------------------------
-	FrameEvent* CreateObjectEvent::clone()
-	{
-		CreateObjectEvent* clonedEvent = new CreateObjectEvent(mID, mLayer, mMatrix, mCXForm);
-		//clonedEvent->mParentMovie = parent;
-
-		//ShapeResource* shape = dynamic_cast<ShapeResource*>(parent->getFile()->getResource(mID));
+		//ShapeResource* shape = dynamic_cast<ShapeResource*>(mObjectContainer->getParent()->getFile()->getResource(mID));
 
 		//if(shape)
 		//{
 		//	shape->_injectScale(mMatrix.getScale());
 		//}
-
-		return clonedEvent;
+	}
+	//-----------------------------------------------------------------------
+	FrameEvent* CreateObjectEvent::clone(DisplayObjectContainer* container)
+	{
+		return new CreateObjectEvent(container, mID, mLayer, mMatrix, mCXForm, mName);
 	}
 	//-----------------------------------------------------------------------
 	void CreateObjectEvent::execute(void)
 	{
-		//VTX_LOG("Movie \"%s\": CreateObjectEvent", mParentMovie->getName().c_str());
-
 		mObject = dynamic_cast<MovableObject*>(mObjectContainer->getParent()->getInstance(mID));
 
 		if(!mObject)
@@ -70,20 +68,14 @@ namespace vtx
 				mObjectContainer->getParent()->getFile()->getFilename().c_str(), mID.c_str());
 		}
 
+		mObject->setParentContainer(mObjectContainer);
 		mObject->setMatrix(mMatrix);
 		mObject->setCXForm(mCXForm);
 		mObjectContainer->addChildAt(mObject, mLayer);
-	}
-	//-----------------------------------------------------------------------
-	void CreateObjectEvent::setObjectContainer(DisplayObjectContainer* container)
-	{
-		FrameEvent::setObjectContainer(container);
 
-		ShapeResource* shape = dynamic_cast<ShapeResource*>(mObjectContainer->getParent()->getFile()->getResource(mID));
-
-		if(shape)
+		if(mName.length())
 		{
-			shape->_injectScale(mMatrix.getScale());
+			mObject->_initScriptObject(mName);
 		}
 	}
 	//-----------------------------------------------------------------------

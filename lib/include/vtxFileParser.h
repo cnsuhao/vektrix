@@ -30,6 +30,9 @@ namespace vtx
 	class FileParser
 	{
 	public:
+		FileParser(){}
+		virtual ~FileParser(){}
+
 		virtual const String& getExtension() const = 0;
 		virtual File* parse(FileStream* stream) = 0;
 	};

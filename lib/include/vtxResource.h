@@ -31,7 +31,7 @@ namespace vtx
 	{
 	public:
 		Resource(const String& id);
-		virtual ~Resource(void);
+		virtual ~Resource();
 
 		const String& getID(void);
 		//BinaryFileResource* getParent(void);

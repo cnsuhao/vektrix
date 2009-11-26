@@ -37,16 +37,6 @@ namespace vtx
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		ButtonHandler::ButtonHandler()
-		{
-
-		}
-		//-----------------------------------------------------------------------
-		ButtonHandler::~ButtonHandler()
-		{
-
-		}
-		//-----------------------------------------------------------------------
 		void ButtonHandler::handleButton(TAG* swfTag, File* file)
 		{
 			if(swfTag->id == ST_DEFINEBUTTON)
@@ -76,7 +66,7 @@ namespace vtx
 					ButtonState* btn_state = new ButtonState;
 					String id = StringHelper::toString(swf_GetU16(swfTag));
 					// debug
-					uint layer = swf_GetU16(swfTag) + 1;
+					uint layer = swf_GetU16(swfTag);
 
 					MATRIX m;
 					CXFORM cx;
@@ -91,33 +81,23 @@ namespace vtx
 						cx.r0/256.0f, cx.g0/256.0f, cx.b0/256.0f, cx.a0/256.0f, 
 						cx.r1/256.0f, cx.g1/256.0f, cx.b1/256.0f, cx.a1/256.0f);
 
-					btn_state->addEvent(new CreateObjectEvent(id, layer, matrix, cxform));
+					btn_state->addEvent(new CreateObjectEvent(NULL, id, layer, matrix, cxform));
 
-					switch(state)
+					if(state & 1)
 					{
-					case 1:
-						{
-							button->setState(btn_state, ButtonResource::SID_UP);
-						}
-						break;
-
-					case 2:
-						{
-							button->setState(btn_state, ButtonResource::SID_OVER);
-						}
-						break;
-
-					case 4:
-						{
-							button->setState(btn_state, ButtonResource::SID_DOWN);
-						}
-						break;
-
-					case 8:
-						{
-							button->setState(btn_state, ButtonResource::SID_HIT_AREA);
-						}
-						break;
+						button->setState(btn_state, ButtonResource::SID_UP);
+					}
+					if(state & 2)
+					{
+						button->setState(btn_state, ButtonResource::SID_OVER);
+					}
+					if(state & 4)
+					{
+						button->setState(btn_state, ButtonResource::SID_DOWN);
+					}
+					if(state & 8)
+					{
+						button->setState(btn_state, ButtonResource::SID_HIT_AREA);
 					}
 
 					state = swf_GetU8(swfTag);

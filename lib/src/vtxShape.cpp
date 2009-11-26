@@ -24,12 +24,23 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxShape.h"
 
 #include "vtxBoundingBox.h"
+#include "vtxShapeResource.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
 	Shape::Shape(Resource* resource) 
 		: MovableObject(resource)
+	{
+		ShapeResource* shape_res = dynamic_cast<ShapeResource*>(resource);
+
+		if(shape_res)
+		{
+			mBB = shape_res->getBoundingBox();
+		}
+	}
+	//-----------------------------------------------------------------------
+	Shape::~Shape()
 	{
 
 	}
@@ -38,6 +49,11 @@ namespace vtx
 	{
 		static String type = "Shape";
 		return type;
+	}
+	//-----------------------------------------------------------------------
+	const BoundingBox& Shape::getBoundingBox() const
+	{
+		return mBB;
 	}
 	//-----------------------------------------------------------------------
 	//-----------------------------------------------------------------------
@@ -51,13 +67,6 @@ namespace vtx
 	void DefaultShape::_update(const float& delta_time)
 	{
 
-	}
-	//-----------------------------------------------------------------------
-	BoundingBox& DefaultShape::getWorldBoundingBox() const
-	{
-		// DEBUG
-		static BoundingBox bb;
-		return bb;
 	}
 	//-----------------------------------------------------------------------
 }

@@ -37,6 +37,11 @@ namespace vtx
 			mAAB.setInfinite();
 		}
 		//-----------------------------------------------------------------------
+		MovableMovie::~MovableMovie()
+		{
+
+		}
+		//-----------------------------------------------------------------------
 		vtx::Instance* MovableMovie::getInstance(const std::string& id)
 		{
 			vtx::Instance* instance = vtx::Movie::getInstance(id);

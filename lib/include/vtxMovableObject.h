@@ -24,6 +24,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #pragma once
 
 #include "vtxPrerequesites.h"
+#include "vtxBoundingBox.h"
 #include "vtxCXForm.h"
 #include "vtxInstance.h"
 #include "vtxMatrix.h"
@@ -34,22 +35,29 @@ namespace vtx
 	{
 	public:
 		MovableObject(Resource* resource);
+		virtual ~MovableObject();
 
 		virtual void setMatrix(const Matrix& m);
 		virtual void setCXForm(const CXForm& cx);
 		//virtual void setLayer(uint layer);
 		//uint getLayer();
 
+		void setParentContainer(DisplayObjectContainer* parent);
+
+		bool isPointInside(const Vector2& coord);
+
 		const Matrix& _getWorldMatrix() const;
+		const BoundingBox& _getWorldBoundingBox() const;
 
 		virtual void _update(const float& delta_time = 0.0f);
-		virtual BoundingBox& getWorldBoundingBox() const = 0;
+		virtual const BoundingBox& getBoundingBox() const = 0;
 
 	protected:
 		bool mNeedsUpdate;
 		DisplayObjectContainer* mParentContainer;
 
 		// properties
+		BoundingBox mWorldBB;
 		Matrix mMatrix;
 		Matrix mWorldMatrix;
 		CXForm mCXForm;

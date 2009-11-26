@@ -39,7 +39,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	MovieClip::~MovieClip()
 	{
-
+		delete mTimeline;
 	}
 	//-----------------------------------------------------------------------
 	const String& MovieClip::getType() const
@@ -75,7 +75,7 @@ namespace vtx
 		mTimeline->addTime(delta_time);
 	}
 	//-----------------------------------------------------------------------
-	BoundingBox& MovieClip::getWorldBoundingBox() const
+	const BoundingBox& MovieClip::getBoundingBox() const
 	{
 		// TODO
 		static BoundingBox bb;
@@ -84,7 +84,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void MovieClip::_setParent(Movie* parent)
 	{
-		Instance::_setParent(parent);
+		DisplayObjectContainer::_setParent(parent);
 
 		MovieClipResource* movieclip_res = dynamic_cast<MovieClipResource*>(mResource);
 

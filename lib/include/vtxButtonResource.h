@@ -40,6 +40,7 @@ namespace vtx
 		};
 
 		ButtonResource(const String& id);
+		virtual ~ButtonResource();
 
 		const String& getType(void) const;
 
@@ -47,11 +48,8 @@ namespace vtx
 		ButtonState* getState(const StateID& id);
 
 	protected:
-		ButtonState* mUp;
-		ButtonState* mOver;
-		ButtonState* mDown;
+		// 3 visual states + 1 special "state" for collision checking
+		ButtonState* mStates[4];
 
-		// special "state" for checking mouse states
-		ButtonState* mHitArea;
 	};
 }
