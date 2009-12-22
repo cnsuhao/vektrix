@@ -47,6 +47,7 @@ namespace vtx
 
 		bool addFileParser(FileParser* parser);
 		FileParser* getFileParser(const String extension);
+		bool removeFileParser(FileParser* parser);
 
 		FileContainer* addFileContainer(const String& name, const String& type = DefaultFileContainer::FACTORY_NAME);
 

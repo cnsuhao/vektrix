@@ -31,10 +31,5 @@ namespace vtx
 	class FileContainerFactory : public Factory<FileContainer, const String&>
 	{
 	public:
-		const String& getType() const
-		{
-			static String type = "FileContainer";
-			return type;
-		}
 	};
 }

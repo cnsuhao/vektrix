@@ -25,9 +25,5 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace vtx
 {
-	const String& MaterialFactory::getType() const
-	{
-		static String type = "Material";
-		return type;
-	}
+
 }

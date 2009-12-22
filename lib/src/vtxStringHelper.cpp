@@ -41,7 +41,7 @@ namespace vtx
 			StringHelper::toString((version>>0)&255);
 	}
 	//-----------------------------------------------------------------------
-	StringList StringHelper::splitString(const String& str)
+	StringList StringHelper::splitString(const String& str, const char& delimiter)
 	{
 		StringList list;
 		uint start, pos;
@@ -49,7 +49,7 @@ namespace vtx
 		start = 0;
 		do 
 		{
-			pos = (uint)str.find_first_of(' ', start);
+			pos = (uint)str.find_first_of(delimiter, start);
 
 			if(pos == start)
 			{
@@ -65,7 +65,7 @@ namespace vtx
 				list.push_back(str.substr(start, pos - start));
 				start = pos + 1;
 			}
-			start = (uint)str.find_first_not_of(' ', start);
+			start = (uint)str.find_first_not_of(delimiter, start);
 
 		}while(pos != String::npos);
 

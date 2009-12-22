@@ -59,12 +59,12 @@ namespace vtx
 		void load();
 		void unload();
 
-		const String& getName(void) const { return mName; }
+		const String& getName() const { return mName; }
 		void* getSymbol(const String& name) const throw();
 
 	protected:
 		String mName;
-		String getError(void);
+		String getError();
 		DYNLIB_HANDLE mInstance;
 	};
 }

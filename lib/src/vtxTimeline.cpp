@@ -31,7 +31,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	Timeline::Timeline(void) 
+	Timeline::Timeline() 
 		: mPlaying(false), 
 		mPosition(0.0f), 
 		mFrameRate(12), 
@@ -41,7 +41,7 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
-	Timeline::~Timeline(void)
+	Timeline::~Timeline()
 	{
 		KeyframeList::iterator it = mKeyframes.begin();
 		KeyframeList::iterator end = mKeyframes.end();

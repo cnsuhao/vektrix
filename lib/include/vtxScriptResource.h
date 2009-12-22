@@ -34,7 +34,10 @@ namespace vtx
 		ScriptResource(const String& id, const char* code, uint len);
 		virtual ~ScriptResource();
 
-		const String& getType(void) const;
+		const String& getType() const;
+
+		const char* getBuffer() const;
+		const uint& getLength() const;
 
 	protected:
 		uint mLength;

@@ -28,14 +28,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	const String& ShapeFactory::getType() const
-	{
-		static String type = "Shape";
-		return type;
-	}
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
 	const String& DefaultShapeFactory::getName() const
 	{
 		static String name = "Default";

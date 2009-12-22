@@ -23,9 +23,7 @@ http://www.gnu.org/copyleft/gpl.txt.
 */
 #pragma once
 
-#include "vtxPrerequesites.h"
-
-#include "vtxswfStdHeader.h"
+#include "vtxswf.h"
 
 namespace vtx
 {

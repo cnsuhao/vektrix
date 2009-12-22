@@ -54,8 +54,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 // version
 #define VEKTRIX_VERSION_MAJOR 0
-#define VEKTRIX_VERSION_MINOR 0
-#define VEKTRIX_VERSION_PATCH 1
+#define VEKTRIX_VERSION_MINOR 1
+#define VEKTRIX_VERSION_PATCH 0
 #define VEKTRIX_VERSION_NAME "Valus"
 
 #define VEKTRIX_VERSION ((VEKTRIX_VERSION_MAJOR << 16) | (VEKTRIX_VERSION_MINOR << 8) | VEKTRIX_VERSION_PATCH)
@@ -134,8 +134,12 @@ namespace vtx
 	class RenderStrategy;
 	class Resource;
 	class Root;
+	class ScriptButton;
 	class ScriptEngine;
+	class ScriptEngineFactory;
+	class ScriptMovieClip;
 	class ScriptObject;
+	class ScriptResource;
 	class Shape;
 	class ShapeFactory;
 	class ShapeResource;

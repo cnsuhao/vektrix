@@ -23,7 +23,7 @@ http://www.gnu.org/copyleft/gpl.txt.
 */
 #pragma once
 
-#include "vtxPrerequesites.h"
+#include "vtxswf.h"
 
 namespace vtx
 {
@@ -34,6 +34,9 @@ namespace vtx
 		public:
 			SwfPlugin();
 			virtual ~SwfPlugin();
+
+		protected:
+			SwfParser2* mSwfParser;
 		};
 	}
 }

@@ -28,14 +28,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	const String& TextureFactory::getType() const
-	{
-		static String type = "Texture";
-		return type;
-	}
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
 	const String& DefaultTextureFactory::getName() const
 	{
 		static String name = "Default";

@@ -49,7 +49,7 @@
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -126,7 +126,7 @@
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -213,6 +213,10 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxFileManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxFileParser.cpp"
 					>
 				</File>
 				<File
@@ -317,6 +321,10 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxFactoryManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxGenericFactory.h"
 					>
 				</File>
 				<File
@@ -596,6 +604,138 @@
 				RelativePath="..\include\vtxInstancePool.h"
 				>
 			</File>
+			<Filter
+				Name="Instance Types"
+				>
+				<Filter
+					Name="Shape"
+					>
+					<File
+						RelativePath="..\src\vtxShape.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxShape.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxShapeFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxShapeFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxShapeManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxShapeManager.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Texture"
+					>
+					<File
+						RelativePath="..\src\vtxTexture.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxTexture.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxTextureFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxTextureFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxTextureManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxTextureManager.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Material"
+					>
+					<File
+						RelativePath="..\src\vtxMaterial.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxMaterial.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxMaterialFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxMaterialFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxMaterialManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxMaterialManager.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="General"
+					>
+					<File
+						RelativePath="..\src\vtxButton.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxButton.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxDisplayObjectContainer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxDisplayObjectContainer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxInteractiveObject.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxInteractiveObject.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxMovableObject.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxMovableObject.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxMovieClip.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxMovieClip.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Atlas Rendering"
@@ -624,138 +764,6 @@
 				RelativePath="..\include\vtxAtlasRastarizer.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Instance Types"
-			>
-			<Filter
-				Name="Shape"
-				>
-				<File
-					RelativePath="..\src\vtxShape.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxShape.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxShapeFactory.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxShapeFactory.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxShapeManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxShapeManager.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Texture"
-				>
-				<File
-					RelativePath="..\src\vtxTexture.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxTexture.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxTextureFactory.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxTextureFactory.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxTextureManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxTextureManager.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Material"
-				>
-				<File
-					RelativePath="..\src\vtxMaterial.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxMaterial.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxMaterialFactory.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxMaterialFactory.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxMaterialManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxMaterialManager.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="General"
-				>
-				<File
-					RelativePath="..\src\vtxButton.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxButton.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxDisplayObjectContainer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxDisplayObjectContainer.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxInteractiveObject.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxInteractiveObject.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxMovableObject.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxMovableObject.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxMovieClip.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxMovieClip.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Render Strategies"
@@ -798,6 +806,22 @@
 			</File>
 			<File
 				RelativePath="..\include\vtxScriptEngine.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxScriptEngineManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxScriptEngineManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxScriptMovieClip.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxScriptMovieClip.h"
 				>
 			</File>
 			<File

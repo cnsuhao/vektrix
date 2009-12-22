@@ -34,5 +34,6 @@ namespace vtx
 	class vtxExport ShapeManager : public FactoryManager<ShapeFactory, DefaultShapeFactory>, public Singleton<ShapeManager>
 	{
 	public:
+		ShapeManager() : FactoryManager("Shape") {}
 	};
 }

@@ -54,7 +54,7 @@ namespace vtx
 			delete mStates[3];
 	}
 	//-----------------------------------------------------------------------
-	const String& ButtonResource::getType(void) const
+	const String& ButtonResource::getType() const
 	{
 		static String type = "Button";
 		return type;

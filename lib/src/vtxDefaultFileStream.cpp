@@ -70,7 +70,7 @@ namespace vtx
 		mStream.seekg(static_cast<std::streamoff>(pos), std::ios::beg);
 	}
 	//-----------------------------------------------------------------------
-	uint DefaultFileStream::tell(void)
+	uint DefaultFileStream::tell()
 	{
 		mStream.clear();
 		return mStream.tellg();
@@ -89,12 +89,12 @@ namespace vtx
 		return str;
 	}
 	//-----------------------------------------------------------------------
-	bool DefaultFileStream::eof(void) const
+	bool DefaultFileStream::eof() const
 	{
 		return mStream.eof();
 	}
 	//-----------------------------------------------------------------------
-	void DefaultFileStream::close(void)
+	void DefaultFileStream::close()
 	{
 		mStream.close();
 	}

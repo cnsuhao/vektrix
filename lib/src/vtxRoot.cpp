@@ -37,6 +37,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxAtlasRastarizer.h"
 
 #include "vtxMaterialManager.h"
+#include "vtxScriptEngineManager.h"
 #include "vtxShapeManager.h"
 #include "vtxTextureManager.h"
 
@@ -45,7 +46,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	template<> Root* Singleton<Root>::sInstance = 0;
 	//-----------------------------------------------------------------------
-	Root::Root()
+	Root::Root() 
+		: FactoryManagerNULL("Movie")
 	{
 		new LogManager();
 
@@ -53,9 +55,9 @@ namespace vtx
 		VTX_LOG("<< Codename: %s >>", VEKTRIX_VERSION_NAME);
 
 		new MaterialManager();
+		new ScriptEngineManager();
 		new ShapeManager();
 		new TextureManager();
-
 		new FileManager();
 
 		// TODO: move this into plugin
@@ -75,11 +77,13 @@ namespace vtx
 		}
 
 		delete AtlasRasterizer::getSingletonPtr();
+
 		delete FileManager::getSingletonPtr();
 
 		unloadAllPlugins();
 
 		delete MaterialManager::getSingletonPtr();
+		delete ScriptEngineManager::getSingletonPtr();
 		delete ShapeManager::getSingletonPtr();
 		delete TextureManager::getSingletonPtr();
 

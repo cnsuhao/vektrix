@@ -21,12 +21,37 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/gpl.txt.
 -----------------------------------------------------------------------------
 */
-#include "vtxswfSubLine.h"
+#pragma once
+
+#pragma warning (disable : 4275)
+
+#if defined VEKTRIX_SWFPLUGIN_EXPORTS
+#   define vtxswfExport __declspec( dllexport )
+#else
+#   define vtxswfExport __declspec( dllimport )
+#endif
+
+// uncomment this if you want to load compressed SWFs
+//#define USE_ZLIB
+
+#include "vtxPrerequesites.h"
 
 namespace vtx
 {
 	namespace swf
 	{
+		// enumerations
+		enum ContourID
+		{
+			CID_LINE = 1, 
+			CID_BEZIER, 
+			CID_MOVE // pseudo element
+		};
 
+		// class pre-declarations
+		class ContourChunk;
+		class ContourPoint;
+		class SubShape;
+		class SwfParser2;
 	}
 }

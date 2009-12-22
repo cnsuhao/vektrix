@@ -63,6 +63,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -137,6 +138,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -174,14 +176,6 @@
 			Name="Plugin"
 			>
 			<File
-				RelativePath="..\include\defines.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\vtxswfMain.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\vtxswfPlugin.cpp"
 				>
 			</File>
@@ -193,60 +187,12 @@
 		<Filter
 			Name="Parser"
 			>
-			<File
-				RelativePath="..\src\vtxswfParser.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxswfParser.h"
-				>
-			</File>
 			<Filter
 				Name="Handlers"
 				>
-				<File
-					RelativePath="..\include\handle_timeline.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxswfButtonHandler.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxswfButtonHandler.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxswfScriptHandler.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxswfScriptHandler.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxswfTimelineHandler.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxswfTimelineHandler.h"
-					>
-				</File>
 				<Filter
 					Name="Shape"
 					>
-					<File
-						RelativePath="..\include\handle_shape.h"
-						>
-					</File>
-					<File
-						RelativePath="..\src\vtxswfShapeHandler.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxswfShapeHandler.h"
-						>
-					</File>
 					<Filter
 						Name="Classes"
 						>
@@ -267,15 +213,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\src\vtxswfSubLine.cpp"
-							>
-						</File>
-						<File
 							RelativePath="..\include\vtxswfSubLine.h"
-							>
-						</File>
-						<File
-							RelativePath="..\src\vtxswfSubShape.cpp"
 							>
 						</File>
 						<File
@@ -319,67 +257,43 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="swftools"
+			Name="ParserV2"
 			>
 			<File
-				RelativePath="..\swftools\bitio.cpp"
+				RelativePath="..\src\vtxswfHandleDefineButton2.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\swftools\bitio.h"
+				RelativePath="..\src\vtxswfHandleDefineShape.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\swftools\MD5.cpp"
+				RelativePath="..\src\vtxswfHandlePlaceObject2.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\swftools\mem.cpp"
+				RelativePath="..\src\vtxswfHandleShowFrame.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\swftools\mem.h"
+				RelativePath="..\src\vtxswfHandleSymbolClass.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\swftools\os.cpp"
+				RelativePath="..\src\vtxswfParser2.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\swftools\rfxswf.cpp"
+				RelativePath="..\include\vtxswfParser2.h"
 				>
 			</File>
 			<File
-				RelativePath="..\swftools\rfxswf.h"
+				RelativePath="..\include\vtxswfParserTypes.h"
 				>
 			</File>
-			<File
-				RelativePath="..\swftools\modules\swfdump.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\swftools\modules\swffilter.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\swftools\modules\swfobject.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\swftools\modules\swfshape.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\swftools\modules\swftools.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Scripting"
-			>
 		</Filter>
 		<File
-			RelativePath="..\include\vtxswfStdHeader.h"
+			RelativePath="..\include\vtxswf.h"
 			>
 		</File>
 	</Files>

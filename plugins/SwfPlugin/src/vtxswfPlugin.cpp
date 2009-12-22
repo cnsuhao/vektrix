@@ -24,16 +24,31 @@ http://www.gnu.org/copyleft/gpl.txt.
 #include "vtxswfPlugin.h"
 
 #include "vtxFileManager.h"
-#include "vtxswfParser.h"
+
+#include "vtxswfParser2.h"
 
 namespace vtx
 {
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		SwfPlugin::SwfPlugin()
+		SwfPlugin* plugin;
+		//-----------------------------------------------------------------------
+		extern "C" void vtxswfExport startPlugin() throw()
 		{
-			FileManager::getSingletonPtr()->addFileParser(new SwfParser);
+			plugin = new SwfPlugin();
+		}
+
+		//-----------------------------------------------------------------------
+		extern "C" void vtxswfExport stopPlugin()
+		{
+			delete plugin;
+		}
+		//-----------------------------------------------------------------------
+		SwfPlugin::SwfPlugin() 
+			: mSwfParser(new SwfParser2)
+		{
+			FileManager::getSingletonPtr()->addFileParser(mSwfParser);
 		}
 		//-----------------------------------------------------------------------
 		SwfPlugin::~SwfPlugin()

@@ -35,5 +35,6 @@ namespace vtx
 	class vtxExport MaterialManager : public FactoryManagerNULL<MaterialFactory>, public Singleton<MaterialManager>
 	{
 	public:
+		MaterialManager() : FactoryManagerNULL("Material") {}
 	};
 }

@@ -25,17 +25,25 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "vtxPrerequesites.h"
 
+#include "vtxFactory.h"
+#include "vtxFactoryManager.h"
+
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport ScriptEngine
 	{
 	public:
 		ScriptEngine(Movie* parent);
 		virtual ~ScriptEngine();
 
-		virtual bool executeCode(const char* code) = 0;
+		virtual bool executeCode(const char* code, const uint& len) = 0;
+		virtual ScriptObject* getRootScriptObject() = 0;
 
 	protected:
 		Movie* mParent;
 	};
+	//-----------------------------------------------------------------------
+	FactoryDecl_P1(ScriptEngine, Movie*);
+	//-----------------------------------------------------------------------
 }

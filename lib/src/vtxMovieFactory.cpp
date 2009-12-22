@@ -48,12 +48,6 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	const String& MovieFactory::getType() const
-	{
-		static String type = "Movie";
-		return type;
-	}
-	//-----------------------------------------------------------------------
 	RenderStrategy* MovieFactory::getDataPool(File* file)
 	{
 		DataPoolMap::iterator it = mDataPools.find(file->getFilename());

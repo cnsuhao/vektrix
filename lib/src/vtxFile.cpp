@@ -34,6 +34,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	File::File(const String& filename) 
 		: mFilename(filename), 
+		mScriptEngineFactory(""), 
 		mMainMovieClip(NULL)
 	{
 
@@ -65,6 +66,16 @@ namespace vtx
 	const File::FileHeader& File::getHeader()
 	{
 		return mHeader;
+	}
+	//-----------------------------------------------------------------------
+	void File::setScriptEngine(const String& scriptEngineFactory)
+	{
+		mScriptEngineFactory = scriptEngineFactory;
+	}
+	//-----------------------------------------------------------------------
+	const String& File::getScriptEngine()
+	{
+		return mScriptEngineFactory;
 	}
 	//-----------------------------------------------------------------------
 	void File::setMainMovieClip(MovieClipResource* movieclip)
@@ -104,7 +115,7 @@ namespace vtx
 			return it->second;
 		}
 
-		VTX_EXCEPT("\"%s\": Unable to find the requested resource with name \"%s\"!", mFilename.c_str(), id.c_str());
+		VTX_WARN("\"%s\": Unable to find the requested resource with name \"%s\"!", mFilename.c_str(), id.c_str());
 
 		return NULL;
 	}

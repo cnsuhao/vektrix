@@ -64,7 +64,7 @@ namespace vtx
 			mRenderOp.indexData = NULL;
 		}
 		//-----------------------------------------------------------------------
-		const Ogre::MaterialPtr& OgreShape::getMaterial(void) const
+		const Ogre::MaterialPtr& OgreShape::getMaterial() const
 		{
 			return mMaterial;
 		}
@@ -92,14 +92,14 @@ namespace vtx
 			//xform[0].setScale(mSize * mScale);
 		}
 		//-----------------------------------------------------------------------
-		const Ogre::Quaternion& OgreShape::getWorldOrientation(void) const
+		const Ogre::Quaternion& OgreShape::getWorldOrientation() const
 		{
 			Ogre::MovableObject* movable = dynamic_cast<Ogre::MovableObject*>(mParentMovie);
 
 			return movable->getParentSceneNode()->_getDerivedOrientation();
 		}
 		//-----------------------------------------------------------------------
-		const Ogre::Vector3& OgreShape::getWorldPosition(void) const
+		const Ogre::Vector3& OgreShape::getWorldPosition() const
 		{
 			Ogre::MovableObject* movable = dynamic_cast<Ogre::MovableObject*>(mParentMovie);
 
@@ -113,7 +113,7 @@ namespace vtx
 			return cam->getDerivedPosition().squaredDistance(movable->getParentNode()->_getDerivedPosition()) - mLayer;
 		}
 		//-----------------------------------------------------------------------
-		const Ogre::LightList& OgreShape::getLights(void) const
+		const Ogre::LightList& OgreShape::getLights() const
 		{
 			Ogre::MovableObject* movable = dynamic_cast<Ogre::MovableObject*>(mParentMovie);
 

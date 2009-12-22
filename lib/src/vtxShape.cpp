@@ -56,6 +56,17 @@ namespace vtx
 		return mBB;
 	}
 	//-----------------------------------------------------------------------
+	void Shape::setScriptObject(ScriptObject* obj)
+	{
+		//mScriptObject = dynamic_cast<ScriptMovieClip*>(obj);
+	}
+	//-----------------------------------------------------------------------
+	ScriptObject* Shape::getScriptObject() const
+	{
+		//return mScriptObject;
+		return NULL;
+	}
+	//-----------------------------------------------------------------------
 	//-----------------------------------------------------------------------
 	//-----------------------------------------------------------------------
 	DefaultShape::DefaultShape(Resource* resource) 

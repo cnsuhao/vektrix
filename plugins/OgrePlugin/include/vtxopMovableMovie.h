@@ -46,9 +46,9 @@ namespace vtx
 			void releaseInstance(vtx::Instance* instance);
 
 			// Ogre functions
-			const Ogre::String& getMovableType(void) const;
-			const Ogre::AxisAlignedBox& getBoundingBox(void) const;
-			Ogre::Real getBoundingRadius(void) const;
+			const Ogre::String& getMovableType() const;
+			const Ogre::AxisAlignedBox& getBoundingBox() const;
+			Ogre::Real getBoundingRadius() const;
 			void _updateRenderQueue(Ogre::RenderQueue* queue);
 			void visitRenderables(Ogre::Renderable::Visitor* visitor, bool debugRenderables);
 

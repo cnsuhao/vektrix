@@ -33,7 +33,6 @@ namespace vtx
 	class vtxExport TextureFactory : public InstanceFactory<Texture>
 	{
 	public:
-		const String& getType() const;
 	};
 	//-----------------------------------------------------------------------
 	//-----------------------------------------------------------------------

@@ -61,6 +61,8 @@ namespace vtx
 		virtual Instance* getInstance(const String& id);
 		virtual void releaseInstance(Instance* instance);
 
+		ScriptEngine* getScriptEngine() const;
+
 		void enableDebugger(const bool& enable);
 
 	protected:
@@ -75,6 +77,7 @@ namespace vtx
 
 		MovieDebugger* mDebugger;
 		MovieClip* mMainMovieClip;
+		ScriptEngine* mScriptEngine;
 
 		Shape* mMouseArrow;
 		Shape* mMouseHand;

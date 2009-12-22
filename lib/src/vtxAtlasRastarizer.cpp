@@ -143,8 +143,8 @@ namespace vtx
 
 		} // subshapes
 
-		VTX_LOG("Cairo status: %s", cairo_status_to_string(cairo_status(mCairo)));
-		VTX_LOG("Surface status: %s", cairo_status_to_string(cairo_surface_status(mSurface)));
+		//VTX_LOG("Cairo status: %s", cairo_status_to_string(cairo_status(mCairo)));
+		//VTX_LOG("Surface status: %s", cairo_status_to_string(cairo_surface_status(mSurface)));
 
 		// DEBUG
 		//VTX_LOG("BLITTING...");

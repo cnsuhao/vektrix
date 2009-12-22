@@ -27,6 +27,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxFile.h"
 #include "vtxMovableObject.h"
 #include "vtxMovie.h"
+#include "vtxScriptObject.h"
 
 #include "vtxLogManager.h"
 #include "vtxShapeResource.h"
@@ -58,7 +59,7 @@ namespace vtx
 		return new CreateObjectEvent(container, mID, mLayer, mMatrix, mCXForm, mName);
 	}
 	//-----------------------------------------------------------------------
-	void CreateObjectEvent::execute(void)
+	void CreateObjectEvent::execute()
 	{
 		mObject = dynamic_cast<MovableObject*>(mObjectContainer->getParent()->getInstance(mID));
 
@@ -75,7 +76,18 @@ namespace vtx
 
 		if(mName.length())
 		{
-			mObject->_initScriptObject(mName);
+			ScriptObject* parent_obj = mObjectContainer->getScriptObject();
+			if(parent_obj)
+			{
+				ScriptObject* script_obj = parent_obj->getChildScriptObject(mName);
+
+				if(script_obj)
+				{
+					script_obj->setNativeObject(mObject);
+					mObject->setScriptObject(script_obj);
+				}
+			}
+			
 		}
 	}
 	//-----------------------------------------------------------------------

@@ -39,10 +39,20 @@ namespace vtx
 		free((void*)mCodeBuffer);
 	}
 	//-----------------------------------------------------------------------
-	const String& ScriptResource::getType(void) const
+	const String& ScriptResource::getType() const
 	{
 		static String type = "Script";
 		return type;
+	}
+	//-----------------------------------------------------------------------
+	const char* ScriptResource::getBuffer() const
+	{
+		return mCodeBuffer;
+	}
+	//-----------------------------------------------------------------------
+	const uint& ScriptResource::getLength() const
+	{
+		return mLength;
 	}
 	//-----------------------------------------------------------------------
 }

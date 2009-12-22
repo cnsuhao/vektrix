@@ -60,9 +60,9 @@ SubLineList mSubLineList; // the sub-lines
 
 // (pre-)processing
 void process_flash_styles(SHAPE2 shape); // process the flash fill- and linestyles
-void generate_chunks(void); // generate the chunks
-void generate_subshapes(void); // generate the final subshapes
-void generate_sublines(void); // generate the final sublines
+void generate_chunks(); // generate the chunks
+void generate_subshapes(); // generate the final subshapes
+void generate_sublines(); // generate the final sublines
 //-----------------------------------------------------------------------
 
 // writing to output file
@@ -263,7 +263,7 @@ void process_flash_styles(SHAPE2 shape)
 //-----------------------------------------------------------------------
 
 // generate the chunks
-void generate_chunks(void)
+void generate_chunks()
 {
 	// loop through all fillstyles
 	for(FillstyleList::iterator fill_it = mFillstyleList.begin(); 
@@ -383,7 +383,7 @@ void generate_chunks(void)
 //-----------------------------------------------------------------------
 
 // generate the final subshapes
-void generate_subshapes(void)
+void generate_subshapes()
 {
 	// loop through all fillstyles
 	for(FillstyleList::iterator fill_it = mFillstyleList.begin(); 
@@ -535,7 +535,7 @@ void generate_subshapes(void)
 //-----------------------------------------------------------------------
 
 // generate the final sublines
-void generate_sublines(void)
+void generate_sublines()
 {
 
 }

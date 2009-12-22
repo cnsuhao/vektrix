@@ -35,13 +35,13 @@ namespace vtx
 		//virtual void skip(long count) = 0;
 
 		virtual void seek(uint pos) = 0;
-		virtual uint tell(void) = 0;
+		virtual uint tell() = 0;
 		virtual uint read(void* buf, uint count) = 0;
 		virtual String& getLine() = 0;
-		virtual bool eof(void) const = 0;
-		virtual void close(void) = 0;
+		virtual bool eof() const = 0;
+		virtual void close() = 0;
 
-		uint size(void) const { return mSize; }
+		uint size() const { return mSize; }
 		const String& getPath() { return mPath; }
 		const String& getFilename() { return mFilename; }
 

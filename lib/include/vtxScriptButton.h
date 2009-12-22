@@ -32,7 +32,14 @@ namespace vtx
 	class vtxExport ScriptButton : public ScriptObject
 	{
 	public:
-		ScriptButton(Button* button);
+		ScriptButton();
+
+		void setNativeObject(Instance* inst);
+
+		virtual void buttonUp() = 0;
+
+		//virtual float getX() = 0;
+		//virtual void setX(float x) = 0;
 
 	protected:
 		Button* mButton;

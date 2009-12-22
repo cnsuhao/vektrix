@@ -34,13 +34,13 @@ namespace vtx
 	public:
 		typedef std::vector<SubshapeResource*> SubshapeList;
 
-		ShapeResource(const String& id, const String& file);
+		ShapeResource(const String& id);
 		virtual ~ShapeResource();
 
 		bool operator<(const ShapeResource& shape) const;
 		bool operator>(const ShapeResource& shape) const;
 
-		const String& getType(void) const;
+		const String& getType() const;
 
 		const float getArea() const;
 
@@ -62,7 +62,6 @@ namespace vtx
 		void _injectScale(const Vector2& scale);
 
 	protected:
-		String mFilename;
 		BoundingBox mBoundingBox;
 		Vector2 mMaximumScale;
 		SubshapeList mSubshapes;

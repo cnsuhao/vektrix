@@ -23,6 +23,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "vtxInstance.h"
 
+#include "vtxMovie.h"
 #include "vtxResource.h"
 
 namespace vtx
@@ -50,17 +51,9 @@ namespace vtx
 		mParentMovie = parent;
 	}
 	//-----------------------------------------------------------------------
-	Movie* Instance::getParent()
+	Movie* Instance::getParent() const
 	{
 		return mParentMovie;
-	}
-	//-----------------------------------------------------------------------
-	void Instance::_initScriptObject(const String& name)
-	{
-		//if(mParentMovie->getScriptEngine())
-		//{
-		//	mScriptObject = mParentMovie->getScriptEngine()->createObject(name?, getType());
-		//}
 	}
 	//-----------------------------------------------------------------------
 }

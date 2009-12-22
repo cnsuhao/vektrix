@@ -35,6 +35,8 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		typedef std::map<String, T*> FactoryMap;
 		//-----------------------------------------------------------------------
+		FactoryManagerBase(const String& base_type) : mBaseType(base_type) {}
+		//-----------------------------------------------------------------------
 		virtual bool addFactory(T* factory)
 		{
 			FactoryMap::iterator it = mFactories.find(factory->getName());
@@ -44,13 +46,13 @@ namespace vtx
 				mFactories.insert(FactoryMap::value_type(factory->getName(), factory));
 
 				// LOG: Factory added successfully
-				VTX_LOG("Added %sFactory '%s'.", factory->getType().c_str(), factory->getName().c_str());
+				VTX_LOG("Added %sFactory '%s'.", mBaseType.c_str(), factory->getName().c_str());
 
 				return true;
 			}
 
 			// WARN: Factory already added
-			VTX_WARN("Tried to add %sFactory '%s' twice!", factory->getType().c_str(), factory->getName().c_str());
+			VTX_WARN("Tried to add %sFactory '%s' twice!", mBaseType.c_str(), factory->getName().c_str());
 
 			return false;
 		}
@@ -62,11 +64,15 @@ namespace vtx
 			if(it != mFactories.end())
 			{
 				mFactories.erase(it);
+
+				// LOG: Factory removed successfully
+				VTX_LOG("Removed %sFactory '%s'.", mBaseType.c_str(), factory->getName().c_str());
+
 				return true;
 			}
 
 			// WARN: unknown Factory
-			VTX_WARN("Requested removal of unknown %sFactory '%s'!", factory->getType().c_str(), factory->getName().c_str());
+			VTX_WARN("Requested removal of unknown %sFactory '%s'!", mBaseType.c_str(), factory->getName().c_str());
 
 			return false;
 		}
@@ -84,18 +90,25 @@ namespace vtx
 		}
 		//-----------------------------------------------------------------------
 	protected:
+		String mBaseType;
 		FactoryMap mFactories;
 	};
 	//-----------------------------------------------------------------------
 	template<typename T>
-	class FactoryManagerNULL : public FactoryManagerBase<T>{};
+	class FactoryManagerNULL : public FactoryManagerBase<T>
+	{
+	public:
+		FactoryManagerNULL(const String& base_type) 
+			: FactoryManagerBase(base_type){}
+	};
 	//-----------------------------------------------------------------------
 	template<typename T, class P1>
 	class FactoryManager : public FactoryManagerBase<T>
 	{
 	public:
 		//-----------------------------------------------------------------------
-		FactoryManager()
+		FactoryManager(const String& base_type) 
+			: FactoryManagerBase(base_type)
 		{
 			mDefaultFactory = new P1;
 			addFactory(mDefaultFactory);
@@ -112,7 +125,7 @@ namespace vtx
 
 			if(!factory)
 			{
-				VTX_WARN("A %sFactory with name \"%s\" is not available, using DefaultFactory", mDefaultFactory->getType().c_str(), name.c_str());
+				VTX_WARN("A %sFactory with name \"%s\" is not available, using DefaultFactory", mBaseType.c_str(), name.c_str());
 				return mDefaultFactory;
 			}
 

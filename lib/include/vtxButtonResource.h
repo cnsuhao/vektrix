@@ -42,7 +42,7 @@ namespace vtx
 		ButtonResource(const String& id);
 		virtual ~ButtonResource();
 
-		const String& getType(void) const;
+		const String& getType() const;
 
 		void setState(ButtonState* state, const StateID& id);
 		ButtonState* getState(const StateID& id);

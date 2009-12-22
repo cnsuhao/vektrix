@@ -45,7 +45,7 @@ namespace vtx
 
 			void debugOgreTexture();
 
-			const Ogre::MaterialPtr& getMaterial(void) const;
+			const Ogre::MaterialPtr& getMaterial() const;
 
 		protected:
 			Ogre::TexturePtr mTexture;

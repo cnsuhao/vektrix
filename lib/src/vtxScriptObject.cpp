@@ -25,5 +25,38 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
+	ScriptObject::ScriptObject()
+	{
 
+	}
+	//-----------------------------------------------------------------------
+	ScriptObject::~ScriptObject()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	//bool ScriptObject::setChildScriptObject(const String& name, ScriptObject* obj)
+	//{
+	//	ChildMap::const_iterator it = mChildren.find(name);
+	//	if(it == mChildren.end())
+	//	{
+	//		mChildren.insert(std::make_pair(name, obj));
+	//		return true;
+	//	}
+
+	//	return false;
+	//}
+	//-----------------------------------------------------------------------
+	//ScriptObject* ScriptObject::getChildScriptObject(const String& name) const
+	//{
+	//	ChildMap::const_iterator it = mChildren.find(name);
+	//	if(it != mChildren.end())
+	//	{
+	//		return it->second;
+	//	}
+
+	//	return NULL;
+	//}
+	//-----------------------------------------------------------------------
 }

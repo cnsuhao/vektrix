@@ -48,7 +48,7 @@ namespace vtx
 		return new MoveObjectEvent(container, mLayer, mMatrix, mCXForm);
 	}
 	//-----------------------------------------------------------------------
-	void MoveObjectEvent::execute(void)
+	void MoveObjectEvent::execute()
 	{
 		mObject = mObjectContainer->getChildAt(mLayer);
 		mObject->setMatrix(mMatrix);

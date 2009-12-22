@@ -40,7 +40,7 @@ namespace vtx
 		delete mTimeline;
 	}
 	//-----------------------------------------------------------------------
-	const String& MovieClipResource::getType(void) const
+	const String& MovieClipResource::getType() const
 	{
 		static String type = "MovieClip";
 		return type;

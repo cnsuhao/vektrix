@@ -23,7 +23,20 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "vtxScriptButton.h"
 
+#include "vtxButton.h"
+
 namespace vtx
 {
+	//-----------------------------------------------------------------------
+	ScriptButton::ScriptButton() 
+		: mButton(NULL)
+	{
 
+	}
+	//-----------------------------------------------------------------------
+	void ScriptButton::setNativeObject(Instance* inst)
+	{
+		mButton = dynamic_cast<Button*>(inst);
+	}
+	//-----------------------------------------------------------------------
 }

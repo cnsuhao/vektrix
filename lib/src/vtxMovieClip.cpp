@@ -24,7 +24,10 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxMovieClip.h"
 
 #include "vtxBoundingBox.h"
+#include "vtxFile.h"
+#include "vtxMovie.h"
 #include "vtxMovieClipResource.h"
+#include "vtxScriptMovieClip.h"
 #include "vtxTimeline.h"
 
 namespace vtx
@@ -32,6 +35,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	MovieClip::MovieClip(Resource* resource) 
 		: DisplayObjectContainer(resource), 
+		mScriptObject(NULL), 
 		mTimeline(NULL)
 	{
 
@@ -50,29 +54,48 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void MovieClip::play()
 	{
-		mTimeline->play();
+		if(mTimeline)
+		{
+			mTimeline->play();
+		}
 	}
 	//-----------------------------------------------------------------------
 	void MovieClip::stop()
 	{
-		mTimeline->stop();
+		if(mTimeline)
+		{
+			mTimeline->stop();
+		}
 	}
 	//-----------------------------------------------------------------------
 	bool MovieClip::goto_frame(uint frame)
 	{
-		return mTimeline->goto_frame(frame);
+		if(mTimeline)
+		{
+			return mTimeline->goto_frame(frame);
+		}
+
+		return false;
 	}
 	//-----------------------------------------------------------------------
 	bool MovieClip::goto_time(const float& time)
 	{
-		return mTimeline->goto_time(time);
+		if(mTimeline)
+		{
+			return mTimeline->goto_time(time);
+		}
+
+		return false;
 	}
 	//-----------------------------------------------------------------------
 	void MovieClip::_update(const float& delta_time)
 	{
 		DisplayObjectContainer::_update(delta_time);
 
-		mTimeline->addTime(delta_time);
+		if(mTimeline)
+		{
+			mTimeline->addTime(delta_time);
+		}
 	}
 	//-----------------------------------------------------------------------
 	const BoundingBox& MovieClip::getBoundingBox() const
@@ -96,7 +119,18 @@ namespace vtx
 			}
 
 			mTimeline = movieclip_res->getTimeline()->clone(this);
+			mTimeline->setFrameRate(mParentMovie->getFile()->getHeader().fps);
 		}
+	}
+	//-----------------------------------------------------------------------
+	void MovieClip::setScriptObject(ScriptObject* obj)
+	{
+		mScriptObject = dynamic_cast<ScriptMovieClip*>(obj);
+	}
+	//-----------------------------------------------------------------------
+	ScriptObject* MovieClip::getScriptObject() const
+	{
+		return mScriptObject;
 	}
 	//-----------------------------------------------------------------------
 }

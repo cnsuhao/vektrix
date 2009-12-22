@@ -21,27 +21,22 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 -----------------------------------------------------------------------------
 */
+#pragma once
 
-#include "defines.h"
-#include "vtxopPlugin.h"
+#include "vtxPrerequesites.h"
+
+#include "vtxScriptObject.h"
 
 namespace vtx
 {
-	namespace ogre
+	class vtxExport ScriptMovieClip : public ScriptObject
 	{
-		//-----------------------------------------------------------------------
-		OgrePlugin* plugin;
-		//-----------------------------------------------------------------------
-		extern "C" void vtxopExport startPlugin(void) throw()
-		{
-			plugin = new OgrePlugin();
-		}
+	public:
+		ScriptMovieClip();
 
-		//-----------------------------------------------------------------------
-		extern "C" void vtxopExport stopPlugin(void)
-		{
-			delete plugin;
-		}
-		//-----------------------------------------------------------------------
-	}
+		void setNativeObject(Instance* inst);
+
+	protected:
+		MovieClip* mMovieClip;
+	};
 }

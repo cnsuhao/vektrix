@@ -43,10 +43,15 @@ namespace vtx
 
 		virtual void _setParent(Movie* parent);
 
+		virtual void setScriptObject(ScriptObject* obj);
+		virtual ScriptObject* getScriptObject() const;
+
 	protected:
 		bool mMouseDown;
 		bool mMouseOver;
 		BoundingBox mBB;
+
+		ScriptButton* mScriptObject;
 
 		ButtonState* mUp;
 		ButtonState* mOver;

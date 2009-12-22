@@ -33,17 +33,17 @@ namespace vtx
 		Instance(Resource* resource);
 		virtual ~Instance();
 
-		const String& getID(void);
+		const String& getID();
 		virtual const String& getType() const = 0;
 
 		virtual void _setParent(Movie* parent);
-		Movie* getParent();
+		Movie* getParent() const;
 
-		void _initScriptObject(const String& name);
+		virtual void setScriptObject(ScriptObject* obj) = 0;
+		virtual ScriptObject* getScriptObject() const = 0;
 
 	protected:
 		Movie* mParentMovie;
 		Resource* mResource;
-		ScriptObject* mScriptObject;
 	};
 }

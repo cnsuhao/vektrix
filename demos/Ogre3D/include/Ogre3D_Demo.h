@@ -66,13 +66,13 @@ public:
 	vtxDemoApplication() {}
 
 protected:
-	virtual void createFrameListener(void)
+	virtual void createFrameListener()
 	{
 		mFrameListener = new vtxDemoFrameListener(mWindow, mCamera);
 		mRoot->addFrameListener(mFrameListener);
 	}
 
-	void createScene(void)
+	void createScene()
 	{
 		mSceneMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
 
@@ -84,16 +84,18 @@ protected:
 		vtx::FileManager::getSingletonPtr()->addFileContainer("../demos/Ogre3D/media");
 
 #ifdef _DEBUG
+		root->loadPlugin("vektrix_AS3Plugin_d");
 		root->loadPlugin("vektrix_SwfPlugin_d");
 		//root->loadPlugin("vektrix_XmlPlugin_d");
 		root->loadPlugin("vektrix_OgrePlugin_d");
 #else
+		root->loadPlugin("vektrix_AS3Plugin");
 		root->loadPlugin("vektrix_SwfPlugin");
 		//root->loadPlugin("vektrix_XmlPlugin");
 		root->loadPlugin("vektrix_OgrePlugin");
 #endif
 
-		movie = (vtx::ogre::MovableMovie*)root->createMovie("swf_movie", "button.swf", "OgreMovableMovie");
+		movie = (vtx::ogre::MovableMovie*)root->createMovie("swf_movie", "vtx_button.swf", "OgreMovableMovie");
 		movie->play();
 
 		movie_node = mSceneMgr->getRootSceneNode()->createChildSceneNode();

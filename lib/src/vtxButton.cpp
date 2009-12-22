@@ -27,6 +27,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxButtonResource.h"
 #include "vtxButtonState.h"
 #include "vtxMovie.h"
+#include "vtxScriptButton.h"
+
+#include "vtxLogManager.h"
 
 namespace vtx
 {
@@ -35,6 +38,7 @@ namespace vtx
 		: DisplayObjectContainer(resource), 
 		mMouseDown(false), 
 		mMouseOver(false), 
+		mScriptObject(NULL), 
 		mUp(NULL), 
 		mOver(NULL), 
 		mDown(NULL)
@@ -77,6 +81,7 @@ namespace vtx
 			{
 				if(!mMouseDown && mDown)
 				{
+					VTX_LOG("Button Down");
 					clearLayers();
 					mDown->execute();
 					mMouseDown = true;
@@ -86,14 +91,21 @@ namespace vtx
 			{
 				if(mMouseDown && mOver)
 				{
+					VTX_LOG("Button Up");
 					clearLayers();
 					mOver->execute();
 					mMouseDown = false;
+
+					if(mScriptObject)
+					{
+						mScriptObject->buttonUp();
+					}
 				}
 			}
 
 			if(!mMouseOver && mOver)
 			{
+				VTX_LOG("Mouse In");
 				clearLayers();
 				mOver->execute();
 				mMouseOver = true;
@@ -103,6 +115,7 @@ namespace vtx
 		{
 			if(mMouseOver && mUp)
 			{
+				VTX_LOG("Mouse Out");
 				clearLayers();
 				mUp->execute();
 				mMouseOver = false;
@@ -134,6 +147,16 @@ namespace vtx
 
 		//clearLayers();
 		//mUp->execute();
+	}
+	//-----------------------------------------------------------------------
+	void Button::setScriptObject(ScriptObject* obj)
+	{
+		mScriptObject = dynamic_cast<ScriptButton*>(obj);
+	}
+	//-----------------------------------------------------------------------
+	ScriptObject* Button::getScriptObject() const
+	{
+		return mScriptObject;
 	}
 	//-----------------------------------------------------------------------
 }

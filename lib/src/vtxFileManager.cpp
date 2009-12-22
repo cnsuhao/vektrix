@@ -37,7 +37,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	template<> FileManager* Singleton<FileManager>::sInstance = 0;
 	//-----------------------------------------------------------------------
-	FileManager::FileManager()
+	FileManager::FileManager() 
+		: FactoryManager("FileContainer")
 	{
 
 	}
@@ -105,15 +106,21 @@ namespace vtx
 
 		if(!file)
 		{
-			// no container found
-			VTX_EXCEPT("An unknown error occured during parsing the file \"%s\".", filename.c_str());
+			String error = parser->getError();
+			while(error.length())
+			{
+				VTX_WARN(error.c_str());
+				error = parser->getError();
+			}
+
+			VTX_EXCEPT("An error occured while parsing the file \"%s\".", filename.c_str());
 		}
 
 		// DEBUG / TODO: implement this more beautifully
 		// how to pass the framerate from fileheader to the timeline
 		// Answer: movieclips retrieve the framerate automatically from
 		// their parent movie
-		file->getMainMovieClip()->getTimeline()->setFrameRate(file->getHeader().fps);
+		//file->getMainMovieClip()->getTimeline()->setFrameRate(file->getHeader().fps);
 
 		// TODO: implement FileStreamPtr, so we don't need to destroy instances by hand ?
 		stream->close();
@@ -169,6 +176,22 @@ namespace vtx
 		}
 
 		return NULL;
+	}
+	//-----------------------------------------------------------------------
+	bool FileManager::removeFileParser(FileParser* parser)
+	{
+		FileParserMap::iterator it = mParsers.find(parser->getExtension());
+
+		if(it != mParsers.end())
+		{
+			mParsers.erase(it);
+
+			VTX_LOG("Removed FileParser for extension \"%s\".", parser->getExtension().c_str());
+
+			return true;
+		}
+
+		return false;
 	}
 	//-----------------------------------------------------------------------
 	FileContainer* FileManager::addFileContainer(const String& name, const String& type)

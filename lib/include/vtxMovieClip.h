@@ -47,7 +47,11 @@ namespace vtx
 
 		virtual void _setParent(Movie* parent);
 
+		virtual void setScriptObject(ScriptObject* obj);
+		virtual ScriptObject* getScriptObject() const;
+
 	protected:
+		ScriptMovieClip* mScriptObject;
 		Timeline* mTimeline;
 	};
 }

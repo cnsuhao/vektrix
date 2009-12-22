@@ -117,7 +117,7 @@ namespace vtx
 			buffer->blitFromMemory(image.getPixelBox(), box);
 
 			// DEBUG
-			//debugOgreTexture();
+			debugOgreTexture();
 
 			//vtx::VTX_LOG("NUM MIPMAPS: %u", mTexture->getNumMipmaps());
 		}
@@ -140,7 +140,7 @@ namespace vtx
 			buffer->unlock();
 		}
 		//-----------------------------------------------------------------------
-		const Ogre::MaterialPtr& OgreTexture::getMaterial(void) const
+		const Ogre::MaterialPtr& OgreTexture::getMaterial() const
 		{
 			return mMaterial;
 		}

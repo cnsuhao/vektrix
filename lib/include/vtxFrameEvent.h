@@ -33,7 +33,7 @@ namespace vtx
 		FrameEvent(DisplayObjectContainer* object_container) : mObjectContainer(object_container){}
 
 		virtual FrameEvent* clone(DisplayObjectContainer* container) = 0;
-		virtual void execute(void) = 0;
+		virtual void execute() = 0;
 
 	protected:
 		DisplayObjectContainer* mObjectContainer;

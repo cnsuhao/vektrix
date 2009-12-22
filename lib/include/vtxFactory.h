@@ -30,9 +30,6 @@ namespace vtx
 	class BaseFactory
 	{
 	public:
-		// get the type of the instance that this factory creates
-		virtual const String& getType() const = 0;
-
 		// get the unique name of the factory
 		virtual const String& getName() const = 0;
 
@@ -57,6 +54,27 @@ namespace vtx
 	
 		virtual T* createObject(P1) = 0;    
 	};
+#define FactoryDecl_P1(base, P1) \
+	class base##Factory : public Factory<base##, P1##>{}
+
+#define FactoryImpl_P1(type, base, P1) \
+	class type##Factory : public base##Factory \
+	{ \
+	public: \
+		const String& getName() const \
+		{ \
+			static String name = #type; \
+			return name; \
+		} \
+		base##* createObject(P1## p1) \
+		{ \
+			return new type##(p1); \
+		} \
+		void destroyObject(base##* inst) \
+		{ \
+			delete inst; \
+		} \
+	}
 	//-----------------------------------------------------------------------
 	template<class T>
 	class Factory<T> : public BaseFactory<T>

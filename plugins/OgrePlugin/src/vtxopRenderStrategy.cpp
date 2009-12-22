@@ -86,6 +86,11 @@ namespace vtx
 
 			Resource* resource = movie->getFile()->getResource(id);
 
+			if(!resource)
+			{
+				VTX_EXCEPT("Resource %s was not found.", id.c_str());
+			}
+
 			// TODO: improve this, maybe implement it in the base class and add a listener for custom handling
 			if(resource->getType() == "Shape")
 			{

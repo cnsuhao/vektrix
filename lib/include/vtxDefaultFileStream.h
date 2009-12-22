@@ -38,11 +38,11 @@ namespace vtx
 		//void skip(long count);
 
 		void seek(uint pos);
-		uint tell(void);
+		uint tell();
 		uint read(void* buf, uint count);
 		String& getLine();
-		bool eof(void) const;
-		void close(void);
+		bool eof() const;
+		void close();
 
 	protected:
 		std::ifstream mStream;

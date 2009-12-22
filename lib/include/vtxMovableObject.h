@@ -52,6 +52,8 @@ namespace vtx
 		virtual void _update(const float& delta_time = 0.0f);
 		virtual const BoundingBox& getBoundingBox() const = 0;
 
+		//void _initScriptObject(const String& name);
+
 	protected:
 		bool mNeedsUpdate;
 		DisplayObjectContainer* mParentContainer;

@@ -27,13 +27,25 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace vtx
 {
-	class FileParser
+	class vtxExport FileParser
 	{
 	public:
-		FileParser(){}
-		virtual ~FileParser(){}
+		typedef std::vector<String> ErrorList;
+
+		FileParser();
+		virtual ~FileParser();
 
 		virtual const String& getExtension() const = 0;
 		virtual File* parse(FileStream* stream) = 0;
+
+		String getError();
+
+	private:
+		ErrorList mErrors;
+		ErrorList::iterator it;
+		ErrorList::iterator end;
+
+	protected:
+		void error(const String& error);
 	};
 }

@@ -25,7 +25,7 @@ unsigned long size_storage = 0;
 U32 mycrc32;
 U32* crc32_table = 0;
 
-void make_crc32_table(void);
+void make_crc32_table();
 void png_write_byte(FILE* fi, U8 byte);
 void png_write_dword(FILE* fi, U32 dword);
 void png_start_chunk(FILE* fi, char*type, int len);
@@ -268,7 +268,7 @@ void handlelossless(TAG* tag, FILE* file)
 	free(data3);
 }
 
-void make_crc32_table(void)
+void make_crc32_table()
 {
 	int t;
 

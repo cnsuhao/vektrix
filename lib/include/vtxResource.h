@@ -33,10 +33,10 @@ namespace vtx
 		Resource(const String& id);
 		virtual ~Resource();
 
-		const String& getID(void);
-		//BinaryFileResource* getParent(void);
+		const String& getID();
+		//BinaryFileResource* getParent();
 
-		virtual const String& getType(void) const = 0;
+		virtual const String& getType() const = 0;
 
 	protected:
 		String mID;

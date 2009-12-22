@@ -40,8 +40,6 @@ namespace vtx
 		MovieFactory();
 		virtual ~MovieFactory();
 
-		const String& getType() const;
-
 		RenderStrategy* getDataPool(File* file);
 
 		ShapeFactory* getShapeFactory();

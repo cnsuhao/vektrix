@@ -23,7 +23,7 @@ http://www.gnu.org/copyleft/gpl.txt.
 */
 #pragma once
 
-#include "vtxPrerequesites.h"
+#include "vtxswf.h"
 
 #include "vtxswfContourElement.h"
 

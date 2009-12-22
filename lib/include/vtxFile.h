@@ -43,6 +43,7 @@ namespace vtx
 			uint width;
 			uint height;
 			Color bgcolor;
+			String script_root_class;
 		};
 
 		typedef std::map<String, Resource*> ResourceMap;
@@ -56,11 +57,11 @@ namespace vtx
 		void setHeader(FileHeader header);
 		const FileHeader& getHeader();
 
+		void setScriptEngine(const String& scriptEngineFactory);
+		const String& getScriptEngine();
+
 		void setMainMovieClip(MovieClipResource* movieclip);
 		MovieClipResource* getMainMovieClip();
-
-		//void setTimeline(Timeline* timeline);
-		//Timeline* getTimeline();
 
 		void addResource(Resource* res);
 		Resource* getResource(const String& id);
@@ -73,6 +74,7 @@ namespace vtx
 		ResourceMap mResources;
 		ShapeResourceList mShapes;
 
+		String mScriptEngineFactory;
 		MovieClipResource* mMainMovieClip;
 
 		// TODO: deprecated

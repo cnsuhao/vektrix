@@ -74,18 +74,18 @@ namespace vtx
 			vtx::Movie::releaseInstance(instance);
 		}
 		//-----------------------------------------------------------------------
-		const Ogre::String& MovableMovie::getMovableType(void) const
+		const Ogre::String& MovableMovie::getMovableType() const
 		{
 			static Ogre::String temp = "myType";
 			return temp;
 		}
 		//-----------------------------------------------------------------------
-		const Ogre::AxisAlignedBox& MovableMovie::getBoundingBox(void) const
+		const Ogre::AxisAlignedBox& MovableMovie::getBoundingBox() const
 		{
 			return mAAB;
 		}
 		//-----------------------------------------------------------------------
-		Ogre::Real MovableMovie::getBoundingRadius(void) const
+		Ogre::Real MovableMovie::getBoundingRadius() const
 		{
 			return 1.0f;
 		}

@@ -30,8 +30,17 @@ namespace vtx
 	class vtxExport ScriptObject
 	{
 	public:
+		typedef std::map<String, ScriptObject*> ChildMap;
+
 		ScriptObject();
+		virtual ~ScriptObject();
+
+		virtual void setNativeObject(Instance* inst) = 0;
+
+		//bool setChildScriptObject(const String& name, ScriptObject* obj);
+		virtual ScriptObject* getChildScriptObject(const String& name) = 0;
 
 	protected:
+		ChildMap mChildren;
 	};
 }

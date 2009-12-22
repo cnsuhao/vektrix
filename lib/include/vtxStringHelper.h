@@ -32,7 +32,7 @@ namespace vtx
 	public:
 		static String versionString(const uint& version);
 
-		static StringList splitString(const String& str);
+		static StringList splitString(const String& str, const char& delimiter = ' ');
 		static String getFileExtension(const String& str);
 
 		static String toString(float val);

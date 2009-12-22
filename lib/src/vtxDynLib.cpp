@@ -86,7 +86,7 @@ namespace vtx
 		return (void*)DYNLIB_GETSYM(mInstance, name.c_str() );
 	}
 	//-----------------------------------------------------------------------
-	String DynLib::getError(void) 
+	String DynLib::getError() 
 	{
 		#if VTX_OS == VTX_WIN32
 			LPVOID lpMsgBuf; 

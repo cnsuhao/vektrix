@@ -42,7 +42,7 @@ namespace vtx
 		return new RemoveObjectEvent(container, mLayer);
 	}
 	//-----------------------------------------------------------------------
-	void RemoveObjectEvent::execute(void)
+	void RemoveObjectEvent::execute()
 	{
 		Instance* inst = (Instance*)mObjectContainer->getChildAt(mLayer);
 

@@ -37,7 +37,7 @@ namespace vtx
 			const String& id, const uint& layer, const Matrix& matrix, const CXForm& cxform, const String& name = "");
 
 		FrameEvent* clone(DisplayObjectContainer* container);
-		void execute(void);
+		void execute();
 
 	protected:
 		uint mLayer;

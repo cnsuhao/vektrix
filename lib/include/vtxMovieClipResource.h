@@ -34,7 +34,7 @@ namespace vtx
 		MovieClipResource(const String& id);
 		virtual ~MovieClipResource();
 
-		const String& getType(void) const;
+		const String& getType() const;
 
 		void setTimeline(Timeline* timeline);
 		Timeline* getTimeline();

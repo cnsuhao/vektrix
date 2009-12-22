@@ -32,9 +32,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	ShapeResource::ShapeResource(const String& id, const String& file) 
+	ShapeResource::ShapeResource(const String& id) 
 		: Resource(id), 
-		mFilename(file), 
 		mMaximumScale(Vector2(1, 1))
 	{
 
@@ -61,7 +60,7 @@ namespace vtx
 		return getArea() > shape.getArea();
 	}
 	//-----------------------------------------------------------------------
-	const String& ShapeResource::getType(void) const
+	const String& ShapeResource::getType() const
 	{
 		static String type = "Shape";
 		return type;

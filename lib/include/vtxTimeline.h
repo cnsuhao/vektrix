@@ -32,8 +32,8 @@ namespace vtx
 	public:
 		typedef std::vector<Keyframe*> KeyframeList;
 
-		Timeline(void);
-		virtual ~Timeline(void);
+		Timeline();
+		virtual ~Timeline();
 
 		Timeline* clone(DisplayObjectContainer* container);
 

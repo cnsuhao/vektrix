@@ -24,6 +24,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxMovableObject.h"
 #include "vtxDisplayObjectContainer.h"
 #include "vtxMovie.h"
+#include "vtxScriptObject.h"
 
 namespace vtx
 {
@@ -109,6 +110,18 @@ namespace vtx
 
 		mWorldBB = getBoundingBox() + mWorldMatrix.getTrans();
 	}
+	//-----------------------------------------------------------------------
+	//void MovableObject::_initScriptObject(const String& name)
+	//{
+	//	if(mParentContainer)
+	//	{
+	//		ScriptObject* parent_obj = mParentContainer->getScriptObject();
+	//		if(parent_obj)
+	//		{
+	//			mScriptObject = parent_obj->getChildScriptObject(name);
+	//		}
+	//	}
+	//}
 	//-----------------------------------------------------------------------
 	////-----------------------------------------------------------------------
 	//void MovableObject::setLayer(uint layer)

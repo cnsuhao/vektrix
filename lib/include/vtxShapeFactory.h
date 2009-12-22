@@ -33,7 +33,6 @@ namespace vtx
 	class vtxExport ShapeFactory : public InstanceFactory<Shape>
 	{
 	public:
-		const String& getType() const;
 	};
 	//-----------------------------------------------------------------------
 	//-----------------------------------------------------------------------

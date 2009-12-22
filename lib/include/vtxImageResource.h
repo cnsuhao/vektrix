@@ -34,7 +34,7 @@ namespace vtx
 		ImageResource(const String& id, const String& type, const String& file);
 		virtual ~ImageResource();
 
-		const String& getType(void) const;
+		const String& getType() const;
 
 	protected:
 		String mType;

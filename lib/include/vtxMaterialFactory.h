@@ -32,6 +32,5 @@ namespace vtx
 	class vtxExport MaterialFactory : public InstanceFactory<Material>
 	{
 	public:
-		const String& getType() const;
 	};
 }

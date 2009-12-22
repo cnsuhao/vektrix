@@ -37,6 +37,20 @@ namespace vtx
 {
 	namespace ogre
 	{
+		//-----------------------------------------------------------------------
+		OgrePlugin* plugin = NULL;
+		//-----------------------------------------------------------------------
+		extern "C" void vtxopExport startPlugin() throw()
+		{
+			plugin = new OgrePlugin();
+		}
+
+		//-----------------------------------------------------------------------
+		extern "C" void vtxopExport stopPlugin()
+		{
+			delete plugin;
+		}
+		//-----------------------------------------------------------------------
 		OgrePlugin::OgrePlugin() 
 			: mShapeFactory(new OgreShapeFactory), 
 			mTextureFactory(new OgreTextureFactory), 
@@ -51,7 +65,7 @@ namespace vtx
 			vtx::Root::getSingletonPtr()->addFactory(mMovableMovie);
 			vtx::Root::getSingletonPtr()->addFactory(mTextureMovie);
 		}
-
+		//-----------------------------------------------------------------------
 		OgrePlugin::~OgrePlugin()
 		{
 			vtx::TextureManager::getSingletonPtr()->removeFactory(mTextureFactory);
@@ -63,5 +77,6 @@ namespace vtx
 			delete mTextureFactory;
 			delete mShapeFactory;
 		}
+		//-----------------------------------------------------------------------
 	}
 }

@@ -36,6 +36,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxRenderStrategy.h"
 #include "vtxResource.h"
 #include "vtxRoot.h"
+#include "vtxScriptEngineManager.h"
+#include "vtxScriptResource.h"
 #include "vtxShape.h"
 #include "vtxShapeManager.h"
 #include "vtxShapeResource.h"
@@ -53,12 +55,31 @@ namespace vtx
 		mMousePosition(0.0f, 0.0f), 
 		mDebugger(NULL), 
 		mMainMovieClip(NULL), 
+		mScriptEngine(NULL), 
 		mMouseArrow(NULL), 
 		mMouseHand(NULL), 
 		mMouseTextCursor(NULL)
 	{
 		mMainMovieClip = new MovieClip(mFile->getMainMovieClip());
 		mMainMovieClip->_setParent(this);
+
+		ScriptEngineFactory* scriptEngineFactory = 
+			ScriptEngineManager::getSingletonPtr()->getFactory(mFile->getScriptEngine());
+
+		// create script VM if available
+		if(scriptEngineFactory)
+		{
+			mScriptEngine = scriptEngineFactory->createObject(this);
+		}
+
+		ScriptResource* script = dynamic_cast<ScriptResource*>(mFile->getResource("Script"));
+		if(mScriptEngine && script)
+		{
+			if(mScriptEngine->executeCode(script->getBuffer(), script->getLength()))
+			{
+				mMainMovieClip->setScriptObject(mScriptEngine->getRootScriptObject());
+			}
+		}
 
 		//mMouseArrow = mCreator->getShapeFactory()->createObject(this, mFile->getResource("__Reserved__MouseArrow"));
 		//mMouseHand = mCreator->getShapeFactory()->createObject(this, mFile->getResource("__Reserved__MouseHand"));
@@ -75,6 +96,7 @@ namespace vtx
 		delete mMouseHand;
 		delete mMouseArrow;
 
+		delete mScriptEngine;
 		delete mMainMovieClip;
 	}
 	//-----------------------------------------------------------------------
@@ -90,7 +112,6 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Movie::addTime(float delta_time)
 	{
-		//mTimeline->addTime(delta_time);
 		mMainMovieClip->_update(delta_time);
 
 		if(mDebugger)
@@ -111,8 +132,6 @@ namespace vtx
 		else if(y > header.height) y = header.height;
 
 		mMousePosition = Vector2((float)x, (float)y);
-
-		//VTX_LOG("setMousePosition %u %u", x, y);
 	}
 	//-----------------------------------------------------------------------
 	void Movie::setMouseRel(float x, float y)
@@ -171,7 +190,7 @@ namespace vtx
 	Instance* Movie::getInstance(const String& id)
 	{
 		Instance* inst = mDataPool->shareInstance(id, this);
-		VTX_LOG("SHARED instance with id %s (%s)", id.c_str(), inst->getType().c_str());
+		//VTX_LOG("SHARED instance with id %s (%s)", id.c_str(), inst->getType().c_str());
 		return inst;
 	}
 	//-----------------------------------------------------------------------
@@ -180,8 +199,13 @@ namespace vtx
 		if(instance)
 		{
 			mDataPool->storeInstance(instance);
-			VTX_LOG("STORED instance with id %s (%s)", instance->getID().c_str(), instance->getType().c_str());
+			//VTX_LOG("STORED instance with id %s (%s)", instance->getID().c_str(), instance->getType().c_str());
 		}
+	}
+	//-----------------------------------------------------------------------
+	ScriptEngine* Movie::getScriptEngine() const
+	{
+		return mScriptEngine;
 	}
 	//-----------------------------------------------------------------------
 	void Movie::enableDebugger(const bool& enable)

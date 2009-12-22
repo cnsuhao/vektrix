@@ -23,9 +23,6 @@ http://www.gnu.org/copyleft/gpl.txt.
 */
 #pragma once
 
-#include "vtxPrerequesites.h"
-
-#include "vtxswfStdHeader.h"
 #include "vtxswfContourPoint.h"
 
 namespace vtx
@@ -48,9 +45,9 @@ namespace vtx
 			bool connectsReverseTo(const ContourElement& element);
 
 			void reverse();
-
 		};
 
 		typedef std::vector<ContourElement> ContourElementList;
+		typedef std::map<unsigned int, ContourElementList> ContourChunkMap;
 	}
 }

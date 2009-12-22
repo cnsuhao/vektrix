@@ -39,6 +39,9 @@ namespace vtx
 		const String& getType() const;
 		const BoundingBox& getBoundingBox() const;
 
+		virtual void setScriptObject(ScriptObject* obj);
+		virtual ScriptObject* getScriptObject() const;
+
 	protected:
 		BoundingBox mBB;
 	};

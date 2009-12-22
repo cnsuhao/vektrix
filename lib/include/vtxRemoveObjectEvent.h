@@ -34,7 +34,7 @@ namespace vtx
 		RemoveObjectEvent(DisplayObjectContainer* object_container, const uint& layer);
 
 		FrameEvent* clone(DisplayObjectContainer* container);
-		void execute(void);
+		void execute();
 
 	protected:
 		uint mLayer;

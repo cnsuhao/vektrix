@@ -44,13 +44,13 @@ namespace vtx
 			virtual ~OgreShape();
 
 			// Ogre functions
-			const Ogre::MaterialPtr& getMaterial(void) const;
+			const Ogre::MaterialPtr& getMaterial() const;
 			void getRenderOperation(Ogre::RenderOperation& op);
 			void getWorldTransforms(Ogre::Matrix4* xform) const;
-			const Ogre::Quaternion& getWorldOrientation(void) const;
-			const Ogre::Vector3& getWorldPosition(void) const;
+			const Ogre::Quaternion& getWorldOrientation() const;
+			const Ogre::Vector3& getWorldPosition() const;
 			Ogre::Real getSquaredViewDepth(const Ogre::Camera* cam) const;
-			const Ogre::LightList& getLights(void) const;
+			const Ogre::LightList& getLights() const;
 
 			//void setMatrix(const vtx::Matrix& m);
 			//void setCXForm(const vtx::CXForm& cx);
