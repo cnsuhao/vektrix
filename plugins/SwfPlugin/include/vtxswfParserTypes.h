@@ -1,4 +1,33 @@
-#pragma once
+/*
+-----------------------------------------------------------------------------
+This source file is part of "vektrix"
+(the rich media and vector graphics rendering library)
+For the latest info, see http://www.fuse-software.com/
+
+Copyright (c) 2009-2010 Fuse-Software (tm)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-----------------------------------------------------------------------------
+*/
+
+#ifndef __vtxswfParserTypes_H__
+#define __vtxswfParserTypes_H__
 
 namespace vtx
 {
@@ -17,11 +46,13 @@ namespace vtx
 			TT_SetBackgroundColor = 9, 
 			TT_DefineShape2 = 22, 
 			TT_PlaceObject2 = 26, 
+			TT_DefineShape3 = 32, 
 			TT_DefineButton2 = 34, 
 			TT_FileAttributes = 69, 
 			TT_SymbolClass = 76, 
 			TT_MetaData = 77, 
 			TT_DoABC = 82, 
+			TT_DefineShape4 = 83, 
 			TT_DefineSceneAndFrameLabelData = 86
 		};
 
@@ -51,6 +82,12 @@ namespace vtx
 			SBits ymin;
 			SBits xmax;
 			SBits ymax;
+
+			RECT() 
+				: xmin(0), 
+				xmax(0), 
+				ymin(0), 
+				ymax(0){}
 		};
 
 		class COLOR
@@ -93,8 +130,12 @@ namespace vtx
 		class FILLSTYLE
 		{
 		public:
-			COLOR color;
+			typedef std::map<UI8, COLOR> GradientMap;
+
 			FillStyleType type;
+			COLOR color;
+			GradientMap gradient;
+			MATRIX matrix;
 		};
 
 		class LINESTYLE
@@ -110,6 +151,11 @@ namespace vtx
 			SBits x, y, cx, cy;
 			int fill0, fill1, line;
 			ShapeElementType type;
+
+			SHAPEELEMENT() 
+				: x(0), y(0), 
+				cx(0), cy(0), 
+				type(SET_MOVE){}
 		};
 
 		typedef std::vector<FILLSTYLE> FillstyleList2;
@@ -119,3 +165,5 @@ namespace vtx
 		typedef std::vector<SHAPEELEMENT> ShapeElementList;
 	}
 }
+
+#endif

@@ -289,10 +289,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\include\vtxPlugin.h"
-				>
-			</File>
-			<File
 				RelativePath="..\include\vtxPrerequesites.h"
 				>
 			</File>
@@ -321,10 +317,6 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxFactoryManager.h"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxGenericFactory.h"
 					>
 				</File>
 				<File
@@ -401,6 +393,14 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxRect.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxTransform.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxTransform.h"
 					>
 				</File>
 				<File
@@ -586,10 +586,6 @@
 			</File>
 			<File
 				RelativePath="..\include\vtxInstance.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\vtxInstanceFactory.cpp"
 				>
 			</File>
 			<File

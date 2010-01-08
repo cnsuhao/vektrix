@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(EXPAT_HOME)\Source\lib&quot;"
+				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VEKTRIX_XMLPLUGIN_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,10 +61,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libexpat.lib"
+				AdditionalDependencies="libexpatMT.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(EXPAT_HOME)\Bin&quot;"
+				AdditionalLibraryDirectories="&quot;$(EXPAT_HOME)\win32\bin\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -89,7 +89,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(OutDir)\$(TargetFileName) $(OGRE_HOME)\Samples\Common\bin\$(ConfigurationName)"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -119,7 +119,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(EXPAT_HOME)\Source\lib&quot;"
+				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VEKTRIX_XMLPLUGIN_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -138,9 +138,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libexpat.lib"
+				AdditionalDependencies="libexpatMT.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(EXPAT_HOME)\Bin&quot;"
+				AdditionalLibraryDirectories="&quot;$(EXPAT_HOME)\win32\bin\$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -167,7 +167,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(OutDir)\$(TargetFileName) $(OGRE_HOME)\Samples\Common\bin\$(ConfigurationName)"
+				CommandLine=""
 			/>
 		</Configuration>
 	</Configurations>
@@ -178,11 +178,7 @@
 			Name="Plugin"
 			>
 			<File
-				RelativePath="..\include\defines.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\vtxxmlMain.cpp"
+				RelativePath="..\include\vtxxml.h"
 				>
 			</File>
 			<File

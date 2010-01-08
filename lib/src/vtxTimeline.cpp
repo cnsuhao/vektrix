@@ -4,29 +4,35 @@ This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
 For the latest info, see http://www.fuse-software.com/
 
-Copyright (c) 2009 Fuse-Software (tm)
+Copyright (c) 2009-2010 Fuse-Software (tm)
 
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU Lesser General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later
-version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-You should have received a copy of the GNU Lesser General Public License along with
-this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-Place - Suite 330, Boston, MA 02111-1307, USA, or go to
-http://www.gnu.org/copyleft/lesser.txt.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
+
 #include "vtxTimeline.h"
 
 #include "vtxDisplayObjectContainer.h"
 #include "vtxKeyframe.h"
 #include "vtxLogManager.h"
-//#include "vtxMovie.h"
+#include "vtxMovieClip.h"
+#include "vtxScriptMovieClip.h"
 
 namespace vtx
 {
@@ -36,7 +42,7 @@ namespace vtx
 		mPosition(0.0f), 
 		mFrameRate(12), 
 		mCurrentFrame(0), 
-		mObjectContainer(NULL)
+		mParentMovieClip(NULL)
 	{
 
 	}
@@ -52,17 +58,17 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	Timeline* Timeline::clone(DisplayObjectContainer* container)
+	Timeline* Timeline::clone(MovieClip* movieclip)
 	{
 		Timeline* clonedTimeline = new Timeline;
 		clonedTimeline->mFrameRate = mFrameRate;
-		clonedTimeline->mObjectContainer = container;
+		clonedTimeline->mParentMovieClip = movieclip;
 
 		KeyframeList::iterator it = mKeyframes.begin();
 
 		for( ; it != mKeyframes.end(); ++it)
 		{
-			Keyframe* frame = (*it)->clone(container);
+			Keyframe* frame = (*it)->clone(movieclip);
 			clonedTimeline->mKeyframes.push_back(frame);
 		}
 
@@ -71,7 +77,6 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Timeline::addKeyframe(Keyframe* frame)
 	{
-		// TODO: add Keyframe with indices
 		mKeyframes.push_back(frame);
 	}
 	//-----------------------------------------------------------------------
@@ -89,6 +94,8 @@ namespace vtx
 			return;
 		}
 
+		// TODO: rework Timeline::goto commands & keyframe handling, etc.
+		// >> mainly the initialization
 		mPosition += delta_time;
 
 		// the frame index which is about to be displayed
@@ -98,12 +105,18 @@ namespace vtx
 		if(frame >= currentFrame->getIndex())
 		{
 			currentFrame->execute();
+
+			if(mParentMovieClip)
+			{
+				mParentMovieClip->getScriptMovieClip()->frameEntered(mCurrentFrame);
+			}
+
 			++mCurrentFrame;
 		}
 
 		if(mCurrentFrame == mKeyframes.size() && mKeyframes.size() > 1)
 		{
-			mObjectContainer->clearLayers();
+			mParentMovieClip->clearLayers();
 
 			mCurrentFrame = 0;
 			mPosition = 1.0f / (float)mFrameRate;
@@ -130,6 +143,7 @@ namespace vtx
 	{
 		mPosition = (float)frame / (float)mFrameRate;
 		mCurrentFrame = 0;
+		mPlaying = true;
 
 		if(!mKeyframes.size())
 		{

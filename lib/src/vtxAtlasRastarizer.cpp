@@ -4,23 +4,28 @@ This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
 For the latest info, see http://www.fuse-software.com/
 
-Copyright (c) 2009 Fuse-Software (tm)
+Copyright (c) 2009-2010 Fuse-Software (tm)
 
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU Lesser General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later
-version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-You should have received a copy of the GNU Lesser General Public License along with
-this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-Place - Suite 330, Boston, MA 02111-1307, USA, or go to
-http://www.gnu.org/copyleft/lesser.txt.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
+
 #include "vtxAtlasRastarizer.h"
 
 #include "vtxAtlasNode.h"
@@ -31,9 +36,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "vtxStringHelper.h"
 #include "vtxSubshapeResource.h"
 #include "vtxTextureFactory.h"
-
-//#define _USE_MATH_DEFINES
-//#include <cmath>
 
 namespace vtx
 {
@@ -52,7 +54,6 @@ namespace vtx
 		VTX_LOG("Rect: %d %d, %d %d", rect.left, rect.top, rect.right, rect.bottom);
 
 		// fire up cairo
-		//VTX_LOG("cairo_image_surface_create(CAIRO_FORMAT_ARGB32, %d, %d);", rect.w(), rect.h());
 		mSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, rect.w(), rect.h());
 		mCairo = cairo_create(mSurface);
 		cairo_set_fill_rule(mCairo, CAIRO_FILL_RULE_EVEN_ODD);
@@ -72,25 +73,102 @@ namespace vtx
 			const SubshapeResource::ShapeElement::List& elements = subshape->getElementList();
 			SubshapeResource::ShapeElement::List::const_iterator element_it = elements.begin();
 
-			if(material->getMaterialType() == MaterialResource::MT_COLOR)
-			{
-				const Color& color = material->getColor();
+			cairo_pattern_t* cairo_pattern = NULL;
 
-				// DEBUG
-				//VTX_LOG("cairo_set_source_rgba(%s);", StringHelper::toString(color).c_str());
-				cairo_set_source_rgba(mCairo, (double)color.r, (double)color.g, (double)color.b, (double)color.a);
-			}
-			else if(material->getMaterialType() == MaterialResource::MT_GRADIENT)
+			switch(material->getMaterialType())
 			{
-				VTX_EXCEPT("UNIMPLEMENTED");
-			}
-			else if(material->getMaterialType() == MaterialResource::MT_IMAGE)
-			{
-				VTX_EXCEPT("UNIMPLEMENTED");
-			}
-			else
-			{
-				VTX_EXCEPT("Unknown material type.");
+			case MaterialResource::MT_COLOR:
+				{
+					const Color& color = material->getColor();
+					cairo_set_source_rgba(mCairo, (double)color.r, (double)color.g, (double)color.b, (double)color.a);
+				}
+				break;
+
+			case MaterialResource::MT_LINEAR_GRADIENT:
+				{
+					const MaterialResource::GradientMap& gradient = material->getGradientMap();
+					MaterialResource::GradientMap::const_iterator grd_it = gradient.begin();
+					MaterialResource::GradientMap::const_iterator grd_end = gradient.end();
+
+					Matrix matrix = material->getTransformMatrix();
+
+#define WORK_ARROUND
+#ifdef WORK_ARROUND
+					Vector2 x1(-819.2f, 0);
+					Vector2 x2(819.2f, 0);
+
+					Vector2 unit_scale = scale;
+					unit_scale.normalize();
+
+					//matrix.m[0][0] = matrix.m[0][0] * unit_scale.x;
+					matrix.m[0][1] = matrix.m[0][1] * unit_scale.y;
+					//matrix.m[0][2] = matrix.m[0][2] * unit_scale.x;
+
+					matrix.m[1][0] = matrix.m[1][0] * unit_scale.x;
+					//matrix.m[1][1] = matrix.m[1][1] * unit_scale.y;
+					//matrix.m[1][2] = matrix.m[1][2] * unit_scale.y;
+
+					x1 = matrix.transformAffine(x1);
+					x2 = matrix.transformAffine(x2);
+
+					// TODO: fix scaling
+					x1 = (x1 + offset) * scale;
+					x2 = (x2 + offset) * scale;
+
+					cairo_pattern = cairo_pattern_create_linear(
+						x1.x, 
+						x1.y, 
+						x2.x, 
+						x2.y);
+#else
+					cairo_pattern = cairo_pattern_create_linear(
+						(-50 + offset.x) * scale.x, 
+						(-50 + offset.y) * scale.y, 
+						(+150 + offset.x) * scale.x, 
+						(-50 + offset.y) * scale.y);
+
+					//Matrix scale_mat(
+					//	1.0f/256.0f, 0, 0, 
+					//	0, 1.0f/256.0f, 0);
+
+					//float angle = 0;
+					//Matrix rot_mat(
+					//	cos(angle), sin(angle), 0, 
+					//	-sin(angle), cos(angle), 0);
+
+					//Matrix trans_mat(
+					//	1, 0, -128.0f, 
+					//	0, 1, 128);
+
+					//cairo_matrix_t cr_mat;
+					//cairo_matrix_t cr_scale_mat = convertMatrix(scale_mat);
+					//cairo_matrix_t cr_rot_mat = convertMatrix(rot_mat);
+					//cairo_matrix_t cr_trans_mat = convertMatrix(trans_mat);
+
+					//cairo_matrix_multiply(&cr_mat, &cr_trans_mat, &cr_scale_mat);
+					//cairo_matrix_multiply(&cr_mat, &cr_mat, &cr_rot_mat);
+
+					//cairo_pattern_set_matrix(cairo_pattern, &cr_mat);
+#endif
+
+					while(grd_it != grd_end)
+					{
+						cairo_pattern_add_color_stop_rgba(cairo_pattern, 
+							(float)grd_it->first/255.0f, 
+							grd_it->second.r, 
+							grd_it->second.g, 
+							grd_it->second.b, 
+							grd_it->second.a);
+						++grd_it;
+					}
+
+					cairo_set_source(mCairo, cairo_pattern);
+				}
+				break;
+
+			default:
+				VTX_EXCEPT("Unimplemented Material Type");
+				break;
 			}
 
 			Vector2 last_position = Vector2::ZERO;
@@ -101,58 +179,64 @@ namespace vtx
 
 				if(element.type == SubshapeResource::ShapeElement::SID_MOVE_TO)
 				{
-					Vector2 pos = (element.pos.yInversedCopy() + offset) * scale;
+					Vector2 pos = (element.pos + offset) * scale;
 
 					if(element_it != elements.begin())
 					{
-						//VTX_LOG("cairo_new_sub_path();");
 						cairo_new_sub_path(mCairo);
 					}
 
-					// DEBUG
-					//VTX_LOG("cairo_move_to(%4.2f, %4.2f);", pos.x, pos.y);
 					cairo_move_to(mCairo, pos.x, pos.y);
 					last_position = pos;
 				}
 				else if(element.type == SubshapeResource::ShapeElement::SID_LINE_TO)
 				{
-					Vector2 pos = (element.pos.yInversedCopy() + offset) * scale;
+					Vector2 pos = (element.pos + offset) * scale;
 
-					// DEBUG
-					//VTX_LOG("cairo_line_to(%4.2f, %4.2f);", pos.x, pos.y);
 					cairo_line_to(mCairo, pos.x, pos.y);
 					last_position = pos;
 				}
 				else if(element.type == SubshapeResource::ShapeElement::SID_CURVE_TO)
 				{
-					Vector2 pos = (element.pos.yInversedCopy() + offset) * scale;
-					Vector2 ctrl = (element.ctrl.yInversedCopy() + offset) * scale;
+					Vector2 pos = (element.pos + offset) * scale;
+					Vector2 ctrl = (element.ctrl + offset) * scale;
 
-					// DEBUG
-					//VTX_LOG("cairo_curve_to(%4.2f, %4.2f, %4.2f, %4.2f, %4.2f, %4.2f);", last_position.x, last_position.y, ctrl.x, ctrl.y, pos.x, pos.y);
 					cairo_curve_to(mCairo, last_position.x, last_position.y, ctrl.x, ctrl.y, pos.x, pos.y);
 					last_position = pos;
 				}
 			} // elements
 
-			// DEBUG
-			//VTX_LOG("cairo_close_path();");
-			//VTX_LOG("cairo_fill();");
 			cairo_close_path(mCairo);
 			cairo_fill(mCairo);
 
+			if(cairo_pattern)
+			{
+				cairo_pattern_destroy(cairo_pattern);
+				cairo_pattern = NULL;
+			}
+
 		} // subshapes
 
-		//VTX_LOG("Cairo status: %s", cairo_status_to_string(cairo_status(mCairo)));
-		//VTX_LOG("Surface status: %s", cairo_status_to_string(cairo_surface_status(mSurface)));
-
-		// DEBUG
-		//VTX_LOG("BLITTING...");
 		texture->paintPixelsToRect(node->getRect(), cairo_image_surface_get_data(mSurface));
 
 		// send cairo to sleep
 		cairo_destroy(mCairo);
 		cairo_surface_destroy(mSurface);
+	}
+	//-----------------------------------------------------------------------
+	cairo_matrix_t AtlasRasterizer::convertMatrix(const Matrix& matrix)
+	{
+		cairo_matrix_t result;
+
+		result.xx = matrix.m[0][0];
+		result.xy = matrix.m[0][1];
+		result.x0 = matrix.m[0][2];
+
+		result.yx = matrix.m[1][0];
+		result.yy = matrix.m[1][1];
+		result.y0 = matrix.m[1][2];
+
+		return result;
 	}
 	//-----------------------------------------------------------------------
 }

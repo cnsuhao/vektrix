@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(TAMARIN_HOME)\caspin\include&quot;;&quot;$(TAMARIN_HOME)\core&quot;;&quot;$(TAMARIN_HOME)\VMPI&quot;;&quot;$(TAMARIN_HOME)\shell&quot;;&quot;$(TAMARIN_HOME)\platform&quot;;&quot;$(TAMARIN_HOME)\MMgc&quot;;&quot;$(TAMARIN_HOME)\eval&quot;;&quot;$(TAMARIN_HOME)\extensions&quot;"
+				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(CASPIN_HOME)\include&quot;;&quot;$(CASPIN_HOME)\tamarin\core&quot;;&quot;$(CASPIN_HOME)\tamarin\vmpi&quot;;&quot;$(CASPIN_HOME)\tamarin\shell&quot;;&quot;$(CASPIN_HOME)\tamarin\platform&quot;;&quot;$(CASPIN_HOME)\tamarin\mmgc&quot;;&quot;$(CASPIN_HOME)\tamarin\eval&quot;;&quot;$(CASPIN_HOME)\tamarin\extensions&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VEKTRIX_AS3PLUGIN_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -65,7 +65,7 @@
 				AdditionalDependencies="caspin_debugger_d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(TAMARIN_HOME)\caspin\lib"
+				AdditionalLibraryDirectories="&quot;$(CASPIN_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -119,7 +119,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(TAMARIN_HOME)\caspin\include&quot;;&quot;$(TAMARIN_HOME)\core&quot;;&quot;$(TAMARIN_HOME)\VMPI&quot;;&quot;$(TAMARIN_HOME)\shell&quot;;&quot;$(TAMARIN_HOME)\platform&quot;;&quot;$(TAMARIN_HOME)\MMgc&quot;;&quot;$(TAMARIN_HOME)\eval&quot;;&quot;$(TAMARIN_HOME)\extensions&quot;"
+				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(CASPIN_HOME)\include&quot;;&quot;$(CASPIN_HOME)\tamarin\core&quot;;&quot;$(CASPIN_HOME)\tamarin\vmpi&quot;;&quot;$(CASPIN_HOME)\tamarin\shell&quot;;&quot;$(CASPIN_HOME)\tamarin\platform&quot;;&quot;$(CASPIN_HOME)\tamarin\mmgc&quot;;&quot;$(CASPIN_HOME)\tamarin\eval&quot;;&quot;$(CASPIN_HOME)\tamarin\extensions&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VEKTRIX_AS3PLUGIN_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -141,7 +141,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="caspin_debugger.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(TAMARIN_HOME)\caspin\lib"
+				AdditionalLibraryDirectories="&quot;$(CASPIN_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -177,6 +177,10 @@
 		<Filter
 			Name="Plugin"
 			>
+			<File
+				RelativePath="..\include\vtxas3.h"
+				>
+			</File>
 			<File
 				RelativePath="..\src\vtxas3Plugin.cpp"
 				>
@@ -286,10 +290,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath="..\include\vtxas3.h"
-			>
-		</File>
 		<File
 			RelativePath="..\src\vtxas3ScriptEngine.cpp"
 			>

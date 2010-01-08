@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OGRE_HOME)\OgreMain\include&quot;;&quot;$(OGRE_HOME)\Dependencies\include&quot;;&quot;$(OGRE_HOME)\Samples\Common\include&quot;;..\include;..\..\..\lib\include;..\..\..\plugins\OgrePlugin\include"
+				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;..\..\..\plugins\OgrePlugin\include;&quot;$(OGRE_HOME)\OgreMain\include&quot;;&quot;$(OGRE_HOME)\Dependencies\include&quot;;&quot;$(OGRE_HOME)\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -94,7 +94,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(OGRE_HOME)\lib\OgreMain.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\lib\OgreMain_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_Direct3D9.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_Direct3D9_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_GL.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_GL_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(OGRE_HOME)\Samples\Common\bin\Release\OIS.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\Samples\Common\bin\Debug\OIS_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(CAIRO_HOME)\bin\libcairo-2.dll $(OutDir)&#x0D;&#x0A;"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -123,7 +123,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(OGRE_HOME)\OgreMain\include&quot;;&quot;$(OGRE_HOME)\Dependencies\include&quot;;&quot;$(OGRE_HOME)\Samples\Common\include&quot;;..\include;..\..\..\lib\include;..\..\..\plugins\OgrePlugin\include"
+				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;..\..\..\plugins\OgrePlugin\include;&quot;$(OGRE_HOME)\OgreMain\include&quot;;&quot;$(OGRE_HOME)\Dependencies\include&quot;;&quot;$(OGRE_HOME)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -174,7 +174,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(OGRE_HOME)\lib\OgreMain.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\lib\OgreMain_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_Direct3D9.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_Direct3D9_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_GL.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\lib\RenderSystem_GL_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(OGRE_HOME)\Samples\Common\bin\Release\OIS.dll $(OutDir)&#x0D;&#x0A;copy $(OGRE_HOME)\Samples\Common\bin\Debug\OIS_d.dll $(OutDir)&#x0D;&#x0A;&#x0D;&#x0A;copy $(CAIRO_HOME)\bin\libcairo-2.dll $(OutDir)&#x0D;&#x0A;"
+				CommandLine=""
 			/>
 		</Configuration>
 	</Configurations>
@@ -183,10 +183,6 @@
 	<Files>
 		<File
 			RelativePath="..\src\Ogre3D_Demo.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\include\Ogre3D_Demo.h"
 			>
 		</File>
 	</Files>

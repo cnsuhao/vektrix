@@ -16,7 +16,7 @@ Ogre::SceneNode* movie_node = NULL;
 Ogre::RenderWindow* mWindow = NULL;
 
 using namespace Ogre; 
-
+//-----------------------------------------------------------------------
 class SimpleFrameListener : public FrameListener 
 {
 public: 
@@ -60,7 +60,7 @@ private:
 	OIS::Keyboard* mKeyboard; 
 	OIS::Mouse* mMouse; 
 }; 
-
+//-----------------------------------------------------------------------
 class SimpleKeyListener : public OIS::KeyListener 
 {
 public: 
@@ -68,7 +68,7 @@ public:
 
 	bool keyReleased(const OIS::KeyEvent& e){ return true; }
 };
-
+//-----------------------------------------------------------------------
 class SimpleMouseListener : public OIS::MouseListener
 {
 public: 
@@ -93,18 +93,17 @@ public:
 		return true;
 	}
 };
-
+//-----------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(4055);
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetBreakAlloc(4515);
 
 	// start vektrix
-	new vtx::Root();
+	vtx::Root* vektrix_root = new vtx::Root();
 
 	Root* ogre_root = new Root("", "ogre.cfg", "Ogre.log");
 
-	vtx::Root* vektrix_root = vtx::Root::getSingletonPtr();
 	vtx::LogManager::getSingletonPtr()->logToCout(true);
 
 	vtx::FileManager::getSingletonPtr()->addFileContainer("../demos/Ogre3D/media");
@@ -113,7 +112,7 @@ int main(int argc, char **argv)
 	// vektrix plugins
 	vektrix_root->loadPlugin("vektrix_AS3Plugin_d");
 	vektrix_root->loadPlugin("vektrix_SwfPlugin_d");
-	//vektrix_root->loadPlugin("vektrix_XmlPlugin_d");
+	vektrix_root->loadPlugin("vektrix_XmlPlugin_d");
 	vektrix_root->loadPlugin("vektrix_OgrePlugin_d");
 
 	// ogre plugins
@@ -123,7 +122,7 @@ int main(int argc, char **argv)
 	// vektrix plugins
 	vektrix_root->loadPlugin("vektrix_AS3Plugin");
 	vektrix_root->loadPlugin("vektrix_SwfPlugin");
-	//vektrix_root->loadPlugin("vektrix_XmlPlugin");
+	vektrix_root->loadPlugin("vektrix_XmlPlugin");
 	vektrix_root->loadPlugin("vektrix_OgrePlugin");
 
 	// ogre plugins
@@ -133,8 +132,16 @@ int main(int argc, char **argv)
 
 	if(!ogre_root->showConfigDialog())
 	{
+		delete vtx::Root::getSingletonPtr();
 		delete ogre_root;
 		return false;
+	}
+
+	// override Floating point mode
+	Ogre::RenderSystem* render_system = ogre_root->getRenderSystem();
+	if(render_system->getName() == "Direct3D9 Rendering Subsystem")
+	{
+		render_system->setConfigOption("Floating-point mode", "Consistent");
 	}
 
 	mWindow = ogre_root->initialise(true, "vektrix Ogre3D Demo");
@@ -146,7 +153,7 @@ int main(int argc, char **argv)
 	Camera* camera = sceneMgr->createCamera("MainCamera"); 
 
 	Viewport* viewPort = mWindow->addViewport(camera);
-	//viewPort->setBackgroundColour(Ogre::ColourValue::Red);
+	viewPort->setBackgroundColour(Ogre::ColourValue::White);
 
 	OIS::ParamList pl;
 	size_t windowHnd = 0;
@@ -182,14 +189,14 @@ int main(int argc, char **argv)
 	ogre_root->addFrameListener(frameListener); 
 
 	// VEKTRIX
-	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "vtx_button.swf", "OgreMovableMovie");
+	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "button_test.swf", "OgreMovableMovie");
 	movie->play();
 
 	movie_node = sceneMgr->getRootSceneNode()->createChildSceneNode();
 	movie_node->attachObject(movie);
 	int width = movie->getFile()->getHeader().width;
 	int height = movie->getFile()->getHeader().height;
-	movie_node->setPosition(-width/2.0f, height/2.0f, -500);
+	movie_node->setPosition(-width/2.0f, height/2.0f, -750);
 
 	movie->enableDebugger(true);
 
@@ -204,41 +211,12 @@ int main(int argc, char **argv)
 	inputManager->destroyInputObject(keyboard); keyboard = 0;
 	OIS::InputManager::destroyInputSystem(inputManager); inputManager = 0;
 	//listeners
-	delete frameListener; 
-	delete mouseListener; 
+	delete frameListener;
+	delete mouseListener;
 	delete keyListener;
 	//Ogre
 	delete ogre_root;
 
 	return 0;
 }
-
-//int main(int argc, char* argv[])
-//{
-//	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-//	//_CrtSetBreakAlloc(4961);
-//
-//	vtxDemoApplication app;
-//
-//	// start vektrix
-//	new vtx::Root();
-//
-//	try
-//	{
-//		app.go();
-//	}
-//	catch(Ogre::Exception& e)
-//	{
-//#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-//		MessageBox( NULL, e.getFullDescription().c_str(), "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
-//#else
-//		std::cerr << "An exception has occured: " <<
-//			e.getFullDescription().c_str() << std::endl;
-//#endif
-//	}
-//
-//	delete vtx::Root::getSingletonPtr();
-//
-//	return 0;
-//}
-
+//-----------------------------------------------------------------------

@@ -4,24 +4,28 @@ This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
 For the latest info, see http://www.fuse-software.com/
 
-Copyright (c) 2009 Fuse-Software (tm)
+Copyright (c) 2009-2010 Fuse-Software (tm)
 
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later
-version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-Place - Suite 330, Boston, MA 02111-1307, USA, or go to
-http://www.gnu.org/copyleft/gpl.txt.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
-#include "vtxswfParser2.h"
+#include "vtxswfParser.h"
 
 #include "vtxFile.h"
 #include "vtxFileStream.h"
@@ -32,6 +36,10 @@ http://www.gnu.org/copyleft/gpl.txt.
 #include "vtxStringHelper.h"
 #include "vtxTimeline.h"
 
+#ifdef USE_ZLIB
+#include "zlib.h"
+#endif
+
 namespace vtx
 {
 	namespace swf
@@ -40,6 +48,7 @@ namespace vtx
 		SwfParser2::SwfParser2() 
 			: mCompressed(false), 
 			mReadPos(0), 
+			mBuffer(NULL), 
 			mBitPos(0), 
 			mBitBuf(0), 
 			mFileLength(0), 
@@ -69,6 +78,8 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		File* SwfParser2::parse(FileStream* stream)
 		{
+			resetData();
+
 			mCurrentStream = stream;
 
 			if(!parseHeader())
@@ -98,6 +109,27 @@ namespace vtx
 			return mCurrentFile;
 		}
 		//-----------------------------------------------------------------------
+		void SwfParser2::resetData()
+		{
+			mCompressed = false;
+			mReadPos = 0; 
+			mBuffer = NULL; 
+			mBitPos = 0; 
+			mBitBuf = 0; 
+			mFileLength = 0; 
+			mCurrentFile = NULL; 
+			mCurrentStream = NULL; 
+
+			// movieclips
+			mCurrentMovieClip = NULL; 
+
+			// main movieclip
+			mMainFrameIndex = 0; 
+			mMainMovieClip = NULL; 
+			mTimeline = NULL; 
+			mCurrentKeyframe = NULL;
+		}
+		//-----------------------------------------------------------------------
 		bool SwfParser2::parseHeader()
 		{
 			UI8 sig[3];
@@ -124,7 +156,71 @@ namespace vtx
 			if(mCompressed)
 			{
 #ifdef USE_ZLIB
-				// TODO: implement ZLIB decompression
+				uint chunk_size = 0x40000; // 256 kBytes
+
+				z_stream zlib_stream;
+				zlib_stream.zalloc = Z_NULL;
+				zlib_stream.zfree = Z_NULL;
+				zlib_stream.opaque = Z_NULL;
+
+				zlib_stream.avail_in = 0;
+				zlib_stream.next_in = Z_NULL;
+
+				int ret = inflateInit(&zlib_stream);
+				if(ret != Z_OK)
+				{
+					error("ZLIB error: unknown startup error");
+					return false;
+				}
+
+				uint bufStart = 0;
+				char* readBuf = new char[chunk_size];
+				mBuffer = new char[mFileLength];
+
+				do 
+				{
+					// read a chunk of data from the SWF file
+					zlib_stream.avail_in = mCurrentStream->read(readBuf, chunk_size);
+
+					// no data available
+					if(zlib_stream.avail_in == 0)
+					{
+						break;
+					}
+
+					// give the read chunk to ZLIB
+					zlib_stream.next_in = (Bytef*)readBuf;
+
+					do
+					{
+						// copy the extracted content to the final buffer
+						zlib_stream.avail_out = chunk_size;
+						zlib_stream.next_out = (Bytef*)&mBuffer[bufStart];
+
+						ret = inflate(&zlib_stream, Z_NO_FLUSH);
+						assert(ret != Z_STREAM_ERROR);
+						switch(ret)
+						{
+						case Z_NEED_DICT:
+						case Z_DATA_ERROR:
+						case Z_MEM_ERROR:
+							(void)inflateEnd(&zlib_stream);
+							error("ZLIB error: extraction failed");
+							return false;
+						}
+
+						// calculate the written bytes
+						uint written = chunk_size - zlib_stream.avail_out;
+						bufStart += written;
+
+					} while(zlib_stream.avail_out == 0);
+
+				} while(ret != Z_STREAM_END);
+
+				// clean up
+				(void)inflateEnd(&zlib_stream);
+				delete[] readBuf;
+
 #else
 				error("Unable to load compressed SWF file (SWF plugin was compiled without zlib support).");
 				return false;
@@ -175,7 +271,10 @@ namespace vtx
 				break;
 
 			case TT_DefineShape:
-				handleDefineShape();
+			case TT_DefineShape2:
+			case TT_DefineShape3:
+			case TT_DefineShape4:
+				handleDefineShape((TagTypes)type);
 				break;
 
 			case TT_SetBackgroundColor:
@@ -291,8 +390,8 @@ namespace vtx
 			if(readUBits(1))
 			{
 				num_bits = readUBits(5);
-				result.cx = readSBits(num_bits);
 				result.cy = readSBits(num_bits);
+				result.cx = readSBits(num_bits);
 			}
 
 			// TRANSLATION

@@ -4,23 +4,28 @@ This source file is part of "vektrix"
 (the rich media and vector graphics rendering library)
 For the latest info, see http://www.fuse-software.com/
 
-Copyright (c) 2009 Fuse-Software (tm)
+Copyright (c) 2009-2010 Fuse-Software (tm)
 
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU Lesser General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later
-version.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-You should have received a copy of the GNU Lesser General Public License along with
-this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-Place - Suite 330, Boston, MA 02111-1307, USA, or go to
-http://www.gnu.org/copyleft/lesser.txt.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
+
 #include "vtxopShape.h"
 #include "vtxAtlasNode.h"
 #include "vtxResource.h"
@@ -82,7 +87,7 @@ namespace vtx
 			//Ogre::Matrix4 vtx_mat;
 			//vtx_mat
 			//vtx_mat.makeTransform(mPosition, mSize * mScale, Ogre::Quaternion::IDENTITY);
-			xform[0] = ogre_mat * mTransform;
+			xform[0] = ogre_mat * mWorldMatrix;
 
 			//Ogre::Vector3 node_pos = xform[0].getTrans();
 			////Ogre::Quaternion rot = xform[0].extractQuaternion();
@@ -120,51 +125,29 @@ namespace vtx
 			return movable->queryLights();
 		}
 		//-----------------------------------------------------------------------
-		//void OgreShape::setMatrix(const vtx::Matrix& m)
-		//{
-		//	mTransform = Ogre::Matrix4(
-		//		m.sx, m.cx, 0,  m.tx, 
-		//		m.cy, m.sy, 0, -m.ty, 
-		//		0,    0,    1,     0,
-		//		0,    0,    0,     1);
-		//	//mPosition.x = m.tx;
-		//	//mPosition.y = m.ty;
-		//	//mPosition.z = 0;
-
-		//	//mScale.x = m.sx;
-		//	//mScale.y = m.sy;
-		//	//mScale.z = 1;
-		//}
-		//-----------------------------------------------------------------------
-		//void OgreShape::setCXForm(const vtx::CXForm& cx)
-		//{
-		//	mMULcolor = Ogre::ColourValue(cx.mul_red, cx.mul_green, cx.mul_blue, cx.mul_alpha);
-		//	mADDcolor = Ogre::ColourValue(cx.add_red, cx.add_green, cx.add_blue, cx.add_alpha);
-		//}
-		//-----------------------------------------------------------------------
 		void OgreShape::_update(const float& delta_time)
 		{
 			Shape::_update(delta_time);
 
-			const Matrix& mat = _getWorldMatrix();
+			const Matrix& mat = getWorldMatrix();
 
-			mTransform = Ogre::Matrix4(
-				mat.m[0][0], mat.m[0][1], 0,  mat.m[0][2], 
-				mat.m[1][0], mat.m[1][1], 0, -mat.m[1][2], 
+			mWorldMatrix = Ogre::Matrix4(
+				mat.m[0][0], -mat.m[0][1], 0,  mat.m[0][2], 
+				-mat.m[1][0], mat.m[1][1], 0, -mat.m[1][2], 
 				0,		  0,		   1,				0,
 				0,		  0,		   0,				1);
 
 			mMULcolor = Ogre::ColourValue(
-				mCXForm.mul_red, 
-				mCXForm.mul_green, 
-				mCXForm.mul_blue, 
-				mCXForm.mul_alpha);
+				mTransform.getColor().mul_red, 
+				mTransform.getColor().mul_green, 
+				mTransform.getColor().mul_blue, 
+				mTransform.getColor().mul_alpha);
 
 			mADDcolor = Ogre::ColourValue(
-				mCXForm.add_red, 
-				mCXForm.add_green, 
-				mCXForm.add_blue, 
-				mCXForm.add_alpha);
+				mTransform.getColor().add_red, 
+				mTransform.getColor().add_green, 
+				mTransform.getColor().add_blue, 
+				mTransform.getColor().add_alpha);
 		}
 		//-----------------------------------------------------------------------
 		void OgreShape::setAtlasQuad(const AtlasPacker::PackResult& quad)

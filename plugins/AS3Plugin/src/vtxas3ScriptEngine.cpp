@@ -1,3 +1,31 @@
+/*
+-----------------------------------------------------------------------------
+This source file is part of "vektrix"
+(the rich media and vector graphics rendering library)
+For the latest info, see http://www.fuse-software.com/
+
+Copyright (c) 2009-2010 Fuse-Software (tm)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-----------------------------------------------------------------------------
+*/
+
 #include "vtxas3ScriptEngine.h"
 
 #include "vtxFile.h"
@@ -60,20 +88,6 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		bool AS3ScriptEngine::executeCode(const char* code, const uint& len)
 		{
-			//csp::ArgumentList args;
-			//args.push_back(mVmCore->newString("click"));
-			//args.push_back(mVmCore->newBoolean(false));
-			//args.push_back(mVmCore->newBoolean(true));
-
-			//csp::ScriptObject* evt = mVmCore->createObject("MouseEvent", "flash.events", args);
-
-			//csp::ScriptObject* hndlr = mVmCore->createObject("EventHandler");
-
-			//args.clear();
-			//args.push_back(evt->atom());
-			//mVmCore->callStaticFunction("EventHandler", "handle", "", args);
-			////hndlr->callFunction("handle", args);
-
 			return mVmCore->executeByteCode(code, len);
 		}
 		//-----------------------------------------------------------------------
@@ -96,22 +110,7 @@ namespace vtx
 						mRoot = mVmCore->createObject(vec.at(0));
 					}
 
-					//mRoot->initializeSlots();
-
 					mRootObject = dynamic_cast<vtx::as3::MovieClip*>(mRoot->scriptObj());
-
-					//ScriptButton* btn = dynamic_cast<vtx::ScriptButton*>(mRoot->getSlotObject("button1")->scriptObj());
-					//mRootObject->setChildScriptObject("button1", btn);
-					// <DEBUG ONLY>
-					//mRoot->callFunction("frame1");
-
-					//args.clear();
-					//args.push_back(evt->atom());
-					//mRoot->getSlotObject("button1")->callFunction("dispatchEvent", args);
-					//mRoot->getSlotObject("button1")->callFunction("dispatchEvent", args);
-					//mRoot->getSlotObject("button1")->callFunction("dispatchEvent", args);
-					//mRoot->getSlotObject("button1")->callFunction("dispatchEvent", args);
-					// </DEBUG ONLY>
 				}
 			}
 
