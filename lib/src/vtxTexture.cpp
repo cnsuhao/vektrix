@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "vtxLogManager.h"
 #include "vtxRect.h"
 #include "vtxShapeResource.h"
+#include "vtxRasterizerManager.h"
 
 namespace vtx
 {
@@ -79,7 +80,9 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Texture::renderAllShapes()
 	{
-		mRoot->renderShape();
+		// TODO: implement dynamic rasterizer assignment
+		Rasterizer* rst = RasterizerManager::getSingletonPtr()->getRasterizer("Cairo");
+		mRoot->renderShape(rst);
 	}
 	//-----------------------------------------------------------------------
 	const uint& Texture::getSize() const

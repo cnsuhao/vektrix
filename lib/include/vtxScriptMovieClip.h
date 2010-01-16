@@ -30,7 +30,6 @@ THE SOFTWARE.
 #define __vtxScriptMovieClip_H__
 
 #include "vtxPrerequesites.h"
-
 #include "vtxScriptObject.h"
 
 namespace vtx

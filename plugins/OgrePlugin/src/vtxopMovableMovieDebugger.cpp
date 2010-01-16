@@ -120,7 +120,7 @@ namespace vtx
 				int width = mParent->getFile()->getHeader().width;
 				int height = mParent->getFile()->getHeader().height;
 
-				mManualObject->begin(mBckgrContrastClrMaterial->getName(), Ogre::RenderOperation::OT_LINE_STRIP);
+				mManualObject->begin(mRedMaterial->getName(), Ogre::RenderOperation::OT_LINE_STRIP);
 				mManualObject->position(0, 0, 0);
 				mManualObject->position(width, 0, 0);
 				mManualObject->position(width, -height, 0);
@@ -130,7 +130,7 @@ namespace vtx
 
 				const Vector2& mouse_pos = mParent->getMouseAbs();
 
-				mManualObject->begin(mBckgrContrastClrMaterial->getName());
+				mManualObject->begin(mRedMaterial->getName());
 				mManualObject->position(mouse_pos.x, -mouse_pos.y-10.0, 0.1);
 				mManualObject->position(mouse_pos.x+5.0, -mouse_pos.y-8.0, 0.1);
 				mManualObject->position(mouse_pos.x, -mouse_pos.y, 0.1);
@@ -138,7 +138,7 @@ namespace vtx
 			}
 		}
 		//-----------------------------------------------------------------------
-		void MovableMovieDebugger::debugObjectBoundingBox(const BoundingBox& bb)
+		void MovableMovieDebugger::drawBoundingBox(const BoundingBox& bb)
 		{
 			if(mManualObject)
 			{

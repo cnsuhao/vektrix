@@ -27,21 +27,22 @@ THE SOFTWARE.
 */
 #include "vtxswfParser.h"
 
+#include "vtxFileHelper.h"
 #include "vtxLogManager.h"
 #include "vtxMaterialResource.h"
 #include "vtxShapeResource.h"
 #include "vtxStringHelper.h"
 #include "vtxSubshapeResource.h"
 
-#define DEBUG_FLASH_SHAPES
-#define DEBUG_OUTPUT_PATH "C:/vektrix_debug/"
+//#define DEBUG_FLASH_SHAPES
+//#define DEBUG_OUTPUT_PATH "C:/vektrix_debug/"
 
 namespace vtx
 {
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		void SwfParser2::handleDefineShape(const TagTypes& type)
+		void SwfParser::handleDefineShape(const TagTypes& type)
 		{
 			// clear all lists
 			// -> FLASH
@@ -216,9 +217,9 @@ namespace vtx
 						(type == TT_DefineShape2 || 
 						type == TT_DefineShape3))
 					{
-						assert(false && "new styles not tested yet");
-						parseFillstyleArray(TT_DefineShape);
-						parseLinestyleArray(TT_DefineShape);
+						//assert(false && "new styles not tested yet");
+						parseFillstyleArray(type);
+						parseLinestyleArray(type);
 						num_fill_bits = readUBits(4);
 						num_line_bits = readUBits(4);
 					}
@@ -244,7 +245,7 @@ namespace vtx
 			std::cout << "finished conversion" << std::endl;
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::parseFillstyleArray(const TagTypes& type)
+		void SwfParser::parseFillstyleArray(const TagTypes& type)
 		{
 			UI16 fillstyle_count = readU8();
 
@@ -301,7 +302,7 @@ namespace vtx
 			}
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::parseLinestyleArray(const TagTypes& type)
+		void SwfParser::parseLinestyleArray(const TagTypes& type)
 		{
 			UI16 linestyle_count = readU8();
 
@@ -346,7 +347,7 @@ namespace vtx
 			}
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::getFlashStyles()
+		void SwfParser::getFlashStyles()
 		{
 			ShapeElementList::iterator it = mShapeElements.begin();
 			ShapeElementList::iterator end = mShapeElements.end();
@@ -379,7 +380,7 @@ namespace vtx
 			}
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::getFlashChunks()
+		void SwfParser::getFlashChunks()
 		{
 			uint count = 0;
 
@@ -456,7 +457,11 @@ namespace vtx
 
 			//std::cout << "Num Elements: " << count << std::endl;
 
-#ifdef DEBUG_FLASH_SHAPES
+#if defined DEBUG_FLASH_SHAPES && defined _DEBUG
+
+			if(!FileHelper::doesDirectoryExist(DEBUG_OUTPUT_PATH))
+				return;
+
 			// DEBUG
 			char filename[512];
 			sprintf_s(filename, "%sall_elements.txt", DEBUG_OUTPUT_PATH);
@@ -520,7 +525,7 @@ namespace vtx
 #endif
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::generateSubshapes()
+		void SwfParser::generateSubshapes()
 		{
 			// loop through all fillstyles
 			FillstyleMap::iterator fill_it = mFillstyles.begin();
@@ -615,25 +620,28 @@ namespace vtx
 				//std::cout << "ELEMENTS LEFT: " << chunks.size() << std::endl;
 				assert("There should be no elements left here" && !chunks.size());
 
-#ifdef DEBUG_FLASH_SHAPES
-				char filename[512];
-				sprintf_s(filename, "%ssubshapes_%d.txt", DEBUG_OUTPUT_PATH, fill_it->first);
-				FILE* file = fopen(filename, "w");
+#if defined DEBUG_FLASH_SHAPES && defined _DEBUG
 
-				elem_it = subshape.elements.begin();
-				elem_end = subshape.elements.end();
-				while(elem_it != elem_end)
+				if(FileHelper::doesDirectoryExist(DEBUG_OUTPUT_PATH))
 				{
-					if((*elem_it).isStartElement)
+					char filename[512];
+					sprintf_s(filename, "%ssubshapes_%d.txt", DEBUG_OUTPUT_PATH, fill_it->first);
+					FILE* file = fopen(filename, "w");
+
+					elem_it = subshape.elements.begin();
+					elem_end = subshape.elements.end();
+					while(elem_it != elem_end)
 					{
-						fprintf(file, "start\n");
+						if((*elem_it).isStartElement)
+						{
+							fprintf(file, "start\n");
+						}
+						debug_contour_element(*elem_it, file);
+						++elem_it;
 					}
-					debug_contour_element(*elem_it, file);
-					++elem_it;
+
+					fclose(file);
 				}
-
-				fclose(file);
-
 #endif
 
 				// store the result
@@ -641,12 +649,12 @@ namespace vtx
 			} // for END (fillstyles)
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::generateSublines()
+		void SwfParser::generateSublines()
 		{
 
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::writeFillstyles(const UI16& shape_id)
+		void SwfParser::writeFillstyles(const UI16& shape_id)
 		{
 			FillstyleMap::iterator it = mFillstyles.begin();
 			FillstyleMap::iterator end = mFillstyles.end();
@@ -723,7 +731,7 @@ namespace vtx
 			}// while(fillstyles)
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::writeSubshapes(const UI16& shape_id, ShapeResource* shape_resource)
+		void SwfParser::writeSubshapes(const UI16& shape_id, ShapeResource* shape_resource)
 		{
 			SubShapeList::iterator subshape_it = mSubShapeList.begin();
 			for( ; subshape_it != mSubShapeList.end(); ++subshape_it)
@@ -790,9 +798,13 @@ namespace vtx
 			} // for(subshapes)
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::debug_contour_element(const ContourElement& element, FILE* file)
+		void SwfParser::debug_contour_element(const ContourElement& element, FILE* file)
 		{
-#ifdef DEBUG_FLASH_SHAPES
+#if defined DEBUG_FLASH_SHAPES && defined _DEBUG
+
+			if(!FileHelper::doesDirectoryExist(DEBUG_OUTPUT_PATH))
+				return;
+
 			switch(element.type)
 			{
 				//case CID_MOVE:
@@ -827,9 +839,13 @@ namespace vtx
 #endif
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::debug_shape_element(const SubshapeResource::ShapeElement& element, FILE* file)
+		void SwfParser::debug_shape_element(const SubshapeResource::ShapeElement& element, FILE* file)
 		{
-#ifdef DEBUG_FLASH_SHAPES
+#if defined DEBUG_FLASH_SHAPES && defined _DEBUG
+
+			if(!FileHelper::doesDirectoryExist(DEBUG_OUTPUT_PATH))
+				return;
+
 			switch(element.type)
 			{
 			case SubshapeResource::ShapeElement::SID_MOVE_TO:

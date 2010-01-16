@@ -42,13 +42,13 @@ namespace vtx
 {
 	namespace swf
 	{
-		class SwfParser2 : public FileParser
+		class SwfParser : public FileParser
 		{
 		public:
 			typedef std::stack<MovieClipResource*> MovieClipStack;
 
-			SwfParser2();
-			virtual ~SwfParser2();
+			SwfParser();
+			virtual ~SwfParser();
 
 			const std::string& getExtension() const;
 			File* parse(FileStream* stream);

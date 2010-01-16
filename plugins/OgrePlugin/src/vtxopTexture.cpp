@@ -55,7 +55,8 @@ namespace vtx
 				size, size, 1, 
 				0, 
 				Ogre::PF_A8R8G8B8, 
-				Ogre::TU_DYNAMIC_WRITE_ONLY);
+				Ogre::TU_DYNAMIC_WRITE_ONLY, 
+				this);
 
 			Ogre::HardwarePixelBufferSharedPtr buffer = mTexture->getBuffer();
 
@@ -99,7 +100,8 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		OgreTexture::~OgreTexture()
 		{
-			Ogre::TextureManager::getSingletonPtr()->remove(static_cast<Ogre::ResourcePtr>(mTexture));
+			//Ogre::TextureManager::getSingletonPtr()->remove(mTexture);
+			mTexture.setNull();
 		}
 		//-----------------------------------------------------------------------
 		void OgreTexture::paintPixelsToRect(const vtx::Rect& coordinates, unsigned char* pixelData)
@@ -148,6 +150,11 @@ namespace vtx
 		const Ogre::MaterialPtr& OgreTexture::getMaterial() const
 		{
 			return mMaterial;
+		}
+		//-----------------------------------------------------------------------
+		void OgreTexture::loadResource(Ogre::Resource* resource)
+		{
+			renderAllShapes();
 		}
 		//-----------------------------------------------------------------------
 	}

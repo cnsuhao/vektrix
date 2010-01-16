@@ -84,17 +84,7 @@ namespace vtx
 			Ogre::MovableObject* movable = dynamic_cast<Ogre::MovableObject*>(mParentMovie);
 
 			Ogre::Matrix4 ogre_mat = movable->_getParentNodeFullTransform();
-			//Ogre::Matrix4 vtx_mat;
-			//vtx_mat
-			//vtx_mat.makeTransform(mPosition, mSize * mScale, Ogre::Quaternion::IDENTITY);
 			xform[0] = ogre_mat * mWorldMatrix;
-
-			//Ogre::Vector3 node_pos = xform[0].getTrans();
-			////Ogre::Quaternion rot = xform[0].extractQuaternion();
-			////pos -= rot * Vector3(0, 0, mDepth);
-			//xform[0].setTrans(node_pos + mPosition);
-			//mat.extractQuaternion();
-			//xform[0].setScale(mSize * mScale);
 		}
 		//-----------------------------------------------------------------------
 		const Ogre::Quaternion& OgreShape::getWorldOrientation() const
@@ -188,6 +178,14 @@ namespace vtx
 			}
 			offset += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3);
 
+
+			// normal
+			if(!mVertexDecl->findElementBySemantic(Ogre::VES_NORMAL))
+			{
+				mVertexDecl->addElement(0, offset, Ogre::VET_FLOAT3, Ogre::VES_NORMAL);
+			}
+			offset += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3);
+
 			// diffuse
 			if(!mVertexDecl->findElementBySemantic(Ogre::VES_DIFFUSE))
 			{
@@ -248,6 +246,11 @@ namespace vtx
 			*vertex++ = -mBoundingBox.getMinY();
 			*vertex++ = 0;
 
+			// normal
+			*vertex++ = 0;
+			*vertex++ = 0;
+			*vertex++ = -1;
+
 			// diffuse
 			*vertex++ = mMULcolor.r;
 			*vertex++ = mMULcolor.g;
@@ -271,6 +274,11 @@ namespace vtx
 			*vertex++ = mBoundingBox.getMinX();
 			*vertex++ = -mBoundingBox.getMaxY();
 			*vertex++ = 0;
+
+			// normal
+			*vertex++ = 0;
+			*vertex++ = 0;
+			*vertex++ = -1;
 
 			// diffuse
 			*vertex++ = mMULcolor.r;
@@ -296,6 +304,11 @@ namespace vtx
 			*vertex++ = -mBoundingBox.getMaxY();
 			*vertex++ = 0;
 
+			// normal
+			*vertex++ = 0;
+			*vertex++ = 0;
+			*vertex++ = -1;
+
 			// diffuse
 			*vertex++ = mMULcolor.r;
 			*vertex++ = mMULcolor.g;
@@ -319,6 +332,11 @@ namespace vtx
 			*vertex++ = mBoundingBox.getMaxX();
 			*vertex++ = -mBoundingBox.getMinY();
 			*vertex++ = 0;
+
+			// normal
+			*vertex++ = 0;
+			*vertex++ = 0;
+			*vertex++ = -1;
 
 			// diffuse
 			*vertex++ = mMULcolor.r;

@@ -45,7 +45,7 @@ namespace vtx
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		SwfParser2::SwfParser2() 
+		SwfParser::SwfParser() 
 			: mCompressed(false), 
 			mReadPos(0), 
 			mBuffer(NULL), 
@@ -65,18 +65,18 @@ namespace vtx
 
 		}
 		//-----------------------------------------------------------------------
-		SwfParser2::~SwfParser2()
+		SwfParser::~SwfParser()
 		{
 
 		}
 		//-----------------------------------------------------------------------
-		const std::string& SwfParser2::getExtension() const
+		const std::string& SwfParser::getExtension() const
 		{
 			static std::string ext = ".swf";
 			return ext;
 		}
 		//-----------------------------------------------------------------------
-		File* SwfParser2::parse(FileStream* stream)
+		File* SwfParser::parse(FileStream* stream)
 		{
 			resetData();
 
@@ -109,7 +109,7 @@ namespace vtx
 			return mCurrentFile;
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::resetData()
+		void SwfParser::resetData()
 		{
 			mCompressed = false;
 			mReadPos = 0; 
@@ -130,7 +130,7 @@ namespace vtx
 			mCurrentKeyframe = NULL;
 		}
 		//-----------------------------------------------------------------------
-		bool SwfParser2::parseHeader()
+		bool SwfParser::parseHeader()
 		{
 			UI8 sig[3];
 			mCurrentStream->read(&sig, sizeof(UI8)*3);
@@ -247,7 +247,7 @@ namespace vtx
 			return true;
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::readTag()
+		void SwfParser::readTag()
 		{
 			// type and length
 			UI16 tnl = readU16();
@@ -330,22 +330,22 @@ namespace vtx
 			}
 		}
 		//-----------------------------------------------------------------------
-		UI8 SwfParser2::readU8()
+		UI8 SwfParser::readU8()
 		{
 			return mBuffer[mReadPos++];
 		}
 		//-----------------------------------------------------------------------
-		UI16 SwfParser2::readU16()
+		UI16 SwfParser::readU16()
 		{
 			return readU8() | readU8()<<8;
 		}
 		//-----------------------------------------------------------------------
-		UI32 SwfParser2::readU32()
+		UI32 SwfParser::readU32()
 		{
 			return readU8() | readU8()<<8 | readU8()<<16 | readU8()<<24;
 		}
 		//-----------------------------------------------------------------------
-		RECT SwfParser2::readRect()
+		RECT SwfParser::readRect()
 		{
 			RECT result;
 			UI32 n = readUBits(5);
@@ -357,7 +357,7 @@ namespace vtx
 			return result;
 		}
 		//-----------------------------------------------------------------------
-		COLOR SwfParser2::readColor(const bool& alpha)
+		COLOR SwfParser::readColor(const bool& alpha)
 		{
 			COLOR result;
 			result.red = readU8();
@@ -372,7 +372,7 @@ namespace vtx
 			return result;
 		}
 		//-----------------------------------------------------------------------
-		MATRIX SwfParser2::readMatrix()
+		MATRIX SwfParser::readMatrix()
 		{
 			MATRIX result;
 			UI32 num_bits = 0;
@@ -402,7 +402,7 @@ namespace vtx
 			return result;
 		}
 		//-----------------------------------------------------------------------
-		CXFORM SwfParser2::readCxForm(const bool& alpha)
+		CXFORM SwfParser::readCxForm(const bool& alpha)
 		{
 			CXFORM result;
 			resetReadBits();
@@ -438,7 +438,7 @@ namespace vtx
 			return result;
 		}
 		//-----------------------------------------------------------------------
-		String SwfParser2::readString()
+		String SwfParser::readString()
 		{
 			String result;
 			UI8 cur_char = readU8();
@@ -451,18 +451,18 @@ namespace vtx
 			return result;
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::fillReadBits()
+		void SwfParser::fillReadBits()
 		{
 			mBitBuf = readU8();
 			mBitPos = 8;
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::resetReadBits()
+		void SwfParser::resetReadBits()
 		{
 			mBitPos = mBitBuf = 0;
 		}
 		//-----------------------------------------------------------------------
-		UI32 SwfParser2::readUBits(UI32 n)
+		UI32 SwfParser::readUBits(UI32 n)
 		{
 			if(n == 0)
 			{
@@ -491,7 +491,7 @@ namespace vtx
 			return result;
 		}
 		//-----------------------------------------------------------------------
-		int SwfParser2::readSBits(UI32 n)
+		int SwfParser::readSBits(UI32 n)
 		{
 			assert(n <= 32);
 			int num = readUBits(n);
@@ -499,7 +499,7 @@ namespace vtx
 			return (num << shift) >> shift; // sign extend
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser2::readByteBlock(char* buf, UI32 n)
+		void SwfParser::readByteBlock(char* buf, UI32 n)
 		{
 			memcpy(buf, &mBuffer[mReadPos], n);
 			mReadPos += n;

@@ -40,7 +40,7 @@ namespace vtx
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		void SwfParser2::handlePlaceObject2()
+		void SwfParser::handlePlaceObject2()
 		{
 			resetReadBits();
 			UI8 has_clip_actions = readUBits(1);

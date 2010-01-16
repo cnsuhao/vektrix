@@ -45,32 +45,38 @@ THE SOFTWARE.
 #include <string>
 #include <vector>
 
-//#define NO_MEM_DBG
-
-#ifdef _DEBUG
-	#ifndef NO_MEM_DBG
-		#define _CRTDBG_MAP_ALLOC
-		#include <stdlib.h>
-		#include <crtdbg.h>
-
-		#ifdef _DEBUG
-		#define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
-		#define malloc(x) _malloc_dbg(x, _NORMAL_BLOCK, __FILE__, __LINE__);
-		#endif
-	#endif
-#endif
-
-#pragma warning (disable : 4251) // disable "dll-interface" warning
-#pragma warning (disable : 4661) // disable singleton include warning
-#pragma warning (disable : 4996) // disable "vsprintf" warning
+#include "vtxConfig.h"
 
 // version
-#define VEKTRIX_VERSION_MAJOR 0
-#define VEKTRIX_VERSION_MINOR 1
-#define VEKTRIX_VERSION_PATCH 0
-#define VEKTRIX_VERSION_NAME "Valus"
+#define VTX_VERSION_MAJOR 0
+#define VTX_VERSION_MINOR 1
+#define VTX_VERSION_PATCH 0
+#define VTX_VERSION_NAME "Valus"
 
-#define VEKTRIX_VERSION ((VEKTRIX_VERSION_MAJOR << 16) | (VEKTRIX_VERSION_MINOR << 8) | VEKTRIX_VERSION_PATCH)
+#define VTX_VERSION ((VTX_VERSION_MAJOR << 16) | (VTX_VERSION_MINOR << 8) | VTX_VERSION_PATCH)
+
+#ifdef VTX_STATIC_LIB
+#	define VTX_LOAD_PLUGIN(name) name##_startPlugin()
+#else
+#	define VTX_LOAD_PLUGIN(name) vtx::Root::getSingletonPtr()->loadPlugin(#name)
+#endif
+
+// defines what operating system is used
+#define VTX_WIN32 1
+#define VTX_LINUX 2
+#define VTX_APPLE 3
+
+#if defined __WIN32__ || defined _WIN32
+#	define VTX_OS VTX_WIN32
+
+#elif defined __APPLE_CC__
+#	define VTX_OS VTX_APPLE
+#else
+#	define VTX_OS VTX_LINUX
+#endif
+
+#include "vtxLinux.h"
+#include "vtxWin32.h"
 
 #ifndef F_OK
 # define F_OK 0
@@ -81,32 +87,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
-	#define VTX_DEFAULT_MOVIE_FACTORY "NULL"
-
-	// defines dll interface
-	#if defined VEKTRIX_EXPORTS
-		#define vtxExport __declspec(dllexport)
-	#else
-		#define vtxExport __declspec(dllimport)
-	#endif
-
-	// defines what operating system is used
-	#define VTX_WIN32 1
-	#define VTX_LINUX 2
-	#define VTX_APPLE 3
-
-	#if defined __WIN32__ || defined _WIN32
-		#define VTX_OS VTX_WIN32
-
-	#elif defined __APPLE_CC__
-		#define VTX_OS VTX_APPLE
-
-	#else
-		#define VTX_OS VTX_LINUX
-	#endif
-
 	class AtlasNode;
-	class Texture;
 	class AtlasPacker;
 	class BoundingBox;
 	class Button;
@@ -141,6 +122,8 @@ namespace vtx
 	class MovieDebugger;
 	class RenderStrategy;
 	class MovieFactory;
+	class Plugin;
+	class Rasterizer;
 	class Rect;
 	class RectF;
 	class RenderStrategy;
@@ -158,6 +141,7 @@ namespace vtx
 	class StringHelper;
 	class SubshapeResource;
 	class Tesselator;
+	class Texture;
 	class TextureFactory;
 	class Timeline;
 	class Vector2;
@@ -181,7 +165,6 @@ namespace vtx
 
 	// plugin functions
 	typedef void (*START_PLUGIN_FUNCTION)();
-	typedef void (*STOP_PLUGIN_FUNCTION)();
 }
 
 #endif

@@ -67,10 +67,10 @@ namespace vtx
 
 		const String& getName() const { return mName; }
 		void* getSymbol(const String& name) const throw();
+		String getError();
 
 	protected:
 		String mName;
-		String getError();
 		DYNLIB_HANDLE mInstance;
 	};
 }

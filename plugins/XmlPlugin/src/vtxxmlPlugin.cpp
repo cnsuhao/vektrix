@@ -27,36 +27,37 @@ THE SOFTWARE.
 */
 
 #include "vtxxmlPlugin.h"
+#include "vtxxmlMovieParser.h"
 
 #include "vtxFileManager.h"
-#include "vtxxmlMovieParser.h"
+#include "vtxRoot.h"
+
+//-----------------------------------------------------------------------
+#ifdef VTX_STATIC_LIB
+	void vektrix_XmlPlugin_startPlugin()
+#else
+	extern "C" void vtxxmlExport startPlugin() throw()
+#endif
+{
+	vtx::Root::getSingletonPtr()->_addPlugin(new vtx::xml::XmlPlugin());
+}
+//-----------------------------------------------------------------------
 
 namespace vtx
 {
 	namespace xml
 	{
 		//-----------------------------------------------------------------------
-		XmlPlugin* plugin = NULL;
-		//-----------------------------------------------------------------------
-		extern "C" void vtxxmlExport startPlugin() throw()
+		XmlPlugin::XmlPlugin() 
+			: mXmlParser(new MovieParser)
 		{
-			plugin = new XmlPlugin();
-		}
-
-		//-----------------------------------------------------------------------
-		extern "C" void vtxxmlExport stopPlugin()
-		{
-			delete plugin;
-		}
-		//-----------------------------------------------------------------------
-		XmlPlugin::XmlPlugin()
-		{
-			FileManager::getSingletonPtr()->addFileParser(new MovieParser);
+			FileManager::getSingletonPtr()->addFileParser(mXmlParser);
 		}
 		//-----------------------------------------------------------------------
 		XmlPlugin::~XmlPlugin()
 		{
-
+			FileManager::getSingletonPtr()->removeFileParser(mXmlParser);
+			delete mXmlParser;
 		}
 		//-----------------------------------------------------------------------
 	}

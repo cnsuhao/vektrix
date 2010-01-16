@@ -31,10 +31,20 @@ THE SOFTWARE.
 
 #include "vtxPrerequesites.h"
 
-#if defined VEKTRIX_SWFPLUGIN_EXPORTS
-#   define vtxswfExport __declspec( dllexport )
-#else
-#   define vtxswfExport __declspec( dllimport )
+#if VTX_OS == VTX_WIN32
+#	ifdef VTX_STATIC_LIB
+#		define vtxswfExport
+#	else
+#		ifdef VEKTRIX_SWFPLUGIN_EXPORTS
+#			define vtxswfExport __declspec(dllexport)
+#		else
+#			define vtxswfExport __declspec(dllimport)
+#		endif
+#	endif
+#endif
+
+#if VTX_OS == VTX_LINUX
+#	define vtxswfExport
 #endif
 
 // uncomment this if you want to load compressed SWFs
@@ -56,7 +66,7 @@ namespace vtx
 		class ContourChunk;
 		class ContourPoint;
 		class SubShape;
-		class SwfParser2;
+		class SwfParser;
 	}
 }
 

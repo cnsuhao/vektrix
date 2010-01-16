@@ -35,7 +35,7 @@ namespace vtx
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		void SwfParser2::handleShowFrame()
+		void SwfParser::handleShowFrame()
 		{
 			if(!mCurrentMovieClip)
 			{
@@ -46,11 +46,17 @@ namespace vtx
 					mCurrentKeyframe->setIndex(mMainFrameIndex);
 					mTimeline->addKeyframe(mCurrentKeyframe);
 					mCurrentKeyframe = NULL;
+				}
+				// no events, release empty frame
+				else
+				{
+					delete mCurrentKeyframe;
+					mCurrentKeyframe = 0;
+				}
 
-					if(mMainFrameIndex < mHeader.frames)
-					{
-						mCurrentKeyframe = new Keyframe;
-					}
+				if(mMainFrameIndex < mHeader.frames)
+				{
+					mCurrentKeyframe = new Keyframe;
 				}
 			}
 		}

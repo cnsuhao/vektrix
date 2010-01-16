@@ -30,12 +30,19 @@ THE SOFTWARE.
 #define __vtxas3Plugin_H__
 
 #include "vtxas3.h"
+#include "vtxPlugin.h"
+
+#ifdef VTX_STATIC_LIB
+	void vektrix_AS3Plugin_startPlugin();
+#else
+	extern "C" void vtxas3Export startPlugin() throw();
+#endif
 
 namespace vtx
 {
 	namespace as3
 	{
-		class AS3Plugin
+		class AS3Plugin : public Plugin
 		{
 		public:
 			AS3Plugin();

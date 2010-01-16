@@ -31,10 +31,20 @@ THE SOFTWARE.
 
 #include "vtxPrerequesites.h"
 
-#if defined VEKTRIX_XMLPLUGIN_EXPORTS
-#   define vtxxmlExport __declspec( dllexport )
-#else
-#   define vtxxmlExport __declspec( dllimport )
+#if VTX_OS == VTX_WIN32
+#	ifdef VTX_STATIC_LIB
+#		define vtxxmlExport
+#	else
+#		ifdef VEKTRIX_XMLPLUGIN_EXPORTS
+#			define vtxxmlExport __declspec(dllexport)
+#		else
+#			define vtxxmlExport __declspec(dllimport)
+#		endif
+#	endif
+#endif
+
+#if VTX_OS == VTX_LINUX
+#	define vtxxmlExport
 #endif
 
 // predeclarations for EXPAT
@@ -47,6 +57,7 @@ namespace vtx
 	namespace xml
 	{
 		class DataHandler;
+		class MovieParser;
 	}
 }
 

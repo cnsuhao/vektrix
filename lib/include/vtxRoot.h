@@ -49,6 +49,7 @@ namespace vtx
 	{
 	public:
 		typedef std::map<String, Movie*> MovieMap;
+		typedef std::vector<Plugin*> PluginList;
 
 		Root();
 		virtual ~Root();
@@ -61,16 +62,6 @@ namespace vtx
 		name Name of the plugin that shall be loaded.
 		*/
 		void loadPlugin(const String& name);
-
-		/** Unload a plugin that what previously loaded.
-		@param
-		name Name of the plugin that shall be unloaded.
-		*/
-		void unloadPlugin(const String& name);
-
-		/** Unload all plugins that are currently loaded.
-		*/
-		void unloadAllPlugins();
 
 		/** Create an instance of a movie.
 		@param
@@ -92,9 +83,12 @@ namespace vtx
 
 		Tesselator* getDefaultTesselator();
 
+		void _addPlugin(Plugin* plugin);
+
 	protected:
 		DynLibMap mLibraries;
 		MovieMap mMovies;
+		PluginList mPlugins;
 		Tesselator* mDefaultTesselator;
 	};
 }

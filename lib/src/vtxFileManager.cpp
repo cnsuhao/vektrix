@@ -43,7 +43,7 @@ namespace vtx
 	template<> FileManager* Singleton<FileManager>::sInstance = 0;
 	//-----------------------------------------------------------------------
 	FileManager::FileManager() 
-		: FactoryManager("FileContainer")
+		: FactoryManager<FileContainerFactory, DefaultFileContainerFactory>("FileContainer")
 	{
 
 	}
@@ -156,9 +156,7 @@ namespace vtx
 		if(it == mParsers.end())
 		{
 			mParsers.insert(FileParserMap::value_type(parser->getExtension(), parser));
-
 			VTX_LOG("Added FileParser for extension \"%s\".", parser->getExtension().c_str());
-
 			return true;
 		}
 
@@ -184,9 +182,7 @@ namespace vtx
 		if(it != mParsers.end())
 		{
 			mParsers.erase(it);
-
 			VTX_LOG("Removed FileParser for extension \"%s\".", parser->getExtension().c_str());
-
 			return true;
 		}
 

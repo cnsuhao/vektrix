@@ -32,7 +32,8 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	MovieDebugger::MovieDebugger(Movie* parent) 
-		: mParent(parent)
+		: mDebugBoundingBoxes(false), 
+		mParent(parent)
 	{
 
 	}
@@ -40,6 +41,24 @@ namespace vtx
 	MovieDebugger::~MovieDebugger()
 	{
 
+	}
+	//-----------------------------------------------------------------------
+	void MovieDebugger::debugBoundingBoxes(const bool& enable)
+	{
+		mDebugBoundingBoxes = enable;
+	}
+	//-----------------------------------------------------------------------
+	const bool& MovieDebugger::debuggingObjectBoundingBoxes() const
+	{
+		return mDebugBoundingBoxes;
+	}
+	//-----------------------------------------------------------------------
+	void MovieDebugger::debugObjectBoundingBox(const BoundingBox& bb)
+	{
+		if(mDebugBoundingBoxes)
+		{
+			drawBoundingBox(bb);
+		}
 	}
 	//-----------------------------------------------------------------------
 }

@@ -40,8 +40,6 @@ namespace vtx
 {
 	class vtxExport LogManager : public Singleton<LogManager>
 	{
-		friend Singleton;
-
 	public:
 		LogManager();
 		virtual ~LogManager();

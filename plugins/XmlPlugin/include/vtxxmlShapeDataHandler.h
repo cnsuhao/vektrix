@@ -30,7 +30,7 @@ THE SOFTWARE.
 #define __vtxxmlShapeDataHandler_H__
 
 #include "vtxPrerequesites.h"
-#include "vtxXMLDataHandler.h"
+#include "vtxxmlDataHandler.h"
 
 namespace vtx
 {

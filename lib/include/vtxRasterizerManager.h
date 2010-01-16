@@ -26,28 +26,30 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxAtlasRastarizer_H__
-#define __vtxAtlasRastarizer_H__
+#ifndef __vtxRasterizerManager_H__
+#define __vtxRasterizerManager_H__
 
 #include "vtxPrerequesites.h"
+#include "vtxRastarizer.h"
+#include "vtxFactoryManager.h"
 #include "vtxSingleton.h"
-
-#include <cairo.h>
 
 namespace vtx
 {
-	class AtlasRasterizer : public Singleton<AtlasRasterizer>
+	class vtxExport RasterizerManager : public Singleton<RasterizerManager>
 	{
 	public:
-		AtlasRasterizer();
-		void renderShapeToTexture(Texture* texture, ShapeResource* shape, AtlasNode* node);
+		typedef std::map<String, Rasterizer*> RasterizerMap;
 
-		cairo_matrix_t convertMatrix(const Matrix& matrix);
+		RasterizerManager();
+		virtual ~RasterizerManager();
+
+		bool addRasterizer(Rasterizer* rasterizer);
+		Rasterizer* getRasterizer(const String name);
+		bool removeRasterizer(Rasterizer* rasterizer);
 
 	protected:
-		unsigned char* mData;
-		cairo_t* mCairo;
-		cairo_surface_t* mSurface;
+		RasterizerMap mRasterizers;
 	};
 }
 

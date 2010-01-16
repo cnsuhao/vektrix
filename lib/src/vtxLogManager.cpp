@@ -76,9 +76,6 @@ namespace vtx
 
 #ifdef WIN32
 		MessageBox(NULL, temp.c_str(), "vektrix exception", MB_OK | MB_ICONSTOP);
-#else
-		std::cout << "Press any key to exit..." << std::endl;
-		getch();
 #endif
 		exit(1);
 	}

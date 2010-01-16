@@ -40,7 +40,7 @@ namespace vtx
 	class vtxExport TextureManager : public FactoryManager<TextureFactory, DefaultTextureFactory>, public Singleton<TextureManager>
 	{
 	public:
-		TextureManager() : FactoryManager("Texture") {}
+		TextureManager() : FactoryManager<TextureFactory, DefaultTextureFactory>("Texture") {}
 	};
 }
 

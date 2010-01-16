@@ -125,7 +125,7 @@ namespace vtx
 		{
 			if(mButton)
 			{
-				mButton->setX(val);
+				mButton->setX((float)val);
 			}
 		}
 		//-----------------------------------------------------------------------
@@ -133,7 +133,7 @@ namespace vtx
 		{
 			if(mButton)
 			{
-				return mButton->getTransform().getY();
+				return mButton->getY();
 			}
 
 			return 0;
@@ -143,7 +143,7 @@ namespace vtx
 		{
 			if(mButton)
 			{
-				mButton->getTransform().setY(val);
+				mButton->setY((float)val);
 			}
 		}
 		//-----------------------------------------------------------------------
@@ -161,7 +161,7 @@ namespace vtx
 		{
 			if(mButton)
 			{
-				mButton->setAngle(val);
+				mButton->setAngle((float)val);
 			}
 		}
 		//-----------------------------------------------------------------------

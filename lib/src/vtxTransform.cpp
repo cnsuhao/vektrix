@@ -98,7 +98,8 @@ namespace vtx
 		mMatrix = m;
 
 		decomposeMatrix();
-		needMatrixCompose();
+		// TODO: check evtl. bug in composeMatrix/decomposeMatrix -> rotation
+		//needMatrixCompose();
 		needMatrixUpdate();
 	}
 	//-----------------------------------------------------------------------

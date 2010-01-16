@@ -30,16 +30,26 @@ THE SOFTWARE.
 #define __vtxxmlPlugin_H__
 
 #include "vtxxml.h"
+#include "vtxPlugin.h"
+
+#ifdef VTX_STATIC_LIB
+	void vektrix_XmlPlugin_startPlugin();
+#else
+	extern "C" void vtxxmlExport startPlugin() throw();
+#endif
 
 namespace vtx
 {
 	namespace xml
 	{
-		class XmlPlugin
+		class XmlPlugin : public Plugin
 		{
 		public:
 			XmlPlugin();
 			virtual ~XmlPlugin();
+
+		protected:
+			MovieParser* mXmlParser;
 		};
 	}
 }

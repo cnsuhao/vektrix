@@ -40,14 +40,21 @@ namespace vtx
 		virtual ~MovieDebugger();
 
 		virtual void preDebug() = 0;
-		virtual void debugObjectBoundingBox(const BoundingBox& bb) = 0;
+
+		void debugBoundingBoxes(const bool& enable);
+		const bool& debuggingObjectBoundingBoxes() const;
+
+		void debugObjectBoundingBox(const BoundingBox& bb);
+
+	protected:
+		bool mDebugBoundingBoxes;
+		Movie* mParent;
+
+		virtual void drawBoundingBox(const BoundingBox& bb) = 0;
 
 		virtual void startDebugLine() = 0;
 		virtual void debugLine(const Vector2& point) = 0;
 		virtual void endDebugLine() = 0;
-
-	protected:
-		Movie* mParent;
 	};
 }
 

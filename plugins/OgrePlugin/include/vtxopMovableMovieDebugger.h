@@ -47,11 +47,6 @@ namespace vtx
 			virtual ~MovableMovieDebugger();
 
 			void preDebug();
-			void debugObjectBoundingBox(const BoundingBox& bb);
-
-			void startDebugLine();
-			void debugLine(const Vector2& point);
-			void endDebugLine();
 
 		protected:
 			Ogre::MaterialPtr mRedMaterial;
@@ -60,6 +55,12 @@ namespace vtx
 			Ogre::MaterialPtr mBckgrContrastClrMaterial;
 			Ogre::ManualObject* mManualObject;
 			Ogre::SceneNode* mNode;
+
+			void drawBoundingBox(const BoundingBox& bb);
+
+			void startDebugLine();
+			void debugLine(const Vector2& point);
+			void endDebugLine();
 		};
 	}
 }

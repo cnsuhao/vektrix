@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 #include "vtxAtlasNode.h"
 
-#include "vtxAtlasRastarizer.h"
+#include "vtxRastarizer.h"
 #include "vtxShapeResource.h"
 
 namespace vtx
@@ -54,21 +54,21 @@ namespace vtx
 		mChild_2 = NULL;
 	}
 	//-----------------------------------------------------------------------
-	void AtlasNode::renderShape()
+	void AtlasNode::renderShape(Rasterizer* rasterizer)
 	{
 		if(mShape)
 		{
-			AtlasRasterizer::getSingletonPtr()->renderShapeToTexture(mParent, mShape, this);
+			rasterizer->renderShapeToTexture(mParent, mShape, this);
 		}
 
 		if(mChild_1)
 		{
-			mChild_1->renderShape();
+			mChild_1->renderShape(rasterizer);
 		}
 
 		if(mChild_2)
 		{
-			mChild_2->renderShape();
+			mChild_2->renderShape(rasterizer);
 		}
 	}
 	//-----------------------------------------------------------------------

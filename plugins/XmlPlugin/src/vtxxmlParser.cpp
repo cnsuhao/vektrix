@@ -27,9 +27,9 @@ THE SOFTWARE.
 */
 
 #include "vtxxmlParser.h"
+#include "vtxxmlDataHandler.h"
 
 #include "vtxFile.h"
-#include "vtxXMLDataHandler.h"
 #include "vtxFileStream.h"
 #include "vtxLogManager.h"
 #include "vtxStringHelper.h"

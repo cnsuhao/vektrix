@@ -39,7 +39,7 @@ namespace vtx
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		void SwfParser2::handleDefineButton2()
+		void SwfParser::handleDefineButton2()
 		{
 			UI16 btn_id = readU16();
 			UI8 menu = readU8();

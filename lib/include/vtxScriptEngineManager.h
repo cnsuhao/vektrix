@@ -30,7 +30,6 @@ THE SOFTWARE.
 #define __vtxScriptEngineManager_H__
 
 #include "vtxPrerequesites.h"
-
 #include "vtxFactoryManager.h"
 #include "vtxSingleton.h"
 #include "vtxScriptEngine.h"
@@ -40,7 +39,7 @@ namespace vtx
 	class vtxExport ScriptEngineManager : public FactoryManagerNULL<ScriptEngineFactory>, public Singleton<ScriptEngineManager>
 	{
 	public:
-		ScriptEngineManager() : FactoryManagerNULL("ScriptEngine") {}
+		ScriptEngineManager() : FactoryManagerNULL<ScriptEngineFactory>("ScriptEngine") {}
 	};
 }
 

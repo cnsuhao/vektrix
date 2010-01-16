@@ -48,7 +48,7 @@ namespace vtx
 		AtlasNode(const Rect& rect, Texture* parent);
 		virtual ~AtlasNode();
 
-		void renderShape();
+		void renderShape(Rasterizer* rasterizer);
 		void setShape(ShapeResource* shape);
 		const Rect& getRect() const;
 

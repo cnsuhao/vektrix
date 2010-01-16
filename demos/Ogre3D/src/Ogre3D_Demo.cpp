@@ -1,23 +1,32 @@
-#define OIS_DYNAMIC_LIB
-
+// uncomment this if you want to statically link to vektrix
+//#define VTX_STATIC_LIB
 #include "vtxFile.h"
 #include "vtxFileManager.h"
 #include "vtxMovie.h"
+#include "vtxMovieDebugger.h"
 #include "vtxRoot.h"
 
 #include "vtxopMovableMovie.h"
 
-#include "Ogre.h" 
-#include "OgreFrameListener.h" 
+// vektrix plugins
+#include "vtxas3Plugin.h"
+#include "vtxcaiPlugin.h"
+#include "vtxopPlugin.h"
+#include "vtxswfPlugin.h"
+#include "vtxxmlPlugin.h"
+
+#include "Ogre.h"
+#include "OgreFrameListener.h"
+
+#define OIS_DYNAMIC_LIB
 #include <OIS/OIS.h>
 
 vtx::ogre::MovableMovie* movie = NULL;
 Ogre::SceneNode* movie_node = NULL;
 Ogre::RenderWindow* mWindow = NULL;
 
-using namespace Ogre; 
 //-----------------------------------------------------------------------
-class SimpleFrameListener : public FrameListener 
+class SimpleFrameListener : public Ogre::FrameListener 
 {
 public: 
 	SimpleFrameListener(OIS::Keyboard* keyboard, OIS::Mouse* mouse) 
@@ -26,23 +35,10 @@ public:
 		mMouse = mouse; 
 	} 
 
-	bool frameStarted(const FrameEvent& evt) 
+	bool frameStarted(const Ogre::FrameEvent& evt) 
 	{
 		mKeyboard->capture();
 		mMouse->capture();
-
-		//const OIS::MouseState& state = mMouse->getMouseState();
-
-		//movie->setMouseRel(state.X.abs/(float)mWindow->getWidth(), state.Y.abs/(float)mWindow->getHeight());
-
-		//if(state.buttonDown(OIS::MB_Left))
-		//{
-		//	movie->mouseDown();
-		//}
-		//else 
-		//{
-		//	movie->mouseUp();
-		//}
 
 		vtx::Root::getSingletonPtr()->update(evt.timeSinceLastFrame);
 
@@ -52,7 +48,7 @@ public:
 		return true; 
 	} 
 
-	bool frameEnded(const FrameEvent& evt) 
+	bool frameEnded(const Ogre::FrameEvent& evt) 
 	{ 
 		return true; 
 	} 
@@ -64,9 +60,25 @@ private:
 class SimpleKeyListener : public OIS::KeyListener 
 {
 public: 
-	bool keyPressed(const OIS::KeyEvent& e){ return true; }
+	bool keyPressed(const OIS::KeyEvent& e)
+	{
+		return true;
+	}
 
-	bool keyReleased(const OIS::KeyEvent& e){ return true; }
+	bool keyReleased(const OIS::KeyEvent& e)
+	{
+		if(e.key == OIS::KC_F1 && movie)
+		{
+			vtx::MovieDebugger* dbg = movie->getDebugger();
+			if(dbg)
+			{
+				// toggle boundingbox debugging visuals
+				dbg->debugBoundingBoxes(!dbg->debuggingObjectBoundingBoxes());
+			}
+		}
+
+		return true;
+	}
 };
 //-----------------------------------------------------------------------
 class SimpleMouseListener : public OIS::MouseListener
@@ -74,21 +86,30 @@ class SimpleMouseListener : public OIS::MouseListener
 public: 
 	bool mouseMoved(const OIS::MouseEvent& e)
 	{
-		movie->setMouseRel(e.state.X.abs/(float)mWindow->getWidth(), e.state.Y.abs/(float)mWindow->getHeight());
+		if(movie)
+		{
+			movie->setMouseRel(e.state.X.abs/(float)mWindow->getWidth(), e.state.Y.abs/(float)mWindow->getHeight());
+		}
 
 		return true;
 	}
 
 	bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 	{
-		movie->mouseDown();
+		if(movie)
+		{
+			movie->mouseDown();
+		}
 
 		return true;
 	}
 
 	bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 	{
-		movie->mouseUp();
+		if(movie)
+		{
+			movie->mouseUp();
+		}
 
 		return true;
 	}
@@ -96,39 +117,41 @@ public:
 //-----------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(4515);
+	//VTX_MEM_DEBUG_ENABLE();
+	//VTX_MEM_DEBUG_BREAK(2838);
 
 	// start vektrix
 	vtx::Root* vektrix_root = new vtx::Root();
 
-	Root* ogre_root = new Root("", "ogre.cfg", "Ogre.log");
+	Ogre::Root* ogre_root = new Ogre::Root("", "ogre.cfg", "Ogre.log");
+
+	// ogre plugins
+#if VTX_OS == VTX_WIN32
+#	ifdef _DEBUG
+		ogre_root->loadPlugin("RenderSystem_Direct3D9_d");
+		ogre_root->loadPlugin("RenderSystem_GL_d");
+#	else
+		ogre_root->loadPlugin("RenderSystem_Direct3D9");
+		ogre_root->loadPlugin("RenderSystem_GL");
+#	endif
+#endif
+
+#if VTX_OS == VTX_LINUX
+		ogre_root->loadPlugin("RenderSystem_GL");
+#endif
 
 	vtx::LogManager::getSingletonPtr()->logToCout(true);
 
 	vtx::FileManager::getSingletonPtr()->addFileContainer("../demos/Ogre3D/media");
 
-#ifdef _DEBUG
 	// vektrix plugins
-	vektrix_root->loadPlugin("vektrix_AS3Plugin_d");
-	vektrix_root->loadPlugin("vektrix_SwfPlugin_d");
-	vektrix_root->loadPlugin("vektrix_XmlPlugin_d");
-	vektrix_root->loadPlugin("vektrix_OgrePlugin_d");
-
-	// ogre plugins
-	ogre_root->loadPlugin("RenderSystem_Direct3D9_d");
-	ogre_root->loadPlugin("RenderSystem_GL_d");
-#else
-	// vektrix plugins
-	vektrix_root->loadPlugin("vektrix_AS3Plugin");
-	vektrix_root->loadPlugin("vektrix_SwfPlugin");
-	vektrix_root->loadPlugin("vektrix_XmlPlugin");
-	vektrix_root->loadPlugin("vektrix_OgrePlugin");
-
-	// ogre plugins
-	ogre_root->loadPlugin("RenderSystem_Direct3D9");
-	ogre_root->loadPlugin("RenderSystem_GL");
+#if VTX_OS == VTX_WIN32
+	VTX_LOAD_PLUGIN(vektrix_AS3Plugin);
 #endif
+	VTX_LOAD_PLUGIN(vektrix_CairoPlugin);
+	VTX_LOAD_PLUGIN(vektrix_OgrePlugin);
+	VTX_LOAD_PLUGIN(vektrix_SwfPlugin);
+	VTX_LOAD_PLUGIN(vektrix_XmlPlugin);
 
 	if(!ogre_root->showConfigDialog())
 	{
@@ -137,7 +160,7 @@ int main(int argc, char **argv)
 		return false;
 	}
 
-	// override Floating point mode
+	// override floating point mode
 	Ogre::RenderSystem* render_system = ogre_root->getRenderSystem();
 	if(render_system->getName() == "Direct3D9 Rendering Subsystem")
 	{
@@ -146,13 +169,13 @@ int main(int argc, char **argv)
 
 	mWindow = ogre_root->initialise(true, "vektrix Ogre3D Demo");
 
-	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
-	SceneManager* sceneMgr = ogre_root->createSceneManager(ST_GENERIC); 
+	Ogre::SceneManager* sceneMgr = ogre_root->createSceneManager(Ogre::ST_GENERIC); 
 
-	Camera* camera = sceneMgr->createCamera("MainCamera"); 
+	Ogre::Camera* camera = sceneMgr->createCamera("MainCamera"); 
 
-	Viewport* viewPort = mWindow->addViewport(camera);
+	Ogre::Viewport* viewPort = mWindow->addViewport(camera);
 	viewPort->setBackgroundColour(Ogre::ColourValue::White);
 
 	OIS::ParamList pl;
@@ -163,58 +186,57 @@ int main(int argc, char **argv)
 	windowHndStr << windowHnd;
 	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
 
-	//setup the manager, keyboard and mouse to handle input
+	// setup the manager, keyboard and mouse to handle input
 	OIS::InputManager* inputManager = OIS::InputManager::createInputSystem(pl);
 	OIS::Keyboard* keyboard = static_cast<OIS::Keyboard*>(inputManager->createInputObject(OIS::OISKeyboard, true));
 	OIS::Mouse*	mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
 
-	//tell OIS about the window's dimensions
-	//unsigned int width, height, depth;
-	//int top, left;
-	//window->getMetrics(width, height, depth, left, top);
+	// tell OIS about the window's dimensions
 	const OIS::MouseState &ms = mouse->getMouseState();
 	ms.width = mWindow->getWidth();
 	ms.height = mWindow->getHeight();
 
-	//key events
+	// key events
 	SimpleKeyListener* keyListener = new SimpleKeyListener();
 	keyboard->setEventCallback(keyListener);
 
-	//mouse events
+	// mouse events
 	SimpleMouseListener* mouseListener = new SimpleMouseListener();
 	mouse->setEventCallback(mouseListener);
 
-	//render events
+	// render events
 	SimpleFrameListener* frameListener = new SimpleFrameListener(keyboard, mouse);
 	ogre_root->addFrameListener(frameListener); 
 
 	// VEKTRIX
-	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "button_test.swf", "OgreMovableMovie");
+	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "button_test2.swf", "OgreMovableMovie");
 	movie->play();
 
 	movie_node = sceneMgr->getRootSceneNode()->createChildSceneNode();
 	movie_node->attachObject(movie);
 	int width = movie->getFile()->getHeader().width;
 	int height = movie->getFile()->getHeader().height;
-	movie_node->setPosition(-width/2.0f, height/2.0f, -750);
+	movie_node->setPosition(-width/2.0f, height/2.0f, -500);
 
 	movie->enableDebugger(true);
 
+	// start the ogre rendering
 	ogre_root->startRendering();
 
+	// shutdown
 	movie_node->detachAllObjects();
 
 	delete vtx::Root::getSingletonPtr();
 
-	//OIS
+	// OIS
 	inputManager->destroyInputObject(mouse); mouse = 0;
 	inputManager->destroyInputObject(keyboard); keyboard = 0;
 	OIS::InputManager::destroyInputSystem(inputManager); inputManager = 0;
-	//listeners
+	// listeners
 	delete frameListener;
 	delete mouseListener;
 	delete keyListener;
-	//Ogre
+	// Ogre
 	delete ogre_root;
 
 	return 0;

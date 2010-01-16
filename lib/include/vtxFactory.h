@@ -60,8 +60,12 @@ namespace vtx
 	
 		virtual T* createObject(P1) = 0;    
 	};
+
+#define FactoryDecl_P0(base) \
+	class base##Factory : public Factory<base##>{}
+
 #define FactoryDecl_P1(base, P1) \
-	class base##Factory : public Factory<base##, P1##>{}
+	class base##Factory : public Factory<base, P1>{}
 
 #define FactoryImpl_P1(type, base, P1) \
 	class type##Factory : public base##Factory \
@@ -72,11 +76,11 @@ namespace vtx
 			static String name = #type; \
 			return name; \
 		} \
-		base##* createObject(P1## p1) \
+		base* createObject(P1 p1) \
 		{ \
-			return new type##(p1); \
+			return new type(p1); \
 		} \
-		void destroyObject(base##* inst) \
+		void destroyObject(base* inst) \
 		{ \
 			delete inst; \
 		} \

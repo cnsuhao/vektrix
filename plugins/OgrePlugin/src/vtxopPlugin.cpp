@@ -38,23 +38,21 @@ THE SOFTWARE.
 #include "vtxopShapeFactory.h"
 #include "vtxopTextureFactory.h"
 
+//-----------------------------------------------------------------------
+#ifdef VTX_STATIC_LIB
+	void vektrix_OgrePlugin_startPlugin()
+#else
+	extern "C" void vtxopExport startPlugin() throw()
+#endif
+{
+	vtx::Root::getSingletonPtr()->_addPlugin(new vtx::ogre::OgrePlugin());
+}
+//-----------------------------------------------------------------------
+
 namespace vtx
 {
 	namespace ogre
 	{
-		//-----------------------------------------------------------------------
-		OgrePlugin* plugin = NULL;
-		//-----------------------------------------------------------------------
-		extern "C" void vtxopExport startPlugin() throw()
-		{
-			plugin = new OgrePlugin();
-		}
-
-		//-----------------------------------------------------------------------
-		extern "C" void vtxopExport stopPlugin()
-		{
-			delete plugin;
-		}
 		//-----------------------------------------------------------------------
 		OgrePlugin::OgrePlugin() 
 			: mShapeFactory(new OgreShapeFactory), 
@@ -73,14 +71,19 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		OgrePlugin::~OgrePlugin()
 		{
-			vtx::TextureManager::getSingletonPtr()->removeFactory(mTextureFactory);
+			// MovieFactories
+			vtx::Root::getSingletonPtr()->removeFactory(mMovableMovie);
+			vtx::Root::getSingletonPtr()->removeFactory(mTextureMovie);
+
+			// InstanceFactories
 			vtx::ShapeManager::getSingletonPtr()->removeFactory(mShapeFactory);
+			vtx::TextureManager::getSingletonPtr()->removeFactory(mTextureFactory);
 
-			delete mTextureMovie;
 			delete mMovableMovie;
+			delete mTextureMovie;
 
-			delete mTextureFactory;
 			delete mShapeFactory;
+			delete mTextureFactory;
 		}
 		//-----------------------------------------------------------------------
 	}

@@ -34,11 +34,11 @@ THE SOFTWARE.
 #include "vtxLogManager.h"
 #include "vtxMovie.h"
 #include "vtxMovieFactory.h"
+#include "vtxPlugin.h"
 #include "vtxStringHelper.h"
 #include "vtxTextureFactory.h"
 
-#include "vtxAtlasRastarizer.h"
-
+#include "vtxRasterizerManager.h"
 #include "vtxMaterialManager.h"
 #include "vtxScriptEngineManager.h"
 #include "vtxShapeManager.h"
@@ -50,21 +50,19 @@ namespace vtx
 	template<> Root* Singleton<Root>::sInstance = 0;
 	//-----------------------------------------------------------------------
 	Root::Root() 
-		: FactoryManagerNULL("Movie")
+		: FactoryManagerNULL<MovieFactory>("Movie")
 	{
 		new LogManager();
 
-		VTX_LOG("<< vektrix %s started >>", StringHelper::versionString(VEKTRIX_VERSION).c_str());
-		VTX_LOG("<< Codename: %s >>", VEKTRIX_VERSION_NAME);
+		VTX_LOG("<< vektrix %s started >>", StringHelper::versionString(VTX_VERSION).c_str());
+		VTX_LOG("<< Codename: %s >>", VTX_VERSION_NAME);
 
+		new RasterizerManager();
 		new MaterialManager();
 		new ScriptEngineManager();
 		new ShapeManager();
 		new TextureManager();
 		new FileManager();
-
-		// TODO: move this into plugin
-		new AtlasRasterizer();
 	}
 	//-----------------------------------------------------------------------
 	Root::~Root()
@@ -79,16 +77,31 @@ namespace vtx
 			++it;
 		}
 
-		delete AtlasRasterizer::getSingletonPtr();
+		// unload plugins
+		PluginList::iterator plugin_it = mPlugins.begin();
+		PluginList::iterator plugin_end = mPlugins.end();
+		while(plugin_it != plugin_end)
+		{
+			delete *plugin_it;
+			++plugin_it;
+		}
 
 		delete FileManager::getSingletonPtr();
-
-		unloadAllPlugins();
-
+		delete RasterizerManager::getSingletonPtr();
 		delete MaterialManager::getSingletonPtr();
 		delete ScriptEngineManager::getSingletonPtr();
 		delete ShapeManager::getSingletonPtr();
 		delete TextureManager::getSingletonPtr();
+
+		// unload dynamic libraries
+		DynLibMap::iterator dynlib_it = mLibraries.begin();
+		DynLibMap::iterator dynlib_end = mLibraries.end();
+		while(dynlib_it != dynlib_end)
+		{
+			dynlib_it->second->unload();
+			delete dynlib_it->second;
+			++dynlib_it;
+		}
 
 		VTX_LOG("<< vektrix successfully shut down >>");
 
@@ -98,11 +111,12 @@ namespace vtx
 	bool Root::addFactory(MovieFactory* factory)
 	{
 		factory->_initialize();
-		return FactoryManagerNULL::addFactory(factory);
+		return FactoryManagerNULL<MovieFactory>::addFactory(factory);
 	}
 	//-----------------------------------------------------------------------
 	void Root::loadPlugin(const String& name)
 	{
+#ifndef VTX_STATIC_LIB
 		if(mLibraries.find(name) != mLibraries.end())
 		{
 			VTX_WARN("The Library \"%s\" was already loaded", name.c_str());
@@ -112,46 +126,19 @@ namespace vtx
 		DynLib* library = new DynLib(name);
 		library->load();
 		mLibraries.insert(DynLibMap::value_type(name, library));
-		START_PLUGIN_FUNCTION startPlugin = (START_PLUGIN_FUNCTION)library->getSymbol("startPlugin");
+		START_PLUGIN_FUNCTION startPluginFunc = (START_PLUGIN_FUNCTION)library->getSymbol("startPlugin");
 
-		if(!startPlugin)
+		if(!startPluginFunc)
 		{
 			VTX_EXCEPT("Cannot find symbol \"startPlugin()\" in library \"%s\"", name.c_str());
 		}
 		else
 		{
-			startPlugin();
+			startPluginFunc();
 		}
-	}
-	//-----------------------------------------------------------------------
-	void Root::unloadPlugin(const String& name)
-	{
-		DynLibMap::iterator it = mLibraries.find(name);
-
-		if(it != mLibraries.end())
-		{
-			STOP_PLUGIN_FUNCTION stopPlugin = (STOP_PLUGIN_FUNCTION)it->second->getSymbol("stopPlugin");
-			stopPlugin();
-			it->second->unload();
-			delete it->second;
-			mLibraries.erase(it);
-		}
-	}
-	//-----------------------------------------------------------------------
-	void Root::unloadAllPlugins()
-	{
-		DynLibMap::iterator it = mLibraries.begin();
-		DynLibMap::iterator end = mLibraries.end();
-		while(it != end)
-		{
-			STOP_PLUGIN_FUNCTION stopPlugin = (STOP_PLUGIN_FUNCTION)it->second->getSymbol("stopPlugin");
-			stopPlugin();
-			it->second->unload();
-			delete it->second;
-			++it;
-		}
-
-		mLibraries.clear();
+#else
+		VTX_WARN("Tried to dynamically load plugin \"%s\", but vektrix was statically linked.", name.c_str());
+#endif
 	}
 	//-----------------------------------------------------------------------
 	Movie* Root::createMovie(const String& name, const String& filename, const String& factoryname)
@@ -194,6 +181,11 @@ namespace vtx
 	Tesselator* Root::getDefaultTesselator()
 	{
 		return mDefaultTesselator;
+	}
+	//-----------------------------------------------------------------------
+	void Root::_addPlugin(Plugin* plugin)
+	{
+		mPlugins.push_back(plugin);
 	}
 	//-----------------------------------------------------------------------
 }

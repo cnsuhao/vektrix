@@ -25,39 +25,39 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
+
 #include "vtxswfPlugin.h"
+#include "vtxswfParser.h"
 
 #include "vtxFileManager.h"
+#include "vtxRoot.h"
 
-#include "vtxswfParser.h"
+//-----------------------------------------------------------------------
+#ifdef VTX_STATIC_LIB
+	void vektrix_SwfPlugin_startPlugin()
+#else
+	extern "C" void vtxswfExport startPlugin() throw()
+#endif
+{
+	vtx::Root::getSingletonPtr()->_addPlugin(new vtx::swf::SwfPlugin());
+}
+//-----------------------------------------------------------------------
 
 namespace vtx
 {
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		SwfPlugin* plugin;
-		//-----------------------------------------------------------------------
-		extern "C" void vtxswfExport startPlugin() throw()
-		{
-			plugin = new SwfPlugin();
-		}
-
-		//-----------------------------------------------------------------------
-		extern "C" void vtxswfExport stopPlugin()
-		{
-			delete plugin;
-		}
-		//-----------------------------------------------------------------------
 		SwfPlugin::SwfPlugin() 
-			: mSwfParser(new SwfParser2)
+			: mSwfParser(new SwfParser)
 		{
 			FileManager::getSingletonPtr()->addFileParser(mSwfParser);
 		}
 		//-----------------------------------------------------------------------
 		SwfPlugin::~SwfPlugin()
 		{
-
+			FileManager::getSingletonPtr()->removeFileParser(mSwfParser);
+			delete mSwfParser;
 		}
 		//-----------------------------------------------------------------------
 	}

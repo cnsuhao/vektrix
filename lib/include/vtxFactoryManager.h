@@ -43,13 +43,24 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		FactoryManagerBase(const String& base_type) : mBaseType(base_type) {}
 		//-----------------------------------------------------------------------
+		virtual ~FactoryManagerBase()
+		{
+			typename FactoryMap::const_iterator it = mFactories.begin();
+			typename FactoryMap::const_iterator end = mFactories.end();
+			while(it != end)
+			{
+				delete it->second;
+				++it;
+			}
+		}
+		//-----------------------------------------------------------------------
 		virtual bool addFactory(T* factory)
 		{
-			FactoryMap::iterator it = mFactories.find(factory->getName());
+			typename FactoryMap::iterator it = mFactories.find(factory->getName());
 
 			if(it == mFactories.end())
 			{
-				mFactories.insert(FactoryMap::value_type(factory->getName(), factory));
+				mFactories.insert(typename FactoryMap::value_type(factory->getName(), factory));
 
 				// LOG: Factory added successfully
 				VTX_LOG("Added %sFactory '%s'.", mBaseType.c_str(), factory->getName().c_str());
@@ -65,7 +76,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		virtual bool removeFactory(T* factory)
 		{
-			FactoryMap::iterator it = mFactories.find(factory->getName());
+			typename FactoryMap::iterator it = mFactories.find(factory->getName());
 
 			if(it != mFactories.end())
 			{
@@ -85,7 +96,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		virtual T* getFactory(const String& name)
 		{
-			FactoryMap::iterator it = mFactories.find(name);
+			typename FactoryMap::iterator it = mFactories.find(name);
 
 			if(it != mFactories.end())
 			{
@@ -105,7 +116,7 @@ namespace vtx
 	{
 	public:
 		FactoryManagerNULL(const String& base_type) 
-			: FactoryManagerBase(base_type){}
+			: FactoryManagerBase<T>(base_type){}
 	};
 	//-----------------------------------------------------------------------
 	template<typename T, class P1>
@@ -114,7 +125,7 @@ namespace vtx
 	public:
 		//-----------------------------------------------------------------------
 		FactoryManager(const String& base_type) 
-			: FactoryManagerBase(base_type)
+			: FactoryManagerBase<T>(base_type)
 		{
 			mDefaultFactory = new P1;
 			addFactory(mDefaultFactory);
@@ -122,16 +133,16 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		virtual ~FactoryManager()
 		{
-			delete mDefaultFactory;
+
 		}
 		//-----------------------------------------------------------------------
 		virtual T* getFactory(const String& name)
 		{
-			T* factory = FactoryManagerBase::getFactory(name);
+			T* factory = FactoryManagerBase<T>::getFactory(name);
 
 			if(!factory)
 			{
-				VTX_WARN("A %sFactory with name \"%s\" is not available, using DefaultFactory", mBaseType.c_str(), name.c_str());
+				VTX_WARN("A %sFactory with name \"%s\" is not available, using DefaultFactory", FactoryManagerBase<T>::mBaseType.c_str(), name.c_str());
 				return mDefaultFactory;
 			}
 

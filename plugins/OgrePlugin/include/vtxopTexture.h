@@ -40,7 +40,7 @@ namespace vtx
 {
 	namespace ogre
 	{
-		class vtxopExport OgreTexture : public vtx::Texture
+		class vtxopExport OgreTexture : public vtx::Texture, public Ogre::ManualResourceLoader
 		{
 		public:
 			OgreTexture(uint size = 1024);
@@ -51,6 +51,9 @@ namespace vtx
 			void debugOgreTexture();
 
 			const Ogre::MaterialPtr& getMaterial() const;
+
+			// overridden from Ogre
+			virtual void loadResource(Ogre::Resource* resource);
 
 		protected:
 			Ogre::TexturePtr mTexture;

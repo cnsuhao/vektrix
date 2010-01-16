@@ -89,7 +89,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Timeline::addTime(float delta_time)
 	{
-		if(!mPlaying || (mKeyframes.size() < 2 && mCurrentFrame == 1))
+		if(!mPlaying || (mKeyframes.size() < 2 && mCurrentFrame == 1) || !mKeyframes.size())
 		{
 			return;
 		}
@@ -108,7 +108,11 @@ namespace vtx
 
 			if(mParentMovieClip)
 			{
-				mParentMovieClip->getScriptMovieClip()->frameEntered(mCurrentFrame);
+				ScriptMovieClip* movieclip = mParentMovieClip->getScriptMovieClip();
+				if(movieclip)
+				{
+					movieclip->frameEntered(mCurrentFrame);
+				}
 			}
 
 			++mCurrentFrame;

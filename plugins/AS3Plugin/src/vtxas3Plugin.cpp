@@ -29,25 +29,24 @@ THE SOFTWARE.
 #include "vtxas3Plugin.h"
 #include "vtxas3ScriptEngine.h"
 
+#include "vtxRoot.h"
 #include "vtxScriptEngineManager.h"
+
+//-----------------------------------------------------------------------
+#ifdef VTX_STATIC_LIB
+	void vektrix_AS3Plugin_startPlugin()
+#else
+	extern "C" void vtxas3Export startPlugin() throw()
+#endif
+{
+	vtx::Root::getSingletonPtr()->_addPlugin(new vtx::as3::AS3Plugin());
+}
+//-----------------------------------------------------------------------
 
 namespace vtx
 {
 	namespace as3
 	{
-		//-----------------------------------------------------------------------
-		AS3Plugin* plugin = NULL;
-		//-----------------------------------------------------------------------
-		extern "C" void vtxas3Export startPlugin() throw()
-		{
-			plugin = new AS3Plugin();
-		}
-
-		//-----------------------------------------------------------------------
-		extern "C" void vtxas3Export stopPlugin()
-		{
-			delete plugin;
-		}
 		//-----------------------------------------------------------------------
 		AS3Plugin::AS3Plugin() 
 			: mAS3ScriptEngine(new AS3ScriptEngineFactory)
@@ -57,7 +56,8 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		AS3Plugin::~AS3Plugin()
 		{
-			delete mAS3ScriptEngine;
+			//ScriptEngineManager::getSingletonPtr()->removeFactory(mAS3ScriptEngine);
+			//delete mAS3ScriptEngine;
 		}
 		//-----------------------------------------------------------------------
 	}

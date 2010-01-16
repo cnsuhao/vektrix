@@ -30,12 +30,19 @@ THE SOFTWARE.
 #define __vtxopPlugin_H__
 
 #include "vtxop.h"
+#include "vtxPlugin.h"
+
+#ifdef VTX_STATIC_LIB
+	void vektrix_OgrePlugin_startPlugin();
+#else
+	extern "C" void vtxopExport startPlugin() throw();
+#endif
 
 namespace vtx
 {
 	namespace ogre
 	{
-		class OgrePlugin
+		class OgrePlugin : public Plugin
 		{
 		public:
 			OgrePlugin();

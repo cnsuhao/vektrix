@@ -32,7 +32,7 @@ namespace vtx
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		void SwfParser2::handleSymbolClass()
+		void SwfParser::handleSymbolClass()
 		{
 			UI16 num_symbols = readU16();
 
