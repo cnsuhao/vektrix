@@ -57,6 +57,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vektrix_Direct3D9_Demo", "d
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vektrix_D3D9Plugin", "plugins\D3D9Plugin\scripts\vektrix_D3D9Plugin.vcproj", "{26F1CD20-F9CF-411D-B222-DEE0A3976D4A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D1476AEC-1BD0-4C99-9726-6B1F09FA72F6} = {D1476AEC-1BD0-4C99-9726-6B1F09FA72F6}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
