@@ -35,9 +35,9 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		const std::string& TextureMovieFactory::getName() const
+		const String& TextureMovieFactory::getName() const
 		{
-			static std::string name = "OgreTextureMovie";
+			static String name = "OgreTextureMovie";
 			return name;
 		}
 		//-----------------------------------------------------------------------
@@ -46,31 +46,13 @@ namespace vtx
 			return new TextureMovie(name, file, this);
 		}
 		//-----------------------------------------------------------------------
-		void TextureMovieFactory::destroyObject(vtx::Movie* instance)
+		void TextureMovieFactory::destroyObject(Movie* instance)
 		{
 			delete instance;
 			instance = NULL;
 		}
 		//-----------------------------------------------------------------------
-		const std::string& TextureMovieFactory::_getButtonFactoryName() const
-		{
-			static std::string name = "BLUBBLBUB";
-			return name;
-		}
-		//-----------------------------------------------------------------------
-		const std::string& TextureMovieFactory::_getShapeFactoryName() const
-		{
-			static std::string name = "OgreShape";
-			return name;
-		}
-		//-----------------------------------------------------------------------
-		const std::string& TextureMovieFactory::_getTextureFactoryName() const
-		{
-			static std::string name = "OgreTexture";
-			return name;
-		}
-		//-----------------------------------------------------------------------
-		RenderStrategy* TextureMovieFactory::_createDataPool(File* file)
+		vtx::RenderStrategy* TextureMovieFactory::_createRenderStrategy(File* file)
 		{
 			return NULL;
 		}

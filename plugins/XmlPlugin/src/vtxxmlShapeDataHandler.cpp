@@ -134,9 +134,9 @@ namespace vtx
 				VTX_EXCEPT("Subshape->Move: Missing parameter \"xy\"!!!");
 			}
 
-			SubshapeResource::ShapeElement element;
+			ShapeElement element;
 
-			element.type = SubshapeResource::ShapeElement::SID_MOVE_TO;
+			element.type = ShapeElement::SID_MOVE_TO;
 			element.pos = StringHelper::toVector2(xy);
 
 			mSubShapeResource->addShapeElement(element);
@@ -151,9 +151,9 @@ namespace vtx
 				VTX_EXCEPT("Subshape->Line: Missing parameter \"xy\"!!!");
 			}
 
-			SubshapeResource::ShapeElement element;
+			ShapeElement element;
 
-			element.type = SubshapeResource::ShapeElement::SID_LINE_TO;
+			element.type = ShapeElement::SID_LINE_TO;
 			element.pos = StringHelper::toVector2(xy);
 
 			mSubShapeResource->addShapeElement(element);
@@ -183,9 +183,9 @@ namespace vtx
 			//}
 
 
-			SubshapeResource::ShapeElement element;
+			ShapeElement element;
 
-			element.type = SubshapeResource::ShapeElement::SID_CURVE_TO;
+			element.type = ShapeElement::SID_CURVE_TO;
 			element.pos = StringHelper::toVector2(xy);
 			element.ctrl = StringHelper::toVector2(cp);
 

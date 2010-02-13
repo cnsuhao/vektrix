@@ -30,6 +30,7 @@ THE SOFTWARE.
 #define __vtxas3SimpleButton_H__
 
 #include "cspPrerequesites.h"
+#include "cspClientObject.h"
 
 #include "vtxScriptButton.h"
 
@@ -37,6 +38,7 @@ namespace vtx
 {
 	namespace as3
 	{
+		//-----------------------------------------------------------------------
 		class SimpleButtonClass : public avmplus::ClassClosure
 		{
 		public:
@@ -45,14 +47,14 @@ namespace vtx
 
 			DECLARE_SLOTS_SimpleButtonClass;
 		};
-
-		class SimpleButton : public InteractiveObject, public vtx::ScriptButton
+		//-----------------------------------------------------------------------
+		class SimpleButton : public InteractiveObject, public vtx::ScriptButton, public csp::ClientObject
 		{
 		public:
 			SimpleButton(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 			virtual ~SimpleButton();
 
-			vtx::ScriptObject* getChildScriptObject(const String& name);
+			void setNativeObject(Instance* inst);
 
 			void buttonUp();
 
@@ -68,9 +70,11 @@ namespace vtx
 			DECLARE_SLOTS_SimpleButton;
 
 		protected:
-			csp::VmCore* mCore;
-			csp::ScriptObject* mObject;
+			vtx::Button* mButton;
+
+			vtx::ScriptObject* _createChildObject(const String& name);
 		};
+		//-----------------------------------------------------------------------
 	}
 }
 

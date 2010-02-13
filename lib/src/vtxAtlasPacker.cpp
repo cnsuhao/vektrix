@@ -28,12 +28,10 @@ THE SOFTWARE.
 
 #include "vtxAtlasPacker.h"
 
+#include "vtxAtlasPackable.h"
 #include "vtxTexture.h"
 #include "vtxLogManager.h"
 #include "vtxRoot.h"
-#include "vtxShapeResource.h"
-#include "vtxTextureFactory.h"
-#include "vtxTextureManager.h"
 
 namespace vtx
 {
@@ -58,44 +56,51 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	bool AtlasPacker::sortShape(ShapeResource* shape1, ShapeResource* shape2)
+	bool AtlasPacker::sortElement(AtlasPackable* elem1, AtlasPackable* elem2)
 	{
-		return (shape1->getArea() < shape2->getArea());
+		const uint area1 = elem1->getPackableWidth() * elem1->getPackableHeight();
+		const uint area2 = elem2->getPackableWidth() * elem2->getPackableHeight();
+		return (area1 < area2);
 	}
 	//-----------------------------------------------------------------------
-	void AtlasPacker::addShape(ShapeResource* shape)
+	void AtlasPacker::addElement(AtlasPackable* element)
 	{
-		mShapes.push_back(shape);
+		mElements.push_back(element);
 	}
 	//-----------------------------------------------------------------------
 	const AtlasPacker::PackResultList& AtlasPacker::packAtlas()
 	{
 		mResult.clear();
-		// TODO: sort shapes
-		std::sort(mShapes.rbegin(), mShapes.rend(), sortShape);
+
+		// sort shapes
+		std::sort(mElements.rbegin(), mElements.rend(), sortElement);
 
 		if(!mTextures.size())
 		{
-			//mTextures.push_back(new Texture(mSize));
-			mTextures.push_back(mTextureFactory->createObject(NULL, NULL));
+			mTextures.push_back(mTextureFactory->createObject());
 		}
 
-		File::ShapeResourceList::iterator shape_it = mShapes.begin();
-		for( ; shape_it != mShapes.end(); )
+		AtlasPackableList::iterator elem_it = mElements.begin();
+		AtlasPackableList::iterator elem_end = mElements.end();
+		while(elem_it != elem_end)
 		{
-			AtlasTextureList::iterator texture_it = mTextures.begin();
-			for( ; texture_it != mTextures.end(); ++texture_it)
+			AtlasTextureList::iterator tex_it = mTextures.begin();
+			AtlasTextureList::iterator tex_end = mTextures.end();
+			while(tex_it != tex_end)
 			{
-				AtlasNode* node = (*texture_it)->packShape(*shape_it);
+				AtlasNode* node = (*tex_it)->packShape(*elem_it);
 				if(node)
 				{
-					mResult.insert(PackResultList::value_type((*shape_it)->getID(), PackResult(*texture_it, node)));
-					// shape was successfully packed, 
-					// advance to the next one
-					++shape_it;
+					mResult.insert(PackResultList::value_type((*elem_it)->getPackID(), PackResult(*tex_it, node)));
+					// element was successfully packed, 
+					// advance to the next element
+					++elem_it;
 					break;
 				}
-			}
+
+				++tex_it;
+
+			} // while(textures)
 
 			// TODO: implement code that handles full textures
 
@@ -103,7 +108,8 @@ namespace vtx
 			// create a new, empty texture
 			//mTextures.push_back(new Texture(mSize));
 			//mTextures.push_back(texture_factory->createObject(mSize));
-		}
+
+		} // while(elements)
 
 		//std::sort(mShapes.rbegin(), mShapes.rend());
 		return mResult;

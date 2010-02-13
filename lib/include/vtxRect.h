@@ -40,6 +40,7 @@ namespace vtx
 		Rect();
 		Rect(uint l, uint t, uint r, uint b);
 
+		const RectF relativeTo(const uint& width, const uint& height) const;
 		const RectF relativeTo(const Rect& rect) const;
 
 		uint w() const;

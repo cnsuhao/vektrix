@@ -39,7 +39,7 @@ THE SOFTWARE.
 	extern "C" void vtxswfExport startPlugin() throw()
 #endif
 {
-	vtx::Root::getSingletonPtr()->_addPlugin(new vtx::swf::SwfPlugin());
+	vtx::Root::getSingletonPtr()->registerPlugin(new vtx::swf::SwfPlugin());
 }
 //-----------------------------------------------------------------------
 

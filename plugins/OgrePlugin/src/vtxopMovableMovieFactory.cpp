@@ -27,54 +27,48 @@ THE SOFTWARE.
 */
 
 #include "vtxopMovableMovieFactory.h"
-
-#include "vtxopMovableMovieDebugger.h"
 #include "vtxopMovableMovie.h"
-#include "vtxopRenderStrategy.h"
+#include "vtxopMovableMovieDebugger.h"
+#include "vtxopMovableStrategy.h"
 
 namespace vtx
 {
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		const std::string& MovableMovieFactory::getName() const
+		MovableMovieFactory::MovableMovieFactory()
 		{
-			static std::string name = "OgreMovableMovie";
+			mFactoryNames["EditText"] = "OgreMovableEditText";
+			mFactoryNames["Shape"] = "OgreMovableShape";
+			mFactoryNames["StaticText"] = "OgreMovableStaticText";
+			mFactoryNames["Texture"] = "OgreTexture";
+		}
+		//-----------------------------------------------------------------------
+		MovableMovieFactory::~MovableMovieFactory()
+		{
+
+		}
+		//-----------------------------------------------------------------------
+		const String& MovableMovieFactory::getName() const
+		{
+			static String name = "OgreMovableMovie";
 			return name;
 		}
 		//-----------------------------------------------------------------------
-		vtx::Movie* MovableMovieFactory::createObject(std::string name, vtx::File* file)
+		Movie* MovableMovieFactory::createObject(String name, File* file)
 		{
 			return new MovableMovie(name, file, this);
 		}
 		//-----------------------------------------------------------------------
-		void MovableMovieFactory::destroyObject(vtx::Movie* instance)
+		void MovableMovieFactory::destroyObject(Movie* instance)
 		{
 			delete instance;
 			instance = NULL;
 		}
 		//-----------------------------------------------------------------------
-		const std::string& MovableMovieFactory::_getButtonFactoryName() const
+		vtx::RenderStrategy* MovableMovieFactory::_createRenderStrategy(File* file)
 		{
-			static std::string name = "BLUBBLBUB";
-			return name;
-		}
-		//-----------------------------------------------------------------------
-		const std::string& MovableMovieFactory::_getShapeFactoryName() const
-		{
-			static std::string name = "OgreShape";
-			return name;
-		}
-		//-----------------------------------------------------------------------
-		const std::string& MovableMovieFactory::_getTextureFactoryName() const
-		{
-			static std::string name = "OgreTexture";
-			return name;
-		}
-		//-----------------------------------------------------------------------
-		vtx::RenderStrategy* MovableMovieFactory::_createDataPool(File* file)
-		{
-			return new ogre::RenderStrategy(this, file);
+			return new MovableRenderStrategy(this, file);
 		}
 		//-----------------------------------------------------------------------
 		MovieDebugger* MovableMovieFactory::_newDebugger(Movie* movie)

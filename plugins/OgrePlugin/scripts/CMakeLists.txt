@@ -9,20 +9,9 @@ set (LIBRARY_OUTPUT_PATH ../../../bin)
 
 # add_definitions (-DVEKTRIX_STATIC_LIB)
 
-add_library (
-vektrix_OgrePlugin SHARED  
-../src/vtxopMovableMovie.cpp
-../src/vtxopMovableMovieDebugger.cpp
-../src/vtxopMovableMovieFactory.cpp
-../src/vtxopPlugin.cpp
-../src/vtxopRenderStrategy.cpp
-../src/vtxopShape.cpp
-../src/vtxopShapeFactory.cpp
-../src/vtxopTexture.cpp
-../src/vtxopTextureFactory.cpp
-../src/vtxopTextureMovie.cpp
-../src/vtxopTextureMovieFactory.cpp
-)
+file(GLOB VTXOP_SRC "../src/*.cpp")
+
+add_library (vektrix_OgrePlugin SHARED ${VTXOP_SRC})
 
 set_target_properties(vektrix_OgrePlugin PROPERTIES PREFIX "")
 

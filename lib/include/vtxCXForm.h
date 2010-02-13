@@ -30,19 +30,20 @@ THE SOFTWARE.
 #define __vtxCXForm_H__
 
 #include "vtxPrerequesites.h"
+#include "vtxColor.h"
 
 namespace vtx
 {
 	class vtxExport CXForm
 	{
 	public:
-		float 
-			mul_red, mul_green, mul_blue, mul_alpha, 
-			add_red, add_green, add_blue, add_alpha;
-
+		CXForm(const Color& mul_color, const Color& add_color);
 		CXForm(
 			float mul_red = 1.0f, float mul_green = 1.0f, float mul_blue = 1.0f, float mul_alpha = 1.0f, 
 			float add_red = 0.0f, float add_green = 0.0f, float add_blue = 0.0f, float add_alpha = 0.0f);
+
+		Color mul;
+		Color add;
 	};
 }
 

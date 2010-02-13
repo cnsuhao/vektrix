@@ -59,8 +59,10 @@ namespace vtx
 			}
 		};
 
+		typedef std::vector<Resource*> ResourceList;
 		typedef std::map<String, Resource*> ResourceMap;
-		typedef std::vector<ShapeResource*> ShapeResourceList;
+		typedef std::map<String, ResourceList> ResourceTypeMap;
+		typedef std::map<String, FontResource*> FontMap;
 
 		File(const String& filename);
 		virtual ~File();
@@ -79,13 +81,16 @@ namespace vtx
 		void addResource(Resource* res);
 		Resource* getResource(const String& id);
 
-		const ShapeResourceList& getShapeResourceList() const;
+		FontResource* getFontByName(const String& font_name);
+
+		const ResourceList& getResourcesByType(const String& type) const;
 
 	protected:
 		String mFilename;
 		FileHeader mHeader;
 		ResourceMap mResources;
-		ShapeResourceList mShapes;
+		ResourceTypeMap mResourcesByType;
+		FontMap mFonts;
 
 		String mScriptEngineFactory;
 		MovieClipResource* mMainMovieClip;

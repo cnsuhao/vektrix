@@ -54,58 +54,36 @@ namespace vtx
 		SimpleButton::SimpleButton(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
 			: InteractiveObject(vtable, prototype)
 		{
-			mCore = csp::VmCore::fromAvmplus(core());
+
 		}
 		//-----------------------------------------------------------------------
 		SimpleButton::~SimpleButton()
 		{
-			delete csp::ScriptObject::fromAvmplus(this);
-			mObject = 0;
+			delete getCaspinObject();
 		}
 		//-----------------------------------------------------------------------
-		vtx::ScriptObject* SimpleButton::getChildScriptObject(const String& name)
+		void SimpleButton::setNativeObject(Instance* inst)
 		{
-			ChildMap::iterator it = mChildren.find(name);
-			if(it != mChildren.end())
-			{
-				return it->second;
-			}
-
-			csp::ScriptObject* parent_obj = csp::ScriptObject::fromAvmplus(this);
-			if(parent_obj)
-			{
-				csp::ScriptObject* slot_obj = parent_obj->createSlotObject(name);
-				vtx::ScriptObject* vtx_obj = dynamic_cast<vtx::ScriptObject*>(slot_obj->scriptObj());
-				if(vtx_obj)
-				{
-					mChildren.insert(std::make_pair(name, vtx_obj));
-				}
-
-				return vtx_obj;
-			}
-
-			return NULL;
+			mButton = dynamic_cast<vtx::Button*>(inst);
 		}
 		//-----------------------------------------------------------------------
 		void SimpleButton::buttonUp()
 		{
-			if(!mObject)
-			{
-				mObject = csp::ScriptObject::fromAvmplus(this);
-			}
+			csp::VmCore* core = getCaspinCore();
+			csp::ScriptObject* object = getCaspinObject();
 
-			if(mCore && mObject)
+			if(core && object)
 			{
 				csp::ArgumentList args;
-				args.push_back(mCore->newString("click"));
-				args.push_back(mCore->newBoolean(false));
-				args.push_back(mCore->newBoolean(true));
+				args.push_back(core->newString("click"));
+				args.push_back(core->newBoolean(false));
+				args.push_back(core->newBoolean(true));
 
-				csp::ScriptObject* evt = mCore->createObject("MouseEvent", "flash.events", args);
+				csp::ScriptObject* evt = core->createObject("MouseEvent", "flash.events", args);
 				args.clear();
 				args.push_back(evt->atom());
 
-				mObject->callFunction("dispatchEvent", args);
+				object->callFunction("dispatchEvent", args);
 
 				delete evt;
 			}
@@ -163,6 +141,21 @@ namespace vtx
 			{
 				mButton->setAngle((float)val);
 			}
+		}
+		//-----------------------------------------------------------------------
+		vtx::ScriptObject* SimpleButton::_createChildObject(const String& name)
+		{
+			csp::ScriptObject* parent_obj = csp::ScriptObject::fromAvmplus(this);
+			if(parent_obj)
+			{
+				csp::ScriptObject* slot_obj = parent_obj->createSlotObject(name);
+				if(slot_obj)
+				{
+					return dynamic_cast<vtx::ScriptObject*>(slot_obj->scriptObj());
+				}
+			}
+
+			return NULL;
 		}
 		//-----------------------------------------------------------------------
 	}

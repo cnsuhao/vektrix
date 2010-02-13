@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include "vtxBoundingBox.h"
 #include "vtxColor.h"
 #include "vtxCXForm.h"
+#include "vtxLogManager.h"
 #include "vtxMatrix.h"
 #include "vtxRect.h"
 #include "vtxVector2.h"
@@ -44,6 +45,107 @@ namespace vtx
 			StringHelper::toString((version>>16)) + "." + 
 			StringHelper::toString((version>>8)&255) + "." + 
 			StringHelper::toString((version>>0)&255);
+	}
+	//-----------------------------------------------------------------------
+	WString StringHelper::utf8Decode(const String& encoded_string)
+	{
+		WString result;
+
+		String::const_iterator it = encoded_string.begin();
+		String::const_iterator end = encoded_string.end();
+		while(it != end)
+		{
+			// UTF-8 multi-byte char
+			if(*it & 128)
+			{
+				uchar shifted = *it;
+				shifted = shifted >> 4;
+				switch(shifted)
+				{
+				case 0xF: // 1111
+					{
+						VTX_EXCEPT("unexpected 4 byte UTF-8 value");
+					}
+					break;
+
+				case 0xE: // 1110
+					{
+						ushort byte[3] = { *it, *++it, *++it };
+						ushort utf_char = 
+							byte[0] << 12 | 
+							(byte[1] << 6) & 4032 | 
+							byte[2] & 63;
+						result.append(1, utf_char);
+					}
+					break;
+
+				case 0xC: // 1100
+					{
+						ushort byte[2] = { *it, *++it };
+						ushort utf_char = 
+							(byte[0] << 6) & 1984 | 
+							byte[1] & 63;
+						result.append(1, utf_char);
+					}
+					break;
+				}
+
+			}
+			// single 7 bit ASCII char
+			else
+			{
+				result.append(1, *it);
+			}
+
+			++it;
+		}
+
+		return result;
+	}
+	//-----------------------------------------------------------------------
+	String StringHelper::utf8Encode(const WString& utf8_string)
+	{
+		String result;
+
+		WString::const_iterator it = utf8_string.begin();
+		WString::const_iterator end = utf8_string.end();
+		while(it != end)
+		{
+			// UTF-8 multi-byte char
+			if(*it > 128)
+			{
+				ushort utf_char = *it;
+
+				// 3 byte form
+				if(utf_char > 2047)
+				{
+					uchar byte[3];
+					byte[0] = 224 | utf_char >> 12;
+					byte[1] = 128 | ((utf_char >> 6) & 63);
+					byte[2] = 128 | (utf_char & 63);
+
+					result.append((char*)&byte, 3);
+				}
+				// 2 byte form
+				else
+				{
+					uchar byte[2];
+					byte[0] = 192 | ((utf_char >> 6) & 63);
+					byte[1] = 128 | (utf_char & 63);
+
+					result.append((char*)&byte, 2);
+				}
+			}
+			// single 7 bit ASCII char
+			else
+			{
+				result.append(1, (uchar)*it);
+			}
+
+			++it;
+		}
+
+		return result;
 	}
 	//-----------------------------------------------------------------------
 	StringList StringHelper::splitString(const String& str, const char& delimiter)
@@ -87,6 +189,36 @@ namespace vtx
 		}
 
 		return "";
+	}
+	//-----------------------------------------------------------------------
+	int StringHelper::intFromHex(const String& hexStr)
+	{
+		int val;
+		std::stringstream sstr;
+		sstr << std::hex << hexStr;
+		sstr >> val;
+		return val;
+	}
+	//-----------------------------------------------------------------------
+	Color StringHelper::colorFromHex(const String& hexStr)
+	{
+		Color result;
+
+		if(hexStr.length() != 7)
+		{
+			return result;
+		}
+
+		if(hexStr.at(0) != '#')
+		{
+			return result;
+		}
+
+		result.r = (float)intFromHex(hexStr.substr(1, 2))/255.0f;
+		result.g = (float)intFromHex(hexStr.substr(3, 2))/255.0f;
+		result.b = (float)intFromHex(hexStr.substr(5, 2))/255.0f;
+
+		return result;
 	}
 	//-----------------------------------------------------------------------
 	String StringHelper::toString(float val)
@@ -211,8 +343,8 @@ namespace vtx
 	{
 		std::ostringstream stream;
 		stream << 
-			val.mul_red << " " << val.mul_green << " " << val.mul_blue << " " << val.mul_alpha << "\n" << 
-			val.add_red << " " << val.add_green << " " << val.add_blue << " " << val.add_alpha;
+			val.mul.r << " " << val.mul.g << " " << val.mul.b << " " << val.mul.a << "\n" << 
+			val.add.r << " " << val.add.g << " " << val.add.b << " " << val.add.a;
 
 		return stream.str();
 	}

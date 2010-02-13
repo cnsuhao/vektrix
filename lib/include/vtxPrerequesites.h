@@ -58,7 +58,7 @@ THE SOFTWARE.
 #ifdef VTX_STATIC_LIB
 #	define VTX_LOAD_PLUGIN(name) name##_startPlugin()
 #else
-#	define VTX_LOAD_PLUGIN(name) vtx::Root::getSingletonPtr()->loadPlugin(#name)
+#	define VTX_LOAD_PLUGIN(name) vtx::Root::getSingletonPtr()->loadLibrary(#name)
 #endif
 
 // defines what operating system is used
@@ -88,6 +88,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	class AtlasNode;
+	class AtlasPackable;
 	class AtlasPacker;
 	class BoundingBox;
 	class Button;
@@ -99,6 +100,9 @@ namespace vtx
 	class DefaultFileContainerFactory;
 	class DisplayObjectContainer;
 	class DynLib;
+	class EditText;
+	class EditTextFactory;
+	class EditTextResource;
 	class EventContainer;
 	class File;
 	class FileContainer;
@@ -106,8 +110,17 @@ namespace vtx
 	class FileParser;
 	class FileManager;
 	class FileStream;
+	class FontResource;
 	class FrameEvent;
+	class GlyphResource;
+	class HtmlElement;
+	class HtmlFont;
+	class HtmlImage;
+	class HtmlParagraph;
+	class HtmlParser;
+	class HtmlText;
 	class Instance;
+	class InstanceManager;
 	class InstancePool;
 	class InteractiveObject;
 	class Keyframe;
@@ -136,11 +149,14 @@ namespace vtx
 	class ScriptObject;
 	class ScriptResource;
 	class Shape;
+	class ShapeElement;
 	class ShapeFactory;
 	class ShapeResource;
+	class StaticText;
+	class StaticTextFactory;
+	class StaticTextResource;
 	class StringHelper;
 	class SubshapeResource;
-	class Tesselator;
 	class Texture;
 	class TextureFactory;
 	class Timeline;

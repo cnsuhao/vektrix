@@ -28,8 +28,8 @@ THE SOFTWARE.
 
 #include "vtxAtlasNode.h"
 
+#include "vtxAtlasPackable.h"
 #include "vtxRastarizer.h"
-#include "vtxShapeResource.h"
 
 namespace vtx
 {
@@ -40,7 +40,7 @@ namespace vtx
 		mParent(parent), 
 		mChild_1(NULL), 
 		mChild_2(NULL), 
-		mShape(NULL)
+		mElement(NULL)
 	{
 
 	}
@@ -56,9 +56,9 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void AtlasNode::renderShape(Rasterizer* rasterizer)
 	{
-		if(mShape)
+		if(mElement)
 		{
-			rasterizer->renderShapeToTexture(mParent, mShape, this);
+			rasterizer->renderElementToTexture(mParent, mElement, this);
 		}
 
 		if(mChild_1)
@@ -72,9 +72,9 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	void AtlasNode::setShape(ShapeResource* shape)
+	void AtlasNode::setShape(AtlasPackable* element)
 	{
-		mShape = shape;
+		mElement = element;
 	}
 	//-----------------------------------------------------------------------
 	const Rect& AtlasNode::getRect() const
@@ -82,52 +82,74 @@ namespace vtx
 		return mRect;
 	}
 	//-----------------------------------------------------------------------
-	AtlasNode::FitMode AtlasNode::fits(ShapeResource* shape)
+	uint AtlasNode::getPackedSize()
+	{
+		uint result = 0;
+
+		if(mChild_1)
+		{
+			result += mChild_1->getPackedSize();
+		}
+
+		if(mChild_2)
+		{
+			result += mChild_2->getPackedSize();
+		}
+
+		if(mElement)
+		{
+			result += mElement->getPackableWidth()*mElement->getPackableHeight();
+		}
+
+		return result;
+	}
+	//-----------------------------------------------------------------------
+	AtlasNode::FitMode AtlasNode::fits(AtlasPackable* element)
 	{
 		// check if it fits normally
-		if(shape->getMaximumWidth_PoT() <= mRect.w() && shape->getMaximumHeight_PoT() <= mRect.h())
+		if(element->getPackableWidth() <= mRect.w() && element->getPackableHeight() <= mRect.h())
 		{
 			return FITS_NORMAL;
 		}
 
 		// ...no? -> check if it fits when rotated
-		if(shape->getMaximumWidth_PoT() <= mRect.h() && shape->getMaximumHeight_PoT() <= mRect.w())
-		{
-			return FITS_ROTATED;
-		}
+		//if(element->getPackableWidth() <= mRect.h() && element->getPackableHeight() <= mRect.w())
+		//{
+		//	return FITS_ROTATED;
+		//}
 
 		// it doesn't fit either way
 		return DOESNT_FIT;
 	}
 	//-----------------------------------------------------------------------
-	AtlasNode::FitMode AtlasNode::fitsExactly(ShapeResource* shape)
+	AtlasNode::FitMode AtlasNode::fitsExactly(AtlasPackable* element)
 	{
 		// check if it fits normally
-		if(shape->getMaximumWidth_PoT() == mRect.w() && shape->getMaximumHeight_PoT() == mRect.h())
+		if(element->getPackableWidth() == mRect.w() && element->getPackableHeight() == mRect.h())
 		{
 			return FITS_NORMAL;
 		}
 
 		// ...no? -> check if it fits when rotated
-		if(shape->getMaximumWidth_PoT() == mRect.h() && shape->getMaximumHeight_PoT() == mRect.w())
-		{
-			return FITS_ROTATED;
-		}
+		//if(element->getPackableWidth() == mRect.h() && element->getPackableHeight() == mRect.w())
+		//{
+		//	return FITS_ROTATED;
+		//}
 
 		// it doesn't fit either way
 		return DOESNT_FIT;
 	}
 	//-----------------------------------------------------------------------
-	AtlasNode* AtlasNode::insert(ShapeResource* shape)
+	AtlasNode* AtlasNode::insert(AtlasPackable* element)
 	{
-		uint shape_width_PoT = shape->getMaximumWidth_PoT();
-		uint shape_height_PoT = shape->getMaximumHeight_PoT();
+		uint element_width_PoT = element->getPackableWidth();
+		uint element_height_PoT = element->getPackableHeight();
 
 		// this is not a leaf (i.e. there are children)
 		if(mChild_1 || mChild_2)
 		{
 			// try to insert into first child node
-			AtlasNode* foundNode = mChild_1->insert(shape);
+			AtlasNode* foundNode = mChild_1->insert(element);
 
 			if(foundNode)
 			{
@@ -136,18 +158,18 @@ namespace vtx
 			}
 
 			// try to insert into second child node
-			return mChild_2->insert(shape);
+			return mChild_2->insert(element);
 		}
 		// this is a leaf (i.e. no children)
 		else
 		{
 			// this node already contains an image
-			if(mShape)
+			if(mElement)
 			{
 				return NULL;
 			}
 
-			const FitMode fit_normal = fits(shape);
+			const FitMode fit_normal = fits(element);
 
 			// image is too big for this node
 			if(fit_normal == DOESNT_FIT)
@@ -155,7 +177,7 @@ namespace vtx
 				return NULL;
 			}
 
-			const FitMode fit_exactly = fitsExactly(shape);
+			const FitMode fit_exactly = fitsExactly(element);
 
 			// image fits exactly into this node
 			if(fit_exactly == FITS_NORMAL)
@@ -177,45 +199,45 @@ namespace vtx
 			if(fit_normal == FITS_NORMAL)
 			{
 				// decide which way to split
-				uint dw = mRect.w() - shape_width_PoT;
-				uint dh = mRect.h() - shape_height_PoT;
+				uint dw = mRect.w() - element_width_PoT;
+				uint dh = mRect.h() - element_height_PoT;
 
 				// delta width is bigger --> split by width
 				if(dw > dh)
 				{
-					mChild_1 = new AtlasNode(Rect(mRect.left, mRect.top, mRect.left+shape_width_PoT, mRect.bottom), mParent);
-					mChild_2 = new AtlasNode(Rect(mRect.left+shape_width_PoT, mRect.top, mRect.right, mRect.bottom), mParent);
+					mChild_1 = new AtlasNode(Rect(mRect.left, mRect.top, mRect.left+element_width_PoT, mRect.bottom), mParent);
+					mChild_2 = new AtlasNode(Rect(mRect.left+element_width_PoT, mRect.top, mRect.right, mRect.bottom), mParent);
 				}
 				// delta height is bigger --> split by height
 				else
 				{
-					mChild_1 = new AtlasNode(Rect(mRect.left, mRect.top, mRect.right, mRect.top+shape_height_PoT), mParent);
-					mChild_2 = new AtlasNode(Rect(mRect.left, mRect.top+shape_height_PoT, mRect.right, mRect.bottom), mParent);
+					mChild_1 = new AtlasNode(Rect(mRect.left, mRect.top, mRect.right, mRect.top+element_height_PoT), mParent);
+					mChild_2 = new AtlasNode(Rect(mRect.left, mRect.top+element_height_PoT, mRect.right, mRect.bottom), mParent);
 				}
 			}
 			// split the node for the rotated image
 			else if(fit_normal == FITS_ROTATED)
 			{
 				// decide which way to split
-				uint dw = mRect.w() - shape_height_PoT;
-				uint dh = mRect.h() - shape_width_PoT;
+				uint dw = mRect.w() - element_height_PoT;
+				uint dh = mRect.h() - element_width_PoT;
 
 				// delta width is bigger --> split by width
 				if(dw > dh)
 				{
-					mChild_1 = new AtlasNode(Rect(mRect.left, mRect.top, mRect.left+shape_height_PoT, mRect.bottom), mParent);
-					mChild_2 = new AtlasNode(Rect(mRect.left+shape_height_PoT, mRect.top, mRect.right, mRect.bottom), mParent);
+					mChild_1 = new AtlasNode(Rect(mRect.left, mRect.top, mRect.left+element_height_PoT, mRect.bottom), mParent);
+					mChild_2 = new AtlasNode(Rect(mRect.left+element_height_PoT, mRect.top, mRect.right, mRect.bottom), mParent);
 				}
 				// delta height is bigger --> split by height
 				else
 				{
-					mChild_1 = new AtlasNode(Rect(mRect.left, mRect.top, mRect.right, mRect.top+shape_width_PoT), mParent);
-					mChild_2 = new AtlasNode(Rect(mRect.left, mRect.top+shape_width_PoT, mRect.right, mRect.bottom), mParent);
+					mChild_1 = new AtlasNode(Rect(mRect.left, mRect.top, mRect.right, mRect.top+element_width_PoT), mParent);
+					mChild_2 = new AtlasNode(Rect(mRect.left, mRect.top+element_width_PoT, mRect.right, mRect.bottom), mParent);
 				}
 			}
 
 			// insert into the first child that we created
-			return mChild_1->insert(shape);
+			return mChild_1->insert(element);
 		}
 
 		// texture is full ?!

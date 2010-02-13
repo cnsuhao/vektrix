@@ -30,7 +30,6 @@ THE SOFTWARE.
 #define __vtxopTexture_H__
 
 #include "vtxop.h"
-
 #include "vtxTexture.h"
 
 #include "OgreMaterial.h"
@@ -40,13 +39,14 @@ namespace vtx
 {
 	namespace ogre
 	{
-		class vtxopExport OgreTexture : public vtx::Texture, public Ogre::ManualResourceLoader
+		//-----------------------------------------------------------------------
+		class vtxopExport OgreTexture : public Texture, public Ogre::ManualResourceLoader
 		{
 		public:
 			OgreTexture(uint size = 1024);
 			virtual ~OgreTexture();
 
-			void paintPixelsToRect(const vtx::Rect& coordinates, unsigned char* pixelData);
+			void paintPixelsToRect(const Rect& coordinates, unsigned char* pixelData);
 
 			void debugOgreTexture();
 
@@ -59,6 +59,9 @@ namespace vtx
 			Ogre::TexturePtr mTexture;
 			Ogre::MaterialPtr mMaterial;
 		};
+		//-----------------------------------------------------------------------
+		FactoryImpl_P0(OgreTexture, Texture);
+		//-----------------------------------------------------------------------
 	}
 }
 

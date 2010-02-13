@@ -42,12 +42,13 @@ namespace vtx
 		class MovableMovie : public vtx::Movie, public Ogre::MovableObject
 		{
 		public:
-			typedef std::map<OgreShape*, OgreShape*> ShapeList;
+			//typedef std::map<OgreShape*, OgreShape*> ShapeList;
+			typedef std::map<Ogre::Renderable*, Ogre::Renderable*> RenderableMap;
 
-			MovableMovie(const std::string& name, vtx::File* file, MovieFactory* creator);
+			MovableMovie(const String& name, File* file, MovieFactory* creator);
 			virtual ~MovableMovie();
 
-			vtx::Instance* getInstance(const std::string& id);
+			vtx::Instance* getInstance(const String& id);
 			void releaseInstance(vtx::Instance* instance);
 
 			// Ogre functions
@@ -59,7 +60,8 @@ namespace vtx
 
 		protected:
 			Ogre::AxisAlignedBox mAAB;
-			ShapeList mShapes;
+			//ShapeList mShapes;
+			RenderableMap mRenderables;
 		};
 	}
 }

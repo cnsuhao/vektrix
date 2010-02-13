@@ -28,8 +28,6 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
-#include "cspScriptObject.h"
-
 namespace vtx
 {
 	namespace as3
@@ -48,8 +46,7 @@ namespace vtx
 		}
 		//-----------------------------------------------------------------------
 		DisplayObject::DisplayObject(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: EventDispatcher(vtable, prototype), 
-			mCaspinObject(NULL)
+			: EventDispatcher(vtable, prototype)
 		{
 
 		}
@@ -82,16 +79,6 @@ namespace vtx
 		void DisplayObject::set_rotation(double val)
 		{
 
-		}
-		//-----------------------------------------------------------------------
-		csp::ScriptObject* DisplayObject::getCaspinObject()
-		{
-			if(!mCaspinObject)
-			{
-				mCaspinObject = csp::ScriptObject::fromAvmplus(this);
-			}
-
-			return mCaspinObject;
 		}
 		//-----------------------------------------------------------------------
 	}

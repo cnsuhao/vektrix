@@ -51,12 +51,14 @@ namespace vtx
 		typedef std::map<String, PackResult> PackResultList;
 		typedef std::vector<Texture*> AtlasTextureList;
 
+		typedef std::vector<AtlasPackable*> AtlasPackableList;
+
 		AtlasPacker(TextureFactory* factory, uint atlasSize = 1024);
 		virtual ~AtlasPacker();
 
-		static bool sortShape(ShapeResource* shape1, ShapeResource* shape2);
+		static bool sortElement(AtlasPackable* elem1, AtlasPackable* elem2);
 
-		void addShape(ShapeResource* shape);
+		void addElement(AtlasPackable* element);
 		const PackResultList& packAtlas();
 		void renderAtlas();
 		void clearAtlas();
@@ -71,7 +73,7 @@ namespace vtx
 		uint mSize;
 		AtlasTextureList mTextures;
 		PackResultList mResult;
-		File::ShapeResourceList mShapes;
+		AtlasPackableList mElements;
 
 		TextureFactory* mTextureFactory;
 	};

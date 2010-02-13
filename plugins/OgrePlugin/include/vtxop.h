@@ -51,15 +51,25 @@ namespace vtx
 {
 	namespace ogre
 	{
-		// instances
-		class OgreShape;
-		class OgreShapeFactory;
+		// MovableMovie
+		class MovableMovie;
+		class MovableMovieFactory;
+		class MovableStrategy;
+		// Instances
+		class OgreMovableEditText;
+		class OgreMovableEditTextFactory;
+		class OgreMovableShape;
+		class OgreMovableShapeFactory;
+		class OgreMovableStaticText;
+		class OgreMovableStaticTextFactory;
+
+		// TextureMovie
+		class TextureMovie;
+		class TextureMovieFactory;
+
+		// Generic
 		class OgreTexture;
 		class OgreTextureFactory;
-
-		// movies
-		class MovableMovieFactory;
-		class TextureMovieFactory;
 	}
 }
 

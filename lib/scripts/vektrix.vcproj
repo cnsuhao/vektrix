@@ -42,8 +42,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VEKTRIX_EXPORTS"
+				AdditionalIncludeDirectories="..\include;..\expat"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VEKTRIX_EXPORTS;COMPILED_FROM_DSP"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -120,8 +120,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\include;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VEKTRIX_EXPORTS"
+				AdditionalIncludeDirectories="..\include;..\expat"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VEKTRIX_EXPORTS;COMPILED_FROM_DSP"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -171,22 +171,146 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="Static_Debug|Win32"
+			OutputDirectory="$(SolutionDir)\bin"
+			IntermediateDirectory="$(SolutionDir)\bin\obj\$(ConfigurationName)\$(ProjectName)"
+			ConfigurationType="4"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+				CommandLine=""
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\include;..\expat"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;VTX_STATIC_LIB;COMPILED_FROM_DSP"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\$(ProjectName)_static_d.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Static_Release|Win32"
+			OutputDirectory="$(SolutionDir)\bin"
+			IntermediateDirectory="$(SolutionDir)\bin\obj\$(ConfigurationName)\$(ProjectName)"
+			ConfigurationType="4"
+			CharacterSet="2"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\include;..\expat"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VTX_STATIC_LIB;COMPILED_FROM_DSP"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\$(ProjectName)_static.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
 	<Files>
 		<Filter
-			Name="File Management"
+			Name="Files"
 			>
 			<Filter
 				Name="Inferfaces"
 				>
 				<File
 					RelativePath="..\include\vtxFileContainer.h"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxFileContainerFactory.h"
 					>
 				</File>
 				<File
@@ -394,6 +518,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\include\vtxShapeElement.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\vtxTransform.cpp"
 					>
 				</File>
@@ -407,18 +535,6 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxVector2.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Platforms"
-				>
-				<File
-					RelativePath="..\include\vtxLinux.h"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxWin32.h"
 					>
 				</File>
 			</Filter>
@@ -514,6 +630,46 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Font"
+				>
+				<File
+					RelativePath="..\src\vtxFontResource.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxFontResource.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxGlyphResource.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxGlyphResource.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Text"
+				>
+				<File
+					RelativePath="..\src\vtxEditTextResource.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxEditTextResource.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxStaticTextResource.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxStaticTextResource.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Timeline"
@@ -588,7 +744,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Instance Management"
+			Name="Instances"
 			>
 			<File
 				RelativePath="..\src\vtxInstance.cpp"
@@ -596,18 +752,6 @@
 			</File>
 			<File
 				RelativePath="..\include\vtxInstance.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxInstanceFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\vtxInstancePool.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxInstancePool.h"
 				>
 			</File>
 			<Filter
@@ -624,22 +768,6 @@
 						RelativePath="..\include\vtxShape.h"
 						>
 					</File>
-					<File
-						RelativePath="..\src\vtxShapeFactory.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxShapeFactory.h"
-						>
-					</File>
-					<File
-						RelativePath="..\src\vtxShapeManager.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxShapeManager.h"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="Texture"
@@ -650,22 +778,6 @@
 					</File>
 					<File
 						RelativePath="..\include\vtxTexture.h"
-						>
-					</File>
-					<File
-						RelativePath="..\src\vtxTextureFactory.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxTextureFactory.h"
-						>
-					</File>
-					<File
-						RelativePath="..\src\vtxTextureManager.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxTextureManager.h"
 						>
 					</File>
 				</Filter>
@@ -686,14 +798,6 @@
 					</File>
 					<File
 						RelativePath="..\include\vtxMaterialFactory.h"
-						>
-					</File>
-					<File
-						RelativePath="..\src\vtxMaterialManager.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxMaterialManager.h"
 						>
 					</File>
 				</Filter>
@@ -741,6 +845,46 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Text"
+					>
+					<File
+						RelativePath="..\src\vtxEditText.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxEditText.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxStaticText.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxStaticText.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Management"
+				>
+				<File
+					RelativePath="..\src\vtxInstanceManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxInstanceManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxInstancePool.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxInstancePool.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -752,6 +896,14 @@
 			</File>
 			<File
 				RelativePath="..\include\vtxAtlasNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxAtlasPackable.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxAtlasPackable.h"
 				>
 			</File>
 			<File
@@ -795,35 +947,11 @@
 			Name="Scripting"
 			>
 			<File
-				RelativePath="..\src\vtxScriptButton.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxScriptButton.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\vtxScriptEngine.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\include\vtxScriptEngine.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\vtxScriptEngineManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxScriptEngineManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\vtxScriptMovieClip.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxScriptMovieClip.h"
 				>
 			</File>
 			<File
@@ -834,6 +962,130 @@
 				RelativePath="..\include\vtxScriptObject.h"
 				>
 			</File>
+			<Filter
+				Name="Objects"
+				>
+				<File
+					RelativePath="..\include\vtxScriptButton.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxScriptEditText.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxScriptMovieClip.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxScriptStaticText.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Platforms"
+			>
+			<File
+				RelativePath="..\include\vtxLinux.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxWin32.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="HTML"
+			>
+			<File
+				RelativePath="..\src\vtxHtmlParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxHtmlParser.h"
+				>
+			</File>
+			<Filter
+				Name="XML"
+				>
+				<File
+					RelativePath="..\src\vtxXmlParser.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxXmlParser.h"
+					>
+				</File>
+				<Filter
+					Name="expat"
+					>
+					<File
+						RelativePath="..\expat\xmlparse.c"
+						>
+					</File>
+					<File
+						RelativePath="..\expat\xmlrole.c"
+						>
+					</File>
+					<File
+						RelativePath="..\expat\xmltok.c"
+						>
+					</File>
+					<File
+						RelativePath="..\expat\xmltok_impl.c"
+						>
+					</File>
+					<File
+						RelativePath="..\expat\xmltok_ns.c"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="DOM"
+				>
+				<File
+					RelativePath="..\src\vtxHtmlElement.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxHtmlElement.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxHtmlFont.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxHtmlFont.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxHtmlImage.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxHtmlImage.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxHtmlParagraph.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxHtmlParagraph.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxHtmlText.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxHtmlText.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath="..\include\vektrix.h"

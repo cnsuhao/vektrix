@@ -37,19 +37,18 @@ namespace vtx
 {
 	namespace ogre
 	{
-		class MovableMovieFactory : public vtx::MovieFactory
+		class MovableMovieFactory : public MovieFactory
 		{
 		public:
-			const std::string& getName() const;
-			Movie* createObject(std::string name, File* file);
+			MovableMovieFactory();
+			virtual ~MovableMovieFactory();
+
+			const String& getName() const;
+			Movie* createObject(String name, File* file);
 			void destroyObject(Movie* instance);
 
 		protected:
-			const std::string& _getButtonFactoryName() const;
-			const std::string& _getShapeFactoryName() const;
-			const std::string& _getTextureFactoryName() const;
-
-			RenderStrategy* _createDataPool(File* file);
+			vtx::RenderStrategy* _createRenderStrategy(File* file);
 			MovieDebugger* _newDebugger(Movie* movie);
 		};
 	}

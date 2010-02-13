@@ -33,10 +33,15 @@ namespace vtx
 {
 	namespace swf
 	{
-		typedef signed SBits;
-		typedef unsigned char UI8;
-		typedef unsigned short UI16;
-		typedef unsigned int UI32;
+		// unsigned types
+		typedef unsigned char	UI8;
+		typedef unsigned short	UI16;
+		typedef unsigned int	UI32;
+		typedef unsigned		UBits;
+
+		// signed types
+		typedef signed short	SI16;
+		typedef signed			SBits;
 
 		enum TagTypes
 		{
@@ -44,16 +49,31 @@ namespace vtx
 			TT_ShowFrame = 1, 
 			TT_DefineShape = 2, 
 			TT_SetBackgroundColor = 9, 
+			TT_DefineFont = 10, 
+			TT_DefineText = 11, 
 			TT_DefineShape2 = 22, 
 			TT_PlaceObject2 = 26, 
 			TT_DefineShape3 = 32, 
+			TT_DefineText2 = 33, 
 			TT_DefineButton2 = 34, 
+			TT_DefineEditText = 37, 
+			TT_DefineSprite = 39, 
 			TT_FileAttributes = 69, 
+			TT_DefineFont3 = 75, 
 			TT_SymbolClass = 76, 
 			TT_MetaData = 77, 
 			TT_DoABC = 82, 
 			TT_DefineShape4 = 83, 
 			TT_DefineSceneAndFrameLabelData = 86
+		};
+
+		enum LanguageCode
+		{
+			LC_Latin = 1, 
+			LC_Japanese = 2, 
+			LC_Korean = 3, 
+			LC_Simplified_Chinese = 4, 
+			LC_Traditional_Chinese = 5
 		};
 
 		enum ShapeElementType
@@ -74,7 +94,7 @@ namespace vtx
 			FST_NonSmoothedRepeatingBitmap = 66, 
 			FST_NonSmoothedClippedBitmap = 67
 		};
-
+		//-----------------------------------------------------------------------
 		class RECT
 		{
 		public:
@@ -89,7 +109,7 @@ namespace vtx
 				ymin(0), 
 				ymax(0){}
 		};
-
+		//-----------------------------------------------------------------------
 		class COLOR
 		{
 		public:
@@ -104,7 +124,7 @@ namespace vtx
 				blue(255), 
 				alpha(255){}
 		};
-
+		//-----------------------------------------------------------------------
 		class MATRIX
 		{
 		public:
@@ -115,7 +135,7 @@ namespace vtx
 				: sx(65536), cx(0), tx(0), 
 				  cy(0), sy(65536), ty(0){}
 		};
-
+		//-----------------------------------------------------------------------
 		class CXFORM
 		{
 		public:
@@ -126,7 +146,37 @@ namespace vtx
 				: add_red(255), add_green(255), add_blue(255), add_alpha(255), 
 				mul_red(255), mul_green(255), mul_blue(255), mul_alpha(255){}
 		};
-
+		//-----------------------------------------------------------------------
+		// FONT TYPES
+		//-----------------------------------------------------------------------
+		class KERNINGRECORD
+		{
+		public:
+			UI16 left_char_code;
+			UI16 right_char_code;
+			SI16 adjustment;
+		};
+		//-----------------------------------------------------------------------
+		class TEXTRECORD
+		{
+		public:
+			UI16 font_id;
+			COLOR color;
+			SI16 x, y;
+			UI16 size;
+		};
+		typedef std::vector<TEXTRECORD> TextRecordList;
+		//-----------------------------------------------------------------------
+		class GLYPHENTRY
+		{
+		public:
+			UBits index;
+			SBits x_advance;
+		};
+		typedef std::vector<GLYPHENTRY> GlyphEntryList;
+		//-----------------------------------------------------------------------
+		// SHAPE TYPES
+		//-----------------------------------------------------------------------
 		class FILLSTYLE
 		{
 		public:
@@ -137,14 +187,18 @@ namespace vtx
 			GradientMap gradient;
 			MATRIX matrix;
 		};
-
+		typedef std::vector<FILLSTYLE> FillstyleList;
+		typedef std::map<uint, FILLSTYLE> FillstyleMap;
+		//-----------------------------------------------------------------------
 		class LINESTYLE
 		{
 		public:
 			COLOR color;
 			UI16 width;
 		};
-
+		typedef std::vector<LINESTYLE> LinestyleList;
+		typedef std::map<uint, LINESTYLE> LinestyleMap;
+		//-----------------------------------------------------------------------
 		class SHAPEELEMENT
 		{
 		public:
@@ -157,12 +211,23 @@ namespace vtx
 				cx(0), cy(0), 
 				type(SET_MOVE){}
 		};
-
-		typedef std::vector<FILLSTYLE> FillstyleList2;
-		typedef std::vector<LINESTYLE> LinestyleList2;
-		typedef std::map<uint, FILLSTYLE> FillstyleMap;
-		typedef std::map<uint, LINESTYLE> LinestyleMap;
 		typedef std::vector<SHAPEELEMENT> ShapeElementList;
+		//-----------------------------------------------------------------------
+		class SHAPE
+		{
+		public:
+			FillstyleList fillstyles;
+			LinestyleList linestyles;
+			ShapeElementList elements;
+
+			void clear()
+			{
+				elements.clear();
+				fillstyles.clear();
+				linestyles.clear();
+			}
+		};
+		//-----------------------------------------------------------------------
 	}
 }
 

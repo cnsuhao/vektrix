@@ -38,6 +38,9 @@ THE SOFTWARE.
 #include "vtxswfSubShape.h"
 #include "vtxswfSubLine.h"
 
+//#define DEBUG_FLASH_SHAPES
+//#define DEBUG_OUTPUT_PATH "C:/vektrix_debug/"
+
 namespace vtx
 {
 	namespace swf
@@ -50,7 +53,7 @@ namespace vtx
 			SwfParser();
 			virtual ~SwfParser();
 
-			const std::string& getExtension() const;
+			const String& getExtension() const;
 			File* parse(FileStream* stream);
 
 		protected:
@@ -69,9 +72,7 @@ namespace vtx
 
 			// shapes
 			// -> FLASH
-			FillstyleList2 mFillstyleArray; // the original flash fillstyles
-			LinestyleList2 mLinestyleArray; // the original flash linestyles
-			ShapeElementList mShapeElements; // the original flash shape elements
+			SHAPE mFlashShape;
 			// -> VEKTRIX
 			FillstyleMap mFillstyles; // only the USED! fillstyles
 			LinestyleMap mLinestyles; // only the USED! linestyles
@@ -80,12 +81,14 @@ namespace vtx
 			SubLineList mSubLineList; // the sub-lines
 
 			// movieclips
+			uint mMovieClipFrameIndex;
 			MovieClipResource* mCurrentMovieClip;
+			Timeline* mMovieClipTimeline;
 
 			// main movieclip
 			uint mMainFrameIndex;
 			MovieClipResource* mMainMovieClip;
-			Timeline* mTimeline;
+			Timeline* mMainTimeline;
 			Keyframe* mCurrentKeyframe;
 
 			void resetData();
@@ -93,37 +96,59 @@ namespace vtx
 			bool parseHeader();
 			void readTag();
 
+			void handleEnd();
 			void handleShowFrame();
 			void handleDefineShape(const TagTypes& type);
+			void handleDefineText(const TagTypes& type);
 			void handlePlaceObject2();
 			void handleDefineButton2();
+			void handleDefineEditText(const TagTypes& type);
+			void handleDefineSprite();
+			void handleDefineFont3();
 			void handleSymbolClass();
-
-			void parseFillstyleArray(const TagTypes& type);
-			void parseLinestyleArray(const TagTypes& type);
+			void handleDoABC(const uint& tag_length);
 
 			// reading
 			void getFlashStyles();
 			void getFlashChunks();
 			// processing
 			void generateSubshapes();
+			void generateGlyphs();
 			void generateSublines();
 			// writing
 			void writeFillstyles(const UI16& shape_id);
-			void writeSubshapes(const UI16& shape_id, ShapeResource* shape_resource);
+			void writeSubshapes(ShapeResource* shape_resource);
+			void writeGlyphContours(GlyphResource* glyph_resource);
 
 			void debug_contour_element(const ContourElement& element, FILE* file);
-			void debug_shape_element(const SubshapeResource::ShapeElement& element, FILE* file);
+			void debug_shape_element(const ShapeElement& element, FILE* file);
 
 			UI8 readU8();
 			UI16 readU16();
 			UI32 readU32();
 
+			SI16 readS16();
+
 			RECT readRect();
 			COLOR readColor(const bool& alpha = false);
 			MATRIX readMatrix();
 			CXFORM readCxForm(const bool& alpha = false);
-			String readString();
+			String readString(const bool& zero_terminated = true);
+
+			// FONT METHODS
+			KERNINGRECORD readKerningRecord(const UI8& wide_codes);
+
+			// DEBUG
+			//FILE* mDebugFile;
+
+			// TEXT METHODS
+			ShapeResource* readGlyphShape();
+
+			// SHAPE METHODS
+			void readShape(const TagTypes& type, SHAPE& result);
+			void readShapeWithStyle(const TagTypes& type, SHAPE& result);
+			void readFillstyleArray(const TagTypes& type, FillstyleList& result);
+			void readLinestyleArray(const TagTypes& type, LinestyleList& result);
 
 			void fillReadBits();
 			void resetReadBits();

@@ -2,6 +2,7 @@ include_directories (../include)
 include_directories (../../../lib/include)
 
 include_directories (../../../plugins/AS3Plugin/include)
+include_directories (../../../plugins/Direct3D9Plugin/include)
 include_directories (../../../plugins/CairoPlugin/include)
 include_directories (../../../plugins/OgrePlugin/include)
 include_directories (../../../plugins/SwfPlugin/include)

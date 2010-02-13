@@ -88,23 +88,24 @@ namespace vtx
 			Ogre::TextureUnitState* texture_unit = pass->createTextureUnitState();
 
 			// DEBUG
-			pass->setSelfIllumination(Ogre::ColourValue::White);
-			//pass->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+			//pass->setSelfIllumination(Ogre::ColourValue::White);
 			// use (1, 1-src_alpha) blending for the pre-multiplied alpha images from cairo
 			pass->setSceneBlending(Ogre::SBF_ONE, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
 			pass->setDepthWriteEnabled(false);
-			//pass->setCullingMode(Ogre::CULL_NONE);
+			pass->setCullingMode(Ogre::CULL_NONE);
+
+			// DEBUG
+			pass->setVertexColourTracking(Ogre::TVC_AMBIENT);
 
 			texture_unit->setTextureName(mTexture->getName());
 		}
 		//-----------------------------------------------------------------------
 		OgreTexture::~OgreTexture()
 		{
-			//Ogre::TextureManager::getSingletonPtr()->remove(mTexture);
 			mTexture.setNull();
 		}
 		//-----------------------------------------------------------------------
-		void OgreTexture::paintPixelsToRect(const vtx::Rect& coordinates, unsigned char* pixelData)
+		void OgreTexture::paintPixelsToRect(const Rect& coordinates, unsigned char* pixelData)
 		{
 			Ogre::HardwarePixelBufferSharedPtr buffer = mTexture->getBuffer();
 
@@ -119,14 +120,7 @@ namespace vtx
 			box.front = 0;
 			box.back = 1;
 
-			vtx::VTX_LOG("PaintPixelsToRect: min: %u %u max: %u %u", coordinates.left, coordinates.top, coordinates.right, coordinates.bottom);
-
 			buffer->blitFromMemory(image.getPixelBox(), box);
-
-			// DEBUG
-			debugOgreTexture();
-
-			//vtx::VTX_LOG("NUM MIPMAPS: %u", mTexture->getNumMipmaps());
 		}
 		//-----------------------------------------------------------------------
 		void OgreTexture::debugOgreTexture()
@@ -155,6 +149,11 @@ namespace vtx
 		void OgreTexture::loadResource(Ogre::Resource* resource)
 		{
 			renderAllShapes();
+
+			VTX_LOG("Ogre texture atlas rendered... %d pixels", getPackedSize());
+
+			// DEBUG
+			//debugOgreTexture();
 		}
 		//-----------------------------------------------------------------------
 	}

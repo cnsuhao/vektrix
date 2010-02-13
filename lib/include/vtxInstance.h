@@ -30,9 +30,11 @@ THE SOFTWARE.
 #define __vtxInstance_H__
 
 #include "vtxPrerequesites.h"
+#include "vtxFactory.h"
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport Instance
 	{
 	public:
@@ -40,7 +42,7 @@ namespace vtx
 		virtual ~Instance();
 
 		const String& getID();
-		virtual const String& getType() const = 0;
+		virtual const String& getType() const = 0; // TODO: evtl. implement this in the base class, using Resource::getType()
 
 		virtual void _setParent(Movie* parent);
 		Movie* getParent() const;
@@ -52,6 +54,10 @@ namespace vtx
 		Movie* mParentMovie;
 		Resource* mResource;
 	};
+	//-----------------------------------------------------------------------
+	template<class T>
+	class InstanceFactory : public Factory<T, Resource*> {};
+	//-----------------------------------------------------------------------
 }
 
 #endif

@@ -29,8 +29,10 @@ THE SOFTWARE.
 #include "vtxas3Plugin.h"
 #include "vtxas3ScriptEngine.h"
 
+#include "vtxInstanceManager.h"
 #include "vtxRoot.h"
-#include "vtxScriptEngineManager.h"
+
+#include "cspVmCore.h"
 
 //-----------------------------------------------------------------------
 #ifdef VTX_STATIC_LIB
@@ -39,7 +41,7 @@ THE SOFTWARE.
 	extern "C" void vtxas3Export startPlugin() throw()
 #endif
 {
-	vtx::Root::getSingletonPtr()->_addPlugin(new vtx::as3::AS3Plugin());
+	vtx::Root::getSingletonPtr()->registerPlugin(new vtx::as3::AS3Plugin());
 }
 //-----------------------------------------------------------------------
 
@@ -51,13 +53,17 @@ namespace vtx
 		AS3Plugin::AS3Plugin() 
 			: mAS3ScriptEngine(new AS3ScriptEngineFactory)
 		{
-			ScriptEngineManager::getSingletonPtr()->addFactory(mAS3ScriptEngine);
+			csp::VmCore::createGcHeap();
+
+			InstanceManager::getSingletonPtr()->scriptEngines()->addFactory(mAS3ScriptEngine);
 		}
 		//-----------------------------------------------------------------------
 		AS3Plugin::~AS3Plugin()
 		{
-			//ScriptEngineManager::getSingletonPtr()->removeFactory(mAS3ScriptEngine);
-			//delete mAS3ScriptEngine;
+			InstanceManager::getSingletonPtr()->scriptEngines()->removeFactory(mAS3ScriptEngine);
+			delete mAS3ScriptEngine;
+
+			csp::VmCore::destroyGcHeap();
 		}
 		//-----------------------------------------------------------------------
 	}

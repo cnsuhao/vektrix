@@ -34,7 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
-	class MovieClip : public DisplayObjectContainer
+	class vtxExport MovieClip : public DisplayObjectContainer
 	{
 	public:
 		MovieClip(Resource* resource);
@@ -57,6 +57,7 @@ namespace vtx
 		ScriptMovieClip* getScriptMovieClip() const;
 
 	protected:
+		BoundingBox mBB;
 		ScriptMovieClip* mScriptObject;
 		Timeline* mTimeline;
 	};

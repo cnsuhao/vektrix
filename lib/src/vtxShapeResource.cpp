@@ -29,10 +29,11 @@ THE SOFTWARE.
 #include "vtxShapeResource.h"
 
 #include "vtxFileManager.h"
-#include "vtxFileContainerFactory.h"
+#include "vtxFileContainer.h"
 #include "vtxFileStream.h"
 #include "vtxMathHelper.h"
 #include "vtxMatrix.h"
+#include "vtxShapeElement.h"
 #include "vtxSubshapeResource.h"
 
 namespace vtx
@@ -77,19 +78,19 @@ namespace vtx
 		{
 			SubshapeResource* subshape = *it;
 
-			SubshapeResource::ShapeElement::List elem_list = subshape->getElementList();
-			SubshapeResource::ShapeElement::List::iterator elem_it = elem_list.begin();
-			SubshapeResource::ShapeElement::List::iterator elem_end = elem_list.end();
+			ShapeElementList elem_list = subshape->getElementList();
+			ShapeElementList::iterator elem_it = elem_list.begin();
+			ShapeElementList::iterator elem_end = elem_list.end();
 
-			SubshapeResource::ShapeElement& prev_element = *elem_it;
+			ShapeElement& prev_element = *elem_it;
 			++elem_it;
 
 			while(elem_it != elem_end)
 			{
-				SubshapeResource::ShapeElement& element = *elem_it;
+				ShapeElement& element = *elem_it;
 
 				if(elem_it != elem_list.begin() && 
-					element.type == SubshapeResource::ShapeElement::SID_MOVE_TO)
+					element.type == ShapeElement::SID_MOVE_TO)
 				{
 					prev_element = element;
 					++elem_it;
@@ -190,6 +191,21 @@ namespace vtx
 		{
 			mMaximumScale.y = scale.y;
 		}
+	}
+	//-----------------------------------------------------------------------
+	const String ShapeResource::getPackID()
+	{
+		return getID();
+	}
+	//-----------------------------------------------------------------------
+	const uint ShapeResource::getPackableWidth()
+	{
+		return getMaximumWidth_PoT();
+	}
+	//-----------------------------------------------------------------------
+	const uint ShapeResource::getPackableHeight()
+	{
+		return getMaximumHeight_PoT();
 	}
 	//-----------------------------------------------------------------------
 }

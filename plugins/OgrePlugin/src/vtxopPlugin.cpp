@@ -28,15 +28,15 @@ THE SOFTWARE.
 
 #include "vtxopPlugin.h"
 
-#include "vtxRoot.h"
-#include "vtxShapeManager.h"
-#include "vtxTextureManager.h"
-
 #include "vtxopMovableMovieFactory.h"
+#include "vtxopMovableEditText.h"
+#include "vtxopMovableShape.h"
+#include "vtxopMovableStaticText.h"
+#include "vtxopTexture.h"
 #include "vtxopTextureMovieFactory.h"
 
-#include "vtxopShapeFactory.h"
-#include "vtxopTextureFactory.h"
+#include "vtxInstanceManager.h"
+#include "vtxRoot.h"
 
 //-----------------------------------------------------------------------
 #ifdef VTX_STATIC_LIB
@@ -45,7 +45,7 @@ THE SOFTWARE.
 	extern "C" void vtxopExport startPlugin() throw()
 #endif
 {
-	vtx::Root::getSingletonPtr()->_addPlugin(new vtx::ogre::OgrePlugin());
+	vtx::Root::getSingletonPtr()->registerPlugin(new vtx::ogre::OgrePlugin());
 }
 //-----------------------------------------------------------------------
 
@@ -55,35 +55,71 @@ namespace vtx
 	{
 		//-----------------------------------------------------------------------
 		OgrePlugin::OgrePlugin() 
-			: mShapeFactory(new OgreShapeFactory), 
-			mTextureFactory(new OgreTextureFactory), 
-			mMovableMovie(new MovableMovieFactory), 
-			mTextureMovie(new TextureMovieFactory)
+			: instMgr(InstanceManager::getSingletonPtr())
 		{
-			// InstanceFactories
-			vtx::ShapeManager::getSingletonPtr()->addFactory(mShapeFactory);
-			vtx::TextureManager::getSingletonPtr()->addFactory(mTextureFactory);
+			// Generic
+			mTexture = new OgreTextureFactory;
+			instMgr->textures()->addFactory(mTexture);
 
-			// MovieFactories
-			vtx::Root::getSingletonPtr()->addFactory(mMovableMovie);
-			vtx::Root::getSingletonPtr()->addFactory(mTextureMovie);
+			// Movies
+			initMovableMovie();
+			initTextureMovie();
 		}
 		//-----------------------------------------------------------------------
 		OgrePlugin::~OgrePlugin()
 		{
-			// MovieFactories
-			vtx::Root::getSingletonPtr()->removeFactory(mMovableMovie);
-			vtx::Root::getSingletonPtr()->removeFactory(mTextureMovie);
+			freeMovableMovie();
+			freeTextureMovie();
 
-			// InstanceFactories
-			vtx::ShapeManager::getSingletonPtr()->removeFactory(mShapeFactory);
-			vtx::TextureManager::getSingletonPtr()->removeFactory(mTextureFactory);
+			// Generic
+			instMgr->textures()->removeFactory(mTexture);
+			delete mTexture;
+		}
+		//-----------------------------------------------------------------------
+		void OgrePlugin::initMovableMovie()
+		{
+			// Instances
+			mMovableEditText = new OgreMovableEditTextFactory;
+			mMovableShape = new OgreMovableShapeFactory;
+			mMovableStaticText = new OgreMovableStaticTextFactory;
 
+			instMgr->editTexts()->addFactory(mMovableEditText);
+			instMgr->shapes()->addFactory(mMovableShape);
+			instMgr->staticTexts()->addFactory(mMovableStaticText);
+
+			// Movie
+			mMovableMovie = new MovableMovieFactory;
+			Root::getSingletonPtr()->addFactory(mMovableMovie);
+		}
+		//-----------------------------------------------------------------------
+		void OgrePlugin::freeMovableMovie()
+		{
+			// Movie
+			Root::getSingletonPtr()->removeFactory(mMovableMovie);
 			delete mMovableMovie;
-			delete mTextureMovie;
 
-			delete mShapeFactory;
-			delete mTextureFactory;
+			// Instances
+			instMgr->editTexts()->removeFactory(mMovableEditText);
+			instMgr->shapes()->removeFactory(mMovableShape);
+			instMgr->staticTexts()->removeFactory(mMovableStaticText);
+
+			delete mMovableEditText;
+			delete mMovableShape;
+			delete mMovableStaticText;
+		}
+		//-----------------------------------------------------------------------
+		void OgrePlugin::initTextureMovie()
+		{
+			// Movie
+			mTextureMovie = new TextureMovieFactory;
+			Root::getSingletonPtr()->addFactory(mTextureMovie);
+		}
+		//-----------------------------------------------------------------------
+		void OgrePlugin::freeTextureMovie()
+		{
+			// Movie
+			Root::getSingletonPtr()->removeFactory(mTextureMovie);
+			delete mTextureMovie;
 		}
 		//-----------------------------------------------------------------------
 	}

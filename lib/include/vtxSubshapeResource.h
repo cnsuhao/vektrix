@@ -30,7 +30,7 @@ THE SOFTWARE.
 #define __vtxSubshapeResource_H__
 
 #include "vtxPrerequesites.h"
-
+#include "vtxShapeElement.h"
 #include "vtxVector2.h"
 
 namespace vtx
@@ -38,46 +38,15 @@ namespace vtx
 	class vtxExport SubshapeResource
 	{
 	public:
-		class ShapeElement
-		{
-		public:
-			typedef std::vector<ShapeElement> List;
-
-			enum ShapeElementID
-			{
-				SID_MOVE_TO = 0, 
-				SID_LINE_TO, 
-				SID_CURVE_TO
-			};
-
-			ShapeElement() 
-				: type(SID_MOVE_TO)
-			{
-
-			}
-
-			// contour identifier { CID_BEGIN | CID_END | CID_LINE | CID_BEZIER }
-			ShapeElementID type;
-
-			// texture coordinates
-			Vector2 texcoord;
-
-			// current location
-			Vector2 pos;
-
-			// control point
-			Vector2 ctrl;
-		};
-
 		void addShapeElement(ShapeElement element);
-		const ShapeElement::List& getElementList() const;
+		const ShapeElementList& getElementList() const;
 
 		void setMaterial(MaterialResource* material);
 		MaterialResource* getMaterial();
 
 	protected:
 		MaterialResource* mMaterial;
-		ShapeElement::List mShapeElements;
+		ShapeElementList mShapeElements;
 	};
 }
 

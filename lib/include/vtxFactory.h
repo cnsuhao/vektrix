@@ -67,6 +67,25 @@ namespace vtx
 #define FactoryDecl_P1(base, P1) \
 	class base##Factory : public Factory<base, P1>{}
 
+#define FactoryImpl_P0(type, base) \
+	class type##Factory : public base##Factory \
+	{ \
+	public: \
+		const String& getName() const \
+		{ \
+			static String name = #type; \
+			return name; \
+		} \
+		base* createObject() \
+		{ \
+			return new type(); \
+		} \
+		void destroyObject(base* inst) \
+		{ \
+			delete inst; \
+		} \
+	}
+
 #define FactoryImpl_P1(type, base, P1) \
 	class type##Factory : public base##Factory \
 	{ \
@@ -79,6 +98,25 @@ namespace vtx
 		base* createObject(P1 p1) \
 		{ \
 			return new type(p1); \
+		} \
+		void destroyObject(base* inst) \
+		{ \
+			delete inst; \
+		} \
+	}
+
+#define FactoryImpl_P2(type, base, P1, P2) \
+	class type##Factory : public base##Factory \
+	{ \
+	public: \
+		const String& getName() const \
+		{ \
+			static String name = #type; \
+			return name; \
+		} \
+		base* createObject(P1 p1, P2 p2) \
+		{ \
+			return new type(p1, p2); \
 		} \
 		void destroyObject(base* inst) \
 		{ \

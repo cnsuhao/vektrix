@@ -29,23 +29,24 @@ THE SOFTWARE.
 #include "vtxMovieFactory.h"
 
 #include "vtxFile.h"
+#include "vtxInstanceManager.h"
 #include "vtxRenderStrategy.h"
-#include "vtxShapeManager.h"
-#include "vtxTextureManager.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
 	MovieFactory::MovieFactory() 
-		: mShapeFactory(NULL), 
+		: mEditTextFactory(NULL), 
+		mShapeFactory(NULL), 
+		mStaticTextFactory(NULL), 
 		mTextureFactory(NULL)
 	{
 	}
 	//-----------------------------------------------------------------------
 	MovieFactory::~MovieFactory()
 	{
-		DataPoolMap::iterator it = mDataPools.begin();
-		DataPoolMap::iterator end = mDataPools.end();
+		RenderStrategyMap::iterator it = mRenderStrategy.begin();
+		RenderStrategyMap::iterator end = mRenderStrategy.end();
 		while(it != end)
 		{
 			delete it->second;
@@ -53,24 +54,34 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	RenderStrategy* MovieFactory::getDataPool(File* file)
+	RenderStrategy* MovieFactory::getRenderStrategy(File* file)
 	{
-		DataPoolMap::iterator it = mDataPools.find(file->getFilename());
+		RenderStrategyMap::iterator it = mRenderStrategy.find(file->getFilename());
 
-		if(it != mDataPools.end())
+		if(it != mRenderStrategy.end())
 		{
 			return it->second;
 		}
 
-		RenderStrategy* dataPool = _createDataPool(file);
-		mDataPools.insert(DataPoolMap::value_type(file->getFilename(), dataPool));
+		RenderStrategy* renderStrategy = _createRenderStrategy(file);
+		mRenderStrategy.insert(RenderStrategyMap::value_type(file->getFilename(), renderStrategy));
 
-		return dataPool;
+		return renderStrategy;
+	}
+	//-----------------------------------------------------------------------
+	EditTextFactory* MovieFactory::getEditTextFactory()
+	{
+		return mEditTextFactory;
 	}
 	//-----------------------------------------------------------------------
 	ShapeFactory* MovieFactory::getShapeFactory()
 	{
 		return mShapeFactory;
+	}
+	//-----------------------------------------------------------------------
+	StaticTextFactory* MovieFactory::getStaticTextFactory()
+	{
+		return mStaticTextFactory;
 	}
 	//-----------------------------------------------------------------------
 	TextureFactory* MovieFactory::getTextureFactory()
@@ -80,8 +91,12 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void MovieFactory::_initialize()
 	{
-		mShapeFactory = ShapeManager::getSingletonPtr()->getFactory(_getShapeFactoryName());
-		mTextureFactory = TextureManager::getSingletonPtr()->getFactory(_getTextureFactoryName());
+		InstanceManager* inst_mgr = InstanceManager::getSingletonPtr();
+
+		mEditTextFactory = inst_mgr->editTexts()->getFactory(mFactoryNames["EditText"]);
+		mShapeFactory = inst_mgr->shapes()->getFactory(mFactoryNames["Shape"]);
+		mStaticTextFactory = inst_mgr->staticTexts()->getFactory(mFactoryNames["StaticText"]);
+		mTextureFactory = inst_mgr->textures()->getFactory(mFactoryNames["Texture"]);
 	}
 	//-----------------------------------------------------------------------
 }

@@ -32,7 +32,8 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	Resource::Resource(const String& id) 
-		: mID(id)
+		: mID(id), 
+		mParent(NULL)
 	{
 
 	}
@@ -45,6 +46,16 @@ namespace vtx
 	const String& Resource::getID()
 	{
 		return mID;
+	}
+	//-----------------------------------------------------------------------
+	File* Resource::getFile() const
+	{
+		return mParent;
+	}
+	//-----------------------------------------------------------------------
+	void Resource::_setFile(File* file)
+	{
+		mParent = file;
 	}
 	//-----------------------------------------------------------------------
 }

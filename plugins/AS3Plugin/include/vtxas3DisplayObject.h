@@ -35,19 +35,23 @@ namespace vtx
 {
 	namespace as3
 	{
+		//-----------------------------------------------------------------------
 		class DisplayObjectClass : public avmplus::ClassClosure
 		{
 		public:
 			DisplayObjectClass(avmplus::VTable* cvtable);
+			virtual ~DisplayObjectClass(){}
+
 			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
 
 			DECLARE_SLOTS_DisplayObjectClass;
 		};
-
+		//-----------------------------------------------------------------------
 		class DisplayObject : public EventDispatcher
 		{
 		public:
 			DisplayObject(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+			virtual ~DisplayObject(){}
 
 			virtual double get_x();
 			virtual void set_x(double val);
@@ -58,23 +62,9 @@ namespace vtx
 			virtual double get_rotation();
 			virtual void set_rotation(double val);
 
-			//virtual double get_x(){return 0;}
-			//virtual void set_x(double val){}
-
-			//virtual double get_y(){return 0;}
-			//virtual void set_y(double val){}
-
-			//virtual double get_rotation(){return 0;}
-			//virtual void set_rotation(double val){}
-
 			DECLARE_SLOTS_DisplayObject;
-
-		private:
-			csp::ScriptObject* mCaspinObject;
-
-		protected:
-			csp::ScriptObject* getCaspinObject();
 		};
+		//-----------------------------------------------------------------------
 	}
 }
 

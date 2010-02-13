@@ -58,7 +58,7 @@ namespace vtx
 			++it;
 		}
 
-		VTX_LOG("InstancePool: destroyed %d instances", numDeletes);
+		VTX_LOG("InstancePool: destroyed %d instance%s", numDeletes, (numDeletes==1)?"":"s");
 	}
 	//-----------------------------------------------------------------------
 	void InstancePool::push(Instance* inst)

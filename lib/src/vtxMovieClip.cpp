@@ -105,26 +105,27 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	const BoundingBox& MovieClip::getBoundingBox() const
 	{
-		// TODO
-		static BoundingBox bb;
-		return bb;
+		return mBB;
 	}
 	//-----------------------------------------------------------------------
 	void MovieClip::_setParent(Movie* parent)
 	{
 		DisplayObjectContainer::_setParent(parent);
 
-		MovieClipResource* movieclip_res = dynamic_cast<MovieClipResource*>(mResource);
-
-		if(movieclip_res)
+		if(parent)
 		{
-			if(mTimeline)
-			{
-				delete mTimeline;
-			}
+			MovieClipResource* movieclip_res = dynamic_cast<MovieClipResource*>(mResource);
 
-			mTimeline = movieclip_res->getTimeline()->clone(this);
-			mTimeline->setFrameRate(mParentMovie->getFile()->getHeader().fps);
+			if(movieclip_res)
+			{
+				if(mTimeline)
+				{
+					delete mTimeline;
+				}
+
+				mTimeline = movieclip_res->getTimeline()->clone(this);
+				mTimeline->setFrameRate(mParentMovie->getFile()->getHeader().fps);
+			}
 		}
 	}
 	//-----------------------------------------------------------------------

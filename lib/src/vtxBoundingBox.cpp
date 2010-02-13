@@ -34,9 +34,7 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	BoundingBox::BoundingBox() 
-		: mExtent(EXTENT_NULL), 
-		mMin(Vector2()), 
-		mMax(Vector2())
+		: mExtent(EXTENT_NULL)
 	{
 
 	}
@@ -89,12 +87,12 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	const float BoundingBox::getWidth() const
 	{
-		return (mMax.x - mMin.x);
+		return abs(mMax.x - mMin.x);
 	}
 	//-----------------------------------------------------------------------
 	const float BoundingBox::getHeight() const
 	{
-		return (mMax.y - mMin.y);
+		return abs(mMax.y - mMin.y);
 	}
 	//-----------------------------------------------------------------------
 	const Vector2& BoundingBox::getMin() const

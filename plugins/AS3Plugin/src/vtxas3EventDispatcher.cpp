@@ -28,6 +28,8 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
+#include "cspScriptObject.h"
+
 namespace vtx
 {
 	namespace as3
@@ -46,7 +48,7 @@ namespace vtx
 		}
 		//-----------------------------------------------------------------------
 		EventDispatcher::EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: ScriptObject(vtable, prototype)
+			: avmplus::ScriptObject(vtable, prototype)
 		{
 
 		}

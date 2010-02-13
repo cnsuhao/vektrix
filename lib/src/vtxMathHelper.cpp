@@ -27,19 +27,21 @@ THE SOFTWARE.
 */
 
 #include "vtxMathHelper.h"
+#include "vtxLogManager.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
 	uint MathHelper::findClosestPowerOfTwo(const float& number)
 	{
-		uint powerOfTwo;
-		for(powerOfTwo=64; powerOfTwo<number; powerOfTwo*=2) {}
+		if(number < 0.0f)
+		{
+			VTX_WARN("Can not find negative power of two");
+			return 0;
+		}
 
-		//if(powerOfTwo-number > abs(powerOfTwo/2-number))
-		//{
-		//	powerOfTwo /= 2;
-		//}
+		uint powerOfTwo;
+		for(powerOfTwo=8; powerOfTwo<number; powerOfTwo*=2) {}
 
 		return powerOfTwo;
 	}

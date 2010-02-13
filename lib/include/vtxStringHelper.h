@@ -38,8 +38,14 @@ namespace vtx
 	public:
 		static String versionString(const uint& version);
 
+		static WString utf8Decode(const String& encoded_string);
+		static String utf8Encode(const WString& utf8_string);
+
 		static StringList splitString(const String& str, const char& delimiter = ' ');
 		static String getFileExtension(const String& str);
+
+		static int intFromHex(const String& hexStr);
+		static Color colorFromHex(const String& hexStr);
 
 		static String toString(float val);
 		static float toFloat(const String& str);

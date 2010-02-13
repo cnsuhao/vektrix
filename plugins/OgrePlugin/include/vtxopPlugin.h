@@ -49,10 +49,25 @@ namespace vtx
 			virtual ~OgrePlugin();
 
 		protected:
-			OgreShapeFactory* mShapeFactory;
-			OgreTextureFactory* mTextureFactory;
+			InstanceManager* instMgr;
+
+			// MovableMovie
 			MovableMovieFactory* mMovableMovie;
+			OgreMovableEditTextFactory* mMovableEditText;
+			OgreMovableShapeFactory* mMovableShape;
+			OgreMovableStaticTextFactory* mMovableStaticText;
+
+			// TextureMovie
 			TextureMovieFactory* mTextureMovie;
+
+			// Generic
+			OgreTextureFactory* mTexture;
+
+			void initMovableMovie();
+			void freeMovableMovie();
+
+			void initTextureMovie();
+			void freeTextureMovie();
 		};
 	}
 }

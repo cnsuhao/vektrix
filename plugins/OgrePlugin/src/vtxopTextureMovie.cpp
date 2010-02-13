@@ -27,21 +27,21 @@ THE SOFTWARE.
 */
 
 #include "vtxopTextureMovie.h"
-#include "vtxopShape.h"
+#include "vtxopMovableShape.h"
 
 #include "vtxInstance.h"
 #include "vtxMovieFactory.h"
-#include "vtxTextureFactory.h"
+#include "vtxTexture.h"
 
 namespace vtx
 {
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		TextureMovie::TextureMovie(const std::string& name, vtx::File* file, MovieFactory* creator) 
+		TextureMovie::TextureMovie(const String& name, vtx::File* file, MovieFactory* creator) 
 			: vtx::Movie(name, file, creator)
 		{
-			mMovieTexture = mCreator->getTextureFactory()->createObject(this, NULL);
+			mMovieTexture = mCreator->getTextureFactory()->createObject();
 		}
 		//-----------------------------------------------------------------------
 	}

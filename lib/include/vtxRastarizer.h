@@ -40,7 +40,7 @@ namespace vtx
 		virtual ~Rasterizer();
 
 		virtual const String& getName() const = 0;
-		virtual void renderShapeToTexture(Texture* texture, ShapeResource* shape, AtlasNode* node) = 0;
+		virtual void renderElementToTexture(Texture* texture, AtlasPackable* element, AtlasNode* node) = 0;
 
 	protected:
 		//cairo_t* mCairo;

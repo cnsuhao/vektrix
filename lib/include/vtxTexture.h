@@ -30,6 +30,7 @@ THE SOFTWARE.
 #define __vtxTexture_H__
 
 #include "vtxPrerequesites.h"
+#include "vtxInstance.h"
 
 namespace vtx
 {
@@ -39,12 +40,13 @@ namespace vtx
 	public:
 		Texture(uint size);
 		virtual ~Texture();
-		AtlasNode* packShape(ShapeResource* shape);
+
+		AtlasNode* packShape(AtlasPackable* element);
 		void clear();
 		void renderAllShapes();
-		//virtual void draw(Shape* shape) = 0;
 
 		const uint& getSize() const;
+		uint getPackedSize();
 
 		virtual void paintPixelsToRect(const Rect& coordinates, unsigned char* pixelData) = 0;
 
@@ -53,13 +55,7 @@ namespace vtx
 		AtlasNode* mRoot;
 	};
 	//-----------------------------------------------------------------------
-	class vtxExport DefaultTexture : public Texture
-	{
-	public:
-		DefaultTexture(uint size);
-
-		void paintPixelsToRect(const Rect& coordinates, unsigned char* pixelData);
-	};
+	class vtxExport TextureFactory : public Factory<Texture> {};
 	//-----------------------------------------------------------------------
 }
 

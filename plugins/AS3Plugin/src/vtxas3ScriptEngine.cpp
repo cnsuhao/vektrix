@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include "vtxFile.h"
 #include "vtxLogManager.h"
 #include "vtxMovie.h"
-#include "vtxScriptMovieClip.h"
+#include "vtxScriptObject.h"
 #include "vtxStringHelper.h"
 
 #include "cspNativePackage.h"
@@ -69,7 +69,7 @@ namespace vtx
 			mRoot(NULL), 
 			mRootObject(NULL)
 		{
-			mVmCore = new csp::VmCore();
+			mVmCore = new csp::VmCore(false);
 
 			mVmCore->addListener(this);
 
@@ -83,7 +83,6 @@ namespace vtx
 		{
 			delete mRoot;
 			delete mVmCore;
-			csp::VmCore::destroyGcHeap();
 		}
 		//-----------------------------------------------------------------------
 		bool AS3ScriptEngine::executeCode(const char* code, const uint& len)
@@ -117,7 +116,7 @@ namespace vtx
 			return mRootObject;
 		}
 		//-----------------------------------------------------------------------
-		void AS3ScriptEngine::output(const std::string& message)
+		void AS3ScriptEngine::output(const String& message)
 		{
 			VTX_LOG("AS3: '%s'", message.c_str());
 		}

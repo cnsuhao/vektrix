@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include "vtxFile.h"
 #include "vtxFileParser.h"
 #include "vtxFileStream.h"
-#include "vtxFileContainerFactory.h"
+#include "vtxFileContainer.h"
 #include "vtxLogManager.h"
 #include "vtxMovieClipResource.h"
 #include "vtxStringHelper.h"
@@ -43,9 +43,9 @@ namespace vtx
 	template<> FileManager* Singleton<FileManager>::sInstance = 0;
 	//-----------------------------------------------------------------------
 	FileManager::FileManager() 
-		: FactoryManager<FileContainerFactory, DefaultFileContainerFactory>("FileContainer")
+		: FactoryManager<FileContainerFactory>("FileContainer")
 	{
-
+		addFactory(new DefaultFileContainerFactory);
 	}
 	//-----------------------------------------------------------------------
 	FileManager::~FileManager()

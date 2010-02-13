@@ -31,11 +31,18 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	CXForm::CXForm(const Color& mul_color, const Color& add_color) 
+		: mul(mul_color), 
+		add(add_color)
+	{
+
+	}
+	//-----------------------------------------------------------------------
 	CXForm::CXForm(
-		float _mul_red, float _mul_green, float _mul_blue, float _mul_alpha, 
-		float _add_red, float _add_green, float _add_blue, float _add_alpha)
-		: mul_red(_mul_red), mul_green(_mul_green), mul_blue(_mul_blue), mul_alpha(_mul_alpha), 
-		add_red(_add_red), add_green(_add_green), add_blue(_add_blue), add_alpha(_add_alpha)
+		float mul_red, float mul_green, float mul_blue, float mul_alpha, 
+		float add_red, float add_green, float add_blue, float add_alpha)
+		: mul(mul_red, mul_green, mul_blue, mul_alpha), 
+		add(add_red, add_green, add_blue, add_alpha)
 	{
 
 	}

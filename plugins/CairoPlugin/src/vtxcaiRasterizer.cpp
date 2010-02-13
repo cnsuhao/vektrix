@@ -29,10 +29,12 @@ THE SOFTWARE.
 #include "vtxcaiRasterizer.h"
 
 #include "vtxAtlasNode.h"
+#include "vtxGlyphResource.h"
 #include "vtxLogManager.h"
 #include "vtxShapeResource.h"
 #include "vtxSubshapeResource.h"
 #include "vtxMaterialResource.h"
+#include "vtxStringHelper.h"
 #include "vtxTexture.h"
 
 namespace vtx
@@ -56,7 +58,24 @@ namespace vtx
 			return name;
 		}
 		//-----------------------------------------------------------------------
-		void CairoRasterizer::renderShapeToTexture(Texture* texture, ShapeResource* shape, AtlasNode* node)
+		void CairoRasterizer::renderElementToTexture(Texture* texture, AtlasPackable* element, AtlasNode* node)
+		{
+			GlyphResource* glyph = dynamic_cast<GlyphResource*>(element);
+			if(glyph)
+			{
+				renderGlyph(texture, glyph, node);
+				return;
+			}
+
+			ShapeResource* shape = dynamic_cast<ShapeResource*>(element);
+			if(shape)
+			{
+				renderShape(texture, shape, node);
+				return;
+			}
+		}
+		//-----------------------------------------------------------------------
+		void CairoRasterizer::renderGlyph(Texture* texture, GlyphResource* glyph, AtlasNode* node)
 		{
 			Rect rect = node->getRect();
 
@@ -71,20 +90,98 @@ namespace vtx
 			mCairo = cairo_create(mSurface);
 			cairo_set_fill_rule(mCairo, CAIRO_FILL_RULE_EVEN_ODD);
 
+			Vector2 offset(-glyph->getBoundingBox().getMinX(), -glyph->getBoundingBox().getMinY());
+			Vector2 scale(rect.w()/glyph->getBoundingBox().getWidth(), rect.h()/glyph->getBoundingBox().getHeight());
+
+			Vector2 last_position = Vector2::ZERO;
+
 			// start drawing
-			const ShapeResource::SubshapeList& subshapes = shape->getSubshapeList();
-			ShapeResource::SubshapeList::const_iterator subshape_it = subshapes.begin();
+			const ShapeElementList& elements = glyph->getElementList();
+			ShapeElementList::const_iterator elem_it = elements.begin();
+			ShapeElementList::const_iterator elem_end = elements.end();
+
+			// color RED
+			cairo_set_source_rgba(mCairo, 1, 1, 1, 1);
+
+			while(elem_it != elem_end)
+			{
+				const ShapeElement& element = *elem_it;
+
+				if(element.type == ShapeElement::SID_MOVE_TO)
+				{
+					Vector2 pos = (element.pos + offset) * scale;
+
+					if(elem_it != elements.begin())
+					{
+						cairo_new_sub_path(mCairo);
+					}
+
+					//VTX_LOG("%4.2f %4.2f", pos.x, pos.y);
+
+					cairo_move_to(mCairo, pos.x, pos.y);
+					last_position = pos;
+				}
+				else if(element.type == ShapeElement::SID_LINE_TO)
+				{
+					Vector2 pos = (element.pos + offset) * scale;
+
+					//VTX_LOG("%4.2f %4.2f", pos.x, pos.y);
+
+					cairo_line_to(mCairo, pos.x, pos.y);
+					last_position = pos;
+				}
+				else if(element.type == ShapeElement::SID_CURVE_TO)
+				{
+					Vector2 pos = (element.pos + offset) * scale;
+					Vector2 ctrl = (element.ctrl + offset) * scale;
+
+					//VTX_LOG("%4.2f %4.2f", ctrl.x, ctrl.y);
+					//VTX_LOG("%4.2f %4.2f", pos.x, pos.y);
+
+					cairo_curve_to(mCairo, last_position.x, last_position.y, ctrl.x, ctrl.y, pos.x, pos.y);
+					last_position = pos;
+				}
+
+				++elem_it;
+			} // while(elements)
+
+			cairo_close_path(mCairo);
+			cairo_fill(mCairo);
+
+			texture->paintPixelsToRect(rect, cairo_image_surface_get_data(mSurface));
+
+			// send cairo to sleep
+			cairo_destroy(mCairo);
+			cairo_surface_destroy(mSurface);
+		}
+		//-----------------------------------------------------------------------
+		void CairoRasterizer::renderShape(Texture* texture, ShapeResource* shape, AtlasNode* node)
+		{
+			Rect rect = node->getRect();
+
+			// pixel border to avoid texture bleeding
+			rect.left += 1;
+			rect.top += 1;
+			rect.right -= 1;
+			rect.bottom -= 1;
+
+			// fire up cairo
+			mSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, rect.w(), rect.h());
+			mCairo = cairo_create(mSurface);
+			cairo_set_fill_rule(mCairo, CAIRO_FILL_RULE_EVEN_ODD);
 
 			Vector2 offset(-shape->getBoundingBox().getMinX(), -shape->getBoundingBox().getMinY());
 			Vector2 scale(rect.w()/shape->getWidth(), rect.h()/shape->getHeight());
 
-			for( ; subshape_it != subshapes.end(); ++subshape_it)
+			// start drawing
+			const ShapeResource::SubshapeList& subshapes = shape->getSubshapeList();
+			ShapeResource::SubshapeList::const_iterator subshape_it = subshapes.begin();
+			ShapeResource::SubshapeList::const_iterator subshape_end = subshapes.end();
+
+			while(subshape_it != subshape_end)
 			{
 				SubshapeResource* subshape = (*subshape_it);
 				MaterialResource* material = subshape->getMaterial();
-
-				const SubshapeResource::ShapeElement::List& elements = subshape->getElementList();
-				SubshapeResource::ShapeElement::List::const_iterator element_it = elements.begin();
 
 				cairo_pattern_t* cairo_pattern = NULL;
 
@@ -186,11 +283,14 @@ namespace vtx
 
 				Vector2 last_position = Vector2::ZERO;
 
-				for( ; element_it != elements.end(); ++element_it)
+				const ShapeElementList& elements = subshape->getElementList();
+				ShapeElementList::const_iterator element_it = elements.begin();
+				ShapeElementList::const_iterator element_end = elements.end();
+				while(element_it != element_end)
 				{
-					const SubshapeResource::ShapeElement& element = *element_it;
+					const ShapeElement& element = *element_it;
 
-					if(element.type == SubshapeResource::ShapeElement::SID_MOVE_TO)
+					if(element.type == ShapeElement::SID_MOVE_TO)
 					{
 						Vector2 pos = (element.pos + offset) * scale;
 
@@ -202,14 +302,14 @@ namespace vtx
 						cairo_move_to(mCairo, pos.x, pos.y);
 						last_position = pos;
 					}
-					else if(element.type == SubshapeResource::ShapeElement::SID_LINE_TO)
+					else if(element.type == ShapeElement::SID_LINE_TO)
 					{
 						Vector2 pos = (element.pos + offset) * scale;
 
 						cairo_line_to(mCairo, pos.x, pos.y);
 						last_position = pos;
 					}
-					else if(element.type == SubshapeResource::ShapeElement::SID_CURVE_TO)
+					else if(element.type == ShapeElement::SID_CURVE_TO)
 					{
 						Vector2 pos = (element.pos + offset) * scale;
 						Vector2 ctrl = (element.ctrl + offset) * scale;
@@ -217,6 +317,9 @@ namespace vtx
 						cairo_curve_to(mCairo, last_position.x, last_position.y, ctrl.x, ctrl.y, pos.x, pos.y);
 						last_position = pos;
 					}
+
+					++element_it;
+
 				} // elements
 
 				cairo_close_path(mCairo);
@@ -227,6 +330,8 @@ namespace vtx
 					cairo_pattern_destroy(cairo_pattern);
 					cairo_pattern = NULL;
 				}
+
+				++subshape_it;
 
 			} // subshapes
 

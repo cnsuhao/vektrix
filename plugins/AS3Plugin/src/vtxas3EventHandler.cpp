@@ -58,7 +58,7 @@ namespace vtx
 		}
 		//-----------------------------------------------------------------------
 		EventHandler::EventHandler(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: ScriptObject(vtable, prototype)
+			: avmplus::ScriptObject(vtable, prototype)
 		{
 
 		}

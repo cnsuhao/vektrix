@@ -27,7 +27,6 @@ THE SOFTWARE.
 */
 
 #include "vtxShape.h"
-
 #include "vtxBoundingBox.h"
 #include "vtxShapeResource.h"
 
@@ -77,31 +76,12 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Shape::setScriptObject(ScriptObject* obj)
 	{
-		//mScriptObject = dynamic_cast<ScriptMovieClip*>(obj);
+
 	}
 	//-----------------------------------------------------------------------
 	ScriptObject* Shape::getScriptObject() const
 	{
-		//return mScriptObject;
 		return NULL;
-	}
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
-	DefaultShape::DefaultShape(Resource* resource) 
-		: Shape(resource)
-	{
-
-	}
-	//-----------------------------------------------------------------------
-	bool DefaultShape::isPointInside(const Vector2& coord)
-	{
-		return false;
-	}
-	//-----------------------------------------------------------------------
-	void DefaultShape::_update(const float& delta_time)
-	{
-
 	}
 	//-----------------------------------------------------------------------
 }

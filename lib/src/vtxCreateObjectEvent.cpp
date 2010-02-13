@@ -87,7 +87,6 @@ namespace vtx
 					mObject->setScriptObject(script_obj);
 				}
 			}
-			
 		}
 	}
 	//-----------------------------------------------------------------------

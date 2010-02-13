@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "vtxButton.h"
 #include "vtxFile.h"
 #include "vtxFileManager.h"
-#include "vtxInstanceFactory.h"
+#include "vtxInstanceManager.h"
 #include "vtxLogManager.h"
 #include "vtxMovableObject.h"
 #include "vtxMovieClip.h"
@@ -41,13 +41,10 @@ THE SOFTWARE.
 #include "vtxRenderStrategy.h"
 #include "vtxResource.h"
 #include "vtxRoot.h"
-#include "vtxScriptEngineManager.h"
 #include "vtxScriptResource.h"
 #include "vtxShape.h"
-#include "vtxShapeManager.h"
 #include "vtxShapeResource.h"
 #include "vtxStringHelper.h"
-#include "vtxTextureManager.h"
 
 namespace vtx
 {
@@ -65,11 +62,13 @@ namespace vtx
 		mMouseHand(NULL), 
 		mMouseTextCursor(NULL)
 	{
+		mRenderStrategy = mCreator->getRenderStrategy(mFile);
+
 		mMainMovieClip = new MovieClip(mFile->getMainMovieClip());
 		mMainMovieClip->_setParent(this);
 
 		ScriptEngineFactory* scriptEngineFactory = 
-			ScriptEngineManager::getSingletonPtr()->getFactory(mFile->getScriptEngine());
+			InstanceManager::getSingletonPtr()->scriptEngines()->getFactory(mFile->getScriptEngine());
 
 		// create script VM if available
 		if(scriptEngineFactory)
@@ -194,7 +193,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	Instance* Movie::getInstance(const String& id)
 	{
-		Instance* inst = mDataPool->shareInstance(id, this);
+		Instance* inst = mRenderStrategy->shareInstance(id, this);
 		//VTX_LOG("SHARED instance with id %s (%s)", id.c_str(), inst->getType().c_str());
 		return inst;
 	}
@@ -203,7 +202,7 @@ namespace vtx
 	{
 		if(instance)
 		{
-			mDataPool->storeInstance(instance);
+			mRenderStrategy->storeInstance(instance);
 			//VTX_LOG("STORED instance with id %s (%s)", instance->getID().c_str(), instance->getType().c_str());
 		}
 	}
@@ -229,12 +228,6 @@ namespace vtx
 	MovieDebugger* Movie::getDebugger() const
 	{
 		return mDebugger;
-	}
-	//-----------------------------------------------------------------------
-	void Movie::_initialize(MovieFactory* creator_factory)
-	{
-		mCreator = creator_factory;
-		mDataPool = mCreator->getDataPool(mFile);
 	}
 	//-----------------------------------------------------------------------
 }

@@ -36,18 +36,21 @@ namespace vtx
 	class vtxExport Resource
 	{
 	public:
+		friend class File;
+
 		Resource(const String& id);
 		virtual ~Resource();
 
 		const String& getID();
-		//BinaryFileResource* getParent();
-
 		virtual const String& getType() const = 0;
+
+		File* getFile() const;
 
 	protected:
 		String mID;
-		//String mType;
-		//BinaryFileResource* mParent;
+		File* mParent;
+
+		void _setFile(File* file);
 	};
 }
 

@@ -61,11 +61,14 @@ THE SOFTWARE.
 #
 #		define VTX_MEM_DEBUG_ENABLE() _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF)
 #		define VTX_MEM_DEBUG_BREAK(a) _CrtSetBreakAlloc(a)
+#	else
+#		define VTX_MEM_DEBUG_ENABLE()
+#		define VTX_MEM_DEBUG_BREAK(a)
 #	endif
 #
 #	if defined VTX_LOAD_PLUGIN && defined _DEBUG && !defined VTX_STATIC_LIB
 #		undef VTX_LOAD_PLUGIN
-#		define VTX_LOAD_PLUGIN(name) vtx::Root::getSingletonPtr()->loadPlugin(#name"_d")
+#		define VTX_LOAD_PLUGIN(name) vtx::Root::getSingletonPtr()->loadLibrary(#name"_d")
 #	endif
 #
 #endif // WIN32 settings

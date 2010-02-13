@@ -32,13 +32,13 @@ THE SOFTWARE.
 #include "vtxPrerequesites.h"
 #include "vtxDefaultFileContainer.h"
 #include "vtxDefaultFileContainerFactory.h"
-#include "vtxFileContainerFactory.h"
 #include "vtxFactoryManager.h"
+#include "vtxFileContainer.h"
 #include "vtxSingleton.h"
 
 namespace vtx
 {
-	class vtxExport FileManager : public Singleton<FileManager>, public FactoryManager<FileContainerFactory, DefaultFileContainerFactory>
+	class vtxExport FileManager : public Singleton<FileManager>, public FactoryManager<FileContainerFactory>
 	{
 	public:
 		typedef std::map<String, File*> FileMap;

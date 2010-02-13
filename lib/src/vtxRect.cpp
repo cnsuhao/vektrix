@@ -49,9 +49,15 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
+	const RectF Rect::relativeTo(const uint& width, const uint& height) const
+	{
+		return RectF((float)left/width, (float)top/height, 
+			(float)right/width, (float)bottom/height);
+	}
+	//-----------------------------------------------------------------------
 	const RectF Rect::relativeTo(const Rect& rect) const
 	{
-		return RectF((float)left/rect.w(), (float)top/rect.h(), (float)right/rect.w(), (float)bottom/rect.h());
+		return relativeTo(rect.w(), rect.h());
 	}
 	//-----------------------------------------------------------------------
 	uint Rect::w() const

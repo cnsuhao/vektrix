@@ -170,6 +170,139 @@
 				CommandLine=""
 			/>
 		</Configuration>
+		<Configuration
+			Name="Static_Debug|Win32"
+			OutputDirectory="$(SolutionDir)\bin"
+			IntermediateDirectory="$(SolutionDir)\bin\obj\$(ConfigurationName)\$(ProjectName)"
+			ConfigurationType="4"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(ZLIB_HOME)&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;VTX_STATIC_LIB"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				AdditionalDependencies="zlibd.lib"
+				OutputFile="$(OutDir)\$(ProjectName)_static_d.lib"
+				AdditionalLibraryDirectories="$(ZLIB_HOME)\projects\visualc6\Win32_LIB_Debug"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Static_Release|Win32"
+			OutputDirectory="$(SolutionDir)\bin"
+			IntermediateDirectory="$(SolutionDir)\bin\obj\$(ConfigurationName)\$(ProjectName)"
+			ConfigurationType="4"
+			CharacterSet="2"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(ZLIB_HOME)&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VTX_STATIC_LIB"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				AdditionalDependencies="zlib.lib"
+				OutputFile="$(OutDir)\$(ProjectName)_static.lib"
+				AdditionalLibraryDirectories="$(ZLIB_HOME)\projects\visualc6\Win32_LIB_Release"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -210,23 +343,47 @@
 			Name="Handlers"
 			>
 			<File
-				RelativePath="..\src\vtxswfHandleDefineButton2.cpp"
+				RelativePath="..\src\vtxswfDefineButton2.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfHandleDefineShape.cpp"
+				RelativePath="..\src\vtxswfDefineEditText.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfHandlePlaceObject2.cpp"
+				RelativePath="..\src\vtxswfDefineFont3.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfHandleShowFrame.cpp"
+				RelativePath="..\src\vtxswfDefineShape.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfHandleSymbolClass.cpp"
+				RelativePath="..\src\vtxswfDefineSprite.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxswfDefineText.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxswfDoABC.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxswfEnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxswfPlaceObject2.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxswfShowFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxswfSymbolClass.cpp"
 				>
 			</File>
 			<Filter

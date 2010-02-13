@@ -39,7 +39,7 @@ THE SOFTWARE.
 	extern "C" void vtxxmlExport startPlugin() throw()
 #endif
 {
-	vtx::Root::getSingletonPtr()->_addPlugin(new vtx::xml::XmlPlugin());
+	vtx::Root::getSingletonPtr()->registerPlugin(new vtx::xml::XmlPlugin());
 }
 //-----------------------------------------------------------------------
 

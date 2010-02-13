@@ -26,19 +26,19 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxMaterialFactory_H__
-#define __vtxMaterialFactory_H__
-
-#include "vtxPrerequesites.h"
-
-#include "vtxInstanceFactory.h"
-
-namespace vtx
-{
-	class vtxExport MaterialFactory : public InstanceFactory<Material>
-	{
-	public:
-	};
-}
-
-#endif
+//#ifndef __vtxMaterialFactory_H__
+//#define __vtxMaterialFactory_H__
+//
+//#include "vtxPrerequesites.h"
+//
+//#include "vtxInstanceFactory.h"
+//
+//namespace vtx
+//{
+//	class vtxExport MaterialFactory : public InstanceFactory<Material>
+//	{
+//	public:
+//	};
+//}
+//
+//#endif

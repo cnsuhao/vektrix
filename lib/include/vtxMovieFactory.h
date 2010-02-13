@@ -39,30 +39,33 @@ namespace vtx
 	public:
 		friend class Movie;
 		friend class Root;
-		// <"MovieDefinitionName", DataPoolPtr>
-		typedef std::map<String, RenderStrategy*> DataPoolMap;
+		// <"MovieDefinitionName", RenderStrategyPtr>
+		typedef std::map<String, RenderStrategy*> RenderStrategyMap;
 
 		MovieFactory();
 		virtual ~MovieFactory();
 
-		RenderStrategy* getDataPool(File* file);
+		RenderStrategy* getRenderStrategy(File* file);
 
+		EditTextFactory* getEditTextFactory();
 		ShapeFactory* getShapeFactory();
+		StaticTextFactory* getStaticTextFactory();
 		TextureFactory* getTextureFactory();
 
 	protected:
-		// map of all datapools, with the respective filename as key
-		DataPoolMap mDataPools;
+		// map of all RenderStrategies, with the respective filename as key
+		RenderStrategyMap mRenderStrategy;
+
+		// map of the used factories <InstanceType, FactoryName>
+		StringMap mFactoryNames;
 
 		// factories
+		EditTextFactory* mEditTextFactory;
 		ShapeFactory* mShapeFactory;
+		StaticTextFactory* mStaticTextFactory;
 		TextureFactory* mTextureFactory;
 
-		virtual const String& _getButtonFactoryName() const = 0;
-		virtual const String& _getShapeFactoryName() const = 0;
-		virtual const String& _getTextureFactoryName() const = 0;
-
-		virtual RenderStrategy* _createDataPool(File* file) = 0;
+		virtual RenderStrategy* _createRenderStrategy(File* file) = 0;
 		virtual MovieDebugger* _newDebugger(Movie* movie) = 0;
 
 		void _initialize();

@@ -30,9 +30,11 @@ THE SOFTWARE.
 #define __vtxFileContainer_H__
 
 #include "vtxPrerequesites.h"
+#include "vtxFactory.h"
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport FileContainer
 	{
 	public:
@@ -42,7 +44,9 @@ namespace vtx
 		virtual FileStream* openFile(const String& filename) = 0;
 		virtual bool hasFile(const String& filename) = 0;
 	};
-
+	//-----------------------------------------------------------------------
+	class FileContainerFactory : public Factory<FileContainer, const String&> {};
+	//-----------------------------------------------------------------------
 }
 
 #endif

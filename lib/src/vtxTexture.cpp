@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include "vtxAtlasNode.h"
 #include "vtxLogManager.h"
 #include "vtxRect.h"
-#include "vtxShapeResource.h"
+#include "vtxAtlasPackable.h"
 #include "vtxRasterizerManager.h"
 
 namespace vtx
@@ -49,23 +49,22 @@ namespace vtx
 		delete mRoot;
 	}
 	//-----------------------------------------------------------------------
-	AtlasNode* Texture::packShape(ShapeResource* shape)
+	AtlasNode* Texture::packShape(AtlasPackable* element)
 	{
-		if(shape->getMaximumWidth_PoT() > mSize || shape->getMaximumHeight_PoT() > mSize)
+		if(element->getPackableWidth() > mSize || element->getPackableHeight() > mSize)
 		{
-			VTX_EXCEPT("The shape with the id '%s' exceeds the maximum atlas size of '%u'", shape->getID().c_str(), mSize);
+			VTX_EXCEPT("An AtlasPackable exceeds the maximum atlas size of '%u'", mSize);
 			return NULL;
 		}
 
-		VTX_LOG("Trying to pack shape with dimensions [%4.2f , %4.2f / %u , %u] ...", 
-			shape->getMaximumWidth(), shape->getMaximumHeight(), 
-			shape->getMaximumWidth_PoT(), shape->getMaximumHeight_PoT());
+		VTX_LOG("Trying to pack AtlasPackable with dimensions [%u , %u] ...", 
+			element->getPackableWidth(), element->getPackableHeight());
 
-		AtlasNode* node = mRoot->insert(shape);
+		AtlasNode* node = mRoot->insert(element);
 
 		if(node)
 		{
-			node->setShape(shape);
+			node->setShape(element);
 			return node;
 		}
 
@@ -90,17 +89,9 @@ namespace vtx
 		return mSize;
 	}
 	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
-	//-----------------------------------------------------------------------
-	DefaultTexture::DefaultTexture(uint size) 
-		: Texture(size)
+	uint Texture::getPackedSize()
 	{
-
-	}
-	//-----------------------------------------------------------------------
-	void DefaultTexture::paintPixelsToRect(const Rect& coordinates, unsigned char* pixelData)
-	{
-		VTX_EXCEPT("Unimplemented DefaultTexture::paintPixelsToRect");
+		return mRoot->getPackedSize();
 	}
 	//-----------------------------------------------------------------------
 }

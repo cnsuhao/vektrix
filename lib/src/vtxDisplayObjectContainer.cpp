@@ -188,12 +188,17 @@ namespace vtx
 	{
 		InteractiveObject::_update(delta_time);
 
+		// TODO: only update bounding box when transformation occured
+		mTransform.getWorldBounding().reset();
+
 		Layers::iterator it = mLayers.begin();
 		Layers::iterator end = mLayers.end();
 
 		while(it != end)
 		{
 			it->second->_update(delta_time);
+			// TODO: only update bounding box when transformation occured
+			mTransform.getWorldBounding().extend(it->second->getWorldBoundingBox());
 			++it;
 		}
 	}

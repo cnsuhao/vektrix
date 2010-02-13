@@ -126,16 +126,6 @@ namespace vtx
 				mMouseOver = false;
 			}
 		}
-
-		mTransform.getWorldBounding().reset();
-
-		Layers::iterator it = mLayers.begin();
-		Layers::iterator end = mLayers.end();
-		while(it != end)
-		{
-			mTransform.getWorldBounding().extend(it->second->getWorldBoundingBox());
-			++it;
-		}
 	}
 	//-----------------------------------------------------------------------
 	const BoundingBox& Button::getBoundingBox() const

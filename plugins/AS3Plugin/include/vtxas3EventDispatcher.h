@@ -31,6 +31,8 @@ THE SOFTWARE.
 
 #include "cspPrerequesites.h"
 
+//#include "vtxScriptObject.h"
+
 namespace vtx
 {
 	namespace as3
@@ -40,6 +42,8 @@ namespace vtx
 		{
 		public:
 			EventDispatcherClass(avmplus::VTable* cvtable);
+			virtual ~EventDispatcherClass(){}
+
 			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
 
 			DECLARE_SLOTS_EventDispatcherClass;
@@ -49,6 +53,7 @@ namespace vtx
 		{
 		public:
 			EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+			virtual ~EventDispatcher(){}
 
 			//bool dispatchEvent(ScriptObject* event);
 

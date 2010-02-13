@@ -33,8 +33,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	ScriptObject::ScriptObject() 
-		: mObject(NULL)
+	ScriptObject::ScriptObject()
 	{
 
 	}
@@ -44,9 +43,22 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
-	void ScriptObject::setNativeObject(Instance* inst)
+	vtx::ScriptObject* ScriptObject::getChildScriptObject(const String& name)
 	{
-		mObject = dynamic_cast<MovableObject*>(inst);
+		ChildMap::iterator it = mChildren.find(name);
+		if(it != mChildren.end())
+		{
+			return it->second;
+		}
+
+		vtx::ScriptObject* vtx_obj = _createChildObject(name);
+
+		if(vtx_obj)
+		{
+			mChildren.insert(std::make_pair(name, vtx_obj));
+		}
+
+		return vtx_obj;
 	}
 	//-----------------------------------------------------------------------
 }

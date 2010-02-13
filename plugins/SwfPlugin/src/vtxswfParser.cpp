@@ -32,7 +32,6 @@ THE SOFTWARE.
 #include "vtxKeyframe.h"
 #include "vtxLogManager.h"
 #include "vtxMovieClipResource.h"
-#include "vtxScriptResource.h"
 #include "vtxStringHelper.h"
 #include "vtxTimeline.h"
 
@@ -55,11 +54,13 @@ namespace vtx
 			mCurrentFile(NULL), 
 			mCurrentStream(NULL), 
 			// movieclips
+			mMovieClipFrameIndex(0), 
 			mCurrentMovieClip(NULL), 
+			mMovieClipTimeline(NULL), 
 			// main movieclip
 			mMainFrameIndex(0), 
 			mMainMovieClip(NULL), 
-			mTimeline(NULL), 
+			mMainTimeline(NULL), 
 			mCurrentKeyframe(NULL)
 		{
 
@@ -70,9 +71,9 @@ namespace vtx
 
 		}
 		//-----------------------------------------------------------------------
-		const std::string& SwfParser::getExtension() const
+		const String& SwfParser::getExtension() const
 		{
-			static std::string ext = ".swf";
+			static String ext = ".swf";
 			return ext;
 		}
 		//-----------------------------------------------------------------------
@@ -90,7 +91,7 @@ namespace vtx
 			mCurrentFile = new File(stream->getFilename());
 
 			mMainMovieClip = new MovieClipResource("__RESERVED__");
-			mTimeline = new Timeline;
+			mMainTimeline = new Timeline;
 			mCurrentKeyframe = new Keyframe;
 
 			while(mReadPos < mFileLength)
@@ -100,10 +101,17 @@ namespace vtx
 
 			delete[] mBuffer;
 
+			// release empty frame
+			if(mCurrentKeyframe)
+			{
+				delete mCurrentKeyframe;
+				mCurrentKeyframe = NULL;
+			}
+
 			mCurrentFile->setHeader(mHeader);
 			mCurrentFile->setScriptEngine("AS3ScriptEngine");
 
-			mMainMovieClip->setTimeline(mTimeline);
+			mMainMovieClip->setTimeline(mMainTimeline);
 			mCurrentFile->setMainMovieClip(mMainMovieClip);
 
 			return mCurrentFile;
@@ -121,12 +129,14 @@ namespace vtx
 			mCurrentStream = NULL; 
 
 			// movieclips
-			mCurrentMovieClip = NULL; 
+			mMovieClipFrameIndex = 0;
+			mCurrentMovieClip = NULL;
+			mMovieClipTimeline = NULL;
 
 			// main movieclip
 			mMainFrameIndex = 0; 
 			mMainMovieClip = NULL; 
-			mTimeline = NULL; 
+			mMainTimeline = NULL; 
 			mCurrentKeyframe = NULL;
 		}
 		//-----------------------------------------------------------------------
@@ -263,7 +273,7 @@ namespace vtx
 			switch(type)
 			{
 			case TT_End:
-				assert(!(mFileLength - mReadPos) && "Unread bytes after TT_End tag");
+				handleEnd();
 				break;
 
 			case TT_ShowFrame:
@@ -275,6 +285,11 @@ namespace vtx
 			case TT_DefineShape3:
 			case TT_DefineShape4:
 				handleDefineShape((TagTypes)type);
+				break;
+
+			case TT_DefineText:
+			case TT_DefineText2:
+				handleDefineText((TagTypes)type);
 				break;
 
 			case TT_SetBackgroundColor:
@@ -296,24 +311,24 @@ namespace vtx
 				handleDefineButton2();
 				break;
 
+			case TT_DefineEditText:
+				handleDefineEditText((TagTypes)type);
+				break;
+
+			case TT_DefineSprite:
+				handleDefineSprite();
+				break;
+
+			case TT_DefineFont3:
+				handleDefineFont3();
+				break;
+
 			case TT_SymbolClass:
 				handleSymbolClass();
 				break;
 
 			case TT_DoABC:
-				{
-					uint start_pos = mReadPos;
-
-					UI32 flags = readU32();
-					String name = readString();
-
-					uint abc_len = length - (mReadPos-start_pos);
-
-					char* abc_buf = new char[abc_len];
-					readByteBlock(abc_buf, abc_len);
-
-					mCurrentFile->addResource(new ScriptResource("Script", abc_buf, abc_len));
-				}
+				handleDoABC(length);
 				break;
 
 				// skip tags that don't need to be parsed (yet?)
@@ -345,8 +360,16 @@ namespace vtx
 			return readU8() | readU8()<<8 | readU8()<<16 | readU8()<<24;
 		}
 		//-----------------------------------------------------------------------
+		SI16 SwfParser::readS16()
+		{
+			//return readU16()>>8;
+			return readU16();
+		}
+		//-----------------------------------------------------------------------
 		RECT SwfParser::readRect()
 		{
+			resetReadBits();
+
 			RECT result;
 			UI32 n = readUBits(5);
 			result.xmin = readSBits(n);
@@ -438,14 +461,32 @@ namespace vtx
 			return result;
 		}
 		//-----------------------------------------------------------------------
-		String SwfParser::readString()
+		String SwfParser::readString(const bool& zero_terminated)
 		{
 			String result;
-			UI8 cur_char = readU8();
-			while(cur_char != 0)
+
+			// zero terminated string
+			if(zero_terminated)
 			{
-				result.append(1, cur_char);
-				cur_char = readU8();
+				UI8 cur_char = readU8();
+				while(cur_char != 0)
+				{
+					result.append(1, cur_char);
+					cur_char = readU8();
+				}
+			}
+			// read string with a given length (non zero terminated)
+			else
+			{
+				UI8 name_length = readU8();
+				for(UI8 i=0; i<name_length; ++i)
+				{
+					UI8 cur_char = readU8();
+					if(cur_char)
+					{
+						result.append(1, cur_char);
+					}
+				}
 			}
 
 			return result;

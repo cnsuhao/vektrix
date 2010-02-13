@@ -30,7 +30,6 @@ THE SOFTWARE.
 #define __vtxShape_H__
 
 #include "vtxPrerequesites.h"
-
 #include "vtxMovableObject.h"
 
 namespace vtx
@@ -54,14 +53,7 @@ namespace vtx
 		ShapeResource* mShapeResource;
 	};
 	//-----------------------------------------------------------------------
-	class vtxExport DefaultShape : public Shape
-	{
-	public:
-		DefaultShape(Resource* resource);
-
-		bool isPointInside(const Vector2& coord);
-		void _update(const float& delta_time);
-	};
+	class vtxExport ShapeFactory : public InstanceFactory<Shape> {};
 	//-----------------------------------------------------------------------
 }
 

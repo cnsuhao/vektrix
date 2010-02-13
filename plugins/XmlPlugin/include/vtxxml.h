@@ -47,16 +47,12 @@ THE SOFTWARE.
 #	define vtxxmlExport
 #endif
 
-// predeclarations for EXPAT
-#define XMLCALL
-struct XML_ParserStruct;
-typedef struct XML_ParserStruct *XML_Parser;
-
 namespace vtx
 {
 	namespace xml
 	{
 		class DataHandler;
+		class DocumentParser;
 		class MovieParser;
 	}
 }

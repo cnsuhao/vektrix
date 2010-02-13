@@ -49,13 +49,15 @@ namespace vtx
 		virtual ~AtlasNode();
 
 		void renderShape(Rasterizer* rasterizer);
-		void setShape(ShapeResource* shape);
+		void setShape(AtlasPackable* element);
 		const Rect& getRect() const;
 
-		FitMode fits(ShapeResource* shape);
-		FitMode fitsExactly(ShapeResource* shape);
+		uint getPackedSize();
 
-		AtlasNode* insert(ShapeResource* shape);
+		FitMode fits(AtlasPackable* element);
+		FitMode fitsExactly(AtlasPackable* element);
+
+		AtlasNode* insert(AtlasPackable* element);
 
 	protected:
 		Rect mRect;
@@ -64,7 +66,7 @@ namespace vtx
 		Texture* mParent;
 		AtlasNode* mChild_1;
 		AtlasNode* mChild_2;
-		ShapeResource* mShape;
+		AtlasPackable* mElement;
 	};
 }
 

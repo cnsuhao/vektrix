@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "vtxFile.h"
 
 #include "vtxAtlasPacker.h"
+#include "vtxFontResource.h"
 #include "vtxLogManager.h"
 #include "vtxMovieClipResource.h"
 #include "vtxResource.h"
@@ -99,15 +100,23 @@ namespace vtx
 
 		if(it != mResources.end())
 		{
-			VTX_EXCEPT("\"%s\": Tried to add Resource with id \"%s\" twice!", mFilename.c_str(), res->getID().c_str());
+			VTX_EXCEPT("\"%s\": Tried to add Resource with id \"%s\" twice!", 
+				mFilename.c_str(), res->getID().c_str());
 		}
 
 		mResources[res->getID()] = res;
+		mResourcesByType[res->getType()].push_back(res);
 
-		if(res->getType() == "Shape")
+		FontResource* font = dynamic_cast<FontResource*>(res);
+		if(font)
 		{
-			mShapes.push_back(dynamic_cast<ShapeResource*>(res));
+			mFonts[font->getName()] = font;
 		}
+
+		res->_setFile(this);
+
+		VTX_LOG("\"%s\": Added resource with id \"%s\" of type \"%s\"", 
+			mFilename.c_str(), res->getID().c_str(), res->getType().c_str());
 	}
 	//-----------------------------------------------------------------------
 	Resource* File::getResource(const String& id)
@@ -124,9 +133,27 @@ namespace vtx
 		return NULL;
 	}
 	//-----------------------------------------------------------------------
-	const File::ShapeResourceList& File::getShapeResourceList() const
+	FontResource* File::getFontByName(const String& font_name)
 	{
-		return mShapes;
+		FontMap::iterator it = mFonts.find(font_name);
+		if(it != mFonts.end())
+		{
+			return it->second;
+		}
+
+		return NULL;
+	}
+	//-----------------------------------------------------------------------
+	const File::ResourceList& File::getResourcesByType(const String& type) const
+	{
+		ResourceTypeMap::const_iterator it = mResourcesByType.find(type);
+		if(it != mResourcesByType.end())
+		{
+			return it->second;
+		}
+
+		static ResourceList empty;
+		return empty;
 	}
 	//-----------------------------------------------------------------------
 }

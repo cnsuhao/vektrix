@@ -34,7 +34,10 @@ THE SOFTWARE.
 
 #include "flash.h"
 
+// flash.events
 #include "vtxas3EventDispatcher.h"
+
+// flash.display
 #include "vtxas3DisplayObject.h"
 #include "vtxas3InteractiveObject.h"
 #include "vtxas3SimpleButton.h"
@@ -42,6 +45,11 @@ THE SOFTWARE.
 #include "vtxas3Sprite.h"
 #include "vtxas3MovieClip.h"
 
+// flash.text
+#include "vtxas3StaticText.h"
+#include "vtxas3TextField.h"
+
+// vektrix.events
 #include "vtxas3EventHandler.h"
 
 #endif

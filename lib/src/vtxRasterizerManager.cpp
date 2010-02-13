@@ -76,7 +76,7 @@ namespace vtx
 		if(it != mRasterizers.end())
 		{
 			mRasterizers.erase(it);
-			VTX_LOG("Removed Rasterizer with name \"%s\".", rasterizer->getName().c_str());
+			VTX_LOG("Removed Rasterizer '%s'.", rasterizer->getName().c_str());
 			return true;
 		}
 

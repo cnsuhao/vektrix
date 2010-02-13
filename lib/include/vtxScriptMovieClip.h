@@ -37,14 +37,7 @@ namespace vtx
 	class vtxExport ScriptMovieClip : public ScriptObject
 	{
 	public:
-		ScriptMovieClip();
-
-		void setNativeObject(Instance* inst);
-
 		virtual void frameEntered(const uint& frame_index) = 0;
-
-	protected:
-		MovieClip* mMovieClip;
 	};
 }
 

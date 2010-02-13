@@ -27,7 +27,7 @@ THE SOFTWARE.
 */
 
 #include "vtxopMovableMovie.h"
-#include "vtxopShape.h"
+#include "vtxopMovableShape.h"
 
 #include "vtxInstance.h"
 
@@ -36,8 +36,8 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		MovableMovie::MovableMovie(const std::string& name, vtx::File* file, MovieFactory* creator) 
-			: vtx::Movie(name, file, creator)
+		MovableMovie::MovableMovie(const String& name, File* file, MovieFactory* creator) 
+			: Movie(name, file, creator)
 		{
 			mAAB.setInfinite();
 		}
@@ -51,30 +51,49 @@ namespace vtx
 		{
 			vtx::Instance* instance = vtx::Movie::getInstance(id);
 
-			if(instance->getType() == "Shape")
+			Ogre::Renderable* renderable = dynamic_cast<Ogre::Renderable*>(instance);
+			if(renderable)
 			{
-				ShapeList::iterator it = mShapes.find((OgreShape*)instance);
-
-				if(it == mShapes.end())
+				RenderableMap::iterator it = mRenderables.find(renderable);
+				if(it == mRenderables.end())
 				{
-					mShapes.insert(ShapeList::value_type((OgreShape*)instance, 0));
+					mRenderables.insert(std::make_pair(renderable, renderable));
 				}
 			}
+			//if(instance->getType() == "Shape")
+			//{
+			//	ShapeList::iterator it = mShapes.find((OgreShape*)instance);
+
+			//	if(it == mShapes.end())
+			//	{
+			//		mShapes.insert(ShapeList::value_type((OgreShape*)instance, 0));
+			//	}
+			//}
 
 			return instance;
 		}
 		//-----------------------------------------------------------------------
 		void MovableMovie::releaseInstance(vtx::Instance* instance)
 		{
-			if(instance->getType() == "Shape")
+			Ogre::Renderable* renderable = dynamic_cast<Ogre::Renderable*>(instance);
+			if(renderable)
 			{
-				ShapeList::iterator it = mShapes.find((OgreShape*)instance);
-
-				if(it != mShapes.end())
+				RenderableMap::iterator it = mRenderables.find(renderable);
+				if(it != mRenderables.end())
 				{
-					mShapes.erase(it);
+					mRenderables.erase(it);
 				}
 			}
+
+			//if(instance->getType() == "Shape")
+			//{
+			//	ShapeList::iterator it = mShapes.find((OgreShape*)instance);
+
+			//	if(it != mShapes.end())
+			//	{
+			//		mShapes.erase(it);
+			//	}
+			//}
 
 			vtx::Movie::releaseInstance(instance);
 		}
@@ -97,12 +116,13 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void MovableMovie::_updateRenderQueue(Ogre::RenderQueue* queue)
 		{
-			ShapeList::iterator it = mShapes.begin();
+			RenderableMap::iterator it = mRenderables.begin();
+			RenderableMap::iterator end = mRenderables.end();
 
-			for( ; it != mShapes.end(); ++it)
+			while(it != end)
 			{
-				Ogre::Renderable* rend = dynamic_cast<Ogre::Renderable*>(it->first);
-				queue->addRenderable(rend);
+				queue->addRenderable(it->second);
+				++it;
 			}
 		}
 		//-----------------------------------------------------------------------

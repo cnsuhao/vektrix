@@ -28,6 +28,7 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
+#include "vtxMovieClip.h"
 #include "vtxStringHelper.h"
 
 #include "cspScriptObject.h"
@@ -60,28 +61,9 @@ namespace vtx
 			//delete getCaspinObject();
 		}
 		//-----------------------------------------------------------------------
-		vtx::ScriptObject* MovieClip::getChildScriptObject(const String& name)
+		void MovieClip::setNativeObject(Instance* inst)
 		{
-			ChildMap::iterator it = mChildren.find(name);
-			if(it != mChildren.end())
-			{
-				return it->second;
-			}
-
-			csp::ScriptObject* csp_obj = getCaspinObject();
-			if(csp_obj)
-			{
-				csp::ScriptObject* slot_obj = csp_obj->createSlotObject(name);
-				vtx::ScriptObject* vtx_obj = dynamic_cast<vtx::ScriptObject*>(slot_obj->scriptObj());
-				if(vtx_obj)
-				{
-					mChildren.insert(std::make_pair(name, vtx_obj));
-				}
-
-				return vtx_obj;
-			}
-
-			return NULL;
+			mMovieClip = dynamic_cast<vtx::MovieClip*>(inst);
 		}
 		//-----------------------------------------------------------------------
 		void MovieClip::frameEntered(const uint& frame_index)
@@ -91,6 +73,21 @@ namespace vtx
 			{
 				csp_obj->callFunction("frame" + StringHelper::toString(frame_index+1));
 			}
+		}
+		//-----------------------------------------------------------------------
+		vtx::ScriptObject* MovieClip::_createChildObject(const String& name)
+		{
+			csp::ScriptObject* parent_obj = getCaspinObject();
+			if(parent_obj)
+			{
+				csp::ScriptObject* slot_obj = parent_obj->createSlotObject(name);
+				if(slot_obj)
+				{
+					return dynamic_cast<vtx::ScriptObject*>(slot_obj->scriptObj());
+				}
+			}
+
+			return NULL;
 		}
 		//-----------------------------------------------------------------------
 	}

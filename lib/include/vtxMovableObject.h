@@ -57,6 +57,7 @@ namespace vtx
 
 		void setParentContainer(DisplayObjectContainer* parent);
 
+		virtual const BoundingBox& getBoundingBox() const = 0;
 		virtual bool isPointInside(const Vector2& coord) = 0;
 
 		const Matrix& getWorldMatrix();
@@ -66,8 +67,6 @@ namespace vtx
 		void needMatrixUpdate();
 
 		virtual void _update(const float& delta_time = 0.0f);
-
-		virtual const BoundingBox& getBoundingBox() const = 0;
 
 		Transform& getTransform();
 

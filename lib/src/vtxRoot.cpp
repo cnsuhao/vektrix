@@ -30,19 +30,15 @@ THE SOFTWARE.
 
 #include "vtxDynLib.h"
 #include "vtxFileManager.h"
-#include "vtxInstanceFactory.h"
+#include "vtxInstanceManager.h"
 #include "vtxLogManager.h"
 #include "vtxMovie.h"
 #include "vtxMovieFactory.h"
 #include "vtxPlugin.h"
 #include "vtxStringHelper.h"
-#include "vtxTextureFactory.h"
+#include "vtxTexture.h"
 
 #include "vtxRasterizerManager.h"
-#include "vtxMaterialManager.h"
-#include "vtxScriptEngineManager.h"
-#include "vtxShapeManager.h"
-#include "vtxTextureManager.h"
 
 namespace vtx
 {
@@ -50,7 +46,7 @@ namespace vtx
 	template<> Root* Singleton<Root>::sInstance = 0;
 	//-----------------------------------------------------------------------
 	Root::Root() 
-		: FactoryManagerNULL<MovieFactory>("Movie")
+		: FactoryManager<MovieFactory>("Movie")
 	{
 		new LogManager();
 
@@ -58,10 +54,8 @@ namespace vtx
 		VTX_LOG("<< Codename: %s >>", VTX_VERSION_NAME);
 
 		new RasterizerManager();
-		new MaterialManager();
-		new ScriptEngineManager();
-		new ShapeManager();
-		new TextureManager();
+		new InstanceManager();
+
 		new FileManager();
 	}
 	//-----------------------------------------------------------------------
@@ -87,11 +81,9 @@ namespace vtx
 		}
 
 		delete FileManager::getSingletonPtr();
+
+		delete InstanceManager::getSingletonPtr();
 		delete RasterizerManager::getSingletonPtr();
-		delete MaterialManager::getSingletonPtr();
-		delete ScriptEngineManager::getSingletonPtr();
-		delete ShapeManager::getSingletonPtr();
-		delete TextureManager::getSingletonPtr();
 
 		// unload dynamic libraries
 		DynLibMap::iterator dynlib_it = mLibraries.begin();
@@ -111,10 +103,10 @@ namespace vtx
 	bool Root::addFactory(MovieFactory* factory)
 	{
 		factory->_initialize();
-		return FactoryManagerNULL<MovieFactory>::addFactory(factory);
+		return FactoryManager<MovieFactory>::addFactory(factory);
 	}
 	//-----------------------------------------------------------------------
-	void Root::loadPlugin(const String& name)
+	void Root::loadLibrary(const String& name)
 	{
 #ifndef VTX_STATIC_LIB
 		if(mLibraries.find(name) != mLibraries.end())
@@ -141,6 +133,11 @@ namespace vtx
 #endif
 	}
 	//-----------------------------------------------------------------------
+	void Root::registerPlugin(Plugin* plugin)
+	{
+		mPlugins.push_back(plugin);
+	}
+	//-----------------------------------------------------------------------
 	Movie* Root::createMovie(const String& name, const String& filename, const String& factoryname)
 	{
 		if(mMovies.find(name) == mMovies.end())
@@ -156,7 +153,6 @@ namespace vtx
 			}
 
 			Movie* movie = factory->createObject(name, file);
-			movie->_initialize(factory);
 			//movie->goto_frame(1);
 
 			mMovies.insert(MovieMap::value_type(name, movie));
@@ -171,21 +167,13 @@ namespace vtx
 	void Root::update(float delta_time)
 	{
 		MovieMap::iterator it = mMovies.begin();
+		MovieMap::iterator end = mMovies.end();
 
-		for( ; it != mMovies.end(); ++it)
+		while(it != end)
 		{
 			it->second->addTime(delta_time);
+			++it;
 		}
-	}
-	//-----------------------------------------------------------------------
-	Tesselator* Root::getDefaultTesselator()
-	{
-		return mDefaultTesselator;
-	}
-	//-----------------------------------------------------------------------
-	void Root::_addPlugin(Plugin* plugin)
-	{
-		mPlugins.push_back(plugin);
 	}
 	//-----------------------------------------------------------------------
 }

@@ -30,12 +30,13 @@ THE SOFTWARE.
 #define __vtxShapeResource_H__
 
 #include "vtxPrerequesites.h"
+#include "vtxAtlasPackable.h"
 #include "vtxBoundingBox.h"
 #include "vtxResource.h"
 
 namespace vtx
 {
-	class vtxExport ShapeResource : public Resource
+	class vtxExport ShapeResource : public Resource, public AtlasPackable
 	{
 	public:
 		typedef std::vector<SubshapeResource*> SubshapeList;
@@ -68,6 +69,11 @@ namespace vtx
 		const SubshapeList& getSubshapeList() const;
 
 		void _injectScale(const Vector2& scale);
+
+		// AtlasPackable
+		const String getPackID();
+		const uint getPackableWidth();
+		const uint getPackableHeight();
 
 	protected:
 		BoundingBox mBoundingBox;

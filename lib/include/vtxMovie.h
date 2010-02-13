@@ -30,46 +30,113 @@ THE SOFTWARE.
 #define __vtxMovie_H__
 
 #include "vtxPrerequesites.h"
-#include "vtxInstancePool.h"
 #include "vtxVector2.h"
 
 namespace vtx
 {
+	/** Defines a movie instance, which was created from a File template.
+	@remarks
+		The Movie class represents a functional GUI instance, which is created
+		based on a beforehand loaded File template. The Movie class itself is
+		mostly an interface which has to be extended and implemented in external
+		plugins. Instances of Movie can only be created by using the Root::createMovie
+		function.
+	*/
 	class vtxExport Movie
 	{
 	public:
-		friend class MovieFactory;
-		friend class Root;
-
 		virtual ~Movie();
-
+		/** Get the unique name associated with this Movie.
+		@returns
+			the name of this Movie.
+		*/
 		const String& getName();
+		/** Get the File template that was used to create this Movie.
+		@returns
+			pointer to the template File.
+		*/
 		File* getFile();
-
+		/** Advance the Timeline of the Movie by the given delta time.
+		@param
+			delta_time Time that shall be added to the Timeline of the Movie.
+		*/
 		void addTime(float delta_time);
-
+		/** Set the Movie's virtual mouse cursor to the given absolute position.
+		@param
+			x X-Coordinate of the mouse cursor in pixels, values in the range of [0 ... movie_width] are valid.
+		@param
+			y Y-Coordinate of the mouse cursor in pixels, values in the range of [0 ... movie_height] are valid.
+		*/
 		void setMouseAbs(uint x, uint y);
+		/** Set the Movie's virtual mouse cursor to the given relative position.
+		@param
+			x X-Coordinate of the mouse cursor relative to the Movie's width, values in the range of [0.0f ... 1.0f] are valid.
+		@param
+			y Y-Coordinate of the mouse cursor relative to the Movie's height, values in the range of [0.0f ... 1.0f] are valid.
+		*/
 		void setMouseRel(float x, float y);
-
+		/** Get the Movie's virtual mouse cursor position in absolute space.
+		@returns
+			Coordinates of the mouse cursor in pixels.
+		*/
 		const Vector2& getMouseAbs() const;
-
+		/** Inform the Movie that a mouse button was pressed.
+		*/
 		void mouseDown();
+		/** Inform the Movie that a mouse button was released.
+		*/
 		void mouseUp();
-
+		/** Query the current status of the mouse button.
+		@returns
+			true if the mouse button is currently pressed, false otherwise.
+		*/
 		const bool& isMouseDown() const;
-
-		// timeline functions
+		/** Advance the playhead of the Movie automatically.
+		*/
 		void play();
+		/** Stop the playhead of the Movie.
+		*/
 		void stop();
+		/** Jump to a given frame of the Movie.
+		@param
+			frame Index of the frame that you want to jump to, values in the range of [0 ... frame_count] are valid.
+		@returns
+			true if the jump to the frame was successful, false otherwise.
+		*/
 		bool goto_frame(uint frame);
+		/** Jump to a given point in time of the Movie.
+		@param
+			time Point in time that you want to jump to, values in the range of [0 ... frame_count/frame_rate] are valid.
+		@returns
+			true if the jump to the point in time was successful, false otherwise.
+		*/
 		bool goto_time(const float& time);
-
+		/** Request an Instance by its id.
+		@param
+			id The id of the Instance that shall be returned.
+		@returns
+			an Instance with the given id.
+		*/
 		virtual Instance* getInstance(const String& id);
+		/** Store an Instance.
+		@param
+			instance The Instance that shall be stored.
+		*/
 		virtual void releaseInstance(Instance* instance);
-
+		/** Get the ScriptEngine that is associated with this Movie.
+		@returns
+			the ScriptEngine that is being used to execute script commands.
+		*/
 		ScriptEngine* getScriptEngine() const;
-
+		/** Enable the debugger for this movie.
+		@param
+			enable Enable the debugger if true, disable otherwise.
+		*/
 		void enableDebugger(const bool& enable);
+		/** Get the MovieDebugger that is associated with this Movie.
+		@returns
+			The MovieDebugger that is used to debug this movie.
+		*/
 		MovieDebugger* getDebugger() const;
 
 	protected:
@@ -79,7 +146,7 @@ namespace vtx
 		File* mFile;
 		bool mMouseDown;
 		MovieFactory* mCreator;
-		RenderStrategy* mDataPool;
+		RenderStrategy* mRenderStrategy;
 		Vector2 mMousePosition;
 
 		MovieDebugger* mDebugger;
@@ -89,8 +156,6 @@ namespace vtx
 		Shape* mMouseArrow;
 		Shape* mMouseHand;
 		Shape* mMouseTextCursor;
-
-		void _initialize(MovieFactory* creator_factory);
 	};
 }
 

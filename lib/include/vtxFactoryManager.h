@@ -33,17 +33,23 @@ THE SOFTWARE.
 
 namespace vtx
 {
-	//-----------------------------------------------------------------------
+#define FactoryManagerImpl(name, type) \
+	class name : public FactoryManager<type##Factory> \
+	{ \
+	public: \
+	name() : FactoryManager<type##Factory>(#type){} \
+	};
+//-----------------------------------------------------------------------
 	template<typename T>
-	class FactoryManagerBase
+	class FactoryManager
 	{
 	public:
 		//-----------------------------------------------------------------------
 		typedef std::map<String, T*> FactoryMap;
 		//-----------------------------------------------------------------------
-		FactoryManagerBase(const String& base_type) : mBaseType(base_type) {}
+		FactoryManager(const String& base_type) : mBaseType(base_type) {}
 		//-----------------------------------------------------------------------
-		virtual ~FactoryManagerBase()
+		virtual ~FactoryManager()
 		{
 			typename FactoryMap::const_iterator it = mFactories.begin();
 			typename FactoryMap::const_iterator end = mFactories.end();
@@ -109,48 +115,6 @@ namespace vtx
 	protected:
 		String mBaseType;
 		FactoryMap mFactories;
-	};
-	//-----------------------------------------------------------------------
-	template<typename T>
-	class FactoryManagerNULL : public FactoryManagerBase<T>
-	{
-	public:
-		FactoryManagerNULL(const String& base_type) 
-			: FactoryManagerBase<T>(base_type){}
-	};
-	//-----------------------------------------------------------------------
-	template<typename T, class P1>
-	class FactoryManager : public FactoryManagerBase<T>
-	{
-	public:
-		//-----------------------------------------------------------------------
-		FactoryManager(const String& base_type) 
-			: FactoryManagerBase<T>(base_type)
-		{
-			mDefaultFactory = new P1;
-			addFactory(mDefaultFactory);
-		}
-		//-----------------------------------------------------------------------
-		virtual ~FactoryManager()
-		{
-
-		}
-		//-----------------------------------------------------------------------
-		virtual T* getFactory(const String& name)
-		{
-			T* factory = FactoryManagerBase<T>::getFactory(name);
-
-			if(!factory)
-			{
-				VTX_WARN("A %sFactory with name \"%s\" is not available, using DefaultFactory", FactoryManagerBase<T>::mBaseType.c_str(), name.c_str());
-				return mDefaultFactory;
-			}
-
-			return factory;
-		}
-		//-----------------------------------------------------------------------
-	protected:
-		P1* mDefaultFactory;
 	};
 	//-----------------------------------------------------------------------
 }

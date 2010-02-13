@@ -30,7 +30,7 @@ THE SOFTWARE.
 #define __vtxDefaultFileContainerFactory_H__
 
 #include "vtxPrerequesites.h"
-#include "vtxFileContainerFactory.h"
+#include "vtxFileContainer.h"
 
 namespace vtx
 {

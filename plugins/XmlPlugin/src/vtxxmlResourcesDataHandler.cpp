@@ -39,7 +39,7 @@ THE SOFTWARE.
 #include "vtxShapeResource.h"
 #include "vtxStringHelper.h"
 
-#include "vtxxmlParser.h"
+#include "vtxxmlDocumentParser.h"
 #include "vtxxmlShapeDataHandler.h"
 
 namespace vtx
@@ -258,7 +258,7 @@ namespace vtx
 			parser_input.file = mCurrentFile;
 			parser_input.shape = shape;
 
-			XMLParser shape_parser(&parser_input);
+			DocumentParser shape_parser(&parser_input);
 
 			std::string shpDH[] = 
 			{

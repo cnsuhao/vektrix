@@ -36,7 +36,7 @@ namespace vtx
 		mShapeElements.push_back(element);
 	}
 	//-----------------------------------------------------------------------
-	const SubshapeResource::ShapeElement::List& SubshapeResource::getElementList() const
+	const ShapeElementList& SubshapeResource::getElementList() const
 	{
 		return mShapeElements;
 	}

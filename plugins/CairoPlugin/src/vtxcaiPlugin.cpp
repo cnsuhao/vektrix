@@ -39,7 +39,7 @@ THE SOFTWARE.
 	extern "C" void vtxcaiExport startPlugin() throw()
 #endif
 {
-	vtx::Root::getSingletonPtr()->_addPlugin(new vtx::cai::CairoPlugin());
+	vtx::Root::getSingletonPtr()->registerPlugin(new vtx::cai::CairoPlugin());
 }
 //-----------------------------------------------------------------------
 

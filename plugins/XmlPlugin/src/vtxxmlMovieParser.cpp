@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "vtxFileStream.h"
 
 #include "vtxxmlHeaderDataHandler.h"
-#include "vtxxmlParser.h"
+#include "vtxxmlDocumentParser.h"
 #include "vtxxmlResourcesDataHandler.h"
 #include "vtxxmlTimelineDataHandler.h"
 
@@ -52,7 +52,7 @@ namespace vtx
 		{
 			File* file = new File(stream->getFilename());
 
-			XMLParser movie_parser(file);
+			DocumentParser movie_parser(file);
 
 			std::string hdrDH[] = 
 			{

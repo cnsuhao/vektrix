@@ -38,7 +38,7 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	Timeline::Timeline() 
-		: mPlaying(false), 
+		: mPlaying(true), 
 		mPosition(0.0f), 
 		mFrameRate(12), 
 		mCurrentFrame(0), 

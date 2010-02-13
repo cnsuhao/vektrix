@@ -40,7 +40,7 @@ namespace vtx
 		class TextureMovie : public vtx::Movie
 		{
 		public:
-			TextureMovie(const std::string& name, vtx::File* file, MovieFactory* creator);
+			TextureMovie(const String& name, vtx::File* file, MovieFactory* creator);
 
 		protected:
 			Texture* mMovieTexture;

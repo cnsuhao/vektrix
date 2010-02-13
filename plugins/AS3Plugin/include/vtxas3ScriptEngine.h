@@ -54,9 +54,9 @@ namespace vtx
 		protected:
 			csp::VmCore* mVmCore;
 			csp::ScriptObject* mRoot;
-			vtx::as3::MovieClip* mRootObject;
+			as3::MovieClip* mRootObject;
 
-			void output(const std::string& message);
+			void output(const String& message);
 		};
 		//-----------------------------------------------------------------------
 		FactoryImpl_P1(AS3ScriptEngine, ScriptEngine, Movie*);
