@@ -42,7 +42,6 @@ THE SOFTWARE.
 #include "vtxResource.h"
 #include "vtxShape.h"
 #include "vtxShapeResource.h"
-#include "vtxStaticText.h"
 #include "vtxStaticTextResource.h"
 
 #include "vtxopMovableEditText.h"
@@ -54,8 +53,8 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		MovableRenderStrategy::MovableRenderStrategy(vtx::MovieFactory* factory, vtx::File* file) 
-			: vtx::RenderStrategy(factory, file)
+		MovableRenderStrategy::MovableRenderStrategy(MovieFactory* factory, File* file) 
+			: RenderStrategy(factory, file)
 		{
 			mPool = new InstancePool;
 			mPacker = new AtlasPacker(mFactory->getTextureFactory());
@@ -67,7 +66,7 @@ namespace vtx
 			// add shapes
 			while(shape_it != shape_end)
 			{
-				ShapeResource* shape = dynamic_cast<vtx::ShapeResource*>(*shape_it);
+				ShapeResource* shape = dynamic_cast<ShapeResource*>(*shape_it);
 				if(shape)
 				{
 					mPacker->addElement(shape);
@@ -83,7 +82,7 @@ namespace vtx
 			// add glyphs
 			while(font_it != font_end)
 			{
-				FontResource* font = dynamic_cast<vtx::FontResource*>(*font_it);
+				FontResource* font = dynamic_cast<FontResource*>(*font_it);
 				if(font)
 				{
 					const FontResource::GlyphList& glyphs = font->getGlyphList();
@@ -101,6 +100,8 @@ namespace vtx
 			}
 
 			mPacker->packAtlas();
+
+			file->addListener(this);
 		}
 		//-----------------------------------------------------------------------
 		MovableRenderStrategy::~MovableRenderStrategy()
@@ -112,13 +113,15 @@ namespace vtx
 			mPool = NULL;
 		}
 		//-----------------------------------------------------------------------
-		void MovableRenderStrategy::storeInstance(vtx::Instance* inst)
+		void MovableRenderStrategy::storeInstance(Instance* inst)
 		{
 			mPool->push(inst);
 			inst->_setParent(NULL);
+
+			// TODO: remove listeners from atlas packer
 		}
 		//-----------------------------------------------------------------------
-		vtx::Instance* MovableRenderStrategy::shareInstance(const String& id, vtx::Movie* movie)
+		Instance* MovableRenderStrategy::shareInstance(const String& id, Movie* movie)
 		{
 			Instance* inst = mPool->pop(id);
 
@@ -133,7 +136,8 @@ namespace vtx
 
 			if(!resource)
 			{
-				VTX_EXCEPT("Resource %s was not found.", id.c_str());
+				VTX_WARN("Resource %s was not found.", id.c_str());
+				return NULL;
 			}
 
 			// TODO: improve this, maybe implement it in the base class and add a listener for custom handling
@@ -153,6 +157,7 @@ namespace vtx
 					{
 						inst->setAtlasQuad(it->second);
 					}
+					mPacker->addListener(inst);
 
 					return inst;
 				}
@@ -206,6 +211,7 @@ namespace vtx
 					inst->_setParent(movie);
 					inst->setAtlasList(mPacker->getResultList());
 					inst->setHtmlText(res->getInitialText());
+					mPacker->addListener(inst);
 
 					return inst;
 				}
@@ -215,6 +221,19 @@ namespace vtx
 				resource->getType().c_str(), id.c_str());
 
 			return NULL;
+		}
+		//-----------------------------------------------------------------------
+		void MovableRenderStrategy::resourceAdded(Resource* resource, const bool& external)
+		{
+			if(resource->getType() == "Shape")
+			{
+				ShapeResource* shape = dynamic_cast<ShapeResource*>(resource);
+				if(shape)
+				{
+					mPacker->addElement(shape);
+					mPacker->packAtlas();
+				}
+			}
 		}
 		//-----------------------------------------------------------------------
 	}

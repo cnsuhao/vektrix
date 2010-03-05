@@ -33,10 +33,13 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A helper class for interacting with the file system */
 	class vtxExport FileHelper
 	{
 	public:
+		/** Check if the given file exists */
 		static bool doesFileExist(String name);
+		/** Check if the given directory exists */
 		static bool doesDirectoryExist(String name);
 	};
 }

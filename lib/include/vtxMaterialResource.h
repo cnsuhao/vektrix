@@ -36,6 +36,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A Resource which contains graphical material data to be used by visual objects */
 	class vtxExport MaterialResource : public Resource
 	{
 	public:
@@ -52,20 +53,30 @@ namespace vtx
 		MaterialResource(const String& id, const MaterialType& type);
 		virtual ~MaterialResource();
 
+		/** @copybrief Resource::getType */
 		const String& getType() const;
 
+		/** Get the type of this material */
 		const MaterialType& getMaterialType();
 
+		/** Set the color for a colored material */
 		void setColor(const Color& rgba);
+		/** Get the color of a colored material */
 		const Color& getColor() const;
 
+		/** Set the image identifier for an image material */
 		void setImageID(const String& image_id);
+		/** Get the image identifier of an image material */
 		const String& getImageID() const;
 
+		/** Set the transformation matrix that is applied during rendering */
 		void setTransformMatrix(const Matrix& matrix);
+		/** Get the transformation matrix that is applied during rendering */
 		const Matrix& getTransformMatrix() const;
 
+		/** Set a gradient step for a gradient material */
 		void setGradientColor(const uchar& ratio, const Color& color);
+		/** Get a gradient step of a gradient material */
 		GradientMap& getGradientMap();
 
 	protected:

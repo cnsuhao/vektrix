@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Represents a RGBA color value */
 	class vtxExport Color
 	{
 	public:

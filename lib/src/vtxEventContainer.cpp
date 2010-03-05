@@ -67,10 +67,12 @@ namespace vtx
 	void EventContainer::execute()
 	{
 		EventList::iterator it = mEvents.begin();
+		EventList::iterator end = mEvents.end();
 
-		for( ; it != mEvents.end(); ++it)
+		while(it != end)
 		{
 			(*it)->execute();
+			++it;
 		}
 	}
 	//-----------------------------------------------------------------------

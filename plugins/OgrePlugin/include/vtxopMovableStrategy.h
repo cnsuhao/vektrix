@@ -31,13 +31,14 @@ THE SOFTWARE.
 
 #include "vtxop.h"
 
+#include "vtxFile.h"
 #include "vtxRenderStrategy.h"
 
 namespace vtx
 {
 	namespace ogre
 	{
-		class MovableRenderStrategy : public vtx::RenderStrategy
+		class MovableRenderStrategy : public RenderStrategy, public File::Listener
 		{
 		public:
 			MovableRenderStrategy(vtx::MovieFactory* factory, vtx::File* file);
@@ -45,6 +46,8 @@ namespace vtx
 
 			void storeInstance(Instance* inst);
 			Instance* shareInstance(const String& id, Movie* movie);
+
+			void resourceAdded(Resource* resource, const bool& external);
 
 		protected:
 			AtlasPacker* mPacker;

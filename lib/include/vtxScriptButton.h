@@ -34,9 +34,11 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Represents the scripting counterpart of a Button object */
 	class vtxExport ScriptButton : public ScriptObject
 	{
 	public:
+		/** Called once a mouse button is released */
 		virtual void buttonUp() = 0;
 	};
 }

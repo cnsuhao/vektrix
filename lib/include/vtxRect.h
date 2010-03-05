@@ -34,31 +34,39 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** Represents a 2D rectangle using natural numbers */
 	class vtxExport Rect
 	{
 	public:
 		Rect();
 		Rect(uint l, uint t, uint r, uint b);
 
+		/** Calculate the coordinates of this rectangle relative to the given width and height */
 		const RectF relativeTo(const uint& width, const uint& height) const;
-		const RectF relativeTo(const Rect& rect) const;
 
+		/** Get the width of the rectangle */
 		uint w() const;
+		/** Get the height of the rectangle */
 		uint h() const;
 
-		uint w2() const;
-		uint h2() const;
+		/** Contract the rectangle by the given amount */
+		void contract(const uint& units);
+		/** Calculates a copy of this rectangle which is contracted by the given amount */
+		Rect contractedCopy(const uint& units) const;
 
 		uint left, top, right, bottom;
 	};
 	//-----------------------------------------------------------------------
+	/** Represents a 2D rectangle using real numbers */
 	class vtxExport RectF
 	{
 	public:
 		RectF();
 		RectF(float l, float t, float r, float b);
 
+		/** Get the width of the rectangle */
 		float w() const;
+		/** Get the height of the rectangle */
 		float h() const;
 
 		float left, top, right, bottom;

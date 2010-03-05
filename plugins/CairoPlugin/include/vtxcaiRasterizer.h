@@ -45,7 +45,7 @@ namespace vtx
 			virtual ~CairoRasterizer();
 
 			const String& getName() const;
-			void renderElementToTexture(Texture* texture, AtlasPackable* element, AtlasNode* node);
+			void renderElementToTexture(Texture* texture, AtlasElement* element, AtlasNode* node);
 
 			void renderGlyph(Texture* texture, GlyphResource* glyph, AtlasNode* node);
 			void renderShape(Texture* texture, ShapeResource* shape, AtlasNode* node);

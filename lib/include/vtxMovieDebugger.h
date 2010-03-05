@@ -33,27 +33,36 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A class for displaying visual debugging information about movies */
 	class vtxExport MovieDebugger
 	{
 	public:
 		MovieDebugger(Movie* parent);
 		virtual ~MovieDebugger();
 
+		/** Called before any of the other debugging informations is being called */
 		virtual void preDebug() = 0;
 
+		/** Enable or disable the debugging of bounding boxes */
 		void debugBoundingBoxes(const bool& enable);
-		const bool& debuggingObjectBoundingBoxes() const;
+		/** Check if debugging bounding boxes is enabled */
+		const bool& debuggingBoundingBoxes() const;
 
-		void debugObjectBoundingBox(const BoundingBox& bb);
+		/** Debug the given BoundingBox */
+		void debugBoundingBox(const BoundingBox& bb);
 
 	protected:
 		bool mDebugBoundingBoxes;
 		Movie* mParent;
 
+		/** Draw a BoundingBox */
 		virtual void drawBoundingBox(const BoundingBox& bb) = 0;
 
+		/** Start a new debug line strip */
 		virtual void startDebugLine() = 0;
+		/** Add a point to the current debug line strip */
 		virtual void debugLine(const Vector2& point) = 0;
+		/** Finish the current debug line strip */
 		virtual void endDebugLine() = 0;
 	};
 }

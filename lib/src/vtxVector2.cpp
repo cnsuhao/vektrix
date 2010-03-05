@@ -47,16 +47,6 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
-	Vector2 Vector2::xInversedCopy() const
-	{
-		return Vector2(-x, y);
-	}
-	//-----------------------------------------------------------------------
-	Vector2 Vector2::yInversedCopy() const
-	{
-		return Vector2(x, -y);
-	}
-	//-----------------------------------------------------------------------
 	float Vector2::length()
 	{
 		return sqrt(x * x + y * y);

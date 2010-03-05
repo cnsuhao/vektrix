@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 #include "vtxAtlasNode.h"
 
-#include "vtxAtlasPackable.h"
+#include "vtxAtlasElement.h"
 #include "vtxRastarizer.h"
 
 namespace vtx
@@ -54,7 +54,7 @@ namespace vtx
 		mChild_2 = NULL;
 	}
 	//-----------------------------------------------------------------------
-	void AtlasNode::renderShape(Rasterizer* rasterizer)
+	void AtlasNode::renderElement(Rasterizer* rasterizer)
 	{
 		if(mElement)
 		{
@@ -63,16 +63,16 @@ namespace vtx
 
 		if(mChild_1)
 		{
-			mChild_1->renderShape(rasterizer);
+			mChild_1->renderElement(rasterizer);
 		}
 
 		if(mChild_2)
 		{
-			mChild_2->renderShape(rasterizer);
+			mChild_2->renderElement(rasterizer);
 		}
 	}
 	//-----------------------------------------------------------------------
-	void AtlasNode::setShape(AtlasPackable* element)
+	void AtlasNode::setElement(AtlasElement* element)
 	{
 		mElement = element;
 	}
@@ -104,7 +104,7 @@ namespace vtx
 		return result;
 	}
 	//-----------------------------------------------------------------------
-	AtlasNode::FitMode AtlasNode::fits(AtlasPackable* element)
+	AtlasNode::FitMode AtlasNode::fits(AtlasElement* element)
 	{
 		// check if it fits normally
 		if(element->getPackableWidth() <= mRect.w() && element->getPackableHeight() <= mRect.h())
@@ -122,7 +122,7 @@ namespace vtx
 		return DOESNT_FIT;
 	}
 	//-----------------------------------------------------------------------
-	AtlasNode::FitMode AtlasNode::fitsExactly(AtlasPackable* element)
+	AtlasNode::FitMode AtlasNode::fitsExactly(AtlasElement* element)
 	{
 		// check if it fits normally
 		if(element->getPackableWidth() == mRect.w() && element->getPackableHeight() == mRect.h())
@@ -140,7 +140,7 @@ namespace vtx
 		return DOESNT_FIT;
 	}
 	//-----------------------------------------------------------------------
-	AtlasNode* AtlasNode::insert(AtlasPackable* element)
+	AtlasNode* AtlasNode::insert(AtlasElement* element)
 	{
 		uint element_width_PoT = element->getPackableWidth();
 		uint element_height_PoT = element->getPackableHeight();

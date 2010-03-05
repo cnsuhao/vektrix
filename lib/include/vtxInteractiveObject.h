@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Base class for everything visual that can provide interactive behaviour */
 	class vtxExport InteractiveObject : public MovableObject
 	{
 	public:

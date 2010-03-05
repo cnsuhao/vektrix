@@ -36,6 +36,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** The manager that keeps track of Rasterizer instances */
 	class vtxExport RasterizerManager : public Singleton<RasterizerManager>
 	{
 	public:
@@ -44,8 +45,11 @@ namespace vtx
 		RasterizerManager();
 		virtual ~RasterizerManager();
 
+		/** Add a Rasterizer instance to the manager */
 		bool addRasterizer(Rasterizer* rasterizer);
+		/** Get a Rasterizer instance by name */
 		Rasterizer* getRasterizer(const String name);
+		/** Remove a Rasterizer instance from the manager */
 		bool removeRasterizer(Rasterizer* rasterizer);
 
 	protected:

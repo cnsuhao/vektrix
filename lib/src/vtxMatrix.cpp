@@ -71,36 +71,18 @@ namespace vtx
 	{
 		Matrix product;
 
-		//// first row
-		//product.m[0][0] = m[0][0] * matrix.m[0][0] + m[0][1] * matrix.m[1][0]/* + m[0][2]*/;
-		//product.m[0][1] = m[0][0] * matrix.m[0][1] + m[0][1] * matrix.m[1][1];
-		//product.m[0][2] = m[0][0] * matrix.m[0][2] + m[0][1] * matrix.m[1][2];
-
-		//// second row
-		//product.m[1][0] = m[1][0] * matrix.m[1][0] + m[1][1] * matrix.m[1][0]/* + m[1][2]*/;
-		//product.m[1][1] = m[1][0] * matrix.m[1][1] + m[1][1] * matrix.m[1][1];
-		//product.m[1][2] = m[1][0] * matrix.m[1][2] + m[1][1] * matrix.m[1][2];
-
 		for (size_t iRow = 0; iRow < 2; iRow++)
 		{
 			for (size_t iCol = 0; iCol < 3; iCol++)
 			{
 				product.m[iRow][iCol] =
 					m[iRow][0]*matrix.m[0][iCol] +
-					m[iRow][1]*matrix.m[1][iCol]/* +
-					(iCol<2?matrix.m[2][iCol]:0)*/;
+					m[iRow][1]*matrix.m[1][iCol];
 			}
 		}
 
 		product.m[0][2] += m[0][2];
 		product.m[1][2] += m[1][2];
-
-		//kProd.m[iRow][iCol] =
-		//	m[iRow][0]*rkMatrix.m[0][iCol] +
-		//	m[iRow][1]*rkMatrix.m[1][iCol] +
-		//	m[iRow][2]*rkMatrix.m[2][iCol];
-
-		//kProd.m[0][iCol] = m[iRow][0]*rkMatrix.m[0][iCol] + m[iRow][1]*rkMatrix.m[1][iCol] + m[iRow][2]*rkMatrix.m[2][iCol];
 
 		return product;
 	}

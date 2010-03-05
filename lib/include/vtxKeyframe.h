@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Represents a single keyframe which is contained within a Timeline */
 	class vtxExport Keyframe : public EventContainer
 	{
 		friend class Timeline;
@@ -41,12 +42,17 @@ namespace vtx
 	public:
 		Keyframe();
 		virtual ~Keyframe();
+
+		/** Create an identical clone of this keyframe */
 		Keyframe* clone(DisplayObjectContainer* container);
 
 		bool operator<(const Keyframe& keyframe) const;
 
+		/** Set the frame index for this keyframe */
 		void setIndex(const uint& index);
+		/** Get the frame index of this keyframe */
 		const uint& getIndex();
+
 	protected:
 		uint mIndex;
 	};

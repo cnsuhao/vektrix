@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A Resource which contains all necessary data for rendering a font */
 	class vtxExport FontResource : public Resource
 	{
 	public:
@@ -45,21 +46,47 @@ namespace vtx
 		FontResource(const String& id);
 		virtual ~FontResource();
 
+		/** @copybrief Resource::getType */
 		const String& getType() const;
 
+		/** Set the name associated with this font */
 		void setName(const String& name);
+		/** Get the name associated with this font */
 		const String& getName() const;
 
+		/** Set the ascender for this font */
+		void setAscender(const float& ascender);
+		/** Get the ascender of this font */
+		const float& getAscender() const;
+
+		/** Set the descender for this font */
+		void setDescender(const float& descender);
+		/** Get the descender of this font */
+		const float& getDescender() const;
+
+		/** Set the leading for this font */
+		void setLeading(const float& leading);
+		/** Get the leading of this font */
+		const float& getLeading() const;
+
+		/** Add a single GlyphResource to this font */
 		void addGlyph(GlyphResource* glyph);
+		/** Get a GlyphResource by its index */
 		GlyphResource* getGlyphByIndex(const uint& index) const;
+		/** Get a GlyphResource by its unicode */
 		GlyphResource* getGlyphByCode(const ushort& char_code) const;
+		/** Get a list of all glyphs contained within this font */
 		const GlyphList& getGlyphList() const;
 
 	protected:
 		String mName;
+		float mAscender;
+		float mDescender;
+		float mLeading;
 		GlyphList mGlyphs;
 		GlyphMap mCharGlyphMap;
 
+		// TODO: refractor this, this should happen automatically when adding glyphs
 		void _notifyGlyphCode(const ushort& code, GlyphResource* glyph);
 	};
 }

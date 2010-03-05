@@ -77,7 +77,8 @@ namespace vtx
 		void OgreMovableShape::setAtlasQuad(const AtlasPacker::PackResult& quad)
 		{
 			mMaterial = dynamic_cast<OgreTexture*>(quad.texture)->getMaterial();
-			RectF tex_coords = quad.node->getRect().relativeTo(quad.texture->getSize(), quad.texture->getSize());
+			RectF tex_coords = quad.node->getRect().contractedCopy(1).relativeTo(
+				quad.texture->getSize(), quad.texture->getSize());
 
 			_lock();
 
@@ -106,6 +107,16 @@ namespace vtx
 				mMULcolor, mADDcolor);
 
 			_unlock();
+		}
+		//-----------------------------------------------------------------------
+		void OgreMovableShape::packed(const AtlasPacker::PackResultList& pack_result)
+		{
+			// TODO: move inheritance from AtlasElement to ogre plugin, out of the core
+			AtlasPacker::PackResultList::const_iterator it = pack_result.find(mShapeResource->getPackID());
+			if(it != pack_result.end())
+			{
+				setAtlasQuad(it->second);
+			}
 		}
 		//-----------------------------------------------------------------------
 	}

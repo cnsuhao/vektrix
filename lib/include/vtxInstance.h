@@ -35,19 +35,26 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** Base class for everything visual, audible, etc that can be created by a Movie instance */
 	class vtxExport Instance
 	{
 	public:
 		Instance(Resource* resource);
 		virtual ~Instance();
 
+		/** Get the unique identifier of this instance */
 		const String& getID();
-		virtual const String& getType() const = 0; // TODO: evtl. implement this in the base class, using Resource::getType()
+		/** Get the unique type of this instance */
+		const String& getType() const;
 
+		/** Notify this instance about its parent Movie */
 		virtual void _setParent(Movie* parent);
+		/** Get the current parent Movie of this instance */
 		Movie* getParent() const;
 
+		/** Set the ScriptObject that is associated with this instance */
 		virtual void setScriptObject(ScriptObject* obj) = 0;
+		/** Get the ScriptObject that is associated with this instance */
 		virtual ScriptObject* getScriptObject() const = 0;
 
 	protected:
@@ -55,8 +62,8 @@ namespace vtx
 		Resource* mResource;
 	};
 	//-----------------------------------------------------------------------
-	template<class T>
-	class InstanceFactory : public Factory<T, Resource*> {};
+	/** The Factory for creating Instance objects */
+	template<class T> class InstanceFactory : public Factory<T, Resource*> {};
 	//-----------------------------------------------------------------------
 }
 

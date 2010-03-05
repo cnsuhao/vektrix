@@ -32,7 +32,8 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	HtmlParagraph::HtmlParagraph() 
-		: HtmlElement(HtmlElement::Paragraph)
+		: HtmlElement(HtmlElement::Paragraph), 
+		align(AlignLeft)
 	{
 
 	}

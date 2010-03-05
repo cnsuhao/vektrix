@@ -33,18 +33,17 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** An abstract interface describing a rasterizer which paints elements to textures */
 	class vtxExport Rasterizer
 	{
 	public:
 		Rasterizer();
 		virtual ~Rasterizer();
 
+		/** Get the unique name of this rasterizer */
 		virtual const String& getName() const = 0;
-		virtual void renderElementToTexture(Texture* texture, AtlasPackable* element, AtlasNode* node) = 0;
-
-	protected:
-		//cairo_t* mCairo;
-		//cairo_surface_t* mSurface;
+		/** Render a given element to a Texture */
+		virtual void renderElementToTexture(Texture* texture, AtlasElement* element, AtlasNode* node) = 0;
 	};
 }
 

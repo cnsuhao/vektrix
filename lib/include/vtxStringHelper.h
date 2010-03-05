@@ -33,10 +33,13 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A helper class for string operations */
 	class vtxExport StringHelper
 	{
 	public:
 		static String versionString(const uint& version);
+
+		static String formatByteUnit(uint bytes);
 
 		static WString utf8Decode(const String& encoded_string);
 		static String utf8Encode(const WString& utf8_string);

@@ -34,17 +34,30 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A Resource which contains all necessary data for rendering an image */
 	class vtxExport ImageResource : public Resource
 	{
 	public:
-		ImageResource(const String& id, const String& type, const String& file);
+		ImageResource(const String& id);
 		virtual ~ImageResource();
 
+		/** @copybrief Resource::getType */
 		const String& getType() const;
 
+		/** Set the image data for this resource */
+		void setImageData(const uint& width, const uint& height, char* pixel_data);
+
+		/** Get the width of the image */
+		const uint& getWidth() const;
+		/** Get the height of the image */
+		const uint& getHeight() const;
+		/** Get the pixel data of the image */
+		const char* getPixelData() const;
+
 	protected:
-		String mType;
-		String mFilename;
+		uint mWidth;
+		uint mHeight;
+		char* mPixelData;
 	};
 }
 

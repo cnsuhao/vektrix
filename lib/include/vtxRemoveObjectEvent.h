@@ -34,12 +34,15 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** An event which removes an existing MovableObject from a certain layer of an DisplayObjectContainer */
 	class vtxExport RemoveObjectEvent : public FrameEvent
 	{
 	public:
 		RemoveObjectEvent(DisplayObjectContainer* object_container, const uint& layer);
 
+		/** @copybrief FrameEvent::clone */
 		FrameEvent* clone(DisplayObjectContainer* container);
+		/** @copybrief FrameEvent::execute */
 		void execute();
 
 	protected:

@@ -35,19 +35,23 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** The base interface for all implementations of scripting virtual machines */
 	class vtxExport ScriptEngine
 	{
 	public:
 		ScriptEngine(Movie* parent);
 		virtual ~ScriptEngine();
 
+		/** Execute a given script code buffer */
 		virtual bool executeCode(const char* code, const uint& len) = 0;
+		/** Get the root ScriptObject that will be associated with the main MovieClip of a Movie */
 		virtual ScriptObject* getRootScriptObject() = 0;
 
 	protected:
 		Movie* mParent;
 	};
 	//-----------------------------------------------------------------------
+	/** The Factory for creating ScriptEngine objects */
 	FactoryDecl_P1(ScriptEngine, Movie*);
 	//-----------------------------------------------------------------------
 }

@@ -40,7 +40,7 @@ namespace vtx
 		HtmlParagraph();
 		virtual ~HtmlParagraph();
 
-		String align;
+		Alignment align;
 		String css_class;
 	};
 }

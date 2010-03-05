@@ -26,21 +26,32 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxDefaultFileContainerFactory_H__
-#define __vtxDefaultFileContainerFactory_H__
+#ifndef __vtxfreeimgPlugin_H__
+#define __vtxfreeimgPlugin_H__
 
-#include "vtxPrerequesites.h"
-#include "vtxFileContainer.h"
+#include "vtxfreeimg.h"
+#include "vtxPlugin.h"
+
+#ifdef VTX_STATIC_LIB
+	void vektrix_FreeImgPlugin_startPlugin();
+#else
+	extern "C" void vtxfreeimgExport startPlugin() throw();
+#endif
 
 namespace vtx
 {
-	class DefaultFileContainerFactory : public FileContainerFactory
+	namespace freeimg
 	{
-	public:
-		const String& getName() const;
-		FileContainer* createObject(const String& location);    
-		void destroyObject(FileContainer* container);    
-	};
+		class FreeImagePlugin : public Plugin
+		{
+		public:
+			FreeImagePlugin();
+			virtual ~FreeImagePlugin();
+
+		protected:
+			ImageParser* mImageParser;
+		};
+	}
 }
 
 #endif

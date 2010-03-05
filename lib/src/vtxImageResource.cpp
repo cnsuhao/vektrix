@@ -31,23 +31,45 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	ImageResource::ImageResource(const String& id, const String& type, const String& file) 
+	ImageResource::ImageResource(const String& id) 
 		: Resource(id), 
-		mType(type), 
-		mFilename(file)
+		mPixelData(NULL)
 	{
 
 	}
 	//-----------------------------------------------------------------------
 	ImageResource::~ImageResource()
 	{
-
+		delete [] mPixelData;
+		mPixelData = NULL;
 	}
 	//-----------------------------------------------------------------------
 	const String& ImageResource::getType() const
 	{
 		static String type = "Image";
 		return type;
+	}
+	//-----------------------------------------------------------------------
+	void ImageResource::setImageData(const uint& width, const uint& height, char* pixel_data)
+	{
+		mWidth = width;
+		mHeight = height;
+		mPixelData = pixel_data;
+	}
+	//-----------------------------------------------------------------------
+	const uint& ImageResource::getWidth() const
+	{
+		return mWidth;
+	}
+	//-----------------------------------------------------------------------
+	const uint& ImageResource::getHeight() const
+	{
+		return mHeight;
+	}
+	//-----------------------------------------------------------------------
+	const char* ImageResource::getPixelData() const
+	{
+		return mPixelData;
 	}
 	//-----------------------------------------------------------------------
 }

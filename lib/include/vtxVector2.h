@@ -33,18 +33,19 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Represents a two-dimensional vector */
 	class vtxExport Vector2
 	{
 	public:
 		Vector2();
 		Vector2(float x, float y);
 
-		Vector2 xInversedCopy() const;
-		Vector2 yInversedCopy() const;
-
+		/** Get the length of the vector */
 		float length();
+		/** Normalize the vector */
 		void normalize();
 
+		/** Calculate the dot product of two vectors */
 		float dotProduct(const Vector2& vec);
 
 		inline bool operator != (const Vector2& vec) const

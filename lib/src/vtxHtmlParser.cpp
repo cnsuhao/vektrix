@@ -38,7 +38,6 @@ THE SOFTWARE.
 #include "vtxHtmlParagraph.h"
 #include "vtxHtmlText.h"
 #include "vtxLogManager.h"
-#include "vtxStaticTextResource.h"
 #include "vtxStringHelper.h"
 
 namespace vtx
@@ -156,11 +155,30 @@ namespace vtx
 	{
 		HtmlImage* img = new HtmlImage;
 
+		// "align" property
+		const String& align = atts["align"];
+		if(align == "left") img->align = HtmlElement::AlignLeft;
+		else if(align == "right") img->align = HtmlElement::AlignRight;
+		else if(align == "center") img->align = HtmlElement::AlignCenter;
+		else if(align == "justify") img->align = HtmlElement::AlignJustify;
+
 		// "width" property
-		img->width = atts["width"];
+		img->width = StringHelper::toFloat(atts["width"]);
 
 		// "height" property
-		img->height = atts["height"];
+		img->height = StringHelper::toFloat(atts["height"]);
+
+		// "hspace" property
+		img->hspace = StringHelper::toFloat(atts["hspace"]);
+
+		// "vspace" property
+		img->vspace = StringHelper::toFloat(atts["vspace"]);
+
+		// "class" property
+		img->css_class = atts["class"];
+
+		// "id" property
+		img->id = atts["id"];
 
 		// "src" property
 		img->src = atts["src"];
@@ -174,7 +192,11 @@ namespace vtx
 		HtmlParagraph* paragraph = new HtmlParagraph;
 
 		// "align" property
-		paragraph->align = atts["align"];
+		const String& align = atts["align"];
+		if(align == "left") paragraph->align = HtmlElement::AlignLeft;
+		else if(align == "right") paragraph->align = HtmlElement::AlignRight;
+		else if(align == "center") paragraph->align = HtmlElement::AlignCenter;
+		else if(align == "justify") paragraph->align = HtmlElement::AlignJustify;
 
 		// "class" property
 		paragraph->css_class = atts["class"];

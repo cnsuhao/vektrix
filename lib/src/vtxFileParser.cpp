@@ -33,8 +33,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	FileParser::FileParser()
 	{
-		it = mErrors.begin();
-		end = mErrors.end();
+		mFirst = mErrors.begin();
+		mLast = mErrors.end();
 	}
 	//-----------------------------------------------------------------------
 	FileParser::~FileParser()
@@ -44,20 +44,31 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	String FileParser::getError()
 	{
-		if(it == end)
+		if(mFirst == mLast)
 		{
 			return "";
 		}
 
-		return *it++;
+		String error = *mFirst;
+		mErrors.erase(mFirst);
+		mFirst = mErrors.begin();
+
+		return error;
 	}
 	//-----------------------------------------------------------------------
 	void FileParser::error(const String& error)
 	{
 		mErrors.push_back(error);
 
-		it = mErrors.begin();
-		end = mErrors.end();
+		mFirst = mErrors.begin();
+		mLast = mErrors.end();
+	}
+	//-----------------------------------------------------------------------
+	void FileParser::clearErrors()
+	{
+		mErrors.clear();
+		mFirst = mErrors.begin();
+		mLast = mErrors.end();
 	}
 	//-----------------------------------------------------------------------
 }

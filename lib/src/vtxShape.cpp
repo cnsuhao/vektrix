@@ -49,12 +49,6 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
-	const String& Shape::getType() const
-	{
-		static String type = "Shape";
-		return type;
-	}
-	//-----------------------------------------------------------------------
 	const BoundingBox& Shape::getBoundingBox() const
 	{
 		return mBB;

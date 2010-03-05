@@ -30,24 +30,31 @@ THE SOFTWARE.
 #define __vtxTexture_H__
 
 #include "vtxPrerequesites.h"
-#include "vtxInstance.h"
+#include "vtxFactory.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** Represents a 2D texture which can be used for drawing visuals */
 	class vtxExport Texture
 	{
 	public:
 		Texture(uint size);
 		virtual ~Texture();
 
-		AtlasNode* packShape(AtlasPackable* element);
+		// TODO: refractor packing, this shouldn't be located here
+
+		/** Pack an AtlasElement into this texture */
+		AtlasNode* packElement(AtlasElement* element);
+		/** Invalidiate previous packing results */
 		void clear();
+		/** Draw all contained elements to this texture */
 		void renderAllShapes();
 
 		const uint& getSize() const;
 		uint getPackedSize();
 
+		/** Paint a given RGBA pixel buffer to the given coordinates inside this texture */
 		virtual void paintPixelsToRect(const Rect& coordinates, unsigned char* pixelData) = 0;
 
 	protected:
@@ -55,6 +62,7 @@ namespace vtx
 		AtlasNode* mRoot;
 	};
 	//-----------------------------------------------------------------------
+	/** The Factory for creating Texture objects */
 	class vtxExport TextureFactory : public Factory<Texture> {};
 	//-----------------------------------------------------------------------
 }

@@ -47,6 +47,30 @@ namespace vtx
 			StringHelper::toString((version>>0)&255);
 	}
 	//-----------------------------------------------------------------------
+	String StringHelper::formatByteUnit(uint bytes)
+	{
+		String result;
+
+		if(bytes < 1024) // 1 kByte
+		{
+			result = toString(bytes) + " byte";
+		}
+		else if(bytes < 1048576) // 1 MByte
+		{
+			result = toString((float)bytes/1024.0f) + " kByte";
+		}
+		else if(bytes < 1073741824) // 1 GByte
+		{
+			result = toString((float)bytes/1048576.0f) + " MByte";
+		}
+		else
+		{
+			result = "<unimplemented size>";
+		}
+
+		return result;
+	}
+	//-----------------------------------------------------------------------
 	WString StringHelper::utf8Decode(const String& encoded_string)
 	{
 		WString result;

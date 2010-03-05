@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Base class for everything visual that can contain itself other visual objects */
 	class vtxExport DisplayObjectContainer : public InteractiveObject
 	{
 	public:
@@ -42,24 +43,39 @@ namespace vtx
 		DisplayObjectContainer(Resource* resource);
 		virtual ~DisplayObjectContainer();
 
+		/** Add a child object at the topmost available layer */
 		void addChild(MovableObject* object);
+		/** Add a child object at the given layer */
 		bool addChildAt(MovableObject* object, uint layer);
+		/** Get the child object located at the given layer */
 		MovableObject* getChildAt(uint layer);
+		/** Remove a child object from the given layer */
 		bool removeChildAt(uint layer);
+		/** Remove all objects from all layers */
 		void clearLayers();
 
+		/** Implementation for MovableObject::isPointInside */
 		bool isPointInside(const Vector2& coord);
 
+		/** @copybrief MovableObject::setX */
 		virtual void setX(const float& x);
+		/** @copybrief MovableObject::setY */
 		virtual void setY(const float& y);
+
+		/** @copybrief MovableObject::setAngle */
 		virtual void setAngle(const float& angle);
+		/** @copybrief MovableObject::setMatrix */
 		virtual void setMatrix(const Matrix& m);
 
+		/** @copybrief MovableObject::_update */
 		virtual void _update(const float& delta_time = 0.0f);
 
 	protected:
 		Layers mLayers;
 
+		/** Update the world BoundingBox of this container */
+		void updateWorldBoundingBox();
+		/** Notify the children of this container about Matrix changes */
 		void childrenNeedMatrixUpdate();
 	};
 }

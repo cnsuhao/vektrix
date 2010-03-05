@@ -52,8 +52,8 @@ namespace vtx
 
 			statictext->setBoundingBox(box);
 
-			StaticTextResource::GlyphStripList glyphs;
-			StaticTextResource::GlyphStrip glyph_strip;
+			GlyphStripList glyphs;
+			GlyphStrip glyph_strip;
 
 			TextRecordList records;
 			while(true)
@@ -118,7 +118,7 @@ namespace vtx
 					entry.index = readUBits(glyph_bits);
 					entry.x_advance = readSBits(advance_bits);
 
-					StaticTextResource::Glyph glyph;
+					GlyphStrip::Glyph glyph;
 					glyph.index = entry.index;
 					glyph.x = entry.x_advance / 20.0f;
 

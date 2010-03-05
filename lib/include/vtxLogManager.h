@@ -38,6 +38,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** The manager for logging events, warnings and errors */
 	class vtxExport LogManager : public Singleton<LogManager>
 	{
 	public:

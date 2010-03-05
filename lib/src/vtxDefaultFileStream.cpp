@@ -34,12 +34,8 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	DefaultFileStream::DefaultFileStream(const String& path, const String& filename) 
-		: FileStream(path, filename)
+		: FileStream(filename)
 	{
-		//struct stat tagStat;
-		//int ret = stat(full_path.c_str(), &tagStat);
-		//assert(ret == 0 && "Problem getting file size" );
-
 		mStream.open((path + filename).c_str(), std::ios::in | std::ios::binary);
 
 		if(mStream.fail())
@@ -56,18 +52,6 @@ namespace vtx
 	{
 		close();
 	}
-	//-----------------------------------------------------------------------
-	//uint DefaultFileStream::read(void* buf, uint count)
-	//{
-	//	mStream.read(static_cast<char*>(buf), static_cast<std::streamsize>(count));
-	//	return mStream.gcount();
-	//}
-	////-----------------------------------------------------------------------
-	//void DefaultFileStream::skip(long count)
-	//{
-	//	mStream.clear();
-	//	mStream.seekg(static_cast<std::ifstream::pos_type>(count), std::ios::cur);
-	//}
 	//-----------------------------------------------------------------------
 	void DefaultFileStream::seek(uint pos)
 	{

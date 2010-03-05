@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** An axis-aligned bounding box */
 	class vtxExport BoundingBox
 	{
 	public:
@@ -68,23 +69,35 @@ namespace vtx
 		}
 
 		void reset();
+		/** Extend the boundaries of this box by the ones of another */
 		void extend(const BoundingBox& bb);
 
+		/** Transform the box using the given affine matrix */
 		void transformAffine(const Matrix& m);
 
+		/** Get the width of the box */
 		const float getWidth() const;
+		/** Get the height of the box */
 		const float getHeight() const;
 
+		/** Get the minimum coordinates */
 		const Vector2& getMin() const;
+		/** Get the maximum coordinates */
 		const Vector2& getMax() const;
 
+		/** Get the minimum x-coordinate */
 		const float& getMinX() const;
+		/** Get the maximum x-coordinate */
 		const float& getMaxX() const;
 
+		/** Get the minimum y-coordinate */
 		const float& getMinY() const;
+		/** Get the maximum y-coordinate */
 		const float& getMaxY() const;
 
+		/** Get the center of the box */
 		Vector2 getCenter() const;
+		/** Get the halved dimensions of the box */
 		Vector2 getHalf() const;
 
 	protected:

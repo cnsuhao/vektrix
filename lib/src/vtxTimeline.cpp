@@ -94,7 +94,7 @@ namespace vtx
 			return;
 		}
 
-		// TODO: rework Timeline::goto commands & keyframe handling, etc.
+		// TODO: rework Timeline::goto commands & keyframe handling, etc
 		// >> mainly the initialization
 		mPosition += delta_time;
 

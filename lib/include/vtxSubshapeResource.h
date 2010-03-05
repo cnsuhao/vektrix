@@ -35,13 +35,18 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A subshape which is contained within a ShapeResource */
 	class vtxExport SubshapeResource
 	{
 	public:
+		/** Add a ShapeElement to the outline of this glyph */
 		void addShapeElement(ShapeElement element);
+		/** Get a list of all contained shape elements */
 		const ShapeElementList& getElementList() const;
 
+		/** Set the MaterialResource that is associated with this subshape */
 		void setMaterial(MaterialResource* material);
+		/** Get the MaterialResource that is associated with this subshape */
 		MaterialResource* getMaterial();
 
 	protected:

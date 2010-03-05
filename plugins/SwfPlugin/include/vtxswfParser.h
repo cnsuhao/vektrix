@@ -48,12 +48,10 @@ namespace vtx
 		class SwfParser : public FileParser
 		{
 		public:
-			typedef std::stack<MovieClipResource*> MovieClipStack;
-
 			SwfParser();
 			virtual ~SwfParser();
 
-			const String& getExtension() const;
+			const StringList& getExtensions() const;
 			File* parse(FileStream* stream);
 
 		protected:
@@ -100,6 +98,7 @@ namespace vtx
 			void handleShowFrame();
 			void handleDefineShape(const TagTypes& type);
 			void handleDefineText(const TagTypes& type);
+			void handleDefineBitsLossless(const TagTypes& type);
 			void handlePlaceObject2();
 			void handleDefineButton2();
 			void handleDefineEditText(const TagTypes& type);

@@ -40,7 +40,7 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		OgreMovableEditText::OgreMovableEditText(vtx::Resource* resource) 
+		OgreMovableEditText::OgreMovableEditText(Resource* resource) 
 			: EditText(resource)
 		{
 			_createBuffers();
@@ -76,6 +76,12 @@ namespace vtx
 			mAtlasList = atlas_list;
 		}
 		//-----------------------------------------------------------------------
+		void OgreMovableEditText::packed(const AtlasPacker::PackResultList& pack_result)
+		{
+			setAtlasList(pack_result);
+			_updateGraphics();
+		}
+		//-----------------------------------------------------------------------
 		void OgreMovableEditText::_updateGraphics()
 		{
 			_resizeBuffers(mGlyphCount);
@@ -83,8 +89,8 @@ namespace vtx
 			File* file = mResource->getFile();
 			OgreTexture* texture = NULL;
 
-			StaticTextResource::GlyphList::const_iterator glyph_it;
-			StaticTextResource::GlyphList::const_iterator glyph_end;
+			GlyphStrip::GlyphList::const_iterator glyph_it;
+			GlyphStrip::GlyphList::const_iterator glyph_end;
 
 			// update the buffer
 			_lock();
@@ -93,11 +99,11 @@ namespace vtx
 			float glyph_x = 0.0f;
 
 			// iterate GlyphStrips
-			StaticTextResource::GlyphStripList::const_iterator it = mGlyphStrips.begin();
-			StaticTextResource::GlyphStripList::const_iterator end = mGlyphStrips.end();
+			GlyphStripList::const_iterator it = mGlyphStrips.begin();
+			GlyphStripList::const_iterator end = mGlyphStrips.end();
 			while(it != end)
 			{
-				const StaticTextResource::GlyphStrip& glyph_strip = *it;
+				const GlyphStrip& glyph_strip = *it;
 				FontResource* font = dynamic_cast<FontResource*>(file->getResource(glyph_strip.fontid));
 
 				// jump to a new line
@@ -116,7 +122,7 @@ namespace vtx
 					// iterate individual Glyphs
 					while(glyph_it != glyph_end)
 					{
-						const StaticTextResource::Glyph& glyph = *glyph_it;
+						const GlyphStrip::Glyph& glyph = *glyph_it;
 
 						GlyphResource* glyph_res = font->getGlyphByIndex(glyph.index);
 						if(glyph_res)
@@ -133,14 +139,14 @@ namespace vtx
 
 								const float size = glyph_strip.size * 0.05f;
 								const BoundingBox& bb = glyph_res->getBoundingBox();
-								const RectF& uv_rect = atlas_quad.node->getRect().relativeTo(
+								const RectF& uv_rect = atlas_quad.node->getRect().contractedCopy(1).relativeTo(
 									atlas_quad.texture->getSize(), atlas_quad.texture->getSize());
 
 								const RectF pos_rect(
 									bb.getMinX() * size + glyph_x, // left
-									-bb.getMinY() * size - glyph_strip.y - mMaxSize, // top
+									-bb.getMinY() * size - glyph_strip.y, // top
 									bb.getMaxX() * size + glyph_x, // right
-									-bb.getMaxY() * size - glyph_strip.y - mMaxSize // bottom
+									-bb.getMaxY() * size - glyph_strip.y // bottom
 									);
 
 								// TOP-LEFT

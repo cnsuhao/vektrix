@@ -35,21 +35,32 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** Represents a visual button */
 	class vtxExport Button : public DisplayObjectContainer
 	{
 	public:
 		Button(Resource* resource);
 		virtual ~Button();
 
-		const String& getType() const;
+		enum MouseState
+		{
+			MS_OUT_UP = 0, 
+			MS_OUT_DOWN, 
+			MS_IN_UP, 
+			MS_IN_DOWN
+		};
 
-		// overridden
+		/** @copybrief DisplayObjectContainer::_update */
 		virtual void _update(const float& delta_time = 0.0f);
+		/** @copybrief MovableObject::getBoundingBox */
 		const BoundingBox& getBoundingBox() const;
 
+		/** @copybrief Instance::_setParent */
 		virtual void _setParent(Movie* parent);
 
+		/** @copybrief Instance::setScriptObject */
 		virtual void setScriptObject(ScriptObject* obj);
+		/** @copybrief Instance::getScriptObject */
 		virtual ScriptObject* getScriptObject() const;
 
 	protected:

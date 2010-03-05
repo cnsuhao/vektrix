@@ -43,6 +43,13 @@ namespace vtx
 		uint powerOfTwo;
 		for(powerOfTwo=8; powerOfTwo<number; powerOfTwo*=2) {}
 
+		float d1 = powerOfTwo-number;
+		float d2 = fabs(powerOfTwo/2.0f-number);
+		if(d1 > d2)
+		{
+			powerOfTwo /= 2;
+		}
+
 		return powerOfTwo;
 	}
 	//-----------------------------------------------------------------------

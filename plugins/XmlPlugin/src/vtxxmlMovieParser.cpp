@@ -42,10 +42,11 @@ namespace vtx
 	namespace xml
 	{
 		//-----------------------------------------------------------------------
-		const std::string& MovieParser::getExtension() const
+		const StringList& MovieParser::getExtensions() const
 		{
-			static std::string ext = ".xml";
-			return ext;
+			static StringList extensions;
+			extensions.push_back(".xml");
+			return extensions;
 		}
 		//-----------------------------------------------------------------------
 		File* MovieParser::parse(FileStream* stream)

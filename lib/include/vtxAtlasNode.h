@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A node of the space partitioning tree that is beeing created during the packing of an atlas */
 	class vtxExport AtlasNode
 	{
 	public:
@@ -48,16 +49,23 @@ namespace vtx
 		AtlasNode(const Rect& rect, Texture* parent);
 		virtual ~AtlasNode();
 
-		void renderShape(Rasterizer* rasterizer);
-		void setShape(AtlasPackable* element);
+		/** Tells the element(s) associated with this node to render their contents to the atlas */
+		void renderElement(Rasterizer* rasterizer);
+		/** Set the element, that shall be associated with this node */
+		void setElement(AtlasElement* element);
+		/** Get the rectangle that this node occupies */
 		const Rect& getRect() const;
 
+		/** Get the size in pixel of the rectangle that this node occupies */
 		uint getPackedSize();
 
-		FitMode fits(AtlasPackable* element);
-		FitMode fitsExactly(AtlasPackable* element);
+		/** Check if the given element fits into one of the leafs of this node */
+		FitMode fits(AtlasElement* element);
+		/** Check if the given element fits into one of the leafs of this node, without needing to create new sub-nodes */
+		FitMode fitsExactly(AtlasElement* element);
 
-		AtlasNode* insert(AtlasPackable* element);
+		/** Insert the given element into the sub-tree of this node */
+		AtlasNode* insert(AtlasElement* element);
 
 	protected:
 		Rect mRect;
@@ -66,7 +74,7 @@ namespace vtx
 		Texture* mParent;
 		AtlasNode* mChild_1;
 		AtlasNode* mChild_2;
-		AtlasPackable* mElement;
+		AtlasElement* mElement;
 	};
 }
 

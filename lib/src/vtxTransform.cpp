@@ -223,7 +223,6 @@ namespace vtx
 		v2.normalize();
 
 		mScale = v1 / v2;
-		//mScale = Vector2(1, 1);
 
 		mPosition.x = mMatrix.m[0][2];
 		mPosition.y = mMatrix.m[1][2];

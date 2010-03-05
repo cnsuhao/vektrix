@@ -52,7 +52,7 @@ namespace vtx
 				vtx::StringHelper::toString((int)this), 
 				"General", 
 				Ogre::TEX_TYPE_2D, 
-				size, size, 1, 
+				size, size, 5, 
 				0, 
 				Ogre::PF_A8R8G8B8, 
 				Ogre::TU_DYNAMIC_WRITE_ONLY, 
@@ -74,8 +74,6 @@ namespace vtx
 			{
 				for(size_t x=0; x<width; ++x)
 				{
-					// 0xRRGGBB -> fill the buffer with yellow pixels
-					//data[pitch*y + x] = 0xFFFF8800;
 					data[pitch*y + x] = 0x00000000;
 				}
 			}
@@ -92,12 +90,11 @@ namespace vtx
 			// use (1, 1-src_alpha) blending for the pre-multiplied alpha images from cairo
 			pass->setSceneBlending(Ogre::SBF_ONE, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
 			pass->setDepthWriteEnabled(false);
-			pass->setCullingMode(Ogre::CULL_NONE);
-
-			// DEBUG
 			pass->setVertexColourTracking(Ogre::TVC_AMBIENT);
 
 			texture_unit->setTextureName(mTexture->getName());
+
+			pass->setCullingMode(Ogre::CULL_NONE);
 		}
 		//-----------------------------------------------------------------------
 		OgreTexture::~OgreTexture()
@@ -150,10 +147,8 @@ namespace vtx
 		{
 			renderAllShapes();
 
-			VTX_LOG("Ogre texture atlas rendered... %d pixels", getPackedSize());
-
 			// DEBUG
-			//debugOgreTexture();
+			debugOgreTexture();
 		}
 		//-----------------------------------------------------------------------
 	}

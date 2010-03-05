@@ -71,10 +71,11 @@ namespace vtx
 
 		}
 		//-----------------------------------------------------------------------
-		const String& SwfParser::getExtension() const
+		const StringList& SwfParser::getExtensions() const
 		{
-			static String ext = ".swf";
-			return ext;
+			static StringList extensions;
+			extensions.push_back(".swf");
+			return extensions;
 		}
 		//-----------------------------------------------------------------------
 		File* SwfParser::parse(FileStream* stream)
@@ -290,6 +291,11 @@ namespace vtx
 			case TT_DefineText:
 			case TT_DefineText2:
 				handleDefineText((TagTypes)type);
+				break;
+
+			case TT_DefineBitsLossless:
+			case TT_DefineBitsLossless2:
+				handleDefineBitsLossless((TagTypes)type);
 				break;
 
 			case TT_SetBackgroundColor:

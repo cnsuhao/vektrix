@@ -55,11 +55,6 @@ namespace vtx
 			(float)right/width, (float)bottom/height);
 	}
 	//-----------------------------------------------------------------------
-	const RectF Rect::relativeTo(const Rect& rect) const
-	{
-		return relativeTo(rect.w(), rect.h());
-	}
-	//-----------------------------------------------------------------------
 	uint Rect::w() const
 	{
 		return right - left;
@@ -70,14 +65,19 @@ namespace vtx
 		return bottom - top;
 	}
 	//-----------------------------------------------------------------------
-	uint Rect::w2() const
+	void Rect::contract(const uint& units)
 	{
-		return right - left + 1;
+		left += units;
+		top += units;
+		right -= units;
+		bottom -= units;
 	}
 	//-----------------------------------------------------------------------
-	uint Rect::h2() const
+	Rect Rect::contractedCopy(const uint& units) const
 	{
-		return bottom - top + 1;
+		Rect result(left, top, right, bottom);
+		result.contract(units);
+		return result;
 	}
 	//-----------------------------------------------------------------------
 	RectF::RectF() 

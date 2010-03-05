@@ -35,18 +35,21 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A visual static textfield that can be displayed inside a Movie */
 	class vtxExport StaticText : public MovableObject
 	{
 	public:
 		StaticText(Resource* resource);
 		virtual ~StaticText();
 
-		const String& getType() const;
-
+		/** @copybrief MovableObject::getBoundingBox */
 		const BoundingBox& getBoundingBox() const;
+		/** Implementation for MovableObject::isPointInside */
 		bool isPointInside(const Vector2& coord);
 
+		/** @copybrief Instance::setScriptObject */
 		void setScriptObject(ScriptObject* obj);
+		/** @copybrief Instance::getScriptObject */
 		ScriptObject* getScriptObject() const;
 
 	protected:
@@ -54,6 +57,7 @@ namespace vtx
 		StaticTextResource* mStaticTextResource;
 	};
 	//-----------------------------------------------------------------------
+	/** The InstanceFactory for creating StaticText objects */
 	class vtxExport StaticTextFactory : public InstanceFactory<StaticText> {};
 	//-----------------------------------------------------------------------
 }

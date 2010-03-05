@@ -65,18 +65,17 @@ namespace vtx
 			delete pars_it->second;
 			++pars_it;
 		}
-
-		FileMap::iterator it = mLoadedFiles.begin();
-		FileMap::iterator end = mLoadedFiles.end();
-		while(it != end)
-		{
-			delete it->second;
-			++it;
-		}
 	}
 	//-----------------------------------------------------------------------
 	File* FileManager::getFile(const String& filename)
 	{
+		// empty filename
+		if(!filename.length())
+		{
+			VTX_WARN("Tried to load file but no filename was given");
+			return NULL;
+		}
+
 		FileMap::iterator file_it = mLoadedFiles.find(filename);
 
 		if(file_it != mLoadedFiles.end())
@@ -94,7 +93,8 @@ namespace vtx
 		if(!stream)
 		{
 			// no container found
-			VTX_EXCEPT("Unable to find container to load file '%s'.", filename.c_str());
+			VTX_WARN("Unable to find container to load file '%s'.", filename.c_str());
+			return NULL;
 		}
 
 		String file_extension = StringHelper::getFileExtension(filename);
@@ -149,18 +149,29 @@ namespace vtx
 		return NULL;
 	}
 	//-----------------------------------------------------------------------
-	bool FileManager::addFileParser(FileParser* parser)
+	void FileManager::addFileParser(FileParser* parser)
 	{
-		FileParserMap::iterator it = mParsers.find(parser->getExtension());
+		const StringList& extensions = parser->getExtensions();
 
-		if(it == mParsers.end())
+		StringList::const_iterator ext_it = extensions.begin();
+		StringList::const_iterator ext_end = extensions.end();
+		while(ext_it != ext_end)
 		{
-			mParsers.insert(FileParserMap::value_type(parser->getExtension(), parser));
-			VTX_LOG("Added FileParser for extension \"%s\".", parser->getExtension().c_str());
-			return true;
-		}
+			const String& ext = *ext_it;
+			FileParserMap::iterator it = mParsers.find(ext);
 
-		return false;
+			if(it == mParsers.end())
+			{
+				mParsers.insert(FileParserMap::value_type(ext, parser));
+				VTX_LOG("Added FileParser for extension \"%s\".", ext.c_str());
+			}
+			else
+			{
+				VTX_WARN("Tried to add FileParser for an already registered extension: \"%s\"", ext.c_str());
+			}
+
+			++ext_it;
+		}
 	}
 	//-----------------------------------------------------------------------
 	FileParser* FileManager::getFileParser(const String extension)
@@ -175,18 +186,25 @@ namespace vtx
 		return NULL;
 	}
 	//-----------------------------------------------------------------------
-	bool FileManager::removeFileParser(FileParser* parser)
+	void FileManager::removeFileParser(FileParser* parser)
 	{
-		FileParserMap::iterator it = mParsers.find(parser->getExtension());
+		const StringList& extensions = parser->getExtensions();
 
-		if(it != mParsers.end())
+		StringList::const_iterator ext_it = extensions.begin();
+		StringList::const_iterator ext_end = extensions.end();
+		while(ext_it != ext_end)
 		{
-			mParsers.erase(it);
-			VTX_LOG("Removed FileParser for extension \"%s\".", parser->getExtension().c_str());
-			return true;
-		}
+			const String& ext = *ext_it;
+			FileParserMap::iterator it = mParsers.find(ext);
 
-		return false;
+			if(it != mParsers.end())
+			{
+				mParsers.erase(it);
+				VTX_LOG("Removed FileParser for extension \"%s\".", ext.c_str());
+			}
+
+			++ext_it;
+		}
 	}
 	//-----------------------------------------------------------------------
 	FileContainer* FileManager::addFileContainer(const String& name, const String& type)
@@ -208,6 +226,20 @@ namespace vtx
 
 		VTX_EXCEPT("A FileContainerFactory with the name '%s' doesn't exist!", type.c_str());
 		return NULL;
+	}
+	//-----------------------------------------------------------------------
+	void FileManager::unloadAllFiles()
+	{
+		VTX_LOG("Unloading files...");
+
+		FileMap::iterator it = mLoadedFiles.begin();
+		FileMap::iterator end = mLoadedFiles.end();
+		while(it != end)
+		{
+			VTX_LOG("Unloading file %s", it->second->getFilename().c_str());
+			delete it->second;
+			++it;
+		}
 	}
 	//-----------------------------------------------------------------------
 }

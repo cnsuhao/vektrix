@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 
 	vtx::LogManager::getSingletonPtr()->logToCout(true);
 
-	vtx::FileManager::getSingletonPtr()->addFileContainer("../demos/Ogre3D/media");
+	vtx::FileManager::getSingletonPtr()->addFileContainer("../demos/media");
 
 	// vektrix plugins
 #if VTX_OS == VTX_WIN32

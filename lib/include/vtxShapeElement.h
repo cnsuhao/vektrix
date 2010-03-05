@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Represents a single element of a vector based shape outline */
 	class ShapeElement
 	{
 	public:
@@ -46,6 +47,16 @@ namespace vtx
 
 		ShapeElement() 
 			: type(SID_MOVE_TO)
+		{
+
+		}
+
+		ShapeElement(const ShapeElementID& type, 
+			const float& x, const float& y, 
+			const float& cx = 0.0f, const float& cy = 0.0f) 
+			: type(type), 
+			pos(x, y), 
+			ctrl(cx, cy)
 		{
 
 		}

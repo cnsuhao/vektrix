@@ -36,7 +36,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
-	/** \brief The root class of the vektrix library */
+	/** The root class of the vektrix library */
 	class vtxExport Root : public Singleton<Root>, public FactoryManager<MovieFactory>
 	{
 	public:
@@ -49,16 +49,16 @@ namespace vtx
 		// overridden from FactoryManager<MovieFactory>
 		bool addFactory(MovieFactory* factory);
 
-		/** \brief Load a plugin from a shared library */
+		/** Load a plugin from a shared library */
 		void loadLibrary(const String& name);
 
-		/** \brief Register a Plugin to the vektrix library */
+		/** Register a Plugin to the vektrix library */
 		void registerPlugin(Plugin* plugin);
 
-		/** \brief Create an instance of a movie */
+		/** Create an instance of a movie */
 		Movie* createMovie(const String& name, const String& filename, const String& factoryname);
 
-		/** \brief Method to update all underlying subsystems and movie instances of vektrix */
+		/** Method to update all underlying subsystems and movie instances of vektrix */
 		void update(float delta_time);
 
 	protected:

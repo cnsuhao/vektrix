@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A Resource which contains all necessary data for creating a Button instance */
 	class vtxExport ButtonResource : public Resource
 	{
 	public:
@@ -48,9 +49,12 @@ namespace vtx
 		ButtonResource(const String& id);
 		virtual ~ButtonResource();
 
+		/** @copybrief Resource::getType */
 		const String& getType() const;
 
+		/** Set the different states for the button */
 		void setState(ButtonState* state, const StateID& id);
+		/** Get the different states of the button */
 		ButtonState* getState(const StateID& id);
 
 	protected:

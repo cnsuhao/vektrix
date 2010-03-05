@@ -40,7 +40,10 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		class vtxopExport OgreMovableEditText : public vtx::EditText, public MovableInstanceBase
+		class vtxopExport OgreMovableEditText : 
+			public EditText, 
+			public MovableInstanceBase, 
+			public AtlasPacker::Listener
 		{
 		public:
 			OgreMovableEditText(vtx::Resource* resource);
@@ -50,6 +53,8 @@ namespace vtx
 
 			void _update(const float& delta_time);
 			void setAtlasList(const AtlasPacker::PackResultList& atlas_list);
+
+			void packed(const AtlasPacker::PackResultList& pack_result);
 
 		protected:
 			AtlasPacker::PackResultList mAtlasList;

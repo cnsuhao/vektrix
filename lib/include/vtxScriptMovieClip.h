@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Represents the scripting counterpart of a MovieClip object */
 	class vtxExport ScriptMovieClip : public ScriptObject
 	{
 	public:

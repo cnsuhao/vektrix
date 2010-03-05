@@ -86,6 +86,11 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
+	const String& DynLib::getName() const
+	{
+		return mName;
+	}
+	//-----------------------------------------------------------------------
 	void* DynLib::getSymbol(const String& name) const throw()
 	{
 		return (void*)DYNLIB_GETSYM(mInstance, name.c_str() );

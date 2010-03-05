@@ -41,7 +41,10 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		class vtxopExport OgreMovableShape : public vtx::Shape, public MovableInstanceBase
+		class vtxopExport OgreMovableShape : 
+			public vtx::Shape, 
+			public MovableInstanceBase, 
+			public AtlasPacker::Listener
 		{
 		public:
 			OgreMovableShape(vtx::Resource* resource);
@@ -51,6 +54,8 @@ namespace vtx
 
 			void _update(const float& delta_time);
 			void setAtlasQuad(const AtlasPacker::PackResult& quad);
+
+			void packed(const AtlasPacker::PackResultList& pack_result);
 
 		protected:
 			float mLayer;

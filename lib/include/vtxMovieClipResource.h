@@ -34,15 +34,19 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A Resource which contains all necessary data for creating an animated MovieClip instance */
 	class vtxExport MovieClipResource : public Resource
 	{
 	public:
 		MovieClipResource(const String& id);
 		virtual ~MovieClipResource();
 
+		/** @copybrief Resource::getType */
 		const String& getType() const;
 
+		/** Set the Timeline associated with this movieclip */
 		void setTimeline(Timeline* timeline);
+		/** Get the Timeline associated with this movieclip */
 		Timeline* getTimeline();
 
 	protected:

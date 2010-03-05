@@ -36,37 +36,56 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** This class combines transformation, color and bounding attributes */
 	class vtxExport Transform
 	{
 	public:
 		Transform();
 		virtual ~Transform();
 
+		/** Set the x-coordinate for this object */
 		void setX(const float& x);
+		/** Get the x-coordinate of this object */
 		const float& getX() const;
 
+		/** Set the y-coordinate for this object */
 		void setY(const float& y);
+		/** Get the y-coordinate of this object */
 		const float& getY() const;
 
+		/** Set the rotation for this object */
 		void setAngle(const float& angle);
+		/** Get the rotation of this object */
 		const float& getAngle() const;
 
+		/** Set the color transformation for this object */
 		void setColor(const CXForm& cx);
+		/** Get the color transformation of this object */
 		const CXForm& getColor() const;
 
+		/** Set the matrix for this object */
 		void setMatrix(const Matrix& m);
+		/** Get the matrix of this object */
 		const Matrix& getMatrix() const;
 
+		/** Set the bounding box for this object */
 		void setBounding(const BoundingBox& bb);
+		/** Get the bounding box of this object */
 		const BoundingBox& getBounding() const;
 
+		/** Inform the object that the color transformation needs to be updated */
 		void needColorUpdate();
+		/** Inform the object that the matrix needs to be updated */
 		void needMatrixUpdate();
 
+		/** Perform color / matrix updates if necessary */
 		void update(DisplayObjectContainer* parent);
 
+		/** Get the world bounding box that has been calculated */
 		BoundingBox& getWorldBounding();
+		/** Get the world color that has been calculated */
 		const CXForm& getWorldColor();
+		/** Get the world matrix that has been calculated */
 		const Matrix& getWorldMatrix();
 
 	protected:
@@ -86,10 +105,14 @@ namespace vtx
 		CXForm mWorldColor;
 		Matrix mWorldMatrix;
 
+		/** Update the world matrix and bounding box */
 		void updateMatrix(DisplayObjectContainer* parent);
 
+		/** Inform the transform that a update of the world matrix is necessary */
 		void needMatrixCompose();
+		/** Compose the local matrix out of the x, y, angle, etc attributes */
 		void composeMatrix();
+		/** Decompose the local matrix back to the seperate x, y, angle, etc attributes */
 		void decomposeMatrix();
 	};
 }

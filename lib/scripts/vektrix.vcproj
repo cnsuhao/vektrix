@@ -358,14 +358,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\vtxDefaultFileContainerFactory.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxDefaultFileContainerFactory.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\vtxDefaultFileStream.cpp"
 					>
 				</File>
@@ -499,6 +491,10 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxCXForm.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxGlyphStrip.h"
 					>
 				</File>
 				<File
@@ -746,14 +742,6 @@
 		<Filter
 			Name="Instances"
 			>
-			<File
-				RelativePath="..\src\vtxInstance.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxInstance.h"
-				>
-			</File>
 			<Filter
 				Name="Instance Types"
 				>
@@ -802,7 +790,7 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="General"
+					Name="Generic"
 					>
 					<File
 						RelativePath="..\src\vtxButton.cpp"
@@ -810,30 +798,6 @@
 					</File>
 					<File
 						RelativePath="..\include\vtxButton.h"
-						>
-					</File>
-					<File
-						RelativePath="..\src\vtxDisplayObjectContainer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxDisplayObjectContainer.h"
-						>
-					</File>
-					<File
-						RelativePath="..\src\vtxInteractiveObject.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxInteractiveObject.h"
-						>
-					</File>
-					<File
-						RelativePath="..\src\vtxMovableObject.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxMovableObject.h"
 						>
 					</File>
 					<File
@@ -886,24 +850,56 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Interfaces"
+				>
+				<File
+					RelativePath="..\src\vtxDisplayObjectContainer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxDisplayObjectContainer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxInstance.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxInstance.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxInteractiveObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxInteractiveObject.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxMovableObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxMovableObject.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Atlas Rendering"
 			>
+			<File
+				RelativePath="..\include\vtxAtlasElement.h"
+				>
+			</File>
 			<File
 				RelativePath="..\src\vtxAtlasNode.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\include\vtxAtlasNode.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\vtxAtlasPackable.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxAtlasPackable.h"
 				>
 			</File>
 			<File

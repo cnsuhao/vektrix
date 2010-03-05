@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Represents a timeline which consists of a number of keyframes */
 	class vtxExport Timeline
 	{
 	public:
@@ -41,17 +42,26 @@ namespace vtx
 		Timeline();
 		virtual ~Timeline();
 
+		/** Create an identical clone of this timeline */
 		Timeline* clone(MovieClip* movieclip);
 
+		/** Add a Keyframe to this timeline */
 		void addKeyframe(Keyframe* frame);
+		/** Remove all keyframes and reset the timeline */
 		void clear();
 
+		/** Advance the playhead of the timeline by the given amount (in seconds) */
 		void addTime(float delta_time);
+		/** Set the frame rate at which the playhead shall advance */
 		void setFrameRate(const uint& framerate);
 
+		/** Tells the playhead of the timeline to advance automatically over time */
 		void play();
+		/** Tells the playhead of the timeline to stop at the current position */
 		void stop();
+		/** Jump to a given frame of the timeline */
 		bool goto_frame(uint frame);
+		/** Jump to a given point in time of the timeline */
 		bool goto_time(float time);
 
 	protected:

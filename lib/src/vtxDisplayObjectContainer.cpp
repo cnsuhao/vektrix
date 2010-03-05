@@ -52,7 +52,7 @@ namespace vtx
 		if(mLayers.size())
 		{
 			Layers::iterator it = --mLayers.end();
-			layer = (++it)->first;
+			layer = it->first + 1;
 		}
 
 		addChildAt(object, layer);
@@ -188,6 +188,18 @@ namespace vtx
 	{
 		InteractiveObject::_update(delta_time);
 
+		Layers::iterator it = mLayers.begin();
+		Layers::iterator end = mLayers.end();
+
+		while(it != end)
+		{
+			it->second->_update(delta_time);
+			++it;
+		}
+	}
+	//-----------------------------------------------------------------------
+	void DisplayObjectContainer::updateWorldBoundingBox()
+	{
 		// TODO: only update bounding box when transformation occured
 		mTransform.getWorldBounding().reset();
 
@@ -196,7 +208,6 @@ namespace vtx
 
 		while(it != end)
 		{
-			it->second->_update(delta_time);
 			// TODO: only update bounding box when transformation occured
 			mTransform.getWorldBounding().extend(it->second->getWorldBoundingBox());
 			++it;

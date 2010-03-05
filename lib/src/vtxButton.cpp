@@ -69,15 +69,10 @@ namespace vtx
 		delete mUp;
 	}
 	//-----------------------------------------------------------------------
-	const String& Button::getType() const
-	{
-		static String type = "Button";
-		return type;
-	}
-	//-----------------------------------------------------------------------
 	void Button::_update(const float& delta_time)
 	{
 		DisplayObjectContainer::_update(delta_time);
+		DisplayObjectContainer::updateWorldBoundingBox();
 
 		// TODO: DEBUGGING only, implement more beautifully
 		if(isPointInside(getParent()->getMouseAbs()))
@@ -137,19 +132,12 @@ namespace vtx
 	{
 		DisplayObjectContainer::_setParent(parent);
 
-		if(!parent)
-		{
-			clearLayers();
-		}
-		else
+		clearLayers();
+
+		if(parent)
 		{
 			mUp->execute();
 		}
-		//if(mParentMovie)
-		//{
-		//	clearLayers();
-		//	mUp->execute();
-		//}
 	}
 	//-----------------------------------------------------------------------
 	void Button::setScriptObject(ScriptObject* obj)

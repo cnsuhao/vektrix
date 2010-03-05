@@ -33,7 +33,10 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	FontResource::FontResource(const String& id) 
-		: Resource(id)
+		: Resource(id), 
+		mAscender(0.0f), 
+		mDescender(0.0f), 
+		mLeading(0.0f)
 	{
 
 	}
@@ -63,6 +66,36 @@ namespace vtx
 	const String& FontResource::getName() const
 	{
 		return mName;
+	}
+	//-----------------------------------------------------------------------
+	void FontResource::setAscender(const float& ascender)
+	{
+		mAscender = ascender;
+	}
+	//-----------------------------------------------------------------------
+	const float& FontResource::getAscender() const
+	{
+		return mAscender;
+	}
+	//-----------------------------------------------------------------------
+	void FontResource::setDescender(const float& descender)
+	{
+		mDescender = descender;
+	}
+	//-----------------------------------------------------------------------
+	const float& FontResource::getDescender() const
+	{
+		return mDescender;
+	}
+	//-----------------------------------------------------------------------
+	void FontResource::setLeading(const float& leading)
+	{
+		mLeading = leading;
+	}
+	//-----------------------------------------------------------------------
+	const float& FontResource::getLeading() const
+	{
+		return mLeading;
 	}
 	//-----------------------------------------------------------------------
 	void FontResource::addGlyph(GlyphResource* glyph)

@@ -49,12 +49,6 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
-	const String& StaticText::getType() const
-	{
-		static String type = "StaticText";
-		return type;
-	}
-	//-----------------------------------------------------------------------
 	const BoundingBox& StaticText::getBoundingBox() const
 	{
 		return mBoundingBox;

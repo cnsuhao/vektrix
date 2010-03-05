@@ -35,18 +35,24 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A Resource which contains all necessary data for creating an EditText instance */
 	class vtxExport EditTextResource : public Resource
 	{
 	public:
 		EditTextResource(const String& id);
 		virtual ~EditTextResource();
 
+		/** @copybrief Resource::getType */
 		const String& getType() const;
 
+		/** Set the BoundingBox for this edit text */
 		void setBoundingBox(const BoundingBox& bb);
+		/** Get the BoundingBox of this edit text */
 		const BoundingBox& getBoundingBox() const;
 
+		/** Set the initial text that shall be set at creation of an EditText instance */
 		void setInitialText(const WString& initial_text);
+		/** Get the initial text that will be set at creation of an EditText instance */
 		const WString& getInitialText();
 
 	protected:

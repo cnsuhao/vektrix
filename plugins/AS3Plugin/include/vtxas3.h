@@ -35,8 +35,6 @@ THE SOFTWARE.
 #if VTX_OS == VTX_WIN32
 #
 #	pragma warning (disable : 4291)
-#	pragma warning (disable : 4201)
-#	pragma warning (disable : 4127)
 #
 #	ifdef VTX_STATIC_LIB
 #		define vtxas3Export

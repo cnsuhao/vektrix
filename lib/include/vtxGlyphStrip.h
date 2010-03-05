@@ -26,21 +26,43 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxAtlasPackable_H__
-#define __vtxAtlasPackable_H__
+#ifndef __vtxGlyphStrip_H__
+#define __vtxGlyphStrip_H__
 
 #include "vtxPrerequesites.h"
 
 namespace vtx
 {
-	class vtxExport AtlasPackable
+	class GlyphStrip
 	{
 	public:
-		virtual const String getPackID() = 0;
+		class Glyph
+		{
+		public:
+			Glyph() : index(0), x(0.0f) {}
 
-		virtual const uint getPackableWidth() = 0;
-		virtual const uint getPackableHeight() = 0;
+			uint index;
+			float x;
+		};
+		typedef std::vector<Glyph> GlyphList;
+
+		GlyphStrip() { reset(); }
+
+		void reset()
+		{
+			fontid.clear();
+			newline = true;
+			x = y = size = 0.0f;
+		}
+
+		bool newline;
+		float x, y;
+		float size;
+		String fontid;
+		Color color;
+		GlyphList glyphs;
 	};
+	typedef std::vector<GlyphStrip> GlyphStripList;
 }
 
 #endif

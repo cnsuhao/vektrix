@@ -26,9 +26,44 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxAtlasPackable.h"
+#include "vtxswfParser.h"
 
 namespace vtx
 {
+	namespace swf
+	{
+		void SwfParser::handleDefineBitsLossless(const TagTypes& type)
+		{
+			UI16 id = readU16();
 
+			UI8 bitmap_format = readU8();
+
+			UI16 width = readU16();
+			UI16 height = readU16();
+
+			UI32 img_data_size = width * height;
+
+			if(bitmap_format == BF_8BIT_COLOR_MAPPED)
+			{
+				UI8 color_table_size = readU8(); // color table size
+
+				// COLORMAPDATA
+				for(UI8 i=0; i<color_table_size; ++i)
+				{
+					// COLORS
+					readColor();
+				}
+
+				for(UI32 i=0; i<img_data_size; ++i)
+				{
+					// INDICES
+					readU8();
+				}
+			}
+			else if(bitmap_format == BF_15BIT_RGB || bitmap_format == BF_24BIT_RGB)
+			{
+				// BITMAPDATA
+			}
+		}
+	}
 }

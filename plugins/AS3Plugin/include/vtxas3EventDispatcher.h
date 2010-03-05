@@ -31,8 +31,6 @@ THE SOFTWARE.
 
 #include "cspPrerequesites.h"
 
-//#include "vtxScriptObject.h"
-
 namespace vtx
 {
 	namespace as3

@@ -34,17 +34,24 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** FileStream implementation for direct reading from the platform's file system */
 	class DefaultFileStream : public FileStream
 	{
 	public:
 		DefaultFileStream(const String& path, const String& filename);
 		virtual ~DefaultFileStream();
 
+		/** @copybrief FileStream::seek */
 		void seek(uint pos);
+		/** @copybrief FileStream::tell */
 		uint tell();
+		/** @copybrief FileStream::read */
 		uint read(void* buf, uint count);
+		/** @copybrief FileStream::getLine */
 		String& getLine();
+		/** @copybrief FileStream::eof */
 		bool eof() const;
+		/** @copybrief FileStream::close */
 		void close();
 
 	protected:

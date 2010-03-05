@@ -32,7 +32,10 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	HtmlImage::HtmlImage() 
-		: HtmlElement(HtmlElement::Image)
+		: HtmlElement(HtmlElement::Image), 
+		align(AlignLeft), 
+		width(0.0f), height(0.0f), 
+		hspace(0.0f), vspace(0.0f)
 	{
 
 	}

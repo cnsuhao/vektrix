@@ -142,7 +142,7 @@ namespace vtx
 		{
 			if(mManualObject)
 			{
-				mManualObject->begin(mRedMaterial->getName(), Ogre::RenderOperation::OT_LINE_STRIP);
+				mManualObject->begin(mGreenMaterial->getName(), Ogre::RenderOperation::OT_LINE_STRIP);
 
 				mManualObject->position(bb.getMinX(), -bb.getMinY(), 0.1);
 				mManualObject->position(bb.getMaxX(), -bb.getMinY(), 0.1);

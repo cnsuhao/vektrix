@@ -48,6 +48,14 @@ namespace vtx
 			Text
 		};
 
+		enum Alignment
+		{
+			AlignLeft = 0, 
+			AlignRight, 
+			AlignCenter, 
+			AlignJustify
+		};
+
 		HtmlElement(const Type& type);
 		virtual ~HtmlElement();
 

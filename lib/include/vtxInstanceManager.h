@@ -40,22 +40,32 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** The manager that keeps track of all different kinds of Instance factories (like EditTextFactory, ShapeFactory, etc) */
 	class vtxExport InstanceManager : public Singleton<InstanceManager>
 	{
+		friend class Root;
+
 	public:
+		/** The EditTextFactory sub-manager */
 		FactoryManagerImpl(EditTexts, EditText);
+		/** The ScriptEngineFactory sub-manager */
 		FactoryManagerImpl(ScriptEngines, ScriptEngine);
+		/** The ShapeFactory sub-manager */
 		FactoryManagerImpl(Shapes, Shape);
+		/** The StaticTextFactory sub-manager */
 		FactoryManagerImpl(StaticTexts, StaticText);
+		/** The TextureFactory sub-manager */
 		FactoryManagerImpl(Textures, Texture);
 
-		InstanceManager();
-		virtual ~InstanceManager();
-
+		/** Get the EditTextFactory sub-manager */
 		EditTexts* editTexts();
+		/** Get the ScriptEngineFactory sub-manager */
 		ScriptEngines* scriptEngines();
+		/** Get the ShapeFactory sub-manager */
 		Shapes* shapes();
+		/** Get the StaticTextFactory sub-manager */
 		StaticTexts* staticTexts();
+		/** Get the TextureFactory sub-manager */
 		Textures* textures();
 
 	protected:
@@ -64,6 +74,9 @@ namespace vtx
 		Shapes* mShapes;
 		StaticTexts* mStaticTexts;
 		Textures* mTextures;
+
+		InstanceManager();
+		virtual ~InstanceManager();
 	};
 }
 

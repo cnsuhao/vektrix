@@ -30,36 +30,50 @@ THE SOFTWARE.
 #define __vtxGlyphResource_H__
 
 #include "vtxPrerequesites.h"
-#include "vtxAtlasPackable.h"
+#include "vtxAtlasElement.h"
 #include "vtxBoundingBox.h"
 #include "vtxShapeElement.h"
 
 namespace vtx
 {
-	class vtxExport GlyphResource : public AtlasPackable
+	/** A Resource which contains information about a single glyph contained within a FontResource */
+	class vtxExport GlyphResource : public AtlasElement
 	{
 	public:
 		GlyphResource(FontResource* parent);
 		virtual ~GlyphResource();
 
+		/** Set the index for this glyph */
 		void setIndex(const uint& index);
+		/** Get the index of this glyph */
 		const uint& getIndex() const;
 
+		/** Set the unicode for this glyph */
 		void setCode(const ushort& code);
+		/** Get the unicode of this glyph */
 		const ushort& getCode() const;
 
+		/** Set the vertical advance value for this glyph */
 		const float& getAdvance() const;
+		/** Get the vertical advance value of this glyph */
 		void setAdvance(const float& advance);
 
+		/** Add a ShapeElement to the outline of this glyph */
 		void addShapeElement(ShapeElement element);
+		/** Get a list of all contained shape elements */
 		const ShapeElementList& getElementList() const;
 
+		/** Set the BoundingBox for this glyph */
 		void setBoundingBox(const BoundingBox& bb);
+		/** Get the BoundingBox of this glyph */
 		const BoundingBox& getBoundingBox() const;
 
-		// AtlasPackable
+		// AtlasElement
+		/** @copybrief AtlasElement::getPackID */
 		const String getPackID();
+		/** @copybrief AtlasElement::getPackableWidth */
 		const uint getPackableWidth();
+		/** @copybrief AtlasElement::getPackableHeight */
 		const uint getPackableHeight();
 
 	protected:

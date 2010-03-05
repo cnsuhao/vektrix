@@ -51,12 +51,6 @@ namespace vtx
 		delete mTimeline;
 	}
 	//-----------------------------------------------------------------------
-	const String& MovieClip::getType() const
-	{
-		static String type = "MovieClip";
-		return type;
-	}
-	//-----------------------------------------------------------------------
 	void MovieClip::play()
 	{
 		if(mTimeline)
@@ -96,6 +90,7 @@ namespace vtx
 	void MovieClip::_update(const float& delta_time)
 	{
 		DisplayObjectContainer::_update(delta_time);
+		DisplayObjectContainer::updateWorldBoundingBox();
 
 		if(mTimeline)
 		{

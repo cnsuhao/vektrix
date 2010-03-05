@@ -683,6 +683,16 @@ namespace vtx
 					}
 					break;
 
+				case FST_ClippedBitmap:
+					{
+						material = new MaterialResource(
+							StringHelper::toString(shape_id)+"->"+StringHelper::toString(it->first), 
+							MaterialResource::MT_IMAGE);
+
+						//material->setImageID(it->second.color);
+					}
+					break;
+
 				case FST_LinearGradient:
 				case FST_RadialGradient:
 					{

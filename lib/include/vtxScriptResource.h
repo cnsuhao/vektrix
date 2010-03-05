@@ -34,15 +34,19 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A Resource which contains binary or textual script data which can be executed at runtime */
 	class vtxExport ScriptResource : public Resource
 	{
 	public:
 		ScriptResource(const String& id, const char* code, uint len);
 		virtual ~ScriptResource();
 
+		/** @copybrief Resource::getType */
 		const String& getType() const;
 
+		/** Get the buffer that contains the script data */
 		const char* getBuffer() const;
+		/** Get the length of the buffer that contains the script data */
 		const uint& getLength() const;
 
 	protected:

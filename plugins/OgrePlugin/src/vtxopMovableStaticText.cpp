@@ -73,12 +73,12 @@ namespace vtx
 				0,		  0,		   0,				1);
 		}
 		//-----------------------------------------------------------------------
-		void OgreMovableStaticText::setGlyphStrips(const StaticTextResource::GlyphStripList& glyph_strips, 
+		void OgreMovableStaticText::setGlyphStrips(const GlyphStripList& glyph_strips, 
 			const AtlasPacker::PackResultList& atlas_list)
 		{
 			uint glyph_count = 0;
-			StaticTextResource::GlyphStripList::const_iterator it = glyph_strips.begin();
-			StaticTextResource::GlyphStripList::const_iterator end = glyph_strips.end();
+			GlyphStripList::const_iterator it = glyph_strips.begin();
+			GlyphStripList::const_iterator end = glyph_strips.end();
 			while(it != end)
 			{
 				glyph_count += (*it).glyphs.size();
@@ -90,8 +90,8 @@ namespace vtx
 			File* file = mResource->getFile();
 			OgreTexture* texture = NULL;
 
-			StaticTextResource::GlyphList::const_iterator glyph_it;
-			StaticTextResource::GlyphList::const_iterator glyph_end;
+			GlyphStrip::GlyphList::const_iterator glyph_it;
+			GlyphStrip::GlyphList::const_iterator glyph_end;
 
 			// update the buffer
 			_lock();
@@ -104,7 +104,7 @@ namespace vtx
 			end = glyph_strips.end();
 			while(it != end)
 			{
-				const StaticTextResource::GlyphStrip& glyph_strip = *it;
+				const GlyphStrip& glyph_strip = *it;
 				FontResource* font = dynamic_cast<FontResource*>(file->getResource(glyph_strip.fontid));
 
 				// jump to a new line
@@ -123,7 +123,7 @@ namespace vtx
 					// iterate Glyphs
 					while(glyph_it != glyph_end)
 					{
-						const StaticTextResource::Glyph& glyph = *glyph_it;
+						const GlyphStrip::Glyph& glyph = *glyph_it;
 
 						GlyphResource* glyph_res = font->getGlyphByIndex(glyph.index);
 						if(glyph_res)
@@ -140,7 +140,7 @@ namespace vtx
 
 								const float size = glyph_strip.size * 0.05f;
 								const BoundingBox& bb = glyph_res->getBoundingBox();
-								const RectF& uv_rect = atlas_quad.node->getRect().relativeTo(
+								const RectF& uv_rect = atlas_quad.node->getRect().contractedCopy(1).relativeTo(
 									atlas_quad.texture->getSize(), atlas_quad.texture->getSize());
 
 								const RectF pos_rect(

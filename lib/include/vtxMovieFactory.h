@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** The Factory that is used for creating Movie objects */
 	class vtxExport MovieFactory : public Factory<Movie, String, File*>
 	{
 	public:
@@ -45,11 +46,16 @@ namespace vtx
 		MovieFactory();
 		virtual ~MovieFactory();
 
+		/** Get a RenderStrategy associated with this factory */
 		RenderStrategy* getRenderStrategy(File* file);
 
+		/** Get the EditTextFactory that is used for creating EditText instances */
 		EditTextFactory* getEditTextFactory();
+		/** Get the ShapeFactory that is used for creating Shape instances */
 		ShapeFactory* getShapeFactory();
+		/** Get the StaticTextFactory that is used for creating StaticText instances */
 		StaticTextFactory* getStaticTextFactory();
+		/** Get the TextureFactory that is used for creating Texture instances */
 		TextureFactory* getTextureFactory();
 
 	protected:
@@ -65,9 +71,12 @@ namespace vtx
 		StaticTextFactory* mStaticTextFactory;
 		TextureFactory* mTextureFactory;
 
+		/** Abstract method for creating the RenderStrategy associated with this Factory */
 		virtual RenderStrategy* _createRenderStrategy(File* file) = 0;
+		/** Abstract method for creating a MovieDebugger for the given Movie */
 		virtual MovieDebugger* _newDebugger(Movie* movie) = 0;
 
+		/** Initialize this Factory */
 		void _initialize();
 	};
 }

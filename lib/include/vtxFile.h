@@ -35,11 +35,13 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Represents a template for creating Movie instances and contains all necessary resources */
 	class vtxExport File
 	{
 	public:
 		friend class FileManager;
 
+		/** The header of a File, which contains basic information such as width, height, fps, etc */
 		class FileHeader
 		{
 		public:
@@ -51,13 +53,30 @@ namespace vtx
 			Color bgcolor;
 			String script_root_class;
 
+			FileHeader()
+			{
+				clear();
+			}
+
 			void clear()
 			{
 				version = script_root_class = "";
-				fps = frames = width = height = 0;
+				fps = 1;
+				frames = width = height = 0;
 				bgcolor = Color();
 			}
 		};
+
+		/** Listen to File events */
+		class Listener
+		{
+		public:
+			/** A Resource has been added to this File */
+			virtual void resourceAdded(Resource* resource, const bool& external){}
+			/** A Resource has been removed from this File */
+			virtual void resourceRemoved(Resource* resource){}
+		};
+		typedef std::map<Listener*, Listener*> ListenerMap;
 
 		typedef std::vector<Resource*> ResourceList;
 		typedef std::map<String, Resource*> ResourceMap;
@@ -67,23 +86,40 @@ namespace vtx
 		File(const String& filename);
 		virtual ~File();
 
+		/** Get the file name from which this file has been parsed */
 		const String& getFilename();
 
+		/** Set the FileHeader for this file */
 		void setHeader(FileHeader header);
+		/** Get the FileHeader of this file */
 		const FileHeader& getHeader();
 
+		/** Set the name of the ScriptEngineFactory that shall be used for Movies created from this File */
 		void setScriptEngine(const String& scriptEngineFactory);
+		/** Get the name of the ScriptEngineFactory that shall be used for Movies created from this File */
 		const String& getScriptEngine();
 
+		/** Set the MovieClipResource which defines the main MovieClip for related Movie instances */
 		void setMainMovieClip(MovieClipResource* movieclip);
+		/** Get the MovieClipResource which defines the main MovieClip for related Movie instances */
 		MovieClipResource* getMainMovieClip();
 
-		void addResource(Resource* res);
+		/** Add a Resource instance to this File */
+		void addResource(Resource* res, const bool& external = false);
+		/** Retrieve a Resource instance from this File by its unique ID */
 		Resource* getResource(const String& id);
 
+		/** Get a particular FontResource by its font name */
 		FontResource* getFontByName(const String& font_name);
 
+		/** Query all resouces from this File that match the given type */
 		const ResourceList& getResourcesByType(const String& type) const;
+
+		/** Get all resources of this File */
+		const ResourceMap& getResources() const;
+
+		bool addListener(Listener* listener);
+		bool removeListener(Listener* listener);
 
 	protected:
 		String mFilename;
@@ -91,6 +127,7 @@ namespace vtx
 		ResourceMap mResources;
 		ResourceTypeMap mResourcesByType;
 		FontMap mFonts;
+		ListenerMap mListeners;
 
 		String mScriptEngineFactory;
 		MovieClipResource* mMainMovieClip;

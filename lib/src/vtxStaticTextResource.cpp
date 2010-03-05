@@ -48,16 +48,6 @@ namespace vtx
 		return type;
 	}
 	//-----------------------------------------------------------------------
-	//void StaticTextResource::addGlyph(const Glyph& glyph)
-	//{
-	//	mGlyphs.push_back(glyph);
-	//}
-	////-----------------------------------------------------------------------
-	//const StaticTextResource::GlyphList& StaticTextResource::getGlyphList() const
-	//{
-	//	return mGlyphs;
-	//}
-	//-----------------------------------------------------------------------
 	void StaticTextResource::setBoundingBox(const BoundingBox& bb)
 	{
 		mBoundingBox = bb;
@@ -73,7 +63,7 @@ namespace vtx
 		mGlyphStrips = glyphstrips;
 	}
 	//-----------------------------------------------------------------------
-	const StaticTextResource::GlyphStripList& StaticTextResource::getGlyphStrips() const
+	const GlyphStripList& StaticTextResource::getGlyphStrips() const
 	{
 		return mGlyphStrips;
 	}

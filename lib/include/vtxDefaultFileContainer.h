@@ -34,13 +34,17 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
+	/** FileContainer implementation for direct reading from the platform's file system */
 	class vtxExport DefaultFileContainer : public FileContainer
 	{
 	public:
 		DefaultFileContainer(const String& location);
 		virtual ~DefaultFileContainer();
 
+		/** @copybrief FileContainer::openFile */
 		FileStream* openFile(const String& filename);
+		/** @copybrief FileContainer::hasFile */
 		bool hasFile(const String& filename);
 
 		static const String FACTORY_NAME;
@@ -48,6 +52,10 @@ namespace vtx
 	protected:
 		String mLocation;
 	};
+	//-----------------------------------------------------------------------
+	/** The FileContainerFactory for creating DefaultFileContainer objects */
+	FactoryImpl_P1(DefaultFileContainer, FileContainer, const String&);
+	//-----------------------------------------------------------------------
 }
 
 #endif

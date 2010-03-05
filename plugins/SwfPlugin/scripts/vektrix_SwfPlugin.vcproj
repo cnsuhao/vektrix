@@ -343,6 +343,10 @@
 			Name="Handlers"
 			>
 			<File
+				RelativePath="..\src\vtxswfDefineBitsLossless.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\vtxswfDefineButton2.cpp"
 				>
 			</File>

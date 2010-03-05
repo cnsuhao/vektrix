@@ -35,16 +35,20 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** An interface representing a data container */
 	class vtxExport FileContainer
 	{
 	public:
 		FileContainer(){}
 		virtual ~FileContainer(){}
 
+		/** Get a FileStream from a file which is located inside this container */
 		virtual FileStream* openFile(const String& filename) = 0;
+		/** Check if the specified file exists inside this container */
 		virtual bool hasFile(const String& filename) = 0;
 	};
 	//-----------------------------------------------------------------------
+	/** The Factory that is used for creating FileContainer objects */
 	class FileContainerFactory : public Factory<FileContainer, const String&> {};
 	//-----------------------------------------------------------------------
 }

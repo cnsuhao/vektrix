@@ -29,11 +29,16 @@ THE SOFTWARE.
 #include "vtxFile.h"
 
 #include "vtxAtlasPacker.h"
+#include "vtxFileManager.h"
+#include "vtxFileStream.h"
 #include "vtxFontResource.h"
+#include "vtxImageResource.h"
 #include "vtxLogManager.h"
+#include "vtxMaterialResource.h"
 #include "vtxMovieClipResource.h"
 #include "vtxResource.h"
 #include "vtxShapeResource.h"
+#include "vtxSubshapeResource.h"
 
 namespace vtx
 {
@@ -54,7 +59,12 @@ namespace vtx
 		ResourceMap::iterator end = mResources.end();
 		while(it != end)
 		{
-			delete it->second;
+			// only delete internal resources
+			if(it->second->getFile() == this)
+			{
+				delete it->second;
+			}
+
 			++it;
 		}
 	}
@@ -94,7 +104,7 @@ namespace vtx
 		return mMainMovieClip;
 	}
 	//-----------------------------------------------------------------------
-	void File::addResource(Resource* res)
+	void File::addResource(Resource* res, const bool& external)
 	{
 		ResourceMap::iterator it = mResources.find(res->getID());
 
@@ -113,7 +123,18 @@ namespace vtx
 			mFonts[font->getName()] = font;
 		}
 
-		res->_setFile(this);
+		if(!external)
+		{
+			res->_setFile(this);
+		}
+
+		ListenerMap::iterator listener_it = mListeners.begin();
+		ListenerMap::iterator listener_end = mListeners.end();
+		while(listener_it != listener_end)
+		{
+			listener_it->second->resourceAdded(res, external);
+			++listener_it;
+		}
 
 		VTX_LOG("\"%s\": Added resource with id \"%s\" of type \"%s\"", 
 			mFilename.c_str(), res->getID().c_str(), res->getType().c_str());
@@ -126,6 +147,26 @@ namespace vtx
 		if(it != mResources.end())
 		{
 			return it->second;
+		}
+
+		File* res_file = FileManager::getSingletonPtr()->getFile(id);
+		if(res_file)
+		{
+			// add as internal resources
+			const ResourceMap& extern_res = res_file->getResources();
+			ResourceMap::const_iterator it = extern_res.begin();
+			ResourceMap::const_iterator end = extern_res.end();
+			while(it != end)
+			{
+				addResource(it->second, true);
+				++it;
+			}
+
+			Resource* res = res_file->getResource(id);
+			if(res)
+			{
+				return res;
+			}
 		}
 
 		VTX_WARN("\"%s\": Unable to find the requested resource with name \"%s\"!", mFilename.c_str(), id.c_str());
@@ -154,6 +195,35 @@ namespace vtx
 
 		static ResourceList empty;
 		return empty;
+	}
+	//-----------------------------------------------------------------------
+	const File::ResourceMap& File::getResources() const
+	{
+		return mResources;
+	}
+	//-----------------------------------------------------------------------
+	bool File::addListener(Listener* listener)
+	{
+		ListenerMap::iterator it = mListeners.find(listener);
+		if(it == mListeners.end())
+		{
+			mListeners.insert(std::make_pair(listener, listener));
+			return true;
+		}
+
+		return false;
+	}
+	//-----------------------------------------------------------------------
+	bool File::removeListener(Listener* listener)
+	{
+		ListenerMap::iterator it = mListeners.find(listener);
+		if(it != mListeners.end())
+		{
+			mListeners.erase(it);
+			return true;
+		}
+
+		return false;
 	}
 	//-----------------------------------------------------------------------
 }

@@ -35,7 +35,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	const String DefaultFileContainer::FACTORY_NAME = "DefaultFileContainerFactory";
+	const String DefaultFileContainer::FACTORY_NAME = "DefaultFileContainer";
 	//-----------------------------------------------------------------------
 	DefaultFileContainer::DefaultFileContainer(const String& location) 
 		: mLocation(location)
@@ -63,6 +63,11 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	bool DefaultFileContainer::hasFile(const String& filename)
 	{
+		if(!filename.length())
+		{
+			return false;
+		}
+
 		return FileHelper::doesFileExist(mLocation + filename);
 	}
 	//-----------------------------------------------------------------------

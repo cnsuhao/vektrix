@@ -26,26 +26,9 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxDefaultFileContainerFactory.h"
-
-#include "vtxDefaultFileContainer.h"
+#include "vtxAtlasElement.h"
 
 namespace vtx
 {
-	//-----------------------------------------------------------------------
-	const String& DefaultFileContainerFactory::getName() const
-	{
-		return DefaultFileContainer::FACTORY_NAME;
-	}
-	//-----------------------------------------------------------------------
-	FileContainer* DefaultFileContainerFactory::createObject(const String& location)
-	{
-		return new DefaultFileContainer(location);
-	}
-	//-----------------------------------------------------------------------
-	void DefaultFileContainerFactory::destroyObject(FileContainer* container)
-	{
-		delete container;
-	}
-	//-----------------------------------------------------------------------
+
 }

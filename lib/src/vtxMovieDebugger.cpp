@@ -48,12 +48,12 @@ namespace vtx
 		mDebugBoundingBoxes = enable;
 	}
 	//-----------------------------------------------------------------------
-	const bool& MovieDebugger::debuggingObjectBoundingBoxes() const
+	const bool& MovieDebugger::debuggingBoundingBoxes() const
 	{
 		return mDebugBoundingBoxes;
 	}
 	//-----------------------------------------------------------------------
-	void MovieDebugger::debugObjectBoundingBox(const BoundingBox& bb)
+	void MovieDebugger::debugBoundingBox(const BoundingBox& bb)
 	{
 		if(mDebugBoundingBoxes)
 		{

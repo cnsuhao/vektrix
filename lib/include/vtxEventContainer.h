@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A container which can encapsulate a set of frame events */
 	class vtxExport EventContainer
 	{
 	public:
@@ -41,10 +42,14 @@ namespace vtx
 		EventContainer();
 		virtual ~EventContainer();
 
+		/** Add an event to this container */
 		void addEvent(FrameEvent* event);
+		/** Get the number of events currently stored inside this container */
 		const uint getEventCount() const;
+		/** Remove all events from this container */
 		void clear();
 
+		/** Execute all events of this container */
 		void execute();
 
 	protected:

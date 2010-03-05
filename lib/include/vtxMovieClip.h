@@ -34,26 +34,35 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Represents an object container which also provides a Timeline for modifying the contained objects */
 	class vtxExport MovieClip : public DisplayObjectContainer
 	{
 	public:
 		MovieClip(Resource* resource);
 		virtual ~MovieClip();
 
-		const String& getType() const;
-
+		/** @copybrief Timeline::play */
 		void play();
+		/** @copybrief Timeline::stop */
 		void stop();
+		/** @copybrief Timeline::goto_frame */
 		bool goto_frame(uint frame);
+		/** @copybrief Timeline::goto_time */
 		bool goto_time(const float& time);
 
+		/** @copybrief DisplayObjectContainer::_update */
 		void _update(const float& delta_time);
+		/** @copybrief MovableObject::getBoundingBox */
 		const BoundingBox& getBoundingBox() const;
 
+		/** @copybrief Instance::_setParent */
 		virtual void _setParent(Movie* parent);
 
+		/** @copybrief Instance::setScriptObject */
 		virtual void setScriptObject(ScriptObject* obj);
+		/** @copybrief Instance::getScriptObject */
 		virtual ScriptObject* getScriptObject() const;
+		/** Get the ScriptMovieClip that is associated with this movieclip */
 		ScriptMovieClip* getScriptMovieClip() const;
 
 	protected:

@@ -230,4 +230,9 @@ namespace vtx
 		return mDebugger;
 	}
 	//-----------------------------------------------------------------------
+	MovieClip* Movie::getMainMovieClip() const
+	{
+		return mMainMovieClip;
+	}
+	//-----------------------------------------------------------------------
 }

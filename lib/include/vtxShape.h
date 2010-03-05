@@ -35,17 +35,21 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A visual shape that can be displayed inside a Movie */
 	class vtxExport Shape : public MovableObject
 	{
 	public:
 		Shape(Resource* resource);
 		virtual ~Shape();
 
-		const String& getType() const;
+		/** @copybrief MovableObject::getBoundingBox */
 		const BoundingBox& getBoundingBox() const;
+		/** Implementation for MovableObject::isPointInside */
 		bool isPointInside(const Vector2& coord);
 
+		/** @copybrief Instance::setScriptObject */
 		virtual void setScriptObject(ScriptObject* obj);
+		/** @copybrief Instance::getScriptObject */
 		virtual ScriptObject* getScriptObject() const;
 
 	protected:
@@ -53,6 +57,7 @@ namespace vtx
 		ShapeResource* mShapeResource;
 	};
 	//-----------------------------------------------------------------------
+	/** The InstanceFactory for creating Shape objects */
 	class vtxExport ShapeFactory : public InstanceFactory<Shape> {};
 	//-----------------------------------------------------------------------
 }

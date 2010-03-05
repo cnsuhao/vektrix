@@ -146,6 +146,10 @@ namespace vtx
 				SI16 descender_height = readS16();
 				SI16 leading_height = readS16();
 
+				font->setAscender(ascender_height/1024.0f);
+				font->setDescender(descender_height/1024.0f);
+				font->setLeading(leading_height/1024.0f);
+
 				// Advance Table
 				for(UI16 i=0; i<num_glyphs; ++i)
 				{

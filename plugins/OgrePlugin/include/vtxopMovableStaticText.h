@@ -33,9 +33,9 @@ THE SOFTWARE.
 #include "vtxopMovableInstanceBase.h"
 
 #include "vtxAtlasPacker.h"
+#include "vtxGlyphStrip.h"
 #include "vtxRect.h"
 #include "vtxStaticText.h"
-#include "vtxStaticTextResource.h"
 
 namespace vtx
 {
@@ -62,7 +62,7 @@ namespace vtx
 			virtual void _setParent(Movie* parent);
 
 			void _update(const float& delta_time);
-			void setGlyphStrips(const StaticTextResource::GlyphStripList& glyph_strips, 
+			void setGlyphStrips(const GlyphStripList& glyph_strips, 
 				const AtlasPacker::PackResultList& atlas_list);
 
 		protected:

@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Base class for all resources that can be contained within a File definition */
 	class vtxExport Resource
 	{
 	public:
@@ -41,15 +42,19 @@ namespace vtx
 		Resource(const String& id);
 		virtual ~Resource();
 
+		/** Get the unique identifier associated with this resource */
 		const String& getID();
+		/** Get the type of this resource  */
 		virtual const String& getType() const = 0;
 
+		/** Get the File that contains this resource */
 		File* getFile() const;
 
 	protected:
 		String mID;
 		File* mParent;
 
+		/** Set the parent File for this resource */
 		void _setFile(File* file);
 	};
 }

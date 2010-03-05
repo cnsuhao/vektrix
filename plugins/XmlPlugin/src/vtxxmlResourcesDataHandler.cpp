@@ -133,11 +133,6 @@ namespace vtx
 			std::string id = (*mAttributes)["id"];
 			std::string file = (*mAttributes)["file"];
 
-			if(!type.length())
-			{
-				VTX_EXCEPT("\"%s\": Missing parameter \"type\" in <image id=\"%s\" file=\"%s\"/>!", mCurrentFile->getFilename().c_str(), id.c_str(), file.c_str());
-			}
-
 			if(!id.length())
 			{
 				VTX_EXCEPT("\"%s\": Missing parameter \"id\" in <image type=\"%s\" file=\"%s\"/>!", mCurrentFile->getFilename().c_str(), type.c_str(), file.c_str());
@@ -148,7 +143,8 @@ namespace vtx
 				VTX_EXCEPT("\"%s\": Missing parameter \"file\" in <image type=\"%s\" id=\"%s\"/>!", mCurrentFile->getFilename().c_str(), type.c_str(), id.c_str());
 			}
 
-			mCurrentFile->addResource(new ImageResource(id, type, file));
+			// TODO: load pixel data
+			mCurrentFile->addResource(new ImageResource(id));
 		}
 		//-----------------------------------------------------------------------
 		void ResourcesDataHandler::handleMaterial()

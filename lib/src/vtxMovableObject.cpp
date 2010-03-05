@@ -78,6 +78,11 @@ namespace vtx
 		return mTransform.getAngle();
 	}
 	//-----------------------------------------------------------------------
+	void MovableObject::setCXForm(const CXForm& cx)
+	{
+		mTransform.setColor(cx);
+	}
+	//-----------------------------------------------------------------------
 	void MovableObject::setMatrix(const Matrix& m)
 	{
 		mTransform.setMatrix(m);
@@ -88,9 +93,14 @@ namespace vtx
 		return mTransform.getMatrix();
 	}
 	//-----------------------------------------------------------------------
-	void MovableObject::setCXForm(const CXForm& cx)
+	const float MovableObject::getWidth() const
 	{
-		mTransform.setColor(cx);
+		return getBoundingBox().getWidth() * getMatrix().getScale().x;
+	}
+	//-----------------------------------------------------------------------
+	const float MovableObject::getHeight() const
+	{
+		return getBoundingBox().getHeight() * getMatrix().getScale().y;
 	}
 	//-----------------------------------------------------------------------
 	void MovableObject::setParentContainer(DisplayObjectContainer* parent)
@@ -127,7 +137,7 @@ namespace vtx
 		MovieDebugger* debugger = mParentMovie->getDebugger();
 		if(debugger)
 		{
-			debugger->debugObjectBoundingBox(mTransform.getWorldBounding());
+			debugger->debugBoundingBox(mTransform.getWorldBounding());
 		}
 	}
 	//-----------------------------------------------------------------------

@@ -31,39 +31,49 @@ THE SOFTWARE.
 
 #include "vtxPrerequesites.h"
 #include "vtxDefaultFileContainer.h"
-#include "vtxDefaultFileContainerFactory.h"
 #include "vtxFactoryManager.h"
-#include "vtxFileContainer.h"
 #include "vtxSingleton.h"
 
 namespace vtx
 {
+	/** The manager that keeps track of File definitions, FileParser instances and FileContainer resources */
 	class vtxExport FileManager : public Singleton<FileManager>, public FactoryManager<FileContainerFactory>
 	{
+		friend class Root;
+
 	public:
 		typedef std::map<String, File*> FileMap;
 		typedef std::map<String, FileContainer*> FileContainerMap;
 		typedef std::map<String, FileParser*> FileParserMap;
 
-		FileManager();
-		virtual ~FileManager();
-
+		/** Request to load a File by filename */
 		File* getFile(const String& filename);
+		/** Open a new FileStream */
 		FileStream* getFileStream(const String& filename);
 
-		bool addFileParser(FileParser* parser);
+		/** Register a FileParser instance to the manager */
+		void addFileParser(FileParser* parser);
+		/** Get a FileParser instance by its associated file extension */
 		FileParser* getFileParser(const String extension);
-		bool removeFileParser(FileParser* parser);
+		/** Remove a FileParser instance from the manager */
+		void removeFileParser(FileParser* parser);
 
+		/** Add a FileContainer resource location */
 		FileContainer* addFileContainer(const String& name, const String& type = DefaultFileContainer::FACTORY_NAME);
+
+		/** Unload all currently loaded File definitions */
+		void unloadAllFiles();
 
 	protected:
 		// map of the already loaded files
 		FileMap mLoadedFiles;
 		// map of registered file parsers
 		FileParserMap mParsers;
-		// map of containers (folders, zip files, databases, etc.)
+		// map of containers (folders, zip files, databases, etc)
 		FileContainerMap mContainers;
+
+		FileManager();
+		virtual ~FileManager();
 	};
 }
 

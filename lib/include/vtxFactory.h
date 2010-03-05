@@ -36,10 +36,10 @@ namespace vtx
 	class BaseFactory
 	{
 	public:
-		// get the unique name of the factory
+		/** Get the unique name of the factory */
 		virtual const String& getName() const = 0;
 
-		// destruction method is the same for all factories
+		/** Destroy an object with this factory */
 		virtual void destroyObject(T*) = 0;    
 	};
 	//-----------------------------------------------------------------------
@@ -49,6 +49,7 @@ namespace vtx
 	public:
 		virtual ~Factory() {};
 
+		/** Create an object with this factory using two creation parameters */
 		virtual T* createObject(P1, P2) = 0;    
 	};
 	//-----------------------------------------------------------------------
@@ -58,6 +59,7 @@ namespace vtx
 	public:
 		virtual ~Factory() {};
 	
+		/** Create an object with this factory using one creation parameter */
 		virtual T* createObject(P1) = 0;    
 	};
 

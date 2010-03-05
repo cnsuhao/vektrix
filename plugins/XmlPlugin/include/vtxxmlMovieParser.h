@@ -38,7 +38,7 @@ namespace vtx
 		class MovieParser : public FileParser
 		{
 		public:
-			const std::string& getExtension() const;
+			const StringList& getExtensions() const;
 			File* parse(FileStream* stream);
 		};
 	}

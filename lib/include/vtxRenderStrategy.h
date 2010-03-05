@@ -33,13 +33,16 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Defines a strategy for rendering Movie instances and their related objects (@see Instance) */
 	class vtxExport RenderStrategy
 	{
 	public:
 		RenderStrategy(MovieFactory* factory, File* file);
 		virtual ~RenderStrategy();
 
+		/** Hand back an Instance which is no longer being used */
 		virtual void storeInstance(Instance* inst) = 0;
+		/** Request an Instance with a given ID for use in a certain Movie */
 		virtual Instance* shareInstance(const String& id, Movie* movie) = 0;
 
 	protected:

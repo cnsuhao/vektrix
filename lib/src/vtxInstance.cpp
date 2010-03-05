@@ -51,6 +51,11 @@ namespace vtx
 		return mResource->getID();
 	}
 	//-----------------------------------------------------------------------
+	const String& Instance::getType() const
+	{
+		return mResource->getType();
+	}
+	//-----------------------------------------------------------------------
 	void Instance::_setParent(Movie* parent)
 	{
 		mParentMovie = parent;

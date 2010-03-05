@@ -36,13 +36,16 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** An event which creates a new MovableObject and places it at a certain layer of an DisplayObjectContainer */
 	class vtxExport CreateObjectEvent : public FrameEvent
 	{
 	public:
 		CreateObjectEvent(DisplayObjectContainer* object_container, 
 			const String& id, const uint& layer, const Matrix& matrix, const CXForm& cxform, const String& name = "");
 
+		/** @copybrief FrameEvent::clone */
 		FrameEvent* clone(DisplayObjectContainer* container);
+		/** @copybrief FrameEvent::execute */
 		void execute();
 
 	protected:

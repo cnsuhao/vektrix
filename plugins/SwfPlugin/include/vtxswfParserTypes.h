@@ -51,11 +51,13 @@ namespace vtx
 			TT_SetBackgroundColor = 9, 
 			TT_DefineFont = 10, 
 			TT_DefineText = 11, 
+			TT_DefineBitsLossless = 20, 
 			TT_DefineShape2 = 22, 
 			TT_PlaceObject2 = 26, 
 			TT_DefineShape3 = 32, 
 			TT_DefineText2 = 33, 
 			TT_DefineButton2 = 34, 
+			TT_DefineBitsLossless2 = 36, 
 			TT_DefineEditText = 37, 
 			TT_DefineSprite = 39, 
 			TT_FileAttributes = 69, 
@@ -65,6 +67,14 @@ namespace vtx
 			TT_DoABC = 82, 
 			TT_DefineShape4 = 83, 
 			TT_DefineSceneAndFrameLabelData = 86
+		};
+
+		enum BitmapFormat
+		{
+			BF_8BIT_COLOR_MAPPED = 3, 
+			BF_15BIT_RGB = 4, 
+			BF_24BIT_RGB = 5, 
+			BF_32BIT_ARGB = 5
 		};
 
 		enum LanguageCode

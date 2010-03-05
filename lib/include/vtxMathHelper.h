@@ -33,9 +33,11 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A helper class for mathematical operations */
 	class vtxExport MathHelper
 	{
 	public:
+		/** Find the closest power-of-two natural number relative to the given real number */
 		static uint findClosestPowerOfTwo(const float& number);
 	};
 }

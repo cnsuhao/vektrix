@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Represents a row-major 3x2 matrix */
 	class vtxExport Matrix
 	{
 	public:
@@ -42,11 +43,16 @@ namespace vtx
 			float _sx = 1.0f, float _cx = 0.0f, float _tx = 0.0f, 
 			float _cy = 0.0f, float _sy = 1.0f, float _ty = 0.0f);
 
+		/** Get the translation component of the matrix */
 		Vector2 getTrans() const;
+		/** Get the scale component of the matrix */
 		Vector2 getScale() const;
 
+		/** Standard matrix multiplication */
 		Matrix operator*(const Matrix& matrix) const;
+		/** Multiply the matrix with a given scalar */
 		Matrix operator*(const float& scalar) const;
+		/** Transform the matrix using another affine matrix */
 		Vector2 transformAffine(const Vector2& v) const;
 	};
 }

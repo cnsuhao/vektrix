@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Represents the scripting counterpart of an EditText object */
 	class vtxExport ScriptEditText : public ScriptObject
 	{
 	public:

@@ -29,7 +29,9 @@ THE SOFTWARE.
 #include "vtxcaiRasterizer.h"
 
 #include "vtxAtlasNode.h"
+#include "vtxFile.h"
 #include "vtxGlyphResource.h"
+#include "vtxImageResource.h"
 #include "vtxLogManager.h"
 #include "vtxShapeResource.h"
 #include "vtxSubshapeResource.h"
@@ -58,7 +60,7 @@ namespace vtx
 			return name;
 		}
 		//-----------------------------------------------------------------------
-		void CairoRasterizer::renderElementToTexture(Texture* texture, AtlasPackable* element, AtlasNode* node)
+		void CairoRasterizer::renderElementToTexture(Texture* texture, AtlasElement* element, AtlasNode* node)
 		{
 			GlyphResource* glyph = dynamic_cast<GlyphResource*>(element);
 			if(glyph)
@@ -80,10 +82,7 @@ namespace vtx
 			Rect rect = node->getRect();
 
 			// pixel border to avoid texture bleeding
-			rect.left += 1;
-			rect.top += 1;
-			rect.right -= 1;
-			rect.bottom -= 1;
+			rect.contract(1);
 
 			// fire up cairo
 			mSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, rect.w(), rect.h());
@@ -160,10 +159,7 @@ namespace vtx
 			Rect rect = node->getRect();
 
 			// pixel border to avoid texture bleeding
-			rect.left += 1;
-			rect.top += 1;
-			rect.right -= 1;
-			rect.bottom -= 1;
+			rect.contract(1);
 
 			// fire up cairo
 			mSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, rect.w(), rect.h());
@@ -191,6 +187,23 @@ namespace vtx
 					{
 						const Color& color = material->getColor();
 						cairo_set_source_rgba(mCairo, (double)color.r, (double)color.g, (double)color.b, (double)color.a);
+					}
+					break;
+
+				case MaterialResource::MT_IMAGE:
+					{
+						ImageResource* img = dynamic_cast<ImageResource*>(shape->getFile()->getResource(material->getImageID()));
+						cairo_surface_t* cairo_surf = cairo_image_surface_create_for_data((uchar*)img->getPixelData(), 
+							CAIRO_FORMAT_ARGB32, img->getWidth(), img->getHeight(), 
+							4 * img->getWidth());
+
+						cairo_pattern = cairo_pattern_create_for_surface(cairo_surf);
+						cairo_pattern_set_extend(cairo_pattern, CAIRO_EXTEND_NONE);
+
+						cairo_matrix_t matrix;
+						cairo_matrix_init_scale(&matrix, 1.0f/scale.x, 1.0f/scale.y);
+						cairo_pattern_set_matrix(cairo_pattern, &matrix);
+						cairo_set_source(mCairo, cairo_pattern);
 					}
 					break;
 
@@ -330,6 +343,7 @@ namespace vtx
 					cairo_pattern_destroy(cairo_pattern);
 					cairo_pattern = NULL;
 				}
+
 
 				++subshape_it;
 

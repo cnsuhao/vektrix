@@ -28,10 +28,11 @@ THE SOFTWARE.
 
 #include "vtxAtlasPacker.h"
 
-#include "vtxAtlasPackable.h"
+#include "vtxAtlasElement.h"
 #include "vtxTexture.h"
 #include "vtxLogManager.h"
 #include "vtxRoot.h"
+#include "vtxStringHelper.h"
 
 namespace vtx
 {
@@ -56,21 +57,21 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	bool AtlasPacker::sortElement(AtlasPackable* elem1, AtlasPackable* elem2)
+	bool AtlasPacker::sortElement(AtlasElement* elem1, AtlasElement* elem2)
 	{
 		const uint area1 = elem1->getPackableWidth() * elem1->getPackableHeight();
 		const uint area2 = elem2->getPackableWidth() * elem2->getPackableHeight();
 		return (area1 < area2);
 	}
 	//-----------------------------------------------------------------------
-	void AtlasPacker::addElement(AtlasPackable* element)
+	void AtlasPacker::addElement(AtlasElement* element)
 	{
 		mElements.push_back(element);
 	}
 	//-----------------------------------------------------------------------
 	const AtlasPacker::PackResultList& AtlasPacker::packAtlas()
 	{
-		mResult.clear();
+		clearAtlas();
 
 		// sort shapes
 		std::sort(mElements.rbegin(), mElements.rend(), sortElement);
@@ -80,15 +81,15 @@ namespace vtx
 			mTextures.push_back(mTextureFactory->createObject());
 		}
 
-		AtlasPackableList::iterator elem_it = mElements.begin();
-		AtlasPackableList::iterator elem_end = mElements.end();
+		AtlasElementList::iterator elem_it = mElements.begin();
+		AtlasElementList::iterator elem_end = mElements.end();
 		while(elem_it != elem_end)
 		{
 			AtlasTextureList::iterator tex_it = mTextures.begin();
 			AtlasTextureList::iterator tex_end = mTextures.end();
 			while(tex_it != tex_end)
 			{
-				AtlasNode* node = (*tex_it)->packShape(*elem_it);
+				AtlasNode* node = (*tex_it)->packElement(*elem_it);
 				if(node)
 				{
 					mResult.insert(PackResultList::value_type((*elem_it)->getPackID(), PackResult(*tex_it, node)));
@@ -112,6 +113,19 @@ namespace vtx
 		} // while(elements)
 
 		//std::sort(mShapes.rbegin(), mShapes.rend());
+
+		uint packed_size = mTextures.front()->getPackedSize();
+		VTX_LOG("Texture atlas packed containing %d pixels (%s)", 
+			packed_size, StringHelper::formatByteUnit(packed_size * 4).c_str());
+
+		ListenerMap::iterator listener_it = mListeners.begin();
+		ListenerMap::iterator listener_end = mListeners.end();
+		while(listener_it != listener_end)
+		{
+			listener_it->second->packed(mResult);
+			++listener_it;
+		}
+
 		return mResult;
 	}
 	//-----------------------------------------------------------------------
@@ -126,6 +140,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void AtlasPacker::clearAtlas()
 	{
+		mResult.clear();
+
 		AtlasTextureList::iterator it = mTextures.begin();
 		for( ; it != mTextures.end(); ++it)
 		{
@@ -149,14 +165,28 @@ namespace vtx
 		return mResult;
 	}
 	//-----------------------------------------------------------------------
-	void AtlasPacker::setSize(uint size)
+	bool AtlasPacker::addListener(Listener* listener)
 	{
-		mSize = size;
+		ListenerMap::iterator it = mListeners.find(listener);
+		if(it == mListeners.end())
+		{
+			mListeners.insert(std::make_pair(listener, listener));
+			return true;
+		}
+
+		return false;
 	}
 	//-----------------------------------------------------------------------
-	const uint& AtlasPacker::getSize() const
+	bool AtlasPacker::removeListener(Listener* listener)
 	{
-		return mSize;
+		ListenerMap::iterator it = mListeners.find(listener);
+		if(it != mListeners.end())
+		{
+			mListeners.erase(it);
+			return true;
+		}
+
+		return false;
 	}
 	//-----------------------------------------------------------------------
 }

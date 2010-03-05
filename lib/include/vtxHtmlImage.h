@@ -40,8 +40,10 @@ namespace vtx
 		HtmlImage();
 		virtual ~HtmlImage();
 
-		String src;
-		String width, height;
+		Alignment align;
+		String src, id, css_class;
+		float width, height, 
+			hspace, vspace;
 	};
 }
 

@@ -35,9 +35,11 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** A class to pack two-dimensional objects into a given atlas */
 	class vtxExport AtlasPacker
 	{
 	public:
+		/** The class containing information about packed elements */
 		class PackResult
 		{
 		public:
@@ -47,33 +49,51 @@ namespace vtx
 			Texture* texture;
 			AtlasNode* node;
 		};
-
 		typedef std::map<String, PackResult> PackResultList;
-		typedef std::vector<Texture*> AtlasTextureList;
 
-		typedef std::vector<AtlasPackable*> AtlasPackableList;
+		/** Listen to AtlasPacker events */
+		class Listener
+		{
+		public:
+			/** All packing information has been cleared */
+			virtual void cleared(){}
+			/** The atlas has been packed */
+			virtual void packed(const PackResultList& pack_result){}
+		};
+		typedef std::map<Listener*, Listener*> ListenerMap;
+
+		typedef std::vector<Texture*> AtlasTextureList;
+		typedef std::vector<AtlasElement*> AtlasElementList;
 
 		AtlasPacker(TextureFactory* factory, uint atlasSize = 1024);
 		virtual ~AtlasPacker();
 
-		static bool sortElement(AtlasPackable* elem1, AtlasPackable* elem2);
+		/** Sorts the elements that are registered to the atlas by area */
+		static bool sortElement(AtlasElement* elem1, AtlasElement* elem2);
 
-		void addElement(AtlasPackable* element);
+		/** Register an element to the atlas for packing */
+		void addElement(AtlasElement* element);
+		/** Pack all registered elements to the atlas */
 		const PackResultList& packAtlas();
+		/** Render all registered elements to their assigned atlas */
 		void renderAtlas();
+		/** Invalidiate previous packing results & trees */
 		void clearAtlas();
+		/** Delete all atlas textures that have been used by the previous packing operation */
 		void destroyAtlas();
 
+		/** Get a list containing packing information for all packed elements */
 		const PackResultList& getResultList();
 
-		void setSize(uint size);
-		const uint& getSize() const;
+		bool addListener(Listener* listener);
+		bool removeListener(Listener* listener);
 
 	protected:
 		uint mSize;
 		AtlasTextureList mTextures;
 		PackResultList mResult;
-		AtlasPackableList mElements;
+		AtlasElementList mElements;
+		ListenerMap mListeners;
 
 		TextureFactory* mTextureFactory;
 	};

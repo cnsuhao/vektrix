@@ -32,53 +32,32 @@ THE SOFTWARE.
 #include "vtxPrerequesites.h"
 #include "vtxBoundingBox.h"
 #include "vtxColor.h"
+#include "vtxGlyphStrip.h"
 #include "vtxResource.h"
 
 namespace vtx
 {
+	/** A Resource which contains all necessary data for creating a StaticText instance */
 	class vtxExport StaticTextResource : public Resource
 	{
 	public:
-		class Glyph
-		{
-		public:
-			Glyph() : index(0), x(0.0f) {}
-
-			uint index;
-			float x;
-		};
-		typedef std::vector<Glyph> GlyphList;
-
-		class GlyphStrip
-		{
-		public:
-			GlyphStrip() : newline(false), x(0.0f), y(0.0f), size(0.0f) {}
-
-			bool newline;
-			float x, y;
-			float size;
-			String fontid;
-			Color color;
-			GlyphList glyphs;
-		};
-		typedef std::vector<GlyphStrip> GlyphStripList;
-
 		StaticTextResource(const String& id);
 		virtual ~StaticTextResource();
 
+		/** @copybrief Resource::getType */
 		const String& getType() const;
 
+		/** Set the BoundingBox for this static text */
 		void setBoundingBox(const BoundingBox& bb);
+		/** Get the BoundingBox of this static text */
 		const BoundingBox& getBoundingBox() const;
 
-		//void addGlyph(const Glyph& glyph);
-		//const GlyphList& getGlyphList() const;
-
+		/** Set the glyph strips that represent this static text */
 		void setGlyphStrips(const GlyphStripList& glyphstrips);
+		/** Get the glyph strips that represent this static text */
 		const GlyphStripList& getGlyphStrips() const;
 
 	protected:
-		//GlyphList mGlyphs;
 		BoundingBox mBoundingBox;
 		GlyphStripList mGlyphStrips;
 	};

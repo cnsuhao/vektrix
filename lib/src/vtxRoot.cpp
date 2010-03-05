@@ -71,6 +71,10 @@ namespace vtx
 			++it;
 		}
 
+		FileManager::getSingletonPtr()->unloadAllFiles();
+
+		VTX_LOG("Unloading Plugins...");
+
 		// unload plugins
 		PluginList::iterator plugin_it = mPlugins.begin();
 		PluginList::iterator plugin_end = mPlugins.end();

@@ -33,22 +33,25 @@ THE SOFTWARE.
 #include "vtxGlyphResource.h"
 #include "vtxHtmlElement.h"
 #include "vtxHtmlFont.h"
+#include "vtxHtmlImage.h"
 #include "vtxHtmlParser.h"
+#include "vtxHtmlParagraph.h"
 #include "vtxHtmlText.h"
 #include "vtxLogManager.h"
+#include "vtxMovie.h"
 #include "vtxScriptEditText.h"
+#include "vtxShape.h"
+#include "vtxShapeResource.h"
 #include "vtxStringHelper.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
 	EditText::EditText(Resource* resource) 
-		: MovableObject(resource), 
+		: DisplayObjectContainer(resource), 
 		mNeedDomUpdate(true), 
 		mHtmlDom(NULL), 
-		mGlyphCount(0), 
-		mMaxSize(0.0f), 
-		mPosition(0.0f)
+		mGlyphCount(0)
 	{
 		mEditTextResource = dynamic_cast<EditTextResource*>(resource);
 
@@ -63,15 +66,9 @@ namespace vtx
 		delete mHtmlDom;
 	}
 	//-----------------------------------------------------------------------
-	const String& EditText::getType() const
-	{
-		static String type = "EditText";
-		return type;
-	}
-	//-----------------------------------------------------------------------
 	void EditText::_update(const float& delta_time)
 	{
-		MovableObject::_update(delta_time);
+		DisplayObjectContainer::_update(delta_time);
 
 		if(mNeedDomUpdate)
 		{
@@ -88,11 +85,18 @@ namespace vtx
 			mHtmlDom = html_parser.getRoot();
 
 			mGlyphCount = 0;
-			mMaxSize = 0.0f;
-			mPosition = 0.0f;
+			mCurrentHeight = 0.0f;
+			mCurrentLine.reset();
+			mCurrentStrip.reset();
+
+			assert(!mStyleStack.size() && "Style stacks not cleared");
+
+			mLines.clear();
 			mGlyphStrips.clear();
 
 			_recursiveDomIteration(mHtmlDom);
+
+			_createStripsAndShapes();
 
 			_updateGraphics();
 
@@ -154,33 +158,93 @@ namespace vtx
 					HtmlFont* font = dynamic_cast<HtmlFont*>(*it);
 					if(!font) break;
 
-					FontResource* new_font = mResource->getFile()->getFontByName(font->face);
-					if(new_font)
+					StyleElement style;
+
+					if(font->face.length())
 					{
-						mFontStack.push(new_font);
+						FontResource* new_font = mResource->getFile()->getFontByName(font->face);
+						if(new_font)
+						{
+							style.font = new_font;
+						}
+						// font name given, but font unavailable
+						else if(mStyleStack.size())
+						{
+							VTX_WARN("Unable to find font %s", font->face.c_str());
+							style.font = mStyleStack.top().font;
+						}
 					}
-					// font name given, but font unavailable
-					else if(font->face.length())
+					else if(mStyleStack.size())
 					{
-						VTX_WARN("Unable to find font %s", font->face.c_str());
+						style.font = mStyleStack.top().font;
 					}
 
-					if(font->size.length()) mSizeStack.push(StringHelper::toFloat(font->size));
-					if(font->color.length()) mColorStack.push(StringHelper::colorFromHex(font->color));
+					if(font->size.length())
+						style.size = StringHelper::toFloat(font->size);
+					else if(mStyleStack.size())
+						style.size = mStyleStack.top().size;
+
+					if(font->color.length())
+						style.color = StringHelper::colorFromHex(font->color);
+					else if(mStyleStack.size())
+						style.color = mStyleStack.top().color;
+
+					mStyleStack.push(style);
+
+					// add FONT_CHANGE element
+					LineElement font_element;
+					font_element.type = LineElement::ET_FontChange;
+					font_element.color = mStyleStack.top().color;
+					font_element.font = mStyleStack.top().font;
+					font_element.height = mStyleStack.top().size;
+					font_element.x = mCurrentLine.width;
+					mCurrentLine.elements.push_back(font_element);
 
 					// continue recursion
 					_recursiveDomIteration(*it);
 
-					if(new_font) mFontStack.pop();
-					if(font->size.length()) mSizeStack.pop();
-					if(font->color.length()) mColorStack.pop();
+					mStyleStack.pop();
+
+					if(mStyleStack.size())
+					{
+						// add FONT_CHANGE element
+						font_element.reset();
+						font_element.type = LineElement::ET_FontChange;
+						font_element.color = mStyleStack.top().color;
+						font_element.font = mStyleStack.top().font;
+						font_element.height = mStyleStack.top().size;
+						font_element.x = mCurrentLine.width;
+						mCurrentLine.elements.push_back(font_element);
+					}
+				}
+				break;
+
+			case HtmlElement::Image:
+				{
+					HtmlImage* img = dynamic_cast<HtmlImage*>(*it);
+					if(!img) break;
+					_addImage(img);
+				}
+				break;
+
+			case HtmlElement::Paragraph:
+				{
+					HtmlParagraph* par = dynamic_cast<HtmlParagraph*>(*it);
+					if(!par) break;
+
+					mAlignStack.push(par->align);
+
+					// continue recursion
+					_recursiveDomIteration(*it);
+
+					mAlignStack.pop();
 				}
 				break;
 
 			case HtmlElement::Text:
 				{
 					HtmlText* text = dynamic_cast<HtmlText*>(*it);
-					if(!text || !mFontStack.size()) break;
+					if(!text || !mStyleStack.size()) break;
 
 					_addText(text->text);
 
@@ -199,22 +263,87 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
+	void EditText::_addImage(HtmlImage* image)
+	{
+		ShapeResource* shape_res = dynamic_cast<ShapeResource*>(mParentMovie->getFile()->getResource(image->src));
+		if(!shape_res) return;
+
+		// add FONT_CHANGE element
+		LineElement font_element;
+		font_element.type = LineElement::ET_FontChange;
+		font_element.color = mStyleStack.top().color;
+		font_element.font = mStyleStack.top().font;
+		font_element.height = mStyleStack.top().size;
+		font_element.x = mCurrentLine.width;
+		mCurrentLine.elements.push_back(font_element);
+
+		LineElement img;
+		img.type = LineElement::ET_Image;
+		img.align = image->align;
+		img.image_shape = image->src;
+
+		// dimensions explicitely given through HTML
+		if(image->width != 0.0f || image->height != 0.0f)
+		{
+			// only height given
+			if(image->width == 0.0f)
+			{
+				img.width = 
+					(image->height / shape_res->getBoundingBox().getHeight()) * 
+					shape_res->getBoundingBox().getWidth();
+				img.height = image->height;
+			}
+			// only width given
+			else if(image->height == 0.0f)
+			{
+				img.width = image->width;
+				img.height = 
+					(image->width / shape_res->getBoundingBox().getWidth()) * 
+					shape_res->getBoundingBox().getHeight();
+			}
+			// both, width and height given
+			else
+			{
+				img.width = image->width;
+				img.height = image->height;
+			}
+		}
+		// use default dimensions
+		else
+		{
+			img.width = shape_res->getBoundingBox().getWidth();
+			img.height = shape_res->getBoundingBox().getHeight();
+		}
+
+		// add the image element
+		_addElement(img);
+
+		if(mStyleStack.size())
+		{
+			// add FONT_CHANGE element
+			font_element.reset();
+			font_element.type = LineElement::ET_FontChange;
+			font_element.color = mStyleStack.top().color;
+			font_element.font = mStyleStack.top().font;
+			font_element.height = mStyleStack.top().size;
+			font_element.x = mCurrentLine.width;
+			mCurrentLine.elements.push_back(font_element);
+		}
+	}
+	//-----------------------------------------------------------------------
 	void EditText::_addText(const WString& text)
 	{
-		mCurrentStrip.glyphs.clear();
-		mCurrentStrip.color = mColorStack.top();
-		mCurrentStrip.size = mSizeStack.top();
-		mCurrentStrip.fontid = mFontStack.top()->getID();
+		LineElement word_element;
+		word_element.type = LineElement::ET_Word;
+		FontResource* font = mStyleStack.top().font;
 
-		float word_length = 0.0f;
-		StaticTextResource::GlyphList word;
-
+		// iterate over characters
 		WString::const_iterator str_it = text.begin();
 		WString::const_iterator str_end = text.end();
 		while(str_it != str_end)
 		{
 			// get glyph from font
-			GlyphResource* glyph_res = mFontStack.top()->getGlyphByCode(*str_it);
+			GlyphResource* glyph_res = font->getGlyphByCode(*str_it);
 			if(!glyph_res)
 			{
 				VTX_WARN("Unable to find glyph for character %d", (int)*str_it);
@@ -222,23 +351,17 @@ namespace vtx
 				continue;
 			}
 
-			float max_size = mSizeStack.top()*0.05f*glyph_res->getBoundingBox().getHeight();
-			if(max_size > mMaxSize)
-			{
-				mMaxSize = max_size;
-			}
-
-			StaticTextResource::Glyph glyph;
+			GlyphStrip::Glyph glyph;
 			glyph.index = glyph_res->getIndex();
-			glyph.x = glyph_res->getAdvance() * mSizeStack.top()/20.0f;
-			word_length += glyph.x;
-			word.push_back(glyph);
+			glyph.x = glyph_res->getAdvance() * mStyleStack.top().size/20.0f;
+			word_element.width += glyph.x;
+			word_element.glyphs.push_back(glyph);
 
+			// word delimiter reached
 			if(*str_it == ' ')
 			{
-				_addWord(word, word_length);
-				word.clear();
-				word_length = 0.0f;
+				_addElement(word_element);
+				word_element.reset();
 			}
 
 			++mGlyphCount;
@@ -246,92 +369,130 @@ namespace vtx
 
 		} // while(characters)
 
-		// add imaginary word which is nearly as long as a whole line
-		// this is just done to add the very last glyph strip to the text
-		_addWord(StaticTextResource::GlyphList(), getBoundingBox().getWidth()*0.99f);
+		// last word not added yet
+		if(word_element.glyphs.size())
+		{
+			_addElement(word_element);
+			word_element.reset();
+		}
 	}
 	//-----------------------------------------------------------------------
-	void EditText::_addWord(const StaticTextResource::GlyphList& glyphs, const float& word_length)
+	void EditText::_addElement(const LineElement& elem)
 	{
-		StaticTextResource::GlyphList::const_iterator it = glyphs.begin();
-		StaticTextResource::GlyphList::const_iterator end = glyphs.end();
-
-		const float& textfield_width = getBoundingBox().getWidth();
-
-		// word doesn't fit into this line as a whole
-		if(mPosition + word_length > textfield_width)
+		// word doesn't fit into current line --> start a new one
+		if(mCurrentLine.width + elem.width > getBoundingBox().getWidth())
 		{
-			// special case, the word is longer than the textfield width
-			if(word_length > textfield_width)
+			_newLine();
+		}
+
+		switch(elem.type)
+		{
+		case LineElement::ET_Word:
+			if(mStyleStack.top().size > mCurrentLine.height)
 			{
-				while(it != end)
-				{
-					const StaticTextResource::Glyph& glyph = *it;
-
-					// glyph doesn't fit into current line, start a new one
-					if(mPosition + glyph.x > textfield_width)
-					{
-						mCurrentStrip.newline = true;
-						_addStrip();
-					}
-					//// glyph does fit into current line
-					//else
-					//{
-					//	mCurrentStrip.newline = true;
-					//}
-
-					mPosition += glyph.x;
-					mCurrentStrip.glyphs.push_back(glyph);
-					++it;
-
-				} // while(glyphs)
+				mCurrentLine.height = mStyleStack.top().size;
 			}
-			// add word into a new line
-			else
-			{
-				// finish previous line and start a new one
-				mCurrentStrip.newline = true;
-				_addStrip();
+			break;
 
-				while(it != end)
+		case LineElement::ET_Image:
+			if(elem.height > mCurrentLine.height)
+			{
+				mCurrentLine.height = elem.height;
+			}
+			break;
+		}
+
+		// check if we are already at the bottom boundary of this textfield
+		if(mCurrentHeight + mCurrentLine.height > getBoundingBox().getHeight())
+		{
+			return;
+		}
+
+		mCurrentLine.width += elem.width;
+		mCurrentLine.elements.push_back(elem);
+	}
+	//-----------------------------------------------------------------------
+	void EditText::_newLine()
+	{
+		mCurrentHeight += mCurrentLine.height;
+		mLines.push_back(mCurrentLine);
+		mCurrentLine.reset();
+	}
+	//-----------------------------------------------------------------------
+	void EditText::_createStripsAndShapes()
+	{
+		if(mCurrentLine.elements.size())
+		{
+			// the last line has not been added yet
+			_newLine();
+		}
+
+		// iterate lines
+		LineList::iterator line_it = mLines.begin();
+		LineList::iterator line_end = mLines.end();
+		while(line_it != line_end)
+		{
+			const Line& line = *line_it;
+
+			mCurrentStrip.y += line.height;
+
+			// iterate line elements
+			ElementList::const_iterator elem_it = line.elements.begin();
+			ElementList::const_iterator elem_end = line.elements.end();
+			while(elem_it != elem_end)
+			{
+				const LineElement& elem = *elem_it;
+
+				switch(elem.type)
 				{
-					const StaticTextResource::Glyph& glyph = *it;
-					mCurrentStrip.glyphs.push_back(glyph);
-					++it;
+				case LineElement::ET_FontChange:
+					{
+						mGlyphStrips.push_back(mCurrentStrip);
+						mCurrentStrip.glyphs.clear();
+						mCurrentStrip.x = elem.x;
+
+						mCurrentStrip.color = elem.color;
+						mCurrentStrip.fontid = elem.font->getID();
+						mCurrentStrip.size = elem.height;
+					}
+					break;
+
+				case LineElement::ET_Word:
+					{
+						mCurrentStrip.glyphs.insert(
+							mCurrentStrip.glyphs.end(), 
+							elem.glyphs.begin(), 
+							elem.glyphs.end());
+					}
+					break;
+
+				case LineElement::ET_Image:
+					{
+						Shape* shape = dynamic_cast<Shape*>(mParentMovie->getInstance(elem.image_shape));
+						if(!shape) break;
+
+						shape->setParentContainer(this);
+						addChild(shape);
+						float sx = elem.width / shape->getBoundingBox().getWidth();
+						float sy = elem.height / shape->getBoundingBox().getHeight();
+						shape->setMatrix(Matrix(sx, 0, mCurrentStrip.x + elem.x, 0, sy, mCurrentStrip.y - elem.height/* * 0.9f*/));
+						mCurrentStrip.x += elem.width;
+					}
+					break;
 				}
 
-				mPosition += word_length;
-			}
-		}
-		// word fits into current line
-		else
-		{
-			while(it != end)
-			{
-				const StaticTextResource::Glyph& glyph = *it;
-				mCurrentStrip.glyphs.push_back(glyph);
-				++it;
-			}
+				++elem_it;
 
-			mPosition += word_length;
-		}
-	}
-	//-----------------------------------------------------------------------
-	void EditText::_addStrip()
-	{
-		// DEBUG
-		//mCurrentStrip.color = Color(rand()%255/255.0f, rand()%255/255.0f, rand()%255/255.0f);
+			} // while(line_elements)
 
-		mGlyphStrips.push_back(mCurrentStrip);
+			mCurrentStrip.newline = true;
+			mGlyphStrips.push_back(mCurrentStrip);
+			mCurrentStrip.glyphs.clear();
+			mCurrentStrip.x = 0.0f;
 
-		if(mCurrentStrip.newline)
-		{
-			mCurrentStrip.y += mMaxSize * 1.2f; // TODO: line spacing
-			mPosition = 0.0f;
-		}
+			++line_it;
 
-		mCurrentStrip.glyphs.clear();
-		mCurrentStrip.newline = false;
+		} // while(lines)
 	}
 	//-----------------------------------------------------------------------
 }

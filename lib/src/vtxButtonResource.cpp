@@ -44,19 +44,11 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	ButtonResource::~ButtonResource()
 	{
-		delete mStates[0];
-
-		if(mStates[1] != mStates[0])
-			delete mStates[1];
-
-		if(mStates[2] != mStates[0] && 
-			mStates[2] != mStates[1])
-			delete mStates[2];
-
-		if(mStates[3] != mStates[0] && 
-			mStates[3] != mStates[1] && 
-			mStates[3] != mStates[2])
-			delete mStates[3];
+		for(uint i=0; i<4; ++i)
+		{
+			delete mStates[i];
+			mStates[i] = NULL;
+		}
 	}
 	//-----------------------------------------------------------------------
 	const String& ButtonResource::getType() const

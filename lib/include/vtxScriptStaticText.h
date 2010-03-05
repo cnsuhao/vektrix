@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** Represents the scripting counterpart of a StaticText object */
 	class vtxExport ScriptStaticText : public ScriptObject
 	{
 	public:

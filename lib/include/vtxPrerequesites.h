@@ -88,7 +88,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	class AtlasNode;
-	class AtlasPackable;
+	class AtlasElement;
 	class AtlasPacker;
 	class BoundingBox;
 	class Button;
@@ -119,6 +119,7 @@ namespace vtx
 	class HtmlParagraph;
 	class HtmlParser;
 	class HtmlText;
+	class ImageResource;
 	class Instance;
 	class InstanceManager;
 	class InstancePool;

@@ -29,7 +29,6 @@ THE SOFTWARE.
 #include "vtxswfParser.h"
 
 #include "vtxEditTextResource.h"
-#include "vtxStaticTextResource.h"
 #include "vtxStringHelper.h"
 
 namespace vtx

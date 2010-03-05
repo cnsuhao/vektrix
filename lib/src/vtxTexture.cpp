@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include "vtxAtlasNode.h"
 #include "vtxLogManager.h"
 #include "vtxRect.h"
-#include "vtxAtlasPackable.h"
+#include "vtxAtlasElement.h"
 #include "vtxRasterizerManager.h"
 
 namespace vtx
@@ -49,7 +49,7 @@ namespace vtx
 		delete mRoot;
 	}
 	//-----------------------------------------------------------------------
-	AtlasNode* Texture::packShape(AtlasPackable* element)
+	AtlasNode* Texture::packElement(AtlasElement* element)
 	{
 		if(element->getPackableWidth() > mSize || element->getPackableHeight() > mSize)
 		{
@@ -57,14 +57,11 @@ namespace vtx
 			return NULL;
 		}
 
-		VTX_LOG("Trying to pack AtlasPackable with dimensions [%u , %u] ...", 
-			element->getPackableWidth(), element->getPackableHeight());
-
 		AtlasNode* node = mRoot->insert(element);
 
 		if(node)
 		{
-			node->setShape(element);
+			node->setElement(element);
 			return node;
 		}
 
@@ -81,7 +78,7 @@ namespace vtx
 	{
 		// TODO: implement dynamic rasterizer assignment
 		Rasterizer* rst = RasterizerManager::getSingletonPtr()->getRasterizer("Cairo");
-		mRoot->renderShape(rst);
+		mRoot->renderElement(rst);
 	}
 	//-----------------------------------------------------------------------
 	const uint& Texture::getSize() const
