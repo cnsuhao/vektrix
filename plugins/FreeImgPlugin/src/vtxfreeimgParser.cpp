@@ -77,8 +77,9 @@ namespace vtx
 		const StringList& ImageParser::getExtensions() const
 		{
 			static StringList extensions;
-			extensions.push_back(".png");
+			extensions.push_back(".gif");
 			extensions.push_back(".jpg");
+			extensions.push_back(".png");
 			return extensions;
 		}
 		//-----------------------------------------------------------------------
@@ -89,11 +90,12 @@ namespace vtx
 
 			File* file = new File(filename);
 
-			BYTE* fileBuf = new BYTE[stream->size()];
-			stream->read(fileBuf, stream->size());
+			const uint& stream_size = stream->size();
+
+			BYTE* fileBuf = new BYTE[stream_size];
+			stream->read(fileBuf, stream_size);
 			
-			FIMEMORY* fiMem = 
-			FreeImage_OpenMemory(fileBuf, static_cast<DWORD>(stream->size()));
+			FIMEMORY* fiMem = FreeImage_OpenMemory(fileBuf, static_cast<DWORD>(stream_size));
 			
 			FIBITMAP* fiBitmap = FreeImage_LoadFromMemory(FreeImage_GetFileTypeFromMemory(fiMem), fiMem);
 			if (!fiBitmap)

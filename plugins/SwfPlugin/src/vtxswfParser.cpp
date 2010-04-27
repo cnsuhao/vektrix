@@ -91,7 +91,7 @@ namespace vtx
 
 			mCurrentFile = new File(stream->getFilename());
 
-			mMainMovieClip = new MovieClipResource("__RESERVED__");
+			mMainMovieClip = new MovieClipResource("__MainMovieClip__");
 			mMainTimeline = new Timeline;
 			mCurrentKeyframe = new Keyframe;
 

@@ -64,24 +64,52 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void TextField::setNativeObject(Instance* inst)
 		{
+			InteractiveObject::setNativeObject(inst);
 			mEditText = dynamic_cast<vtx::EditText*>(inst);
 		}
 		//-----------------------------------------------------------------------
+		//void TextField::eventFired(const Event& evt)
+		//{
+		//	InteractiveObject::eventFired(evt);
+		//}
+		//-----------------------------------------------------------------------
 		avmplus::Stringp TextField::get_htmlText()
 		{
-			if(mEditText)
+			csp::VmCore* core = getCaspinCore();
+
+			if(mEditText && core)
 			{
-				return stl2cspUTF8(mEditText->getHtmlText());
+				return core->stl2cspUTF8(mEditText->getHtmlText());
 			}
 
-			return stl2csp("");
+			return core->stl2csp("");
 		}
 		//-----------------------------------------------------------------------
 		void TextField::set_htmlText(avmplus::Stringp htmlText)
 		{
+			csp::VmCore* core = getCaspinCore();
+
+			if(mEditText && core)
+			{
+				mEditText->setHtmlText(core->csp2stlUTF8(htmlText));
+			}
+		}
+		//-----------------------------------------------------------------------
+		int TextField::getLineIndexAtPoint(double x, double y)
+		{
 			if(mEditText)
 			{
-				mEditText->setHtmlText(csp2stlUTF8(htmlText));
+				return mEditText->getLineAtPoint(Vector2((float)x, (float)y)).index;
+			}
+
+			return -1;
+		}
+		//-----------------------------------------------------------------------
+		void TextField::setSelection(int beginIndex, int endIndex)
+		{
+			if(mEditText)
+			{
+				mEditText->setSelection(beginIndex, endIndex);
 			}
 		}
 		//-----------------------------------------------------------------------

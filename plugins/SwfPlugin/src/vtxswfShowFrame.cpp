@@ -42,7 +42,7 @@ namespace vtx
 			{
 				++mMainFrameIndex;
 
-				if(mCurrentKeyframe->getEventCount())
+				//if(mCurrentKeyframe->getEventCount())
 				{
 					mCurrentKeyframe->setIndex(mMainFrameIndex);
 					mMainTimeline->addKeyframe(mCurrentKeyframe);

@@ -28,6 +28,8 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
+#include "vtxDisplayObject.h"
+
 namespace vtx
 {
 	namespace as3
@@ -46,39 +48,106 @@ namespace vtx
 		}
 		//-----------------------------------------------------------------------
 		DisplayObject::DisplayObject(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: EventDispatcher(vtable, prototype)
+			: EventDispatcher(vtable, prototype), 
+			mDisplayObject(NULL)
 		{
 
 		}
 		//-----------------------------------------------------------------------
+		void DisplayObject::setNativeObject(Instance* inst)
+		{
+			EventDispatcher::setNativeObject(inst);
+			mDisplayObject = dynamic_cast<vtx::DisplayObject*>(inst);
+		}
+		//-----------------------------------------------------------------------
 		double DisplayObject::get_x()
 		{
+			if(mDisplayObject)
+			{
+				return mDisplayObject->getX();
+			}
+
 			return 0;
 		}
 		//-----------------------------------------------------------------------
 		void DisplayObject::set_x(double val)
 		{
-
+			if(mDisplayObject)
+			{
+				mDisplayObject->setX((float)val);
+			}
 		}
 		//-----------------------------------------------------------------------
 		double DisplayObject::get_y()
 		{
+			if(mDisplayObject)
+			{
+				return mDisplayObject->getY();
+			}
+
 			return 0;
 		}
 		//-----------------------------------------------------------------------
 		void DisplayObject::set_y(double val)
 		{
-
+			if(mDisplayObject)
+			{
+				mDisplayObject->setY((float)val);
+			}
 		}
 		//-----------------------------------------------------------------------
 		double DisplayObject::get_rotation()
 		{
+			if(mDisplayObject)
+			{
+				return mDisplayObject->getAngle();
+			}
+
 			return 0;
 		}
 		//-----------------------------------------------------------------------
 		void DisplayObject::set_rotation(double val)
 		{
+			if(mDisplayObject)
+			{
+				mDisplayObject->setAngle((float)val);
+			}
+		}
+		//-----------------------------------------------------------------------
+		double DisplayObject::get_scaleX()
+		{
+			if(mDisplayObject)
+			{
+				return mDisplayObject->getScaleX();
+			}
 
+			return 0;
+		}
+		//-----------------------------------------------------------------------
+		void DisplayObject::set_scaleX(double val)
+		{
+			if(mDisplayObject)
+			{
+				mDisplayObject->setScaleX((float)val);
+			}
+		}
+		//-----------------------------------------------------------------------
+		double DisplayObject::get_scaleY()
+		{
+			if(mDisplayObject)
+			{
+				return mDisplayObject->getScaleY();
+			}
+
+			return 0;
+		}
+		//-----------------------------------------------------------------------
+		void DisplayObject::set_scaleY(double val)
+		{
+			if(mDisplayObject)
+			{
+				mDisplayObject->setScaleY((float)val);
+			}
 		}
 		//-----------------------------------------------------------------------
 	}

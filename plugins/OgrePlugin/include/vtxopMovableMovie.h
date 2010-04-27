@@ -42,7 +42,6 @@ namespace vtx
 		class MovableMovie : public vtx::Movie, public Ogre::MovableObject
 		{
 		public:
-			//typedef std::map<OgreShape*, OgreShape*> ShapeList;
 			typedef std::map<Ogre::Renderable*, Ogre::Renderable*> RenderableMap;
 
 			MovableMovie(const String& name, File* file, MovieFactory* creator);

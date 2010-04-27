@@ -49,7 +49,11 @@ THE SOFTWARE.
 #include "vtxas3StaticText.h"
 #include "vtxas3TextField.h"
 
+// flash.utils
+//#include "DictionaryGlue.h"
+
 // vektrix.events
+#include "vtxas3Event.h"
 #include "vtxas3EventHandler.h"
 
 #endif

@@ -30,9 +30,6 @@ THE SOFTWARE.
 #define __vtxas3StaticText_H__
 
 #include "cspPrerequesites.h"
-#include "cspClientObject.h"
-
-#include "vtxScriptStaticText.h"
 
 namespace vtx
 {
@@ -48,13 +45,15 @@ namespace vtx
 			DECLARE_SLOTS_StaticTextClass;
 		};
 		//-----------------------------------------------------------------------
-		class StaticText : public DisplayObject, public vtx::ScriptStaticText, public csp::ClientObject
+		class StaticText : public DisplayObject
 		{
 		public:
 			StaticText(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 			virtual ~StaticText();
 
 			void setNativeObject(Instance* inst);
+
+			void eventFired(const Event& evt);
 
 			avmplus::Stringp get_text();
 

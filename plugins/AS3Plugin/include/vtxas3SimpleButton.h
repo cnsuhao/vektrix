@@ -30,9 +30,6 @@ THE SOFTWARE.
 #define __vtxas3SimpleButton_H__
 
 #include "cspPrerequesites.h"
-#include "cspClientObject.h"
-
-#include "vtxScriptButton.h"
 
 namespace vtx
 {
@@ -48,24 +45,14 @@ namespace vtx
 			DECLARE_SLOTS_SimpleButtonClass;
 		};
 		//-----------------------------------------------------------------------
-		class SimpleButton : public InteractiveObject, public vtx::ScriptButton, public csp::ClientObject
+		class SimpleButton : public InteractiveObject
 		{
 		public:
 			SimpleButton(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 			virtual ~SimpleButton();
 
 			void setNativeObject(Instance* inst);
-
-			void buttonUp();
-
-			virtual double get_x();
-			virtual void set_x(double val);
-
-			virtual double get_y();
-			virtual void set_y(double val);
-
-			virtual double get_rotation();
-			virtual void set_rotation(double val);
+			//void eventFired(const Event& evt);
 
 			DECLARE_SLOTS_SimpleButton;
 

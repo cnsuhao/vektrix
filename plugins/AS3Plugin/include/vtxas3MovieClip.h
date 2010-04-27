@@ -30,14 +30,12 @@ THE SOFTWARE.
 #define __vtxas3MovieClip_H__
 
 #include "cspPrerequesites.h"
-#include "cspClientObject.h"
-
-#include "vtxScriptMovieClip.h"
 
 namespace vtx
 {
 	namespace as3
 	{
+		//-----------------------------------------------------------------------
 		class MovieClipClass : public avmplus::ClassClosure
 		{
 		public:
@@ -46,16 +44,15 @@ namespace vtx
 
 			DECLARE_SLOTS_MovieClipClass;
 		};
-
-		class MovieClip : public Sprite, public vtx::ScriptMovieClip, public csp::ClientObject
+		//-----------------------------------------------------------------------
+		class MovieClip : public Sprite
 		{
 		public:
 			MovieClip(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 			virtual ~MovieClip();
 
 			void setNativeObject(Instance* inst);
-
-			void frameEntered(const uint& frame_index);
+			void eventFired(const vtx::Event& evt);
 
 			DECLARE_SLOTS_MovieClip;
 
@@ -64,6 +61,7 @@ namespace vtx
 
 			vtx::ScriptObject* _createChildObject(const String& name);
 		};
+		//-----------------------------------------------------------------------
 	}
 }
 

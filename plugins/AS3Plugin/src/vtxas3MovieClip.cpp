@@ -28,6 +28,7 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
+#include "vtxEvent.h"
 #include "vtxMovieClip.h"
 #include "vtxStringHelper.h"
 
@@ -63,15 +64,23 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void MovieClip::setNativeObject(Instance* inst)
 		{
+			Sprite::setNativeObject(inst);
 			mMovieClip = dynamic_cast<vtx::MovieClip*>(inst);
 		}
 		//-----------------------------------------------------------------------
-		void MovieClip::frameEntered(const uint& frame_index)
+		void MovieClip::eventFired(const vtx::Event& evt)
 		{
-			csp::ScriptObject* csp_obj = getCaspinObject();
-			if(csp_obj)
+			if(evt.getCategory() == vtx::Event::GENERIC_CATEGORY)
 			{
-				csp_obj->callFunction("frame" + StringHelper::toString(frame_index+1));
+				if(evt.getType() == vtx::Event::ENTER_FRAME)
+				{
+					csp::ScriptObject* csp_obj = getCaspinObject();
+					if(csp_obj)
+					{
+						const uint& frame = mMovieClip->getCurrentFrame();
+						csp_obj->callFunction("frame" + StringHelper::toString(frame+1));
+					}
+				}
 			}
 		}
 		//-----------------------------------------------------------------------

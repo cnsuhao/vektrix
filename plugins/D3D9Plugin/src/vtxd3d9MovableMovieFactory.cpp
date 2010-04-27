@@ -61,7 +61,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void MovableMovieFactory::destroyObject(Movie* instance)
 		{
-			delete instance;
+			delete dynamic_cast<MovableMovie*>(instance);
 			instance = NULL;
 		}
 		//-----------------------------------------------------------------------

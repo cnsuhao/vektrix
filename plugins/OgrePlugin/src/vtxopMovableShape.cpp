@@ -34,6 +34,9 @@ THE SOFTWARE.
 #include "vtxopMovableMovie.h"
 #include "vtxopTexture.h"
 
+#include "OgrePass.h"
+#include "OgreTechnique.h"
+
 namespace vtx
 {
 	namespace ogre
@@ -41,6 +44,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		OgreMovableShape::OgreMovableShape(vtx::Resource* resource) 
 			: Shape(resource), 
+			MovableInstanceBase(this), 
 			mLayer(0.0f)
 		{
 			_createBuffers();

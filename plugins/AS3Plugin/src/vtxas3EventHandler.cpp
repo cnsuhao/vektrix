@@ -47,14 +47,19 @@ namespace vtx
 			return new (core()->GetGC(), ivtable->getExtraSize()) EventHandler(ivtable, prototype);
 		}
 		//-----------------------------------------------------------------------
+		int EventHandlerClass::add(int a, int b)
+		{
+			return a + b;
+		}
+		//-----------------------------------------------------------------------
 		void EventHandlerClass::handle(avmplus::ScriptObject* evt)
 		{
 			std::cout << "native C++ EventHandler called" << std::endl;
-			csp::ScriptObject* csp_evt = csp::ScriptObject::fromAvmplus(evt);
-			if(csp_evt)
-			{
-				csp_evt->callFunction("debugEventDispatcher");
-			}
+			//csp::ScriptObject* csp_evt = csp::ScriptObject::fromAvmplus(evt);
+			//if(csp_evt)
+			//{
+			//	csp_evt->callFunction("debugEventDispatcher");
+			//}
 		}
 		//-----------------------------------------------------------------------
 		EventHandler::EventHandler(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 

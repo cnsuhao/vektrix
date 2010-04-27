@@ -27,8 +27,12 @@ THE SOFTWARE.
 */
 
 #include "vtxcurlPlugin.h"
-
+#include "vtxcurlWebFileContainer.h"
+#include "vtxFileManager.h"
 #include "vtxRoot.h"
+
+#define CURL_STATICLIB
+#include "curl/curl.h"
 
 //-----------------------------------------------------------------------
 #ifdef VTX_STATIC_LIB
@@ -48,12 +52,20 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		cURLPlugin::cURLPlugin()
 		{
+			curl_global_init(CURL_GLOBAL_DEFAULT);
 
+			mWebFactory = new WebFileContainerFactory();
+			FileManager::getSingletonPtr()->addFactory(mWebFactory);
 		}
 		//-----------------------------------------------------------------------
 		cURLPlugin::~cURLPlugin()
 		{
+			FileManager::getSingletonPtr()->removeFactory(mWebFactory);
 
+			delete mWebFactory;
+			mWebFactory = NULL;
+
+			curl_global_cleanup();
 		}
 		//-----------------------------------------------------------------------
 	}

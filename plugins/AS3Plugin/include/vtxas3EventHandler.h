@@ -41,6 +41,7 @@ namespace vtx
 			EventHandlerClass(avmplus::VTable* cvtable);
 			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
 
+			int add(int a, int b);
 			void handle(avmplus::ScriptObject* evt);
 
 			DECLARE_SLOTS_EventHandlerClass;

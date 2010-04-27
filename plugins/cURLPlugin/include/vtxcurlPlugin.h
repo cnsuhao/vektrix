@@ -47,6 +47,9 @@ namespace vtx
 		public:
 			cURLPlugin();
 			virtual ~cURLPlugin();
+
+		protected:
+			WebFileContainerFactory* mWebFactory;
 		};
 	}
 }

@@ -118,7 +118,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void AS3ScriptEngine::output(const String& message)
 		{
-			VTX_LOG("AS3: '%s'", message.c_str());
+			VTX_LOG("ActionScript3: '%s'", message.c_str());
 		}
 		//-----------------------------------------------------------------------
 	}

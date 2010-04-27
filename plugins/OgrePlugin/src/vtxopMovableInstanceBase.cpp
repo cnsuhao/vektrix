@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "vtxopMovableMovie.h"
 
 #include "vtxColor.h"
+#include "vtxDisplayObject.h"
 
 #include "OgreCamera.h"
 #include "OgreHardwareBufferManager.h"
@@ -41,8 +42,9 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		MovableInstanceBase::MovableInstanceBase() 
-			: mVertex(NULL), 
+		MovableInstanceBase::MovableInstanceBase(DisplayObject* display_object) 
+			: mDisplayObject(display_object), 
+			mVertex(NULL), 
 			mParentMovable(NULL)
 		{
 			mRenderOp.vertexData = NULL;
@@ -90,7 +92,8 @@ namespace vtx
 		Ogre::Real MovableInstanceBase::getSquaredViewDepth(const Ogre::Camera* cam) const
 		{
 			return cam->getDerivedPosition().squaredDistance(
-				mParentMovable->getParentNode()->_getDerivedPosition());
+				mParentMovable->getParentNode()->_getDerivedPosition())
+				-(float)mDisplayObject->getZOrder();
 		}
 		//-----------------------------------------------------------------------
 		const Ogre::LightList& MovableInstanceBase::getLights() const

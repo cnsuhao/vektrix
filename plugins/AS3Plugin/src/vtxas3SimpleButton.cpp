@@ -30,8 +30,10 @@ THE SOFTWARE.
 
 #include "vtxButton.h"
 
+#include "vtxLogManager.h"
+
 #include "cspInternalCore.h"
-#include "cspVmCore.h"
+//#include "cspVmCore.h"
 #include "cspScriptObject.h"
 
 namespace vtx
@@ -64,84 +66,14 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void SimpleButton::setNativeObject(Instance* inst)
 		{
+			InteractiveObject::setNativeObject(inst);
 			mButton = dynamic_cast<vtx::Button*>(inst);
 		}
 		//-----------------------------------------------------------------------
-		void SimpleButton::buttonUp()
-		{
-			csp::VmCore* core = getCaspinCore();
-			csp::ScriptObject* object = getCaspinObject();
+		//void SimpleButton::eventFired(const Event& evt)
+		//{
 
-			if(core && object)
-			{
-				csp::ArgumentList args;
-				args.push_back(core->newString("click"));
-				args.push_back(core->newBoolean(false));
-				args.push_back(core->newBoolean(true));
-
-				csp::ScriptObject* evt = core->createObject("MouseEvent", "flash.events", args);
-				args.clear();
-				args.push_back(evt->atom());
-
-				object->callFunction("dispatchEvent", args);
-
-				delete evt;
-			}
-		}
-		//-----------------------------------------------------------------------
-		double SimpleButton::get_x()
-		{
-			if(mButton)
-			{
-				return mButton->getX();
-			}
-
-			return 0;
-		}
-		//-----------------------------------------------------------------------
-		void SimpleButton::set_x(double val)
-		{
-			if(mButton)
-			{
-				mButton->setX((float)val);
-			}
-		}
-		//-----------------------------------------------------------------------
-		double SimpleButton::get_y()
-		{
-			if(mButton)
-			{
-				return mButton->getY();
-			}
-
-			return 0;
-		}
-		//-----------------------------------------------------------------------
-		void SimpleButton::set_y(double val)
-		{
-			if(mButton)
-			{
-				mButton->setY((float)val);
-			}
-		}
-		//-----------------------------------------------------------------------
-		double SimpleButton::get_rotation()
-		{
-			if(mButton)
-			{
-				return mButton->getAngle();
-			}
-
-			return 0;
-		}
-		//-----------------------------------------------------------------------
-		void SimpleButton::set_rotation(double val)
-		{
-			if(mButton)
-			{
-				mButton->setAngle((float)val);
-			}
-		}
+		//}
 		//-----------------------------------------------------------------------
 		vtx::ScriptObject* SimpleButton::_createChildObject(const String& name)
 		{

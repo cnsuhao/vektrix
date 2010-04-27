@@ -30,12 +30,15 @@ THE SOFTWARE.
 #define __vtxas3EventDispatcher_H__
 
 #include "cspPrerequesites.h"
+#include "cspClientObject.h"
+
+#include "vtxScriptObject.h"
 
 namespace vtx
 {
 	namespace as3
 	{
-		using namespace avmplus;
+		//-----------------------------------------------------------------------
 		class EventDispatcherClass : public avmplus::ClassClosure
 		{
 		public:
@@ -46,17 +49,31 @@ namespace vtx
 
 			DECLARE_SLOTS_EventDispatcherClass;
 		};
-
-		class EventDispatcher : public avmplus::ScriptObject
+		//-----------------------------------------------------------------------
+		class EventDispatcher : public avmplus::ScriptObject, public ScriptObject, public csp::ClientObject
 		{
 		public:
+			typedef std::vector<avmplus::FunctionObject*> FunctionList;
+			typedef std::map<String, FunctionList> FunctionMap;
+
 			EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 			virtual ~EventDispatcher(){}
 
-			//bool dispatchEvent(ScriptObject* event);
+			void addEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useCapture, int priority, bool useWeakReference);
+			bool dispatchEvent(as3::Event* event);
+
+			virtual void setNativeObject(Instance* inst);
+			virtual void eventFired(const vtx::Event& evt);
+
+			virtual vtx::ScriptObject* _createChildObject(const String& name) { return 0; }
 
 			DECLARE_SLOTS_EventDispatcher;
+
+		protected:
+			Instance* mNativeObject;
+			FunctionMap mHandlers;
 		};
+		//-----------------------------------------------------------------------
 	}
 }
 

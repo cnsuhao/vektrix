@@ -117,8 +117,8 @@ namespace vtx
 				// clear previous input
 				mManualObject->clear();
 
-				int width = mParent->getFile()->getHeader().width;
-				int height = mParent->getFile()->getHeader().height;
+				Ogre::Real width = (Ogre::Real)mParent->getFile()->getHeader().width;
+				Ogre::Real height = (Ogre::Real)mParent->getFile()->getHeader().height;
 
 				mManualObject->begin(mRedMaterial->getName(), Ogre::RenderOperation::OT_LINE_STRIP);
 				mManualObject->position(0, 0, 0);
@@ -131,9 +131,9 @@ namespace vtx
 				const Vector2& mouse_pos = mParent->getMouseAbs();
 
 				mManualObject->begin(mRedMaterial->getName());
-				mManualObject->position(mouse_pos.x, -mouse_pos.y-10.0, 0.1);
-				mManualObject->position(mouse_pos.x+5.0, -mouse_pos.y-8.0, 0.1);
-				mManualObject->position(mouse_pos.x, -mouse_pos.y, 0.1);
+				mManualObject->position(mouse_pos.x, -mouse_pos.y-10.0f, 0.1f);
+				mManualObject->position(mouse_pos.x+5.0f, -mouse_pos.y-8.0f, 0.1f);
+				mManualObject->position(mouse_pos.x, -mouse_pos.y, 0.1f);
 				mManualObject->end();
 			}
 		}
@@ -144,11 +144,11 @@ namespace vtx
 			{
 				mManualObject->begin(mGreenMaterial->getName(), Ogre::RenderOperation::OT_LINE_STRIP);
 
-				mManualObject->position(bb.getMinX(), -bb.getMinY(), 0.1);
-				mManualObject->position(bb.getMaxX(), -bb.getMinY(), 0.1);
-				mManualObject->position(bb.getMaxX(), -bb.getMaxY(), 0.1);
-				mManualObject->position(bb.getMinX(), -bb.getMaxY(), 0.1);
-				mManualObject->position(bb.getMinX(), -bb.getMinY(), 0.1);
+				mManualObject->position(bb.getMinX(), -bb.getMinY(), 0.1f);
+				mManualObject->position(bb.getMaxX(), -bb.getMinY(), 0.1f);
+				mManualObject->position(bb.getMaxX(), -bb.getMaxY(), 0.1f);
+				mManualObject->position(bb.getMinX(), -bb.getMaxY(), 0.1f);
+				mManualObject->position(bb.getMinX(), -bb.getMinY(), 0.1f);
 
 				mManualObject->end();
 			}

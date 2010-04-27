@@ -59,9 +59,9 @@ namespace vtx
 			mPool = new InstancePool;
 			mPacker = new AtlasPacker(mFactory->getTextureFactory());
 
-			const File::ResourceList shape_list = file->getResourcesByType("Shape");
-			File::ResourceList::const_iterator shape_it = shape_list.begin();
-			File::ResourceList::const_iterator shape_end = shape_list.end();
+			const ResourceList& shape_list = file->getResourcesByType("Shape");
+			ResourceList::const_iterator shape_it = shape_list.begin();
+			ResourceList::const_iterator shape_end = shape_list.end();
 
 			// add shapes
 			while(shape_it != shape_end)
@@ -75,9 +75,9 @@ namespace vtx
 				++shape_it;
 			}
 
-			const File::ResourceList& font_list = file->getResourcesByType("Font");
-			File::ResourceList::const_iterator font_it = font_list.begin();
-			File::ResourceList::const_iterator font_end = font_list.end();
+			const ResourceList& font_list = file->getResourcesByType("Font");
+			ResourceList::const_iterator font_it = font_list.begin();
+			ResourceList::const_iterator font_end = font_list.end();
 
 			// add glyphs
 			while(font_it != font_end)
@@ -223,7 +223,7 @@ namespace vtx
 			return NULL;
 		}
 		//-----------------------------------------------------------------------
-		void MovableRenderStrategy::resourceAdded(Resource* resource, const bool& external)
+		void MovableRenderStrategy::resourceAdded(Resource* resource, const File::ResourceGroupType& group)
 		{
 			if(resource->getType() == "Shape")
 			{

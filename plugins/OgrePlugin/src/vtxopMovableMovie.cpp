@@ -44,7 +44,6 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		MovableMovie::~MovableMovie()
 		{
-
 		}
 		//-----------------------------------------------------------------------
 		vtx::Instance* MovableMovie::getInstance(const std::string& id)
@@ -60,15 +59,6 @@ namespace vtx
 					mRenderables.insert(std::make_pair(renderable, renderable));
 				}
 			}
-			//if(instance->getType() == "Shape")
-			//{
-			//	ShapeList::iterator it = mShapes.find((OgreShape*)instance);
-
-			//	if(it == mShapes.end())
-			//	{
-			//		mShapes.insert(ShapeList::value_type((OgreShape*)instance, 0));
-			//	}
-			//}
 
 			return instance;
 		}
@@ -84,16 +74,6 @@ namespace vtx
 					mRenderables.erase(it);
 				}
 			}
-
-			//if(instance->getType() == "Shape")
-			//{
-			//	ShapeList::iterator it = mShapes.find((OgreShape*)instance);
-
-			//	if(it != mShapes.end())
-			//	{
-			//		mShapes.erase(it);
-			//	}
-			//}
 
 			vtx::Movie::releaseInstance(instance);
 		}

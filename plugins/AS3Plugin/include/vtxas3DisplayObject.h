@@ -53,16 +53,27 @@ namespace vtx
 			DisplayObject(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 			virtual ~DisplayObject(){}
 
-			virtual double get_x();
-			virtual void set_x(double val);
+			virtual void setNativeObject(Instance* inst);
 
-			virtual double get_y();
-			virtual void set_y(double val);
+			double get_x();
+			void set_x(double val);
 
-			virtual double get_rotation();
-			virtual void set_rotation(double val);
+			double get_y();
+			void set_y(double val);
+
+			double get_rotation();
+			void set_rotation(double val);
+
+			double get_scaleX();
+			void set_scaleX(double val);
+
+			double get_scaleY();
+			void set_scaleY(double val);
 
 			DECLARE_SLOTS_DisplayObject;
+
+		protected:
+			vtx::DisplayObject* mDisplayObject;
 		};
 		//-----------------------------------------------------------------------
 	}

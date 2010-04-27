@@ -50,7 +50,7 @@ namespace vtx
 
 			if(key == "vektrix|timeline|")
 			{
-				mMainMovieClip = new MovieClipResource("__RESERVED__");
+				mMainMovieClip = new MovieClipResource("__MainMovieClip__");
 				mTimeline = new Timeline;
 			}
 

@@ -43,7 +43,8 @@ namespace vtx
 	{
 		//-----------------------------------------------------------------------
 		OgreMovableStaticText::OgreMovableStaticText(vtx::Resource* resource) 
-			: StaticText(resource)
+			: StaticText(resource), 
+			MovableInstanceBase(this)
 		{
 			_createBuffers();
 		}
@@ -178,7 +179,7 @@ namespace vtx
 
 						} // if(glyph_res)
 
-						glyph_x += glyph.x;
+						glyph_x += glyph.x_advance;
 
 						++glyph_it;
 

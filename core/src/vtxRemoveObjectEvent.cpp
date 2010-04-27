@@ -26,13 +26,41 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-package
+#include "vtxRemoveObjectEvent.h"
+
+#include "vtxDisplayObjectContainer.h"
+#include "vtxLogManager.h"
+#include "vtxMovie.h"
+
+namespace vtx
 {
-	import flash.events.Event;
-	
-    [native(cls="::vtx::as3::EventHandlerClass", instance="::vtx::as3::EventHandler", methods="auto")]
-    public class EventHandler
-    {
-		public native static function handle(e:Event):void;
-    }
+	//-----------------------------------------------------------------------
+	RemoveObjectEvent::RemoveObjectEvent(DisplayObjectContainer* object_container, const uint& layer) 
+		: FrameEvent(object_container), 
+		mLayer(layer)
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	FrameEvent* RemoveObjectEvent::clone(DisplayObjectContainer* container)
+	{
+		return new RemoveObjectEvent(container, mLayer);
+	}
+	//-----------------------------------------------------------------------
+	void RemoveObjectEvent::execute()
+	{
+		Instance* inst = (Instance*)mObjectContainer->getChildAt(mLayer);
+
+		mObjectContainer->removeChildAt(mLayer);
+
+		if(inst)
+		{
+			mObjectContainer->getParent()->releaseInstance(inst);
+		}
+		else
+		{
+			VTX_WARN("Can't release Instance from layer %u, layer is empty!", mLayer);
+		}
+	}
+	//-----------------------------------------------------------------------
 }

@@ -41,14 +41,16 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(CASPIN_HOME)\include&quot;;&quot;$(CASPIN_HOME)\tamarin\core&quot;;&quot;$(CASPIN_HOME)\tamarin\vmpi&quot;;&quot;$(CASPIN_HOME)\tamarin\shell&quot;;&quot;$(CASPIN_HOME)\tamarin\platform&quot;;&quot;$(CASPIN_HOME)\tamarin\mmgc&quot;;&quot;$(CASPIN_HOME)\tamarin\eval&quot;;&quot;$(CASPIN_HOME)\tamarin\extensions&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VEKTRIX_AS3PLUGIN_EXPORTS"
+				AdditionalIncludeDirectories="..\include;..\..\..\core\include;&quot;$(CASPIN_HOME)\include&quot;;&quot;$(CASPIN_HOME)\tamarin\core&quot;;&quot;$(CASPIN_HOME)\tamarin\vmpi&quot;;&quot;$(CASPIN_HOME)\tamarin\shell&quot;;&quot;$(CASPIN_HOME)\tamarin\platform&quot;;&quot;$(CASPIN_HOME)\tamarin\mmgc&quot;;&quot;$(CASPIN_HOME)\tamarin\eval&quot;;&quot;$(CASPIN_HOME)\tamarin\extensions&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VEKTRIX_AS3PLUGIN_EXPORTS;CSP_USE_RUNTIME_DEBUGGER"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
+				WarnAsError="true"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4221"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -118,13 +120,15 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(CASPIN_HOME)\include&quot;;&quot;$(CASPIN_HOME)\tamarin\core&quot;;&quot;$(CASPIN_HOME)\tamarin\vmpi&quot;;&quot;$(CASPIN_HOME)\tamarin\shell&quot;;&quot;$(CASPIN_HOME)\tamarin\platform&quot;;&quot;$(CASPIN_HOME)\tamarin\mmgc&quot;;&quot;$(CASPIN_HOME)\tamarin\eval&quot;;&quot;$(CASPIN_HOME)\tamarin\extensions&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VEKTRIX_AS3PLUGIN_EXPORTS"
+				AdditionalIncludeDirectories="..\include;..\..\..\core\include;&quot;$(CASPIN_HOME)\include&quot;;&quot;$(CASPIN_HOME)\tamarin\core&quot;;&quot;$(CASPIN_HOME)\tamarin\vmpi&quot;;&quot;$(CASPIN_HOME)\tamarin\shell&quot;;&quot;$(CASPIN_HOME)\tamarin\platform&quot;;&quot;$(CASPIN_HOME)\tamarin\mmgc&quot;;&quot;$(CASPIN_HOME)\tamarin\eval&quot;;&quot;$(CASPIN_HOME)\tamarin\extensions&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VEKTRIX_AS3PLUGIN_EXPORTS;CSP_USE_RUNTIME_DEBUGGER"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
+				WarnAsError="true"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4221"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -193,14 +197,16 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(CASPIN_HOME)\include&quot;;&quot;$(CASPIN_HOME)\tamarin\core&quot;;&quot;$(CASPIN_HOME)\tamarin\vmpi&quot;;&quot;$(CASPIN_HOME)\tamarin\shell&quot;;&quot;$(CASPIN_HOME)\tamarin\platform&quot;;&quot;$(CASPIN_HOME)\tamarin\mmgc&quot;;&quot;$(CASPIN_HOME)\tamarin\eval&quot;;&quot;$(CASPIN_HOME)\tamarin\extensions&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;VTX_STATIC_LIB;COMPILED_FROM_DSP"
+				AdditionalIncludeDirectories="..\include;..\..\..\core\include;&quot;$(CASPIN_HOME)\include&quot;;&quot;$(CASPIN_HOME)\tamarin\core&quot;;&quot;$(CASPIN_HOME)\tamarin\vmpi&quot;;&quot;$(CASPIN_HOME)\tamarin\shell&quot;;&quot;$(CASPIN_HOME)\tamarin\platform&quot;;&quot;$(CASPIN_HOME)\tamarin\mmgc&quot;;&quot;$(CASPIN_HOME)\tamarin\eval&quot;;&quot;$(CASPIN_HOME)\tamarin\extensions&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;VTX_STATIC_LIB;CSP_USE_RUNTIME_DEBUGGER"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
+				WarnAsError="true"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4221"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -260,13 +266,15 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\include;..\..\..\lib\include;&quot;$(CASPIN_HOME)\include&quot;;&quot;$(CASPIN_HOME)\tamarin\core&quot;;&quot;$(CASPIN_HOME)\tamarin\vmpi&quot;;&quot;$(CASPIN_HOME)\tamarin\shell&quot;;&quot;$(CASPIN_HOME)\tamarin\platform&quot;;&quot;$(CASPIN_HOME)\tamarin\mmgc&quot;;&quot;$(CASPIN_HOME)\tamarin\eval&quot;;&quot;$(CASPIN_HOME)\tamarin\extensions&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VTX_STATIC_LIB;COMPILED_FROM_DSP"
+				AdditionalIncludeDirectories="..\include;..\..\..\core\include;&quot;$(CASPIN_HOME)\include&quot;;&quot;$(CASPIN_HOME)\tamarin\core&quot;;&quot;$(CASPIN_HOME)\tamarin\vmpi&quot;;&quot;$(CASPIN_HOME)\tamarin\shell&quot;;&quot;$(CASPIN_HOME)\tamarin\platform&quot;;&quot;$(CASPIN_HOME)\tamarin\mmgc&quot;;&quot;$(CASPIN_HOME)\tamarin\eval&quot;;&quot;$(CASPIN_HOME)\tamarin\extensions&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VTX_STATIC_LIB;CSP_USE_RUNTIME_DEBUGGER"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
+				WarnAsError="true"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4221"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -322,22 +330,122 @@
 		<Filter
 			Name="AS3 classes"
 			>
-			<File
-				RelativePath="..\as3\flash_display.as"
+			<Filter
+				Name="flash"
 				>
-			</File>
-			<File
-				RelativePath="..\as3\flash_events.as"
+				<Filter
+					Name="net"
+					>
+					<File
+						RelativePath="..\as3\flash\net\LocalConnection.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\net\NetConnection.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\net\NetStream.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\net\SharedObject.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\net\Socket.as"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="media"
+					>
+					<File
+						RelativePath="..\as3\flash\media\Camera.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\media\Video.as"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="display"
+					>
+					<File
+						RelativePath="..\as3\flash\display\DisplayObject.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\display\DisplayObjectContainer.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\display\IBitmapDrawable.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\display\InteractiveObject.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\display\MovieClip.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\display\SimpleButton.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\display\Sprite.as"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="events"
+					>
+					<File
+						RelativePath="..\as3\flash\events\Event.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\events\EventDispatcher.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\events\FocusEvent.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\events\IEventDispatcher.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\events\MouseEvent.as"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="text"
+					>
+					<File
+						RelativePath="..\as3\flash\text\StaticText.as"
+						>
+					</File>
+					<File
+						RelativePath="..\as3\flash\text\TextField.as"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="vektrix"
 				>
-			</File>
-			<File
-				RelativePath="..\as3\flash_text.as"
-				>
-			</File>
-			<File
-				RelativePath="..\as3\vektrix_events.as"
-				>
-			</File>
+				<File
+					RelativePath="..\as3\vektrix\EventHandler.as"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="C++ classes"
@@ -350,17 +458,17 @@
 				RelativePath="..\include\flash_package.h"
 				>
 			</File>
-			<File
-				RelativePath="..\src\vtxas3EventHandler.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxas3EventHandler.h"
-				>
-			</File>
 			<Filter
 				Name="flash.events"
 				>
+				<File
+					RelativePath="..\src\vtxas3Event.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxas3Event.h"
+					>
+				</File>
 				<File
 					RelativePath="..\src\vtxas3EventDispatcher.cpp"
 					>
@@ -439,6 +547,18 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxas3TextField.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="vektrix"
+				>
+				<File
+					RelativePath="..\src\vtxas3EventHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxas3EventHandler.h"
 					>
 				</File>
 			</Filter>

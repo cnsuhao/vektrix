@@ -51,7 +51,8 @@ namespace vtx
 {
 	namespace curl
 	{
-
+		class WebFileContainer;
+		class WebFileContainerFactory;
 	}
 }
 

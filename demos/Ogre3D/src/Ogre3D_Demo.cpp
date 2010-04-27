@@ -9,6 +9,7 @@
 // vektrix plugins
 #include "vtxas3Plugin.h"
 #include "vtxcaiPlugin.h"
+#include "vtxcurlPlugin.h"
 #include "vtxd3d9Plugin.h"
 #include "vtxfreeimgPlugin.h"
 #include "vtxopPlugin.h"
@@ -40,42 +41,53 @@ public:
 		mKeyboard->capture();
 		mMouse->capture();
 
-		if(mKeyboard->isKeyDown(OIS::KC_F2) && movie)
+		if(movie)
 		{
-			movie_node->translate(0, 0, evt.timeSinceLastFrame * 150.0f, Ogre::Node::TS_WORLD);
-		}
-		if(mKeyboard->isKeyDown(OIS::KC_F3) && movie)
-		{
-			movie_node->translate(0, 0, -evt.timeSinceLastFrame * 150.0f, Ogre::Node::TS_WORLD);
-		}
-		if(mKeyboard->isKeyDown(OIS::KC_LEFT) && movie)
-		{
-			movie_node->translate(+evt.timeSinceLastFrame * 150.0f, 0, 0, Ogre::Node::TS_WORLD);
-		}
-		if(mKeyboard->isKeyDown(OIS::KC_RIGHT) && movie)
-		{
-			movie_node->translate(-evt.timeSinceLastFrame * 150.0f, 0, 0, Ogre::Node::TS_WORLD);
-		}
-		if(mKeyboard->isKeyDown(OIS::KC_UP) && movie)
-		{
-			movie_node->translate(0, -evt.timeSinceLastFrame * 150.0f, 0, Ogre::Node::TS_WORLD);
-		}
-		if(mKeyboard->isKeyDown(OIS::KC_DOWN) && movie)
-		{
-			movie_node->translate(0, +evt.timeSinceLastFrame * 150.0f, 0, Ogre::Node::TS_WORLD);
-		}
-		if(mKeyboard->isKeyDown(OIS::KC_A) && movie)
-		{
-			movie_node->yaw(Ogre::Radian(-evt.timeSinceLastFrame), Ogre::Node::TS_WORLD);
-		}
-		if(mKeyboard->isKeyDown(OIS::KC_D) && movie)
-		{
-			movie_node->yaw(Ogre::Radian(+evt.timeSinceLastFrame), Ogre::Node::TS_WORLD);
+			if(mKeyboard->isKeyDown(OIS::KC_F2))
+			{
+				movie_node->translate(0, 0, evt.timeSinceLastFrame * 150.0f, Ogre::Node::TS_WORLD);
+			}
+			if(mKeyboard->isKeyDown(OIS::KC_F3))
+			{
+				movie_node->translate(0, 0, -evt.timeSinceLastFrame * 150.0f, Ogre::Node::TS_WORLD);
+			}
+
+			// TRANSLATE & ROTATE
+			if(mKeyboard->isKeyDown(OIS::KC_LSHIFT))
+			{
+				if(mKeyboard->isKeyDown(OIS::KC_LEFT))
+				{
+					movie_node->yaw(Ogre::Radian(-evt.timeSinceLastFrame), Ogre::Node::TS_WORLD);
+				}
+				if(mKeyboard->isKeyDown(OIS::KC_RIGHT))
+				{
+					movie_node->yaw(Ogre::Radian(+evt.timeSinceLastFrame), Ogre::Node::TS_WORLD);
+				}
+			}
+			else
+			{
+				if(mKeyboard->isKeyDown(OIS::KC_LEFT))
+				{
+					movie_node->translate(+evt.timeSinceLastFrame * 150.0f, 0, 0, Ogre::Node::TS_WORLD);
+				}
+				if(mKeyboard->isKeyDown(OIS::KC_RIGHT))
+				{
+					movie_node->translate(-evt.timeSinceLastFrame * 150.0f, 0, 0, Ogre::Node::TS_WORLD);
+				}
+				if(mKeyboard->isKeyDown(OIS::KC_UP))
+				{
+					movie_node->translate(0, -evt.timeSinceLastFrame * 150.0f, 0, Ogre::Node::TS_WORLD);
+				}
+				if(mKeyboard->isKeyDown(OIS::KC_DOWN))
+				{
+					movie_node->translate(0, +evt.timeSinceLastFrame * 150.0f, 0, Ogre::Node::TS_WORLD);
+				}
+			}
 		}
 
 		vtx::Root::getSingletonPtr()->update(evt.timeSinceLastFrame);
 
-		if(mKeyboard->isKeyDown(OIS::KC_ESCAPE) || mKeyboard->isKeyDown(OIS::KC_Q))
+		if(mKeyboard->isKeyDown(OIS::KC_ESCAPE))
 			return false;
 
 		return true;
@@ -95,11 +107,21 @@ class SimpleKeyListener : public OIS::KeyListener
 public: 
 	bool keyPressed(const OIS::KeyEvent& e)
 	{
+		if(movie)
+		{
+			movie->keyDown(e.key, e.text);
+		}
+
 		return true;
 	}
 
 	bool keyReleased(const OIS::KeyEvent& e)
 	{
+		if(movie)
+		{
+			movie->keyUp(e.key, e.text);
+		}
+
 		if(e.key == OIS::KC_F1 && movie)
 		{
 			vtx::MovieDebugger* dbg = movie->getDebugger();
@@ -112,6 +134,17 @@ public:
 		else if(e.key == OIS::KC_F4)
 		{
 			std::cout << "Batch count: " << mWindow->getStatistics().batchCount << std::endl;
+		}
+		else if(e.key == OIS::KC_F5 && movie)
+		{
+			if(movie->getDebugger())
+			{
+				movie->enableDebugger(false);
+			}
+			else
+			{
+				movie->enableDebugger(true);
+			}
 		}
 
 		return true;
@@ -155,7 +188,7 @@ public:
 int main(int argc, char **argv)
 {
 	VTX_MEM_DEBUG_ENABLE();
-	//VTX_MEM_DEBUG_BREAK(5114);
+	//VTX_MEM_DEBUG_BREAK(6707);
 
 	// start vektrix
 	vtx::Root* vektrix_root = new vtx::Root();
@@ -179,18 +212,20 @@ int main(int argc, char **argv)
 
 	vtx::LogManager::getSingletonPtr()->logToCout(true);
 
-	vtx::FileManager::getSingletonPtr()->addFileContainer("../demos/media");
-
 	// vektrix plugins
 #if VTX_OS == VTX_WIN32
 	VTX_LOAD_PLUGIN(vektrix_AS3Plugin);
 	VTX_LOAD_PLUGIN(vektrix_D3D9Plugin);
 #endif
 	VTX_LOAD_PLUGIN(vektrix_CairoPlugin);
+	VTX_LOAD_PLUGIN(vektrix_cURLPlugin);
 	VTX_LOAD_PLUGIN(vektrix_FreeImgPlugin);
 	VTX_LOAD_PLUGIN(vektrix_OgrePlugin);
 	VTX_LOAD_PLUGIN(vektrix_SwfPlugin);
 	VTX_LOAD_PLUGIN(vektrix_XmlPlugin);
+
+	vtx::FileManager::getSingletonPtr()->addFileContainer("../demos/media");
+	vtx::FileManager::getSingletonPtr()->addFileContainer("", "WebFileContainer");
 
 	if(!ogre_root->showConfigDialog())
 	{
@@ -217,7 +252,7 @@ int main(int argc, char **argv)
 	camera->setNearClipDistance(1);
 
 	Ogre::Viewport* viewPort = mWindow->addViewport(camera);
-	viewPort->setBackgroundColour(Ogre::ColourValue(0.2, 0.2, 0.2, 0.2));
+	viewPort->setBackgroundColour(Ogre::ColourValue(0.2f, 0.2f, 0.2f, 0.2f));
 	//viewPort->setBackgroundColour(Ogre::ColourValue::White);
 
 	OIS::ParamList pl;
@@ -251,7 +286,10 @@ int main(int argc, char **argv)
 	ogre_root->addFrameListener(frameListener);
 
 	// VEKTRIX
+	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "http://fuse-software.com/vektrix/dyn_text_web.swf", "OgreMovableMovie");
 	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie");
+	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "cpp_test.swf", "OgreMovableMovie");
+	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "video_test.swf", "OgreMovableMovie");
 	movie->play();
 
 	movie_node = sceneMgr->getRootSceneNode()->createChildSceneNode();

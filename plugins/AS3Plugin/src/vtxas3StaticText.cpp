@@ -64,7 +64,13 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void StaticText::setNativeObject(Instance* inst)
 		{
+			DisplayObject::setNativeObject(inst);
 			mStaticText = dynamic_cast<vtx::StaticText*>(inst);
+		}
+		//-----------------------------------------------------------------------
+		void StaticText::eventFired(const Event& evt)
+		{
+
 		}
 		//-----------------------------------------------------------------------
 		avmplus::Stringp StaticText::get_text()

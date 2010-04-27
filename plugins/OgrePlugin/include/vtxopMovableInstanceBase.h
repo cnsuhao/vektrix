@@ -33,6 +33,8 @@ THE SOFTWARE.
 
 #include "OgreRenderable.h"
 
+#pragma warning (disable : 4355)
+
 namespace vtx
 {
 	namespace ogre
@@ -40,7 +42,7 @@ namespace vtx
 		class vtxopExport MovableInstanceBase : public Ogre::Renderable
 		{
 		public:
-			MovableInstanceBase();
+			MovableInstanceBase(DisplayObject* display_object);
 			virtual ~MovableInstanceBase();
 
 			// Ogre functions
@@ -61,6 +63,7 @@ namespace vtx
 			Ogre::VertexBufferBinding* mVertexBufferBind;
 
 		protected:
+			DisplayObject* mDisplayObject;
 			Ogre::MaterialPtr mMaterial;
 			Ogre::Matrix4 mWorldMatrix;
 			MovableMovie* mParentMovable;

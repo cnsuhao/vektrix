@@ -120,7 +120,7 @@ namespace vtx
 
 					GlyphStrip::Glyph glyph;
 					glyph.index = entry.index;
-					glyph.x = entry.x_advance / 20.0f;
+					glyph.x_advance = entry.x_advance / 20.0f;
 
 					// add glyph to strip
 					glyph_strip.glyphs.push_back(glyph);

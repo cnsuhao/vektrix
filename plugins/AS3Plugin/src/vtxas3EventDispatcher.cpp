@@ -28,7 +28,14 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
+#include "vtxFocusEvent.h"
+#include "vtxMouseEvent.h"
+
+#include "cspInternalCore.h"
 #include "cspScriptObject.h"
+#include "cspVmCore.h"
+
+#include "vtxInstance.h"
 
 namespace vtx
 {
@@ -48,22 +55,98 @@ namespace vtx
 		}
 		//-----------------------------------------------------------------------
 		EventDispatcher::EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: avmplus::ScriptObject(vtable, prototype)
+			: avmplus::ScriptObject(vtable, prototype), 
+			mNativeObject(NULL)
 		{
 
 		}
 		//-----------------------------------------------------------------------
-		//bool EventDispatcher::dispatchEvent(ScriptObject* event)
-		//{
-		//	ScriptObject* mListeners = AvmCore::atomToScriptObject(get_private_mListeners());
-		//	if(mListeners)
-		//	{
-		//		Atom args[2] = { get_private_mListeners(), event->atom() };
-		//		mListeners->call(1, args);
-		//	}
+		void EventDispatcher::addEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useCapture, int priority, bool useWeakReference)
+		{
+			csp::VmCore* core = getCaspinCore();
 
-		//	return false;
-		//}
+			String tp = core->csp2stl(type);
+			mHandlers[tp].push_back(function);
+		}
+		//-----------------------------------------------------------------------
+		bool EventDispatcher::dispatchEvent(as3::Event* event)
+		{
+			csp::VmCore* core = getCaspinCore();
+
+			String type = core->csp2stl(event->getType());
+
+			//std::cout << "As3 dispatch event" << std::endl;
+
+			FunctionMap::const_iterator funcs = mHandlers.find(type);
+			if(funcs != mHandlers.end())
+			{
+				const FunctionList& functions = funcs->second;
+
+				FunctionList::const_iterator it = functions.begin();
+				FunctionList::const_iterator end = functions.end();
+				while(it != end)
+				{
+					Atom args[2] = { (*it)->atom(), event->atom() };
+					(*it)->call(1, args);
+					++it;
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+		//-----------------------------------------------------------------------
+		void EventDispatcher::setNativeObject(Instance* inst)
+		{
+			mNativeObject = inst;
+		}
+		//-----------------------------------------------------------------------
+		void EventDispatcher::eventFired(const vtx::Event& evt)
+		{
+			csp::VmCore* core = getCaspinCore();
+			csp::ScriptObject* object = getCaspinObject();
+
+			if(!core || !object)
+			{
+				return;
+			}
+
+			if(evt.getCategory() == MouseEvent::CATEGORY)
+			{
+				const MouseEvent& mouse_evt = dynamic_cast<const MouseEvent&>(evt);
+
+				csp::ArgumentList args;
+				args.push_back(core->newString(evt.getType().c_str()));
+				args.push_back(core->newBoolean(false));
+				args.push_back(core->newBoolean(true));
+
+				csp::ScriptObject* evt = core->createObject("MouseEvent", "flash.events", args);
+				args.clear();
+				args.push_back(evt->atom());
+
+				object->callFunction("dispatchEvent", args);
+
+				delete evt;
+			}
+			else if(evt.getCategory() == FocusEvent::CATEGORY)
+			{
+				const FocusEvent& focus_evt = dynamic_cast<const FocusEvent&>(evt);
+
+				csp::ArgumentList args;
+				args.push_back(core->newString(evt.getType().c_str()));
+				args.push_back(core->newBoolean(false));
+				args.push_back(core->newBoolean(true));
+
+				csp::ScriptObject* evt = core->createObject("FocusEvent", "flash.events", args);
+				args.clear();
+				args.push_back(evt->atom());
+
+				object->callFunction("dispatchEvent", args);
+
+				delete evt;
+			}
+		}
 		//-----------------------------------------------------------------------
 	}
 }

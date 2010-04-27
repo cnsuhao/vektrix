@@ -41,7 +41,8 @@ namespace vtx
 	{
 		//-----------------------------------------------------------------------
 		OgreMovableEditText::OgreMovableEditText(Resource* resource) 
-			: EditText(resource)
+			: EditText(resource), 
+			MovableInstanceBase(this)
 		{
 			_createBuffers();
 		}
@@ -177,7 +178,7 @@ namespace vtx
 
 						} // if(glyph_res)
 
-						glyph_x += glyph.x;
+						glyph_x += glyph.x_advance;
 
 						++glyph_it;
 

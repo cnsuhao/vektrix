@@ -30,9 +30,6 @@ THE SOFTWARE.
 #define __vtxas3TextField_H__
 
 #include "cspPrerequesites.h"
-#include "cspClientObject.h"
-
-#include "vtxScriptEditText.h"
 
 namespace vtx
 {
@@ -48,7 +45,7 @@ namespace vtx
 			DECLARE_SLOTS_TextFieldClass;
 		};
 		//-----------------------------------------------------------------------
-		class TextField : public InteractiveObject, public vtx::ScriptEditText, public csp::ClientObject
+		class TextField : public InteractiveObject
 		{
 		public:
 			TextField(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
@@ -56,8 +53,15 @@ namespace vtx
 
 			void setNativeObject(Instance* inst);
 
+			//void eventFired(const Event& evt);
+
+			/* getters / setters */
 			avmplus::Stringp get_htmlText();
 			void set_htmlText(avmplus::Stringp htmlText);
+
+			/* methods */
+			int getLineIndexAtPoint(double x, double y);
+			void setSelection(int beginIndex, int endIndex);
 
 			DECLARE_SLOTS_StaticText;
 
