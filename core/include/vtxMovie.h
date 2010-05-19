@@ -37,6 +37,7 @@ namespace vtx
 	/** Defines a movie instance, which can be created by using Root::createMovie() */
 	class vtxExport Movie
 	{
+		friend class InteractiveObject;
 		friend class Root;
 
 	protected:
@@ -126,6 +127,8 @@ namespace vtx
 		MovieDebugger* mDebugger;
 		MovieClip* mMainMovieClip;
 		ScriptEngine* mScriptEngine;
+
+		void _setFocusedObject(InteractiveObject* focused_object);
 
 		//Shape* mMouseArrow;
 		//Shape* mMouseHand;

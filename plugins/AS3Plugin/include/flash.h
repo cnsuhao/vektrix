@@ -81,51 +81,54 @@ AVMTHUNK_DECLARE_NATIVE_INITIALIZER(flash)
 const uint32_t abcclass_flash_display_IBitmapDrawable = 0;
 const uint32_t abcclass_flash_events_Event = 1;
 const uint32_t abcclass_flash_events_IEventDispatcher = 2;
-const uint32_t abcclass_vektrix_EventHandler = 3;
-const uint32_t abcclass_flash_events_FocusEvent = 4;
-const uint32_t abcclass_flash_events_MouseEvent = 5;
-const uint32_t abcclass_flash_events_EventDispatcher = 6;
-const uint32_t abcclass_flash_display_DisplayObject = 7;
-const uint32_t abcclass_flash_media_Camera = 8;
-const uint32_t abcclass_flash_net_LocalConnection = 9;
-const uint32_t abcclass_flash_net_NetConnection = 10;
-const uint32_t abcclass_flash_net_NetStream = 11;
-const uint32_t abcclass_flash_net_SharedObject = 12;
-const uint32_t abcclass_flash_net_Socket = 13;
-const uint32_t abcclass_flash_display_InteractiveObject = 14;
-const uint32_t abcclass_flash_media_Video = 15;
-const uint32_t abcclass_flash_text_StaticText = 16;
-const uint32_t abcclass_flash_display_DisplayObjectContainer = 17;
-const uint32_t abcclass_flash_display_SimpleButton = 18;
-const uint32_t abcclass_flash_text_TextField = 19;
-const uint32_t abcclass_flash_display_Sprite = 20;
-const uint32_t abcclass_flash_display_MovieClip = 21;
+const uint32_t abcclass_flash_text_TextFieldType = 3;
+const uint32_t abcclass_vektrix_EventHandler = 4;
+const uint32_t abcclass_flash_events_FocusEvent = 5;
+const uint32_t abcclass_flash_events_MouseEvent = 6;
+const uint32_t abcclass_flash_events_EventDispatcher = 7;
+const uint32_t abcclass_flash_display_DisplayObject = 8;
+const uint32_t abcclass_flash_media_Camera = 9;
+const uint32_t abcclass_flash_net_LocalConnection = 10;
+const uint32_t abcclass_flash_net_NetConnection = 11;
+const uint32_t abcclass_flash_net_NetStream = 12;
+const uint32_t abcclass_flash_net_SharedObject = 13;
+const uint32_t abcclass_flash_net_Socket = 14;
+const uint32_t abcclass_flash_display_InteractiveObject = 15;
+const uint32_t abcclass_flash_media_Video = 16;
+const uint32_t abcclass_flash_text_StaticText = 17;
+const uint32_t abcclass_flash_display_DisplayObjectContainer = 18;
+const uint32_t abcclass_flash_display_SimpleButton = 19;
+const uint32_t abcclass_flash_text_TextField = 20;
+const uint32_t abcclass_flash_display_Sprite = 21;
+const uint32_t abcclass_flash_display_MovieClip = 22;
 
 /* methods */
-const uint32_t vektrix_EventHandler_add = 31;
-const uint32_t vektrix_EventHandler_handle = 32;
-const uint32_t flash_events_EventDispatcher_addEventListener = 45;
-const uint32_t flash_events_EventDispatcher_dispatchEvent = 46;
-const uint32_t flash_display_DisplayObject_x_get = 52;
-const uint32_t flash_display_DisplayObject_x_set = 53;
-const uint32_t flash_display_DisplayObject_y_get = 54;
-const uint32_t flash_display_DisplayObject_y_set = 55;
-const uint32_t flash_display_DisplayObject_rotation_get = 56;
-const uint32_t flash_display_DisplayObject_rotation_set = 57;
-const uint32_t flash_display_DisplayObject_scaleX_get = 58;
-const uint32_t flash_display_DisplayObject_scaleX_set = 59;
-const uint32_t flash_display_DisplayObject_scaleY_get = 60;
-const uint32_t flash_display_DisplayObject_scaleY_set = 61;
-const uint32_t flash_text_StaticText_text_get = 135;
-const uint32_t flash_text_TextField_htmlText_get = 146;
-const uint32_t flash_text_TextField_htmlText_set = 147;
-const uint32_t flash_text_TextField_getLineIndexAtPoint = 148;
-const uint32_t flash_text_TextField_setSelection = 149;
+const uint32_t vektrix_EventHandler_add = 34;
+const uint32_t vektrix_EventHandler_handle = 35;
+const uint32_t flash_events_EventDispatcher_addEventListener = 48;
+const uint32_t flash_events_EventDispatcher_dispatchEvent = 49;
+const uint32_t flash_events_EventDispatcher_removeEventListener = 51;
+const uint32_t flash_display_DisplayObject_x_get = 55;
+const uint32_t flash_display_DisplayObject_x_set = 56;
+const uint32_t flash_display_DisplayObject_y_get = 57;
+const uint32_t flash_display_DisplayObject_y_set = 58;
+const uint32_t flash_display_DisplayObject_rotation_get = 59;
+const uint32_t flash_display_DisplayObject_rotation_set = 60;
+const uint32_t flash_display_DisplayObject_scaleX_get = 61;
+const uint32_t flash_display_DisplayObject_scaleX_set = 62;
+const uint32_t flash_display_DisplayObject_scaleY_get = 63;
+const uint32_t flash_display_DisplayObject_scaleY_set = 64;
+const uint32_t flash_text_StaticText_text_get = 138;
+const uint32_t flash_text_TextField_htmlText_get = 149;
+const uint32_t flash_text_TextField_htmlText_set = 150;
+const uint32_t flash_text_TextField_getLineIndexAtPoint = 155;
+const uint32_t flash_text_TextField_setSelection = 156;
 
 extern AvmBox vektrix_EventHandler_add_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox vektrix_EventHandler_handle_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_events_EventDispatcher_addEventListener_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_events_EventDispatcher_dispatchEvent_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+extern AvmBox flash_events_EventDispatcher_removeEventListener_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern double flash_display_DisplayObject_x_get_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_display_DisplayObject_x_set_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern double flash_display_DisplayObject_y_get_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
@@ -143,6 +146,9 @@ extern AvmBox flash_text_TextField_getLineIndexAtPoint_thunk(AvmMethodEnv env, u
 extern AvmBox flash_text_TextField_setSelection_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 
 #ifdef VMCFG_INDIRECT_NATIVE_THUNKS
+
+extern AvmBox flash_v2a_osob_optbfalse_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+#define flash_events_EventDispatcher_removeEventListener_thunk  flash_v2a_osob_optbfalse_thunk
 
 extern AvmBox flash_v2a_od_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 #define flash_display_DisplayObject_scaleY_set_thunk  flash_v2a_od_thunk
@@ -237,50 +243,50 @@ public:
     REALLY_INLINE AvmString get_USER_IDLE() const { return m_USER_IDLE; }
     REALLY_INLINE AvmString get_USER_PRESENT() const { return m_USER_PRESENT; }
 private:
-    DRCWB(AvmString) m_ACTIVATE;
-    DRCWB(AvmString) m_ADDED;
-    DRCWB(AvmString) m_ADDED_TO_STAGE;
-    DRCWB(AvmString) m_CANCEL;
-    DRCWB(AvmString) m_CHANGE;
-    DRCWB(AvmString) m_CLEAR;
-    DRCWB(AvmString) m_CLOSE;
-    DRCWB(AvmString) m_CLOSING;
-    DRCWB(AvmString) m_COMPLETE;
-    DRCWB(AvmString) m_CONNECT;
-    DRCWB(AvmString) m_COPY;
-    DRCWB(AvmString) m_CUT;
-    DRCWB(AvmString) m_DEACTIVATE;
-    DRCWB(AvmString) m_DISPLAYING;
-    DRCWB(AvmString) m_ENTER_FRAME;
-    DRCWB(AvmString) m_EXIT_FRAME;
-    DRCWB(AvmString) m_EXITING;
-    DRCWB(AvmString) m_FRAME_CONSTRUCTED;
-    DRCWB(AvmString) m_FULLSCREEN;
-    DRCWB(AvmString) m_HTML_BOUNDS_CHANGE;
-    DRCWB(AvmString) m_HTML_DOM_INITIALIZE;
-    DRCWB(AvmString) m_HTML_RENDER;
-    DRCWB(AvmString) m_ID3;
-    DRCWB(AvmString) m_INIT;
-    DRCWB(AvmString) m_LOCATION_CHANGE;
-    DRCWB(AvmString) m_MOUSE_LEAVE;
-    DRCWB(AvmString) m_NETWORK_CHANGE;
-    DRCWB(AvmString) m_OPEN;
-    DRCWB(AvmString) m_PASTE;
-    DRCWB(AvmString) m_REMOVED;
-    DRCWB(AvmString) m_REMOVED_FROM_STAGE;
-    DRCWB(AvmString) m_RENDER;
-    DRCWB(AvmString) m_RESIZE;
-    DRCWB(AvmString) m_SAMPLE_DATA;
-    DRCWB(AvmString) m_SCROLL;
-    DRCWB(AvmString) m_SELECT;
-    DRCWB(AvmString) m_SELECT_ALL;
-    DRCWB(AvmString) m_SOUND_COMPLETE;
-    DRCWB(AvmString) m_TAB_CHILDREN_CHANGE;
-    DRCWB(AvmString) m_TAB_ENABLED_CHANGE;
-    DRCWB(AvmString) m_TAB_INDEX_CHANGE;
-    DRCWB(AvmString) m_UNLOAD;
-    DRCWB(AvmString) m_USER_IDLE;
-    DRCWB(AvmString) m_USER_PRESENT;
+    AvmString m_ACTIVATE;
+    AvmString m_ADDED;
+    AvmString m_ADDED_TO_STAGE;
+    AvmString m_CANCEL;
+    AvmString m_CHANGE;
+    AvmString m_CLEAR;
+    AvmString m_CLOSE;
+    AvmString m_CLOSING;
+    AvmString m_COMPLETE;
+    AvmString m_CONNECT;
+    AvmString m_COPY;
+    AvmString m_CUT;
+    AvmString m_DEACTIVATE;
+    AvmString m_DISPLAYING;
+    AvmString m_ENTER_FRAME;
+    AvmString m_EXIT_FRAME;
+    AvmString m_EXITING;
+    AvmString m_FRAME_CONSTRUCTED;
+    AvmString m_FULLSCREEN;
+    AvmString m_HTML_BOUNDS_CHANGE;
+    AvmString m_HTML_DOM_INITIALIZE;
+    AvmString m_HTML_RENDER;
+    AvmString m_ID3;
+    AvmString m_INIT;
+    AvmString m_LOCATION_CHANGE;
+    AvmString m_MOUSE_LEAVE;
+    AvmString m_NETWORK_CHANGE;
+    AvmString m_OPEN;
+    AvmString m_PASTE;
+    AvmString m_REMOVED;
+    AvmString m_REMOVED_FROM_STAGE;
+    AvmString m_RENDER;
+    AvmString m_RESIZE;
+    AvmString m_SAMPLE_DATA;
+    AvmString m_SCROLL;
+    AvmString m_SELECT;
+    AvmString m_SELECT_ALL;
+    AvmString m_SOUND_COMPLETE;
+    AvmString m_TAB_CHILDREN_CHANGE;
+    AvmString m_TAB_ENABLED_CHANGE;
+    AvmString m_TAB_INDEX_CHANGE;
+    AvmString m_UNLOAD;
+    AvmString m_USER_IDLE;
+    AvmString m_USER_PRESENT;
 };
 #define DECLARE_SLOTS_EventClass \
     private: \
@@ -351,18 +357,18 @@ public:
 private:
     AvmBool32 m_flash_events_Event_mBubbles;
     AvmBool32 m_flash_events_Event_mCancelable;
-    DRCWB(AvmString) m_flash_events_Event_mType;
-    DRCWB(::vtx::as3::EventDispatcher*) m_flash_events_Event_mEventDispatcher;
+    AvmString m_flash_events_Event_mType;
+    ::vtx::as3::EventDispatcher* m_flash_events_Event_mEventDispatcher;
 };
 REALLY_INLINE void _vtx_as3_EventSlots::set_flash_events_Event_mBubbles(AvmBool32 newVal) { m_flash_events_Event_mBubbles = newVal; }
 REALLY_INLINE void _vtx_as3_EventSlots::set_flash_events_Event_mCancelable(AvmBool32 newVal) { m_flash_events_Event_mCancelable = newVal; }
 REALLY_INLINE void _vtx_as3_EventSlots::set_flash_events_Event_mType(::vtx::as3::Event* obj, AvmString newVal)
 {
-    m_flash_events_Event_mType.set(((ScriptObject*)obj)->gc(), obj, newVal);
+    WBRC(((ScriptObject*)obj)->gc(), obj, &m_flash_events_Event_mType, newVal);
 }
 REALLY_INLINE void _vtx_as3_EventSlots::set_flash_events_Event_mEventDispatcher(::vtx::as3::Event* obj, ::vtx::as3::EventDispatcher* newVal)
 {
-    m_flash_events_Event_mEventDispatcher.set(((ScriptObject*)obj)->gc(), obj, newVal);
+    WBRC(((ScriptObject*)obj)->gc(), obj, &m_flash_events_Event_mEventDispatcher, newVal);
 }
 #define DECLARE_SLOTS_Event \
     private: \

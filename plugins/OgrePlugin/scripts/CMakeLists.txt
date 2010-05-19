@@ -1,9 +1,10 @@
-include_directories (../include) 
-include_directories (../../../lib/include)
+include_directories (
+../include
+../../../core/include
+$ENV{OGRE_HOME}/include/OGRE
+)
 
-include_directories (/home/stone/Desktop/ogre/OgreMain/include)
-
-link_libraries (/home/stone/Desktop/ogre/OgreMain/src/.libs/libOgreMain.so)
+#link_libraries ($ENV{OGRE_HOME}/lib/libOgreMain.so)
 
 set (LIBRARY_OUTPUT_PATH ../../../bin)
 
@@ -12,6 +13,8 @@ set (LIBRARY_OUTPUT_PATH ../../../bin)
 file(GLOB VTXOP_SRC "../src/*.cpp")
 
 add_library (vektrix_OgrePlugin SHARED ${VTXOP_SRC})
+
+target_link_libraries(vektrix_OgrePlugin OgreMain)
 
 set_target_properties(vektrix_OgrePlugin PROPERTIES PREFIX "")
 

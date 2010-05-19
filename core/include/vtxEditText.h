@@ -31,111 +31,18 @@ THE SOFTWARE.
 
 #include "vtxPrerequesites.h"
 #include "vtxDisplayObjectContainer.h"
-#include "vtxGlyphStrip.h"
-#include "vtxHtmlElement.h"
+#include "vtxHtmlOperations.h"
+#include "vtxHtmlRenderable.h"
+#include "vtxTextLine.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
 	/** A visual dynamic/editable textfield that can be displayed inside a Movie */
-	class vtxExport EditText : public DisplayObjectContainer
+	class vtxExport EditText : public DisplayObjectContainer, public HtmlOperations, public HtmlRenderable
 	{
 	public:
-		/** Represents a single line element, such as a word or an image */
-		class LineElement
-		{
-		public:
-			enum ElementType
-			{
-				ET_Word = 0, 
-				ET_Image, 
-				ET_FontChange, 
-				ET_ParagraphChange
-			};
-
-			LineElement()
-			{
-				parentHTML = NULL;
-				reset();
-			}
-
-			/** Reset all attributes of this element */
-			void reset()
-			{
-				// IMAGE
-				image_shape.clear();
-
-				// WORD
-				color = Color();
-				width = x = 0.0f;
-				glyphs.clear();
-
-				// ALIGN_CHANGE
-				align = HtmlElement::AlignLeft;
-
-				// FONT_CHANGE
-				height = 0.0f;
-				font = NULL;
-			}
-
-			ElementType type;
-
-			/// get the parent HtmlElement of the DOM tree, from which this LineElement was generated
-			HtmlElement* parentHTML;
-
-			// IMAGE
-			String image_shape;
-
-			// WORD
-			Color color;
-			float width, x;
-			GlyphStrip::GlyphList glyphs;
-
-			// ALIGN_CHANGE
-			HtmlElement::Alignment align;
-
-			// FONT_CHANGE
-			float height;
-			FontResource* font;
-		};
-		typedef std::vector<LineElement> ElementList;
-
-		/** Represents a single line of an EditText textfield */
-		class Line
-		{
-		public:
-			Line()
-			{
-				align = HtmlElement::AlignLeft;
-				reset();
-			}
-
-			/** Reset all attributes and contents of this line */
-			void reset()
-			{
-				index = -1;
-				width = height = y = 0.0f;
-				elements.clear();
-			}
-
-			int index;
-			float width, height, y;
-			HtmlElement::Alignment align;
-			ElementList elements;
-		};
-		typedef std::vector<Line> LineList;
-
-		/** Represents a style element which contains information about font, color and size */
-		class StyleElement
-		{
-		public:
-			StyleElement() : size(0.0f) {}
-			float size;
-			Color color;
-			FontResource* font;
-		};
-		typedef std::stack<StyleElement> StyleStack;
-		typedef std::stack<HtmlElement::Alignment> AlignmentStack;
+		typedef std::vector<TextLine> LineList;
 
 		EditText(Resource* resource);
 		virtual ~EditText();
@@ -155,7 +62,7 @@ namespace vtx
 
 		const GlyphStrip::Glyph& getGlyphAtPoint(const Vector2& point);
 
-		const Line& getLineAtPoint(const Vector2& point);
+		const TextLine& getLineAtPoint(const Vector2& point);
 
 		/** Set the currently selected text */
 		void setSelection(const uint& beginIndex, const uint& endIndex);
@@ -178,7 +85,7 @@ namespace vtx
 		// properties
 		WString mText;
 		WString mHtmlText;
-		WString mComposedHTMLText;
+		//WString mComposedHTMLText;
 
 		// selection management
 		uint mSelectionBeginIndex;
@@ -194,42 +101,55 @@ namespace vtx
 		HtmlElement* mHtmlDom;
 
 		uint mGlyphCount;
-		StyleStack mStyleStack;
-		AlignmentStack mAlignStack;
 
 		// visuals
 		float mCurrentHeight;
 		GlyphStrip mCurrentStrip;
 		GlyphStripList mGlyphStrips;
 
-		Line mCurrentLine;
+		TextLine mCurrentLine;
 		LineList mLines;
-
-		// DOM Iteration
-		/// remember the previous HtmlText node during the DOM iteration
-		HtmlText* mPreviousTextNode;
-		/// remember the previous HtmlImage node during the DOM iteration
-		HtmlImage* mPreviousImageNode;
 
 		void _buildGraphicsFromDOM();
 
 		/** Inform textfield implementations that they need to update their graphics */
 		virtual void _updateGraphics() = 0;
 
-		/** Recursive method to iterate over the HTML DOM tree */
-		void _recursiveDomIteration(HtmlElement* source_element);
+		void _addFont(HtmlFont* font);
+
+		void _fontStyleChanged(const StyleElement& style);
 
 		/** Add an image to the line that is currently being created */
 		void _addImage(HtmlImage* image);
+
+		void _addParagraph(HtmlParagraph* paragraph);
+
 		/** Add a piece of text to the line that is currently being created */
 		void _addText(HtmlText* text);
+
 		/** Add a single line element to the line that is currently being created */
-		void _addLineElement(LineElement& elem);
+		void _addLineElement(TextLineElement& elem);
+
 		/** Start a new line */
 		void _startNewLine();
 
+		// event handlers
+		void keyboardEvent(const KeyboardEvent& evt);
+		void mouseEvent(const MouseEvent& evt);
+
+		bool mSelecting;
+		typedef std::vector<Shape*> SelectionShapes;
+		SelectionShapes mSelectionShapes;
+
 		/** Create GlyphStrip objects and Shape instances from the generated line elements */
 		void _createStripsAndShapes();
+
+		void _addSelectionShape(const float& sx, const float& sy, const float& x, const float& y);
+
+		/** Create Shape instances to display the current selection */
+		void _createSelectionShapes();
+
+		void _clearSelectionShapes();
 
 		HtmlSelection _getSelectionAtPoint(const Vector2& point);
 	};

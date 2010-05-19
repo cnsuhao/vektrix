@@ -98,6 +98,7 @@ namespace vtx
 	class CXForm;
 	class DefaultFileContainer;
 	class DefaultFileContainerFactory;
+	class DisplayObject;
 	class DisplayObjectContainer;
 	class DynLib;
 	class EditText;
@@ -126,18 +127,19 @@ namespace vtx
 	class InstanceManager;
 	class InstancePool;
 	class InteractiveObject;
+	class KeyboardEvent;
 	class Keyframe;
 	class LogManager;
 	class Material;
 	class MaterialResource;
 	class Matrix;
-	class DisplayObject;
+	class MouseEvent;
 	class Movie;
 	class MovieClip;
 	class MovieClipResource;
 	class MovieDebugger;
-	class RenderStrategy;
 	class MovieFactory;
+	class OpSysHelper;
 	class Plugin;
 	class Rasterizer;
 	class Rect;
@@ -159,6 +161,8 @@ namespace vtx
 	class StaticTextResource;
 	class StringHelper;
 	class SubshapeResource;
+	class TextLine;
+	class TextLineElement;
 	class Texture;
 	class TextureFactory;
 	class Timeline;

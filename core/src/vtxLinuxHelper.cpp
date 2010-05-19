@@ -26,40 +26,26 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxopMovableStaticText_H__
-#define __vtxopMovableStaticText_H__
+#include "vtxOpSysHelper.h"
 
-#include "vtxop.h"
-#include "vtxogreMovableTextBase.h"
-
-//#include "vtxAtlasPacker.h"
-//#include "vtxGlyphStrip.h"
-//#include "vtxRect.h"
-#include "vtxStaticText.h"
+#if VTX_OS == VTX_LINUX
 
 namespace vtx
 {
-	namespace ogre
+	//-----------------------------------------------------------------------
+	static WString clipboard_wstr;
+	//-----------------------------------------------------------------------
+	bool OpSysHelper::copyToClipboard(WString str)
 	{
-		//-----------------------------------------------------------------------
-		class vtxopExport OgreMovableStaticText : public vtx::StaticText, public MovableTextBase
-		{
-		public:
-			OgreMovableStaticText(vtx::Resource* resource);
-			virtual ~OgreMovableStaticText();
-
-			virtual void _setParent(Movie* parent);
-
-			void _update(const float& delta_time);
-			void setGlyphStrips(const GlyphStripList& glyph_strips, 
-				const AtlasPacker::PackResultList& atlas_list);
-
-		protected:
-		};
-		//-----------------------------------------------------------------------
-		FactoryImpl_P1(OgreMovableStaticText, StaticText, Resource*);
-		//-----------------------------------------------------------------------
+		clipboard_wstr = str;
+		return true;
 	}
+	//-----------------------------------------------------------------------
+	WString OpSysHelper::getWStringFromClipboard()
+	{
+		return clipboard_wstr;
+	}
+	//-----------------------------------------------------------------------
 }
 
 #endif

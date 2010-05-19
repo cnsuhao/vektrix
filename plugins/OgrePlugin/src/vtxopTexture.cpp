@@ -122,7 +122,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void OgreTexture::debugOgreTexture()
 		{
-			Ogre::HardwarePixelBufferSharedPtr buffer = mTexture->getBuffer();
+			/*Ogre::HardwarePixelBufferSharedPtr buffer = mTexture->getBuffer();
 
 			buffer->lock(Ogre::HardwareBuffer::HBL_READ_ONLY);
 			const Ogre::PixelBox& pixelBox = buffer->getCurrentLock();
@@ -133,9 +133,9 @@ namespace vtx
 				mTexture->getWidth(), mTexture->getHeight(),
 				mTexture->getDepth(), mTexture->getFormat(),false,1,0);
 
-			image.save("blit.png");
+			//image.save("blit.png");
 
-			buffer->unlock();
+			buffer->unlock();*/
 		}
 		//-----------------------------------------------------------------------
 		const Ogre::MaterialPtr& OgreTexture::getMaterial() const

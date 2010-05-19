@@ -76,9 +76,9 @@ namespace vtx
 		void transformAffine(const Matrix& m);
 
 		/** Get the width of the box */
-		const float getWidth() const;
+		float getWidth() const;
 		/** Get the height of the box */
-		const float getHeight() const;
+		float getHeight() const;
 
 		/** Get the minimum coordinates */
 		const Vector2& getMin() const;

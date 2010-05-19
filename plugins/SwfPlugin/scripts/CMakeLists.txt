@@ -1,6 +1,8 @@
 # include directories
-include_directories (../include) 
-include_directories (../../../lib/include)
+include_directories (
+../include
+../../../core/include
+)
 
 # output directory
 set (LIBRARY_OUTPUT_PATH ../../../bin)

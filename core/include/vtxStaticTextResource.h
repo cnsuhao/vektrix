@@ -31,7 +31,6 @@ THE SOFTWARE.
 
 #include "vtxPrerequesites.h"
 #include "vtxBoundingBox.h"
-#include "vtxColor.h"
 #include "vtxGlyphStrip.h"
 #include "vtxResource.h"
 

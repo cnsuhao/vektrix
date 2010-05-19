@@ -28,14 +28,9 @@ THE SOFTWARE.
 
 #include "vtxopMovableStaticText.h"
 #include "vtxopMovableMovie.h"
-#include "vtxopTexture.h"
 
-#include "vtxAtlasNode.h"
-#include "vtxAtlasPacker.h"
-#include "vtxFile.h"
-#include "vtxFontResource.h"
-#include "vtxGlyphResource.h"
-#include "vtxTexture.h"
+// TODO
+#include "vtxResource.h"
 
 namespace vtx
 {
@@ -44,7 +39,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		OgreMovableStaticText::OgreMovableStaticText(vtx::Resource* resource) 
 			: StaticText(resource), 
-			MovableInstanceBase(this)
+			MovableTextBase(this)
 		{
 			_createBuffers();
 		}
@@ -87,116 +82,7 @@ namespace vtx
 			}
 
 			_resizeBuffers(glyph_count);
-
-			File* file = mResource->getFile();
-			OgreTexture* texture = NULL;
-
-			GlyphStrip::GlyphList::const_iterator glyph_it;
-			GlyphStrip::GlyphList::const_iterator glyph_end;
-
-			// update the buffer
-			_lock();
-
-			// x-Position of glyphs
-			float glyph_x = 0.0f;
-
-			// iterate GlyphStrips
-			it = glyph_strips.begin();
-			end = glyph_strips.end();
-			while(it != end)
-			{
-				const GlyphStrip& glyph_strip = *it;
-				FontResource* font = dynamic_cast<FontResource*>(file->getResource(glyph_strip.fontid));
-
-				// jump to a new line
-				if(glyph_strip.newline)
-				{
-					glyph_x = 0.0f;
-				}
-
-				glyph_x += glyph_strip.x;
-
-				if(font)
-				{
-					glyph_it = glyph_strip.glyphs.begin();
-					glyph_end = glyph_strip.glyphs.end();
-
-					// iterate Glyphs
-					while(glyph_it != glyph_end)
-					{
-						const GlyphStrip::Glyph& glyph = *glyph_it;
-
-						GlyphResource* glyph_res = font->getGlyphByIndex(glyph.index);
-						if(glyph_res)
-						{
-							AtlasPacker::PackResultList::const_iterator atlas_it = atlas_list.find(glyph_res->getPackID());
-							if(atlas_it != atlas_list.end())
-							{
-								const AtlasPacker::PackResult& atlas_quad = atlas_it->second;
-
-								if(!texture)
-								{
-									texture = dynamic_cast<OgreTexture*>(atlas_quad.texture);
-								}
-
-								const float size = glyph_strip.size * 0.05f;
-								const BoundingBox& bb = glyph_res->getBoundingBox();
-								const RectF& uv_rect = atlas_quad.node->getRect().contractedCopy(1).relativeTo(
-									atlas_quad.texture->getSize(), atlas_quad.texture->getSize());
-
-								const RectF pos_rect(
-									bb.getMinX() * size + glyph_x, // left
-									-bb.getMinY() * size - glyph_strip.y, // top
-									bb.getMaxX() * size + glyph_x, // right
-									-bb.getMaxY() * size - glyph_strip.y // bottom
-									);
-
-								// TOP-LEFT
-								_addVertex(
-									Vector2(pos_rect.left, pos_rect.top), 
-									Vector2(uv_rect.left, uv_rect.top), 
-									glyph_strip.color, glyph_strip.color);
-
-								// BOTTOM-LEFT
-								_addVertex(
-									Vector2(pos_rect.left, pos_rect.bottom), 
-									Vector2(uv_rect.left, uv_rect.bottom), 
-									glyph_strip.color, glyph_strip.color);
-
-								// BOTTOM-RIGHT
-								_addVertex(
-									Vector2(pos_rect.right, pos_rect.bottom), 
-									Vector2(uv_rect.right, uv_rect.bottom), 
-									glyph_strip.color, glyph_strip.color);
-
-								// TOP-RIGHT
-								_addVertex(
-									Vector2(pos_rect.right, pos_rect.top), 
-									Vector2(uv_rect.right, uv_rect.top), 
-									glyph_strip.color, glyph_strip.color);
-
-							} // if(atlas_list_result)
-
-						} // if(glyph_res)
-
-						glyph_x += glyph.x_advance;
-
-						++glyph_it;
-
-					} // while(glyphs)
-
-				} // if(font)
-
-				++it;
-
-			} // while(glyph_strips)
-
-			_unlock();
-
-			if(texture)
-			{
-				mMaterial = texture->getMaterial();
-			}
+			_updateVertexBuffer(glyph_strips, atlas_list, mResource->getFile());
 		}
 		//-----------------------------------------------------------------------
 	}

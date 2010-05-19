@@ -30,6 +30,7 @@ THE SOFTWARE.
 
 #include "vtxFocusEvent.h"
 #include "vtxMouseEvent.h"
+#include "vtxMovie.h"
 
 #include "vtxLogManager.h"
 
@@ -54,9 +55,9 @@ namespace vtx
 		{
 			const MouseEvent& mouse_evt = dynamic_cast<const MouseEvent&>(evt);
 
-			if(isPointInside(Vector2(mouse_evt.stageX, mouse_evt.stageY)))
+			if(evt.getType() == MouseEvent::MOUSE_DOWN)
 			{
-				if(evt.getType() == MouseEvent::MOUSE_UP)
+				if(isPointInside(Vector2(mouse_evt.stageX, mouse_evt.stageY)))
 				{
 					if(!mHasFocus)
 					{
@@ -65,9 +66,19 @@ namespace vtx
 
 						eventFired(focus_evt);
 						mHasFocus = true;
+
+						mParentMovie->_setFocusedObject(this);
 					}
 				}
-			}
+				else if(mHasFocus)
+				{
+					FocusEvent focus_evt(FocusEvent::FOCUS_OUT);
+					focus_evt.relatedObject = this;
+
+					eventFired(focus_evt);
+					mHasFocus = false;
+				}
+			} // MOUSE_DOWN
 		}
 	}
 	//-----------------------------------------------------------------------

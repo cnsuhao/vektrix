@@ -147,10 +147,10 @@ namespace vtx
 
 		mMousePosition = Vector2((float)x, (float)y);
 
-		//MouseEvent evt(MouseEvent::MOUSE_MOVE);
-		//evt.stageX = mMousePosition.x;
-		//evt.stageY = mMousePosition.y;
-		//mMainMovieClip->eventFired(evt);
+		MouseEvent evt(MouseEvent::MOUSE_MOVE);
+		evt.stageX = mMousePosition.x;
+		evt.stageY = mMousePosition.y;
+		mMainMovieClip->eventFired(evt);
 	}
 	//-----------------------------------------------------------------------
 	void Movie::setMouseRel(float x, float y)
@@ -269,6 +269,11 @@ namespace vtx
 	void* Movie::getUserData() const
 	{
 		return mUserData;
+	}
+	//-----------------------------------------------------------------------
+	void Movie::_setFocusedObject(InteractiveObject* focused_object)
+	{
+		mFocusedObject = focused_object;
 	}
 	//-----------------------------------------------------------------------
 }

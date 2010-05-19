@@ -335,6 +335,14 @@
 					Name="Instances"
 					>
 					<File
+						RelativePath="..\src\vtxogreMovableTextBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxogreMovableTextBase.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\vtxopMovableEditText.cpp"
 						>
 					</File>

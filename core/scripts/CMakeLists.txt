@@ -1,17 +1,18 @@
 # include directories
-include_directories (../include) 
+include_directories (
+../include
+$ENV{EXPAT_HOME}/lib
+) 
 
-# preprocessor definitions
-add_definitions (-DHAVE_EXPAT_CONFIG_H)
+# library dependencies
+#link_libraries ($ENV{EXPAT_HOME}/lib/libexpat.so)
 
 # output directory
 set (LIBRARY_OUTPUT_PATH ../../bin)
 
 file (GLOB VTX_SRC "../src/*.cpp")
-file (GLOB EXPAT_SRC "../expat/*.c")
 
 # build
-add_library (vektrix SHARED ${VTX_SRC} ${EXPAT_SRC})
+add_library (vektrix SHARED ${VTX_SRC})
 
-# remove "lib" prefix
-set_target_properties(vektrix PROPERTIES PREFIX "")
+target_link_libraries(vektrix expat)

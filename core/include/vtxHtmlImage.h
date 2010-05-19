@@ -46,10 +46,10 @@ namespace vtx
 			hspace, vspace;
 
 		/// get the nearest HtmlText node that is located <b>BEFORE</b> this image inside the DOM tree
-		HtmlText* prevTextNode;
+		//HtmlText* prevTextNode;
 
 		/// get the nearest HtmlText node that is located <b>AFTER</b> this element inside the DOM tree
-		HtmlText* nextTextNode;
+		//HtmlText* nextTextNode;
 	};
 }
 

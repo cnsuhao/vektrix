@@ -436,6 +436,10 @@
 						RelativePath="..\as3\flash\text\TextField.as"
 						>
 					</File>
+					<File
+						RelativePath="..\as3\flash\text\TextFieldType.as"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

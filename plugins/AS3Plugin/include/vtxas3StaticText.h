@@ -53,16 +53,12 @@ namespace vtx
 
 			void setNativeObject(Instance* inst);
 
-			void eventFired(const Event& evt);
-
 			avmplus::Stringp get_text();
 
 			DECLARE_SLOTS_StaticText;
 
 		protected:
 			vtx::StaticText* mStaticText;
-
-			vtx::ScriptObject* _createChildObject(const String& name);
 		};
 		//-----------------------------------------------------------------------
 	}

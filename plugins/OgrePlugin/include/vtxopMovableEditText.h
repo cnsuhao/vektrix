@@ -30,9 +30,7 @@ THE SOFTWARE.
 #define __vtxopMovableEditText_H__
 
 #include "vtxop.h"
-#include "vtxopMovableInstanceBase.h"
-
-#include "vtxAtlasPacker.h"
+#include "vtxogreMovableTextBase.h"
 #include "vtxEditText.h"
 
 namespace vtx
@@ -42,7 +40,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		class vtxopExport OgreMovableEditText : 
 			public EditText, 
-			public MovableInstanceBase, 
+			public MovableTextBase, 
 			public AtlasPacker::Listener
 		{
 		public:

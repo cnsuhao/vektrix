@@ -75,20 +75,5 @@ namespace vtx
 
 		//}
 		//-----------------------------------------------------------------------
-		vtx::ScriptObject* SimpleButton::_createChildObject(const String& name)
-		{
-			csp::ScriptObject* parent_obj = csp::ScriptObject::fromAvmplus(this);
-			if(parent_obj)
-			{
-				csp::ScriptObject* slot_obj = parent_obj->createSlotObject(name);
-				if(slot_obj)
-				{
-					return dynamic_cast<vtx::ScriptObject*>(slot_obj->scriptObj());
-				}
-			}
-
-			return NULL;
-		}
-		//-----------------------------------------------------------------------
 	}
 }

@@ -123,12 +123,12 @@ namespace vtx
 		return mTransform.getMatrix();
 	}
 	//-----------------------------------------------------------------------
-	const float DisplayObject::getWidth() const
+	float DisplayObject::getWidth() const
 	{
 		return getBoundingBox().getWidth() * getMatrix().getScale().x;
 	}
 	//-----------------------------------------------------------------------
-	const float DisplayObject::getHeight() const
+	float DisplayObject::getHeight() const
 	{
 		return getBoundingBox().getHeight() * getMatrix().getScale().y;
 	}

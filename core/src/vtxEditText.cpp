@@ -54,11 +54,13 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	EditText::EditText(Resource* resource) 
 		: DisplayObjectContainer(resource), 
+		HtmlRenderable(resource), 
 		mNeedDomUpdate(true), 
 		mSelectionBeginIndex(0), 
 		mSelectionEndIndex(0), 
 		mHtmlDom(NULL), 
-		mGlyphCount(0)
+		mGlyphCount(0), 
+		mSelecting(false)
 	{
 		mEditTextResource = dynamic_cast<EditTextResource*>(resource);
 
@@ -111,19 +113,19 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	const WString& EditText::getHtmlText()
 	{
-		return mHtmlText;
+		return HtmlOperations::getHtmlText(mHtmlDom);
 	}
 	//-----------------------------------------------------------------------
 	const GlyphStrip::Glyph& EditText::getGlyphAtPoint(const Vector2& point)
 	{
-		const Line& line = getLineAtPoint(point);
+		const TextLine& line = getLineAtPoint(point);
 
 		// iterate line elements
-		ElementList::const_iterator elem_it = line.elements.begin();
-		ElementList::const_iterator elem_end = line.elements.end();
+		TextLine::ElementList::const_iterator elem_it = line.elements.begin();
+		TextLine::ElementList::const_iterator elem_end = line.elements.end();
 		while(elem_it != elem_end)
 		{
-			const LineElement& elem = *elem_it;
+			const TextLineElement& elem = *elem_it;
 
 			if(elem.x <= point.x && elem.x + elem.width >= point.x)
 			{
@@ -144,9 +146,9 @@ namespace vtx
 		return glyph;
 	}
 	//-----------------------------------------------------------------------
-	const EditText::Line& EditText::getLineAtPoint(const Vector2& point)
+	const TextLine& EditText::getLineAtPoint(const Vector2& point)
 	{
-		static const Line empty;
+		static const TextLine empty;
 
 		if(
 			point.x < 0.0f || 
@@ -162,7 +164,7 @@ namespace vtx
 		LineList::iterator line_end = mLines.end();
 		while(line_it != line_end)
 		{
-			const Line& line = *line_it;
+			const TextLine& line = *line_it;
 
 			// line that contains the given point reached
 			if(line.y - line.height <= point.y && line.y >= point.y)
@@ -217,90 +219,15 @@ namespace vtx
 
 		if(evt.getCategory() == KeyboardEvent::CATEGORY)
 		{
-			const KeyboardEvent& keybd_evt = dynamic_cast<const KeyboardEvent&>(evt);
+			const KeyboardEvent& keybd_evt = static_cast<const KeyboardEvent&>(evt);
 
-			if(evt.getType() == KeyboardEvent::KEY_DOWN)
-			{
-				switch(keybd_evt.keyCode)
-				{
-				case KC_BACK:
-					{
-						// DEBUG
-						Shape* shape = dynamic_cast<Shape*>(mParentMovie->getInstance("BlackBox"));
-						if(shape)
-						{
-							// TODO:
-							addChildAt(shape, -1);
-							shape->setMatrix(Matrix(100, 0, 0, 0, 100, 0));
-						}
-					}
-					break;
-
-				case KC_DELETE:
-					{
-						if(mSelectionBegin.element && mSelectionEnd.element)
-						{
-							HtmlOperations op(mHtmlDom);
-							op.eraseSelection(mSelectionBegin, mSelectionEnd);
-							_buildGraphicsFromDOM();
-						}
-					}
-					break;
-
-				case KC_RETURN:
-					break;
-
-					// usual character input
-				default:
-					if(mSelectionBegin == mSelectionEnd && keybd_evt.charCode != 0)
-					{
-						if(mSelectionBegin.element)
-						{
-							if(mSelectionBegin.element->type == HtmlElement::Text && mSelectionBegin.subSelection >= 0)
-							{
-								HtmlText* text = dynamic_cast<HtmlText*>(mSelectionBegin.element);
-								text->text.insert(mSelectionBegin.subSelection, 1, keybd_evt.charCode);
-								++mSelectionBegin.subSelection;
-								++mSelectionEnd.subSelection;
-								_buildGraphicsFromDOM();
-							}
-						}
-					}
-					break;
-				}
-			}
-
-			//VTX_LOG("Key pressed: code: %d, char: %c", keybd_evt.keyCode, keybd_evt.charCode);
+			keyboardEvent(keybd_evt);
 		}
 		else if(evt.getCategory() == MouseEvent::CATEGORY)
 		{
-			const MouseEvent& mouse_evt = dynamic_cast<const MouseEvent&>(evt);
+			const MouseEvent& mouse_evt = static_cast<const MouseEvent&>(evt);
 
-			if(isPointInside(Vector2(mouse_evt.stageX, mouse_evt.stageY)))
-			{
-				Vector2 coord = mTransform.getWorldMatrix().transformInverse(
-					Vector2(mouse_evt.stageX, mouse_evt.stageY));
-
-				if(mouse_evt.getType() == MouseEvent::MOUSE_DOWN)
-				{
-					mSelectionBegin = _getSelectionAtPoint(coord);
-				}
-				else if(mouse_evt.getType() == MouseEvent::MOUSE_UP)
-				{
-					mSelectionEnd = _getSelectionAtPoint(coord);
-				}
-			}
-		}
-		else if(evt.getCategory() == FocusEvent::CATEGORY)
-		{
-			//if(evt.getType() == FocusEvent::FOCUS_IN)
-			//{
-			//	VTX_LOG("FOCUS_IN");
-			//}
-			//else if(evt.getType() == FocusEvent::FOCUS_OUT)
-			//{
-			//	VTX_LOG("FOCUS_OUT");
-			//}
+			mouseEvent(mouse_evt);
 		}
 
 		// TODO: do this in InteractiveObject
@@ -317,174 +244,37 @@ namespace vtx
 		mCurrentLine.reset();
 		mCurrentStrip.reset();
 
-		mPreviousTextNode = NULL;
-		mPreviousImageNode = NULL;
-
-		assert(!mStyleStack.size() && "Style stacks not cleared");
-
 		mLines.clear();
 		mGlyphStrips.clear();
-		mComposedHTMLText.clear();
+
+		_clearSelectionShapes();
 
 		clearLayers();
 
-		_recursiveDomIteration(mHtmlDom);
+		interateDomTree(mHtmlDom);
 
 		_createStripsAndShapes();
+
+		_createSelectionShapes();
 
 		_updateGraphics();
 	}
 	//-----------------------------------------------------------------------
-	void EditText::_recursiveDomIteration(HtmlElement* source_element)
+	void EditText::_addFont(HtmlFont* font)
 	{
-		HtmlElement::ChildList::const_iterator it = source_element->children.begin();
-		HtmlElement::ChildList::const_iterator end = source_element->children.end();
-		while(it != end)
-		{
-			switch((*it)->type)
-			{
-			case HtmlElement::Font:
-				{
-					HtmlFont* font = dynamic_cast<HtmlFont*>(*it);
-					if(!font) break;
 
-					mComposedHTMLText += L"<font";
-
-					StyleElement style;
-
-					if(font->face.length())
-					{
-						mComposedHTMLText += L" face=";
-						mComposedHTMLText.append(font->face.begin(), font->face.end());
-
-						FontResource* new_font = mResource->getFile()->getFontByName(font->face);
-						if(new_font)
-						{
-							style.font = new_font;
-						}
-						// font name given, but font unavailable
-						else if(mStyleStack.size())
-						{
-							VTX_WARN("Unable to find font %s", font->face.c_str());
-							style.font = mStyleStack.top().font;
-						}
-					}
-					else if(mStyleStack.size())
-					{
-						style.font = mStyleStack.top().font;
-					}
-
-					if(font->size.length())
-					{
-						mComposedHTMLText += L" size=";
-						mComposedHTMLText.append(font->size.begin(), font->size.end());
-
-						style.size = StringHelper::toFloat(font->size);
-					}
-					else if(mStyleStack.size())
-						style.size = mStyleStack.top().size;
-
-					if(font->color.length())
-					{
-						mComposedHTMLText += L" color=";
-						mComposedHTMLText.append(font->color.begin(), font->color.end());
-
-						style.color = StringHelper::colorFromHex(font->color);
-					}
-					else if(mStyleStack.size())
-						style.color = mStyleStack.top().color;
-
-					mComposedHTMLText += L">";
-
-					mStyleStack.push(style);
-
-					// add FONT_CHANGE element
-					LineElement font_element;
-					font_element.type = LineElement::ET_FontChange;
-					font_element.color = mStyleStack.top().color;
-					font_element.font = mStyleStack.top().font;
-					font_element.height = mStyleStack.top().size;
-					font_element.x = mCurrentLine.width;
-					mCurrentLine.elements.push_back(font_element);
-
-					// continue recursion
-					_recursiveDomIteration(*it);
-
-					mComposedHTMLText += L"</font>";
-
-					mStyleStack.pop();
-
-					if(mStyleStack.size())
-					{
-						// add FONT_CHANGE element
-						font_element.reset();
-						font_element.type = LineElement::ET_FontChange;
-						font_element.color = mStyleStack.top().color;
-						font_element.font = mStyleStack.top().font;
-						font_element.height = mStyleStack.top().size;
-						font_element.x = mCurrentLine.width;
-						mCurrentLine.elements.push_back(font_element);
-					}
-				}
-				break;
-
-			case HtmlElement::Image:
-				{
-					HtmlImage* img = dynamic_cast<HtmlImage*>(*it);
-					if(!img) break;
-
-					// apply previous text node to this image
-					img->prevTextNode = mPreviousTextNode;
-					mPreviousImageNode = img;
-
-					_addImage(img);
-				}
-				break;
-
-			case HtmlElement::Paragraph:
-				{
-					HtmlParagraph* par = dynamic_cast<HtmlParagraph*>(*it);
-					if(!par) break;
-
-					mAlignStack.push(par->align);
-
-					// continue recursion
-					_recursiveDomIteration(*it);
-
-					mAlignStack.pop();
-				}
-				break;
-
-			case HtmlElement::Text:
-				{
-					HtmlText* text = dynamic_cast<HtmlText*>(*it);
-					if(!text || !mStyleStack.size()) break;
-
-					_addText(text);
-
-					// apply this text node as "next-node" to the previous image
-					if(mPreviousImageNode)
-					{
-						if(!mPreviousImageNode->nextTextNode)
-						{
-							mPreviousImageNode->nextTextNode = text;
-						}
-					}
-					mPreviousTextNode = text;
-
-					// continue recursion
-					_recursiveDomIteration(*it);
-				}
-				break;
-
-			default:
-				// continue recursion
-				_recursiveDomIteration(*it);
-				break;
-			}
-
-			++it;
-		}
+	}
+	//-----------------------------------------------------------------------
+	void EditText::_fontStyleChanged(const StyleElement& style)
+	{
+		// add FONT_CHANGE element
+		TextLineElement font_element;
+		font_element.type = TextLineElement::ET_FontChange;
+		font_element.color = style.color;
+		font_element.font = style.font;
+		font_element.height = style.size;
+		font_element.x = mCurrentLine.width;
+		mCurrentLine.elements.push_back(font_element);
 	}
 	//-----------------------------------------------------------------------
 	void EditText::_addImage(HtmlImage* image)
@@ -492,17 +282,8 @@ namespace vtx
 		ShapeResource* shape_res = dynamic_cast<ShapeResource*>(mParentMovie->getFile()->getResource(image->src));
 		if(!shape_res) return;
 
-		// add FONT_CHANGE element
-		LineElement font_element;
-		font_element.type = LineElement::ET_FontChange;
-		font_element.color = mStyleStack.top().color;
-		font_element.font = mStyleStack.top().font;
-		font_element.height = mStyleStack.top().size;
-		font_element.x = mCurrentLine.width;
-		mCurrentLine.elements.push_back(font_element);
-
-		LineElement img;
-		img.type = LineElement::ET_Image;
+		TextLineElement img;
+		img.type = TextLineElement::ET_Image;
 		img.align = image->align;
 		img.image_shape = image->src;
 		img.parentHTML = image;
@@ -542,26 +323,27 @@ namespace vtx
 
 		// add the image element
 		_addLineElement(img);
+	}
+	//-----------------------------------------------------------------------
+	void EditText::_addParagraph(HtmlParagraph* paragraph)
+	{
 
-		if(mStyleStack.size())
-		{
-			// add FONT_CHANGE element
-			font_element.reset();
-			font_element.type = LineElement::ET_FontChange;
-			font_element.color = mStyleStack.top().color;
-			font_element.font = mStyleStack.top().font;
-			font_element.height = mStyleStack.top().size;
-			font_element.x = mCurrentLine.width;
-			mCurrentLine.elements.push_back(font_element);
-		}
 	}
 	//-----------------------------------------------------------------------
 	void EditText::_addText(HtmlText* text)
 	{
-		LineElement word_element;
-		word_element.type = LineElement::ET_Word;
+		const StyleElement& style = getCurrentStyle();
+
+		TextLineElement word_element;
+		word_element.type = TextLineElement::ET_Word;
 		word_element.parentHTML = text;
-		FontResource* font = mStyleStack.top().font;
+		FontResource* font = style.font;
+
+		if(!font)
+		{
+			VTX_WARN("Invalid font");
+			return;
+		}
 
 		// iterate over characters
 		uint charIndex = 0;
@@ -581,8 +363,9 @@ namespace vtx
 			GlyphStrip::Glyph glyph;
 			glyph.index = glyph_res->getIndex();
 			glyph.index_in_string = charIndex;
-			glyph.x_advance = glyph_res->getAdvance() * mStyleStack.top().size/20.0f;
+			glyph.x_advance = glyph_res->getAdvance() * style.size/20.0f;
 			word_element.width += glyph.x_advance;
+			glyph.x_in_word = word_element.width;
 			word_element.glyphs.push_back(glyph);
 
 			// word delimiter reached
@@ -606,8 +389,10 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	void EditText::_addLineElement(LineElement& elem)
+	void EditText::_addLineElement(TextLineElement& elem)
 	{
+		const StyleElement& style = getCurrentStyle();
+
 		// word doesn't fit into current line --> start a new one
 		if(mCurrentLine.width + elem.width > getBoundingBox().getWidth())
 		{
@@ -616,14 +401,14 @@ namespace vtx
 
 		switch(elem.type)
 		{
-		case LineElement::ET_Word:
-			if(mStyleStack.top().size > mCurrentLine.height)
+		case TextLineElement::ET_Word:
+			if(style.size > mCurrentLine.height)
 			{
-				mCurrentLine.height = mStyleStack.top().size;
+				mCurrentLine.height = style.size;
 			}
 			break;
 
-		case LineElement::ET_Image:
+		case TextLineElement::ET_Image:
 			if(elem.height > mCurrentLine.height)
 			{
 				mCurrentLine.height = elem.height;
@@ -651,6 +436,134 @@ namespace vtx
 		mCurrentLine.reset();
 	}
 	//-----------------------------------------------------------------------
+	void EditText::keyboardEvent(const KeyboardEvent& evt)
+	{
+		if(evt.getType() == KeyboardEvent::KEY_DOWN)
+		{
+			switch(evt.keyCode)
+			{
+			case KC_LEFT:
+				{
+					mSelectionBegin = mSelectionEnd = 
+						selectBackward(mSelectionBegin);
+
+					// TODO: add "_buildSelectionShapes()" since no DOM update should be necessary here
+					_buildGraphicsFromDOM();
+				}
+				break;
+
+			case KC_RIGHT:
+				{
+					mSelectionBegin = mSelectionEnd = 
+						selectForward(mSelectionEnd);
+
+					_buildGraphicsFromDOM();
+				}
+				break;
+
+			case KC_BACK:
+				{
+					////eraseBackward(mHtmlDom);
+					////_buildGraphicsFromDOM();
+					if(mSelectionBegin.element && mSelectionEnd.element)
+					{
+						if(mSelectionBegin != mSelectionEnd)
+						{
+							mSelectionBegin = mSelectionEnd = 
+								eraseSelection(mHtmlDom, mSelectionBegin, mSelectionEnd);
+						}
+						else
+						{
+							mSelectionBegin = mSelectionEnd = 
+								eraseBackward(mSelectionBegin);
+						}
+
+						_buildGraphicsFromDOM();
+					}
+				}
+				break;
+
+			case KC_DELETE:
+				{
+					////eraseForward(mHtmlDom);
+					////_buildGraphicsFromDOM();
+					if(mSelectionBegin.element && mSelectionEnd.element)
+					{
+						if(mSelectionBegin != mSelectionEnd)
+						{
+							mSelectionBegin = mSelectionEnd = 
+								eraseSelection(mHtmlDom, mSelectionBegin, mSelectionEnd);
+						}
+						else
+						{
+							mSelectionBegin = mSelectionEnd = 
+								eraseForward(mSelectionBegin);
+						}
+
+						_buildGraphicsFromDOM();
+					}
+				}
+				break;
+
+			case KC_RETURN:
+				break;
+
+				// usual character input
+			default:
+				if(mSelectionBegin == mSelectionEnd && evt.charCode != 0)
+				{
+					if(mSelectionBegin.element)
+					{
+						if(mSelectionBegin.element->getType() == HtmlElement::Text && mSelectionBegin.subSel >= 0)
+						{
+							HtmlText* text = static_cast<HtmlText*>(mSelectionBegin.element);
+							text->text.insert(mSelectionBegin.subSel, 1, evt.charCode);
+							++mSelectionBegin.subSel;
+							++mSelectionEnd.subSel;
+							_buildGraphicsFromDOM();
+						}
+					}
+				}
+				break;
+			}
+		}
+	}
+	//-----------------------------------------------------------------------
+	void EditText::mouseEvent(const MouseEvent& evt)
+	{
+		if(isPointInside(Vector2(evt.stageX, evt.stageY)))
+		{
+			Vector2 coord = mTransform.getWorldMatrix().transformInverse(
+				Vector2(evt.stageX, evt.stageY));
+
+			if(evt.getType() == MouseEvent::MOUSE_DOWN)
+			{
+				mSelectionBegin = _getSelectionAtPoint(coord);
+				mSelecting = true;
+			}
+			else if(evt.getType() == MouseEvent::MOUSE_MOVE)
+			{
+				if(mSelecting)
+				{
+					mSelectionEnd = _getSelectionAtPoint(coord);
+					_createSelectionShapes();
+				}
+			}
+		}
+
+		// TODO: no more _getSelectionAtPoint here, just use the already present result
+		// (note: but looks like its needed, without it failure)
+		if(evt.getType() == MouseEvent::MOUSE_UP)
+		{
+			Vector2 coord = mTransform.getWorldMatrix().transformInverse(
+				Vector2(evt.stageX, evt.stageY));
+
+			mSelectionEnd = _getSelectionAtPoint(coord);
+			_createSelectionShapes();
+			mSelecting = false;
+		}
+	}
+	//-----------------------------------------------------------------------
 	void EditText::_createStripsAndShapes()
 	{
 		if(mCurrentLine.elements.size())
@@ -660,24 +573,26 @@ namespace vtx
 		}
 
 		// iterate lines
-		LineList::iterator line_it = mLines.begin();
-		LineList::iterator line_end = mLines.end();
-		while(line_it != line_end)
+		//LineList::iterator line_it = mLines.begin();
+		//LineList::iterator line_end = mLines.end();
+		//while(line_it != line_end)
+		for(uint line_it=0; line_it<mLines.size(); ++line_it)
 		{
-			const Line& line = *line_it;
+			//const TextLine& line = *line_it;
+			const TextLine& line = mLines.at(line_it);
 
 			mCurrentStrip.y += line.height;
 
 			// iterate line elements
-			ElementList::const_iterator elem_it = line.elements.begin();
-			ElementList::const_iterator elem_end = line.elements.end();
+			TextLine::ElementList::const_iterator elem_it = line.elements.begin();
+			TextLine::ElementList::const_iterator elem_end = line.elements.end();
 			while(elem_it != elem_end)
 			{
-				const LineElement& elem = *elem_it;
+				const TextLineElement& elem = *elem_it;
 
 				switch(elem.type)
 				{
-				case LineElement::ET_FontChange:
+				case TextLineElement::ET_FontChange:
 					{
 						// only store the current strip if there already were some glyphs processed
 						if(mCurrentStrip.glyphs.size())
@@ -694,8 +609,44 @@ namespace vtx
 					}
 					break;
 
-				case LineElement::ET_Word:
+				case TextLineElement::ET_Word:
 					{
+						// DEBUG
+						if(
+							elem.parentHTML == mSelectionBegin.element && 
+							mSelectionBegin == mSelectionEnd)
+						{
+							if(elem.glyphs.size())
+							{
+								const int& startIdx = elem.glyphs.front().index_in_string;
+								const int& endIdx = elem.glyphs.back().index_in_string;
+
+								if(mSelectionBegin.subSel >= startIdx && 
+									mSelectionBegin.subSel <= endIdx+1)
+								{
+									std::cout << "successful x calc" << std::endl;
+									mSelectionBegin.lineIndex = mSelectionEnd.lineIndex = line_it;
+									mSelectionBegin.x = elem.x;
+
+									int idx = mSelectionBegin.subSel-startIdx-1;
+									if(idx >= 0)
+									{
+										mSelectionBegin.x += elem.glyphs.at(idx).x_in_word;
+									}
+
+									//GlyphStrip::GlyphList::const_iterator glyph_it = elem.glyphs.begin();
+									//GlyphStrip::GlyphList::const_iterator glyph_end = elem.glyphs.end();
+									//while(glyph_it != glyph_end && (*glyph_it).index_in_string < mSelectionBegin.subSel)
+									//{
+									//	mSelectionBegin.x += (*glyph_it).x_advance;
+									//	++glyph_it;
+									//}
+
+									mSelectionEnd.x = mSelectionBegin.x;
+								}
+							}
+						}
+
 						mCurrentStrip.glyphs.insert(
 							mCurrentStrip.glyphs.end(), 
 							elem.glyphs.begin(), 
@@ -703,7 +654,7 @@ namespace vtx
 					}
 					break;
 
-				case LineElement::ET_Image:
+				case TextLineElement::ET_Image:
 					{
 						Shape* shape = dynamic_cast<Shape*>(mParentMovie->getInstance(elem.image_shape));
 						if(!shape) break;
@@ -726,33 +677,170 @@ namespace vtx
 			mCurrentStrip.glyphs.clear();
 			mCurrentStrip.x = 0.0f;
 
-			++line_it;
+		} // for(lines)
+	}
+	//-----------------------------------------------------------------------
+	void EditText::_addSelectionShape(const float& sx, const float& sy, 
+		const float& x, const float& y)
+	{
+		Shape* shape = dynamic_cast<Shape*>(mParentMovie->getInstance("BlackBox"));
+		if(shape)
+		{
+			addChild(shape);
+			mSelectionShapes.push_back(shape);
 
-		} // while(lines)
+			shape->setMatrix(Matrix(
+				sx, 0, x, 
+				0, sy, y));
+		}
+	}
+	//-----------------------------------------------------------------------
+	void EditText::_createSelectionShapes()
+	{
+		// TODO: fix bug when selectionBegin is an empty space
+		if(mSelectionBegin.lineIndex < 0 || mSelectionEnd.lineIndex < 0)
+		{
+			return;
+		}
+
+		_clearSelectionShapes();
+
+		// simple cursor position
+		if(mSelectionBegin == mSelectionEnd)
+		{
+			const TextLine& line = mLines.at(mSelectionBegin.lineIndex);
+			_addSelectionShape(
+				1.0f, line.height, 
+				mSelectionBegin.x-0.5f, line.y-line.height);
+		}
+		// selecting backwards
+		else if(mSelectionBegin > mSelectionEnd)
+		{
+			// selecting a single line
+			if(mSelectionBegin.lineIndex == mSelectionEnd.lineIndex)
+			{
+				const TextLine& line = mLines.at(mSelectionBegin.lineIndex);
+
+				_addSelectionShape(
+					mSelectionBegin.x-mSelectionEnd.x, line.height, 
+					mSelectionEnd.x, line.y-line.height);
+			}
+			// selecting multiple lines
+			else
+			{
+				for(int i=mSelectionBegin.lineIndex; i>=mSelectionEnd.lineIndex; --i)
+				{
+					const TextLine& line = mLines.at(i);
+
+					// last line
+					if(i == mSelectionBegin.lineIndex)
+					{
+						_addSelectionShape(
+							mSelectionBegin.x, line.height, 
+							0.0f, line.y-line.height);
+					}
+					// first line
+					else if(i == mSelectionEnd.lineIndex)
+					{
+						_addSelectionShape(
+							getBoundingBox().getWidth()-mSelectionEnd.x, line.height, 
+							mSelectionEnd.x, line.y-line.height);
+					}
+					// lines in between
+					else
+					{
+						_addSelectionShape(
+							getBoundingBox().getWidth(), line.height, 
+							0.0f, line.y-line.height);
+					}
+
+				} // for(lines)
+			}
+		}
+		// selecting forward
+		else
+		{
+			// selecting a single line
+			if(mSelectionBegin.lineIndex == mSelectionEnd.lineIndex)
+			{
+				const TextLine& line = mLines.at(mSelectionBegin.lineIndex);
+
+				_addSelectionShape(
+					mSelectionEnd.x-mSelectionBegin.x, line.height, 
+					mSelectionBegin.x, line.y-line.height);
+			}
+			// selecting multiple lines
+			else
+			{
+				for(int i=mSelectionBegin.lineIndex; i<=mSelectionEnd.lineIndex; ++i)
+				{
+					const TextLine& line = mLines.at(i);
+
+					// first line
+					if(i == mSelectionBegin.lineIndex)
+					{
+						_addSelectionShape(
+							getBoundingBox().getWidth()-mSelectionBegin.x, line.height, 
+							mSelectionBegin.x, line.y-line.height);
+					}
+					// last line
+					else if(i == mSelectionEnd.lineIndex)
+					{
+						_addSelectionShape(
+							mSelectionEnd.x, line.height, 
+							0.0f, line.y-line.height);
+					}
+					// lines in between
+					else
+					{
+						_addSelectionShape(
+							getBoundingBox().getWidth(), line.height, 
+							0.0f, line.y-line.height);
+					}
+
+				} // for(lines)
+			}
+		}
+	}
+	//-----------------------------------------------------------------------
+	void EditText::_clearSelectionShapes()
+	{
+		SelectionShapes::iterator it = mSelectionShapes.begin();
+		SelectionShapes::iterator end = mSelectionShapes.end();
+		while(it != end)
+		{
+			removeChildAt((*it)->getLayer());
+			++it;
+		}
+
+		mSelectionShapes.clear();
 	}
 	//-----------------------------------------------------------------------
 	HtmlSelection EditText::_getSelectionAtPoint(const Vector2& point)
 	{
-		const Line& line = getLineAtPoint(point);
+		const TextLine& line = getLineAtPoint(point);
 
 		// valid line
 		if(line.index >= 0)
 		{
 			// iterate line elements
-			ElementList::const_iterator elem_it = line.elements.begin();
-			ElementList::const_iterator elem_end = line.elements.end();
+			TextLine::ElementList::const_iterator elem_it = line.elements.begin();
+			TextLine::ElementList::const_iterator elem_end = line.elements.end();
 			while(elem_it != elem_end)
 			{
-				const LineElement& elem = *elem_it;
+				const TextLineElement& elem = *elem_it;
 
 				if(elem.x <= point.x && elem.x + elem.width >= point.x)
 				{
-					HtmlSelection selection;
-					selection.element = elem.parentHTML;
+					HtmlSelection sel;
+					sel.x = elem.x + elem.width;
+					sel.lineIndex = line.index;
+					sel.element = elem.parentHTML;
+					//sel.subSelection = -1; // TODO: check for correctness / debug
 
-					if(selection.element)
+					if(sel.element)
 					{
-						if(selection.element->type == HtmlElement::Text)
+						if(sel.element->getType() == HtmlElement::Text)
 						{
 							float glyph_x = elem.x;
 							GlyphStrip::GlyphList::const_iterator glyph_it = elem.glyphs.begin();
@@ -763,8 +851,9 @@ namespace vtx
 
 								if(glyph_x + glyph.x_advance * 0.5f >= point.x)
 								{
-									selection.subSelection = glyph.index_in_string;
-									return selection;
+									sel.x = glyph_x;
+									sel.subSel = glyph.index_in_string;
+									return sel;
 								}
 
 								glyph_x += glyph.x_advance;
@@ -772,40 +861,45 @@ namespace vtx
 								++glyph_it;
 							}
 						}
-						else if(selection.element->type == HtmlElement::Image)
+						else if(sel.element->getType() == HtmlElement::Image)
 						{
 							// TODO: find next or previous "Text" node and set it as selection instead
 							float center = elem.x + elem.width * 0.5f;
 
-							HtmlImage* img = dynamic_cast<HtmlImage*>(elem.parentHTML);
+							HtmlImage* img = static_cast<HtmlImage*>(sel.element);
 
-							if(img)
+							//sel.x = elem.x + elem.width;
+
+							// cursor to the left of the image
+							if(point.x < center)
 							{
-								// cursor to the left of the image
-								if(point.x < center)
+								sel.element = img->prevVisualNode;
+
+								HtmlText* prevText = dynamic_cast<HtmlText*>(img->prevVisualNode);
+								if(prevText)
 								{
-									selection.element = img->prevTextNode;
-									if(img->prevTextNode)
-									{
-										selection.subSelection = img->prevTextNode->text.length();
-									}
+									sel.subSel = prevText->text.length();
 								}
-								// cursor to the right of the image
-								else
+							}
+							// cursor to the right of the image
+							else
+							{
+								sel.element = img->nextVisualNode;
+
+								HtmlText* nextText = dynamic_cast<HtmlText*>(img->nextVisualNode);
+								if(nextText)
 								{
-									selection.element = img->nextTextNode;
-									if(img->nextTextNode)
-									{
-										selection.subSelection = 0;
-									}
+									sel.subSel = 0;
 								}
 							}
 
-							return selection;
-						}
-					}
+							return sel;
 
-					return selection;
+						} // switch(element.type)
+
+					} // if(sel.element)
+
+					return sel;
 
 				} // point inside element
 

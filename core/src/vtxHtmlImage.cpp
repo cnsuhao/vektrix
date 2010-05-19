@@ -35,9 +35,9 @@ namespace vtx
 		: HtmlElement(HtmlElement::Image, parent), 
 		align(AlignLeft), 
 		width(0.0f), height(0.0f), 
-		hspace(0.0f), vspace(0.0f), 
+		hspace(0.0f), vspace(0.0f)/*, 
 		prevTextNode(NULL), 
-		nextTextNode(NULL)
+		nextTextNode(NULL)*/
 	{
 
 	}

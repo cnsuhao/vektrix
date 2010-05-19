@@ -50,7 +50,7 @@ namespace vtx
 		/** @copybrief Timeline::gotoTime */
 		bool gotoTime(const float& time);
 
-		const uint getCurrentFrame() const;
+		uint getCurrentFrame() const;
 
 		/** @copybrief DisplayObjectContainer::_update */
 		void _update(const float& delta_time);

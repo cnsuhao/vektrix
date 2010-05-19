@@ -27,7 +27,6 @@ THE SOFTWARE.
 */
 
 #include "vtxDynLib.h"
-
 #include "vtxLogManager.h"
 
 namespace vtx

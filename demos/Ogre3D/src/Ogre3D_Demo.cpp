@@ -10,7 +10,6 @@
 #include "vtxas3Plugin.h"
 #include "vtxcaiPlugin.h"
 #include "vtxcurlPlugin.h"
-#include "vtxd3d9Plugin.h"
 #include "vtxfreeimgPlugin.h"
 #include "vtxopPlugin.h"
 #include "vtxswfPlugin.h"
@@ -64,7 +63,7 @@ public:
 					movie_node->yaw(Ogre::Radian(+evt.timeSinceLastFrame), Ogre::Node::TS_WORLD);
 				}
 			}
-			else
+			else if(mKeyboard->isKeyDown(OIS::KC_LCONTROL))
 			{
 				if(mKeyboard->isKeyDown(OIS::KC_LEFT))
 				{
@@ -213,10 +212,7 @@ int main(int argc, char **argv)
 	vtx::LogManager::getSingletonPtr()->logToCout(true);
 
 	// vektrix plugins
-#if VTX_OS == VTX_WIN32
 	VTX_LOAD_PLUGIN(vektrix_AS3Plugin);
-	VTX_LOAD_PLUGIN(vektrix_D3D9Plugin);
-#endif
 	VTX_LOAD_PLUGIN(vektrix_CairoPlugin);
 	VTX_LOAD_PLUGIN(vektrix_cURLPlugin);
 	VTX_LOAD_PLUGIN(vektrix_FreeImgPlugin);
@@ -263,6 +259,18 @@ int main(int argc, char **argv)
 	windowHndStr << windowHnd;
 	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
 
+#if defined OIS_WIN32_PLATFORM
+	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND" )));
+	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
+	pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
+	pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
+#elif defined OIS_LINUX_PLATFORM
+	pl.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
+	pl.insert(std::make_pair(std::string("x11_mouse_hide"), std::string("false")));
+	pl.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
+	pl.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
+#endif
+
 	// setup the manager, keyboard and mouse to handle input
 	OIS::InputManager* inputManager = OIS::InputManager::createInputSystem(pl);
 	OIS::Keyboard* keyboard = static_cast<OIS::Keyboard*>(inputManager->createInputObject(OIS::OISKeyboard, true));
@@ -287,7 +295,9 @@ int main(int argc, char **argv)
 
 	// VEKTRIX
 	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "http://fuse-software.com/vektrix/dyn_text_web.swf", "OgreMovableMovie");
+	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "lorem_ipsum2.swf", "OgreMovableMovie");
 	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie");
+	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "as3_textfield.swf", "OgreMovableMovie");
 	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "cpp_test.swf", "OgreMovableMovie");
 	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "video_test.swf", "OgreMovableMovie");
 	movie->play();

@@ -58,8 +58,6 @@ namespace vtx
 
 		protected:
 			vtx::Button* mButton;
-
-			vtx::ScriptObject* _createChildObject(const String& name);
 		};
 		//-----------------------------------------------------------------------
 	}

@@ -26,39 +26,28 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxopMovableStaticText_H__
-#define __vtxopMovableStaticText_H__
+#ifndef __vtxogreMovableTextBase_H__
+#define __vtxogreMovableTextBase_H__
 
 #include "vtxop.h"
-#include "vtxogreMovableTextBase.h"
-
-//#include "vtxAtlasPacker.h"
-//#include "vtxGlyphStrip.h"
-//#include "vtxRect.h"
-#include "vtxStaticText.h"
+#include "vtxopMovableInstanceBase.h"
+#include "vtxAtlasPacker.h"
+#include "vtxGlyphStrip.h"
 
 namespace vtx
 {
 	namespace ogre
 	{
-		//-----------------------------------------------------------------------
-		class vtxopExport OgreMovableStaticText : public vtx::StaticText, public MovableTextBase
+		class vtxopExport MovableTextBase : public MovableInstanceBase
 		{
 		public:
-			OgreMovableStaticText(vtx::Resource* resource);
-			virtual ~OgreMovableStaticText();
-
-			virtual void _setParent(Movie* parent);
-
-			void _update(const float& delta_time);
-			void setGlyphStrips(const GlyphStripList& glyph_strips, 
-				const AtlasPacker::PackResultList& atlas_list);
+			MovableTextBase(DisplayObject* display_object);
+			virtual ~MovableTextBase();
 
 		protected:
+			// TODO: remove file dependency somehow (by using FontResource* instead of a string in GlyphStrips ???)
+			void _updateVertexBuffer(const GlyphStripList& glyph_strips, const AtlasPacker::PackResultList& atlas_list, File* file);
 		};
-		//-----------------------------------------------------------------------
-		FactoryImpl_P1(OgreMovableStaticText, StaticText, Resource*);
-		//-----------------------------------------------------------------------
 	}
 }
 

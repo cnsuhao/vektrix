@@ -46,6 +46,7 @@ namespace vtx
 		{
 			mCurl = curl_easy_init();
 			curl_easy_setopt(mCurl, CURLOPT_WRITEFUNCTION, &memoryCallback);
+			curl_easy_setopt(mCurl, CURLOPT_CONNECTTIMEOUT_MS, 1000);
 		}
 		//-----------------------------------------------------------------------
 		WebFileContainer::~WebFileContainer()

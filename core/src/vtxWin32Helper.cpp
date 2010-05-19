@@ -26,58 +26,107 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxHtmlElement.h"
+#include "vtxOpSysHelper.h"
+
+#if VTX_OS == VTX_WIN32
+
+#define WIN32_LEAN_AND_MEAN
+#include "windows.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	HtmlElement::HtmlElement(const Type& type, HtmlElement* parent) 
-		: type(type), 
-		parent(parent), 
-		prevVisualNode(NULL), 
-		nextVisualNode(NULL)
+	bool OpSysHelper::copyToClipboard(WString str)
 	{
+		// open the clipboard
+		if(!OpenClipboard(NULL))
+		{
+			return false;
+		}
 
-	}
-	//-----------------------------------------------------------------------
-	HtmlElement::~HtmlElement()
-	{
-		ChildList::iterator it = children.begin();
-		ChildList::iterator end = children.end();
-		while(it != end)
+		// empty the clipboard
+		if(!EmptyClipboard())
 		{
-			delete *it;
-			++it;
+			CloseClipboard();
+			return false;
 		}
-	}
-	//-----------------------------------------------------------------------
-	void HtmlElement::addChild(HtmlElement* child)
-	{
-		children.push_back(child);
-	}
-	//-----------------------------------------------------------------------
-	void HtmlElement::removeChild(const uint& index)
-	{
-		if(index >= 0 && index < children.size())
-		{
-			children.erase(children.begin() + index);
-		}
-	}
-	//-----------------------------------------------------------------------
-	void HtmlElement::removeChild(HtmlElement* element)
-	{
-		ChildList::iterator it = children.begin();
-		ChildList::iterator end = children.end();
-		while(it != end)
-		{
-			if(*it == element)
-			{
-				children.erase(it);
-				return;
-			}
 
-			++it;
+		// allocate global memory
+		uint str_len = (str.length() + 1) * sizeof(wchar_t);
+		HGLOBAL mem = GlobalAlloc(GMEM_MOVEABLE, str_len);
+		if(mem == NULL)
+		{
+			CloseClipboard();
+			return false;
 		}
+
+		// lock memory, and copy text to it
+		wchar_t* dest = (wchar_t*)GlobalLock(mem);
+		if(dest == NULL)
+		{
+			GlobalUnlock(mem);
+			CloseClipboard();
+			return false;
+		}
+
+		memcpy(dest, str.c_str(), str_len);
+
+		// unlock memory block
+		GlobalUnlock(mem);
+
+		// copy memory to clipboard
+		if(SetClipboardData(CF_UNICODETEXT, mem) == NULL)
+		{
+			CloseClipboard();
+			return false;
+		}
+
+		// release the clipboard
+		CloseClipboard();
+
+		return true;
+	}
+	//-----------------------------------------------------------------------
+	WString OpSysHelper::getWStringFromClipboard()
+	{
+		WString result;
+
+		// open the clipboard
+		if(!OpenClipboard(NULL))
+		{
+			return L"";
+		}
+
+		HGLOBAL mem = GetClipboardData(CF_UNICODETEXT);
+
+		if(mem == NULL)
+		{
+			CloseClipboard();
+			return L"";
+		}
+
+		uint len = GlobalSize(mem) / sizeof(wchar_t);
+
+		wchar_t* begin = (wchar_t*)GlobalLock(mem);
+		if(begin == NULL)
+		{
+			GlobalUnlock(mem);
+			CloseClipboard();
+			return L"";
+		}
+
+		wchar_t* end = std::find(begin, begin + len, L'\0');
+		result.assign(begin, end);
+
+		// unlock memory block
+		GlobalUnlock(mem);
+
+		// release the clipboard
+		CloseClipboard();
+
+		return result;
 	}
 	//-----------------------------------------------------------------------
 }
+
+#endif

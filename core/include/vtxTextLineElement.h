@@ -26,40 +26,71 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxopMovableStaticText_H__
-#define __vtxopMovableStaticText_H__
+#ifndef __vtxTextLineElement_H__
+#define __vtxTextLineElement_H__
 
-#include "vtxop.h"
-#include "vtxogreMovableTextBase.h"
-
-//#include "vtxAtlasPacker.h"
-//#include "vtxGlyphStrip.h"
-//#include "vtxRect.h"
-#include "vtxStaticText.h"
+#include "vtxPrerequesites.h"
+#include "vtxGlyphStrip.h"
 
 namespace vtx
 {
-	namespace ogre
+	/** Represents a single line element, such as a word or an image */
+	class TextLineElement
 	{
-		//-----------------------------------------------------------------------
-		class vtxopExport OgreMovableStaticText : public vtx::StaticText, public MovableTextBase
+	public:
+		enum ElementType
 		{
-		public:
-			OgreMovableStaticText(vtx::Resource* resource);
-			virtual ~OgreMovableStaticText();
-
-			virtual void _setParent(Movie* parent);
-
-			void _update(const float& delta_time);
-			void setGlyphStrips(const GlyphStripList& glyph_strips, 
-				const AtlasPacker::PackResultList& atlas_list);
-
-		protected:
+			ET_Word = 0, 
+			ET_Image, 
+			ET_FontChange, 
+			ET_ParagraphChange
 		};
-		//-----------------------------------------------------------------------
-		FactoryImpl_P1(OgreMovableStaticText, StaticText, Resource*);
-		//-----------------------------------------------------------------------
-	}
+
+		TextLineElement()
+		{
+			parentHTML = NULL;
+			reset();
+		}
+
+		/** Reset all attributes of this element */
+		void reset()
+		{
+			// IMAGE
+			image_shape.clear();
+
+			// WORD
+			color = Color();
+			width = x = 0.0f;
+			glyphs.clear();
+
+			// ALIGN_CHANGE
+			align = HtmlElement::AlignLeft;
+
+			// FONT_CHANGE
+			height = 0.0f;
+			font = NULL;
+		}
+
+		ElementType type;
+
+		/// get the parent HtmlElement of the DOM tree, from which this LineElement was generated
+		HtmlElement* parentHTML;
+
+		// IMAGE
+		String image_shape;
+
+		// WORD
+		Color color;
+		float width, x;
+		GlyphStrip::GlyphList glyphs;
+
+		// ALIGN_CHANGE
+		HtmlElement::Alignment align;
+
+		// FONT_CHANGE
+		float height;
+		FontResource* font;
+	};
 }
 
 #endif

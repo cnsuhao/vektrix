@@ -85,7 +85,7 @@ namespace vtx
 		return false;
 	}
 	//-----------------------------------------------------------------------
-	const uint MovieClip::getCurrentFrame() const
+	uint MovieClip::getCurrentFrame() const
 	{
 		if(mTimeline)
 		{

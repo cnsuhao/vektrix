@@ -37,6 +37,12 @@ package flash.text
 		public native function get htmlText():String;
 		public native function set htmlText(value:String):void;
 		
+		public function get text():String {return "";}
+		public function set text(value:String):void {}
+
+		public function get type():String {return "";}
+		public function set type(value:String):void {}
+		
 		/* methods */
 		public native function getLineIndexAtPoint(x:Number, y:Number):int;
 		public native function setSelection(beginIndex:int, endIndex:int):void;

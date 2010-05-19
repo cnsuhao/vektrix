@@ -26,40 +26,39 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxopMovableStaticText_H__
-#define __vtxopMovableStaticText_H__
+#ifndef __vtxTextLine_H__
+#define __vtxTextLine_H__
 
-#include "vtxop.h"
-#include "vtxogreMovableTextBase.h"
-
-//#include "vtxAtlasPacker.h"
-//#include "vtxGlyphStrip.h"
-//#include "vtxRect.h"
-#include "vtxStaticText.h"
+#include "vtxPrerequesites.h"
+#include "vtxTextLineElement.h"
 
 namespace vtx
 {
-	namespace ogre
+	/** Represents a single line of an EditText textfield */
+	class TextLine
 	{
-		//-----------------------------------------------------------------------
-		class vtxopExport OgreMovableStaticText : public vtx::StaticText, public MovableTextBase
+	public:
+		typedef std::vector<TextLineElement> ElementList;
+
+		TextLine()
 		{
-		public:
-			OgreMovableStaticText(vtx::Resource* resource);
-			virtual ~OgreMovableStaticText();
+			align = HtmlElement::AlignLeft;
+			reset();
+		}
 
-			virtual void _setParent(Movie* parent);
+		/** Reset all attributes and contents of this line */
+		void reset()
+		{
+			index = -1;
+			width = height = y = 0.0f;
+			elements.clear();
+		}
 
-			void _update(const float& delta_time);
-			void setGlyphStrips(const GlyphStripList& glyph_strips, 
-				const AtlasPacker::PackResultList& atlas_list);
-
-		protected:
-		};
-		//-----------------------------------------------------------------------
-		FactoryImpl_P1(OgreMovableStaticText, StaticText, Resource*);
-		//-----------------------------------------------------------------------
-	}
+		int index;
+		float width, height, y;
+		HtmlElement::Alignment align;
+		ElementList elements;
+	};
 }
 
 #endif

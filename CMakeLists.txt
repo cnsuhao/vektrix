@@ -1,12 +1,14 @@
 cmake_minimum_required (VERSION 2.6)
-project (vektrix)
+project (vektrix_unix)
 
 # core library
-add_subdirectory (lib/scripts)
+add_subdirectory (core/scripts)
 
 # plugins
-#add_subdirectory (plugins/AS3Plugin/scripts) not supported yet
+add_subdirectory (plugins/AS3Plugin/scripts)
 add_subdirectory (plugins/CairoPlugin/scripts)
+add_subdirectory (plugins/cURLPlugin/scripts)
+add_subdirectory (plugins/FreeImgPlugin/scripts)
 add_subdirectory (plugins/OgrePlugin/scripts)
 add_subdirectory (plugins/SwfPlugin/scripts)
 add_subdirectory (plugins/XmlPlugin/scripts)
@@ -39,5 +41,5 @@ execute_process(COMMAND mkdir ./bin/)
 execute_process(COMMAND cp $ENV{OGRE_HOME}/lib/OGRE/RenderSystem_GL.so ./bin/)
 
 # create launcher scripts
-CREATE_LAUNCHER("vektrix_Ogre3D_demo")
+#CREATE_LAUNCHER("vektrix_Ogre3D_demo")
 

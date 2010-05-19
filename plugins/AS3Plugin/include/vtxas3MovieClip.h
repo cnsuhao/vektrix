@@ -58,8 +58,6 @@ namespace vtx
 
 		protected:
 			vtx::MovieClip* mMovieClip;
-
-			vtx::ScriptObject* _createChildObject(const String& name);
 		};
 		//-----------------------------------------------------------------------
 	}

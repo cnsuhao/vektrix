@@ -81,9 +81,9 @@ namespace vtx
 		virtual const Matrix& getMatrix() const;
 
 		/** Get the current width of this object */
-		const float getWidth() const;
+		float getWidth() const;
 		/** Get the current height of this object */
-		const float getHeight() const;
+		float getHeight() const;
 
 		/** Notify this object about its parent DisplayObjectContainer */
 		void setParentContainer(DisplayObjectContainer* parent);

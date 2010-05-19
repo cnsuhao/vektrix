@@ -30,6 +30,7 @@ THE SOFTWARE.
 #define __vtxGlyphStrip_H__
 
 #include "vtxPrerequesites.h"
+#include "vtxColor.h"
 
 namespace vtx
 {
@@ -44,6 +45,10 @@ namespace vtx
 			float x_advance;
 			// TODO: evtl. replace with GlyphResource* resource;
 			uint index;
+
+			// convienience properties
+			// TODO: use this ???
+			float x_in_word;
 			int index_in_string;
 		};
 		typedef std::vector<Glyph> GlyphList;

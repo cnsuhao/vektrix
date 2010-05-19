@@ -26,55 +26,70 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxHtmlOperations_H__
-#define __vtxHtmlOperations_H__
+#ifndef __vtxHtmlRenderable_H__
+#define __vtxHtmlRenderable_H__
 
 #include "vtxPrerequesites.h"
+#include "vtxColor.h"
 #include "vtxHtmlElement.h"
 
 namespace vtx
 {
-	class vtxExport HtmlOperations
+	class vtxExport HtmlRenderable
 	{
 	public:
-		HtmlOperations();
-		virtual ~HtmlOperations();
-
-		enum EraseState
+		/** Represents a style element which contains information about font, color and size */
+		class StyleElement
 		{
-			ES_BEFORE_ERASE = 0, 
-			ES_ERASING, 
-			ES_AFTER_ERASE
+		public:
+			StyleElement() : size(0.0f), font(NULL) {}
+			float size;
+			Color color;
+			FontResource* font;
 		};
+		typedef std::stack<StyleElement> StyleStack;
+		typedef std::stack<HtmlElement::Alignment> AlignmentStack;
 
-		HtmlSelection selectBackward(HtmlSelection sel);
-		HtmlSelection selectForward(HtmlSelection sel);
-
-		HtmlSelection eraseBackward(HtmlSelection sel);
-		HtmlSelection eraseForward(HtmlSelection sel);
-
-		HtmlSelection eraseSelection(HtmlElement* root, 
-			const HtmlSelection& begin, const HtmlSelection& end);
-
-		const WString& getHtmlText(HtmlElement* root);
+		// TODO: remove resource dependency
+		HtmlRenderable(Resource* resource);
+		virtual ~HtmlRenderable();
 
 	protected:
-		HtmlSelection mSelBegin;
-		HtmlSelection mSelEnd;
+		void interateDomTree(HtmlElement* root);
+
+		// inline for best performance
+		inline const StyleElement& getCurrentStyle() const
+		{
+			if(mStyleStack.size())
+			{
+				return mStyleStack.top();
+			}
+
+			static StyleElement empty;
+			return empty;
+		}
+
+		//inline bool hasStyle() const
+		//{
+		//	return mStyleStack.size() != 0;
+		//}
 
 	private:
-		EraseState mEraseState;
+		Resource* mResource2;
+		StyleStack mStyleStack;
+		AlignmentStack mAlignStack;
 
-		// generate HTML from DOM
-		bool mHtmlTextNeedsUpdate;
-		WString mHtmlText;
+		/// remember the previous visual node during the DOM iteration
+		HtmlElement* mPreviousVisualNode;
 
-		HtmlSelection _selectPreviousElement(HtmlSelection sel);
-		HtmlSelection _selectNextElement(HtmlSelection sel);
+		virtual void _addFont(HtmlFont* font) = 0;
+		virtual void _fontStyleChanged(const StyleElement& style) {}
+		virtual void _addImage(HtmlImage* image) = 0;
+		virtual void _addParagraph(HtmlParagraph* paragraph) = 0;
+		virtual void _addText(HtmlText* text) = 0;
 
-		// recursive utility functions
-		void _recursiveErase(HtmlElement* current_element);
-		void _recursiveGenerate(HtmlElement* current_element);
+		/** Recursive method to iterate over the HTML DOM tree */
+		void _recursiveDomIteration(HtmlElement* source_element);
 	};
 }
 

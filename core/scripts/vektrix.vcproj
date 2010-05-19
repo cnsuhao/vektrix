@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\expat"
+				AdditionalIncludeDirectories="..\include;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VEKTRIX_EXPORTS;COMPILED_FROM_DSP"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -65,9 +65,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="libexpatMT.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="&quot;$(EXPAT_HOME)\win32\bin\Debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
@@ -123,7 +124,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="..\include;..\expat"
+				AdditionalIncludeDirectories="..\include;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VEKTRIX_EXPORTS;COMPILED_FROM_DSP"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -144,8 +145,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="libexpatMT.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="&quot;$(EXPAT_HOME)\win32\bin\Release&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -202,7 +204,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\expat"
+				AdditionalIncludeDirectories="..\include;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;VTX_STATIC_LIB;COMPILED_FROM_DSP"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -225,7 +227,9 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="libexpatMT.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_static_d.lib"
+				AdditionalLibraryDirectories="&quot;$(EXPAT_HOME)\win32\bin\Debug&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -270,7 +274,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="..\include;..\expat"
+				AdditionalIncludeDirectories="..\include;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VTX_STATIC_LIB;COMPILED_FROM_DSP"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -291,7 +295,9 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="libexpatMT.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_static.lib"
+				AdditionalLibraryDirectories="&quot;$(EXPAT_HOME)\win32\bin\Release&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -491,6 +497,22 @@
 					RelativePath="..\include\vtxStringHelper.h"
 					>
 				</File>
+				<Filter
+					Name="OS"
+					>
+					<File
+						RelativePath="..\src\vtxLinuxHelper.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxOpSysHelper.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxWin32Helper.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Attributes"
@@ -541,6 +563,14 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxShapeElement.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxTextLine.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxTextLineElement.h"
 					>
 				</File>
 				<File
@@ -855,42 +885,6 @@
 						>
 					</File>
 				</Filter>
-				<Filter
-					Name="Interfaces"
-					>
-					<File
-						RelativePath="..\src\vtxDisplayObject.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxDisplayObject.h"
-						>
-					</File>
-					<File
-						RelativePath="..\src\vtxDisplayObjectContainer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxDisplayObjectContainer.h"
-						>
-					</File>
-					<File
-						RelativePath="..\src\vtxInstance.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxInstance.h"
-						>
-					</File>
-					<File
-						RelativePath="..\src\vtxInteractiveObject.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\include\vtxInteractiveObject.h"
-						>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="Management"
@@ -909,6 +903,42 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxInstancePool.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Interfaces"
+				>
+				<File
+					RelativePath="..\src\vtxDisplayObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxDisplayObject.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxDisplayObjectContainer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxDisplayObjectContainer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxInstance.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxInstance.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxInteractiveObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxInteractiveObject.h"
 					>
 				</File>
 			</Filter>
@@ -1045,68 +1075,188 @@
 					<File
 						RelativePath="..\expat\xmlparse.c"
 						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Static_Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Static_Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\expat\xmlrole.c"
 						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Static_Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Static_Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\expat\xmltok.c"
 						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Static_Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Static_Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\expat\xmltok_impl.c"
 						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Static_Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Static_Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\expat\xmltok_ns.c"
 						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Static_Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Static_Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
 					</File>
 				</Filter>
 			</Filter>
 			<Filter
 				Name="DOM"
 				>
-				<File
-					RelativePath="..\src\vtxHtmlElement.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxHtmlElement.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxHtmlFont.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxHtmlFont.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxHtmlImage.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxHtmlImage.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxHtmlParagraph.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxHtmlParagraph.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxHtmlText.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxHtmlText.h"
-					>
-				</File>
 				<Filter
 					Name="Manipulation"
 					>
@@ -1116,6 +1266,62 @@
 					</File>
 					<File
 						RelativePath="..\include\vtxHtmlOperations.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Elements"
+					>
+					<File
+						RelativePath="..\src\vtxHtmlElement.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxHtmlElement.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxHtmlFont.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxHtmlFont.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxHtmlImage.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxHtmlImage.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxHtmlParagraph.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxHtmlParagraph.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxHtmlText.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxHtmlText.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Rendering"
+					>
+					<File
+						RelativePath="..\src\vtxHtmlRenderable.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxHtmlRenderable.h"
 						>
 					</File>
 				</Filter>

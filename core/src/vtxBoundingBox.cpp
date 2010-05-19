@@ -85,12 +85,12 @@ namespace vtx
 		setExtents(center - newHalfSize, center + newHalfSize);
 	}
 	//-----------------------------------------------------------------------
-	const float BoundingBox::getWidth() const
+	float BoundingBox::getWidth() const
 	{
 		return abs(mMax.x - mMin.x);
 	}
 	//-----------------------------------------------------------------------
-	const float BoundingBox::getHeight() const
+	float BoundingBox::getHeight() const
 	{
 		return abs(mMax.y - mMin.y);
 	}

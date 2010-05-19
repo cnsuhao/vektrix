@@ -48,10 +48,7 @@ package flash.events
 			return false;
 		}
 		
-		public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void
-		{
-			
-		}
+		public native function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void;
 		
 		public function willTrigger(type:String):Boolean
 		{

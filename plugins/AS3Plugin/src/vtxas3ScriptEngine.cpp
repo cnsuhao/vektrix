@@ -36,25 +36,8 @@ THE SOFTWARE.
 
 #include "cspNativePackage.h"
 #include "cspScriptObject.h"
+#include "cspSystem.h"
 #include "cspVmCore.h"
-
-#include "shell_toplevel.h"
-
-using namespace avmplus;
-#include "FileInputStream.h"
-#include "ConsoleOutputStream.h"
-#include "SystemClass.h"
-#include "FileClass.h"
-#include "DomainClass.h"
-#include "DebugCLI.h"
-#include "Profiler.h"
-#include "DataIO.h"
-#include "ByteArrayGlue.h"
-#include "DictionaryGlue.h"
-#include "SamplerScript.h"
-#include "JavaGlue.h"
-
-#include "shell_toplevel.cpp"
 
 #include "flash_package.h"
 
@@ -73,7 +56,7 @@ namespace vtx
 
 			mVmCore->addListener(this);
 
-			NativePackage(shell_toplevel, mVmCore);
+			NativePackage(caspin_base, mVmCore);
 			NativePackage(flash, mVmCore);
 
 			mVmCore->initializePackages();

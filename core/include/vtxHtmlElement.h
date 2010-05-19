@@ -36,15 +36,37 @@ namespace vtx
 	class HtmlSelection
 	{
 	public:
-		HtmlSelection() : subSelection(-1), element(NULL) {}
+		HtmlSelection() 
+			: x(-50.0f), 
+			lineIndex(-1), 
+			subSel(-1), 
+			element(NULL) {}
 
 		inline bool operator == (const HtmlSelection& sel) const
 		{
-			return (subSelection == sel.subSelection && 
+			return (subSel == sel.subSel && 
 				element == sel.element && element);
 		}
 
-		int subSelection;
+		inline bool operator != (const HtmlSelection& sel) const
+		{
+			return (subSel != sel.subSel || 
+				element != sel.element);
+		}
+
+		inline bool operator > (const HtmlSelection& sel) const
+		{
+			return (lineIndex > sel.lineIndex) || (lineIndex == sel.lineIndex && x > sel.x);
+		}
+
+		inline bool operator < (const HtmlSelection& sel) const
+		{
+			return (lineIndex < sel.lineIndex) || (lineIndex == sel.lineIndex && x < sel.x);
+		}
+
+		float x;
+		int lineIndex;
+		int subSel;
 		HtmlElement* element;
 	};
 
@@ -76,11 +98,28 @@ namespace vtx
 
 		void addChild(HtmlElement* child);
 		void removeChild(const uint& index);
+		void removeChild(HtmlElement* element);
 
-		Type type;
+		inline const Type& getType() const
+		{
+			return type;
+		}
+
+		inline HtmlElement* getParent() const
+		{
+			return parent;
+		}
+
 		ChildList children;
 
+		/// the nearest visual node that is located <b>BEFORE</b> this element inside the DOM tree
+		HtmlElement* prevVisualNode;
+
+		/// the nearest visual node that is located <b>AFTER</b> this element inside the DOM tree
+		HtmlElement* nextVisualNode;
+
 	protected:
+		Type type;
 		HtmlElement* parent;
 	};
 }

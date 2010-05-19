@@ -58,7 +58,7 @@ namespace vtx
 			: avmplus::ScriptObject(vtable, prototype), 
 			mNativeObject(NULL)
 		{
-
+			init(this);
 		}
 		//-----------------------------------------------------------------------
 		void EventDispatcher::addEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useCapture, int priority, bool useWeakReference)
@@ -67,6 +67,7 @@ namespace vtx
 
 			String tp = core->csp2stl(type);
 			mHandlers[tp].push_back(function);
+			function->IncrementRef();
 		}
 		//-----------------------------------------------------------------------
 		bool EventDispatcher::dispatchEvent(as3::Event* event)
@@ -86,6 +87,7 @@ namespace vtx
 				FunctionList::const_iterator end = functions.end();
 				while(it != end)
 				{
+					// call the function
 					Atom args[2] = { (*it)->atom(), event->atom() };
 					(*it)->call(1, args);
 					++it;
@@ -95,6 +97,33 @@ namespace vtx
 			}
 
 			return false;
+		}
+		//-----------------------------------------------------------------------
+		void EventDispatcher::removeEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useWeakReference)
+		{
+			csp::VmCore* core = getCaspinCore();
+
+			String stl_type = core->csp2stl(type);
+
+			FunctionMap::iterator funcs = mHandlers.find(stl_type);
+			if(funcs != mHandlers.end())
+			{
+				FunctionList& functions = funcs->second;
+
+				FunctionList::iterator it = functions.begin();
+				FunctionList::iterator end = functions.end();
+				while(it != end)
+				{
+					if(*it == function)
+					{
+						(*it)->DecrementRef();
+						functions.erase(it);
+						return;
+					}
+					++it;
+				}
+			}
+
 		}
 		//-----------------------------------------------------------------------
 		void EventDispatcher::setNativeObject(Instance* inst)
@@ -146,6 +175,21 @@ namespace vtx
 
 				delete evt;
 			}
+		}
+		//-----------------------------------------------------------------------
+		vtx::ScriptObject* EventDispatcher::_createChildObject(const String& name)
+		{
+			csp::ScriptObject* parent_obj = getCaspinObject();
+			if(parent_obj)
+			{
+				csp::ScriptObject* slot_obj = parent_obj->createSlotObject(name);
+				if(slot_obj)
+				{
+					return dynamic_cast<vtx::ScriptObject*>(slot_obj->scriptObj());
+				}
+			}
+
+			return NULL;
 		}
 		//-----------------------------------------------------------------------
 	}

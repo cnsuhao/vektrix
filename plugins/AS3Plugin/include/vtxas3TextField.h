@@ -67,8 +67,6 @@ namespace vtx
 
 		protected:
 			vtx::EditText* mEditText;
-
-			vtx::ScriptObject* _createChildObject(const String& name);
 		};
 		//-----------------------------------------------------------------------
 	}
