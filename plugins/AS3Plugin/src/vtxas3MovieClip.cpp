@@ -59,13 +59,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		MovieClip::~MovieClip()
 		{
-			//delete getCaspinObject();
-		}
-		//-----------------------------------------------------------------------
-		void MovieClip::setNativeObject(Instance* inst)
-		{
-			Sprite::setNativeObject(inst);
-			mMovieClip = dynamic_cast<vtx::MovieClip*>(inst);
+
 		}
 		//-----------------------------------------------------------------------
 		void MovieClip::eventFired(const vtx::Event& evt)
@@ -74,14 +68,19 @@ namespace vtx
 			{
 				if(evt.getType() == vtx::Event::ENTER_FRAME)
 				{
-					csp::ScriptObject* csp_obj = getCaspinObject();
-					if(csp_obj)
+					if(mScriptObject)
 					{
 						const uint& frame = mMovieClip->getCurrentFrame();
-						csp_obj->callFunction("frame" + StringHelper::toString(frame+1));
+						mScriptObject->callFunction("frame" + StringHelper::toString(frame+1));
 					}
 				}
 			}
+		}
+		//-----------------------------------------------------------------------
+		void MovieClip::_setNativeObject(Instance* inst)
+		{
+			Sprite::_setNativeObject(inst);
+			mMovieClip = dynamic_cast<vtx::MovieClip*>(inst);
 		}
 		//-----------------------------------------------------------------------
 	}

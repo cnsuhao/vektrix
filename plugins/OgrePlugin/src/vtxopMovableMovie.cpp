@@ -27,7 +27,7 @@ THE SOFTWARE.
 */
 
 #include "vtxopMovableMovie.h"
-#include "vtxopMovableShape.h"
+#include "vtxopMovableStrategy.h"
 
 #include "vtxInstance.h"
 
@@ -44,11 +44,34 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		MovableMovie::~MovableMovie()
 		{
+
+		}
+		//-----------------------------------------------------------------------
+		AtlasPacker* MovableMovie::getPacker() const
+		{
+			return static_cast<MovableRenderStrategy*>(mRenderStrategy)->getPacker();
 		}
 		//-----------------------------------------------------------------------
 		vtx::Instance* MovableMovie::getInstance(const std::string& id)
 		{
 			vtx::Instance* instance = vtx::Movie::getInstance(id);
+
+			Ogre::Renderable* renderable = dynamic_cast<Ogre::Renderable*>(instance);
+			if(renderable)
+			{
+				RenderableMap::iterator it = mRenderables.find(renderable);
+				if(it == mRenderables.end())
+				{
+					mRenderables.insert(std::make_pair(renderable, renderable));
+				}
+			}
+
+			return instance;
+		}
+		//-----------------------------------------------------------------------
+		vtx::Instance* MovableMovie::getInstanceByType(const String& type)
+		{
+			vtx::Instance* instance = vtx::Movie::getInstanceByType(type);
 
 			Ogre::Renderable* renderable = dynamic_cast<Ogre::Renderable*>(instance);
 			if(renderable)

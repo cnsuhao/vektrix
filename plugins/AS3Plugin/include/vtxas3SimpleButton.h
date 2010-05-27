@@ -51,13 +51,12 @@ namespace vtx
 			SimpleButton(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 			virtual ~SimpleButton();
 
-			void setNativeObject(Instance* inst);
-			//void eventFired(const Event& evt);
-
 			DECLARE_SLOTS_SimpleButton;
 
 		protected:
 			vtx::Button* mButton;
+
+			void _setNativeObject(Instance* inst);
 		};
 		//-----------------------------------------------------------------------
 	}

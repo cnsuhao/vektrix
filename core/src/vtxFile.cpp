@@ -162,7 +162,7 @@ namespace vtx
 		}
 
 		VTX_LOG("\"%s\": Added %sresource with id \"%s\" of type \"%s\"", 
-			mFilename.c_str(), ((group==RGT_External)?"external ":""), 
+			mFilename.c_str(), ((group==RGT_External)?"external ":"internal "), 
 			res->getID().c_str(), res->getType().c_str());
 	}
 	//-----------------------------------------------------------------------

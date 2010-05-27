@@ -42,10 +42,15 @@ namespace vtx
 	class vtxExport EditText : public DisplayObjectContainer, public HtmlOperations, public HtmlRenderable
 	{
 	public:
+		static const String TYPE;
 		typedef std::vector<TextLine> LineList;
 
-		EditText(Resource* resource);
+		EditText();
 		virtual ~EditText();
+
+		virtual void initFromResource(Resource* resource);
+
+		const String& getType() const;
 
 		/** @copybrief DisplayObject::_update */
 		virtual void _update(const float& delta_time = 0.0f);
@@ -85,7 +90,6 @@ namespace vtx
 		// properties
 		WString mText;
 		WString mHtmlText;
-		//WString mComposedHTMLText;
 
 		// selection management
 		uint mSelectionBeginIndex;
@@ -94,7 +98,6 @@ namespace vtx
 		HtmlSelection mSelectionEnd;
 
 		BoundingBox mBoundingBox;
-		EditTextResource* mEditTextResource;
 
 		// DOM management
 		bool mNeedDomUpdate;
@@ -153,9 +156,6 @@ namespace vtx
 
 		HtmlSelection _getSelectionAtPoint(const Vector2& point);
 	};
-	//-----------------------------------------------------------------------
-	/** The InstanceFactory for creating EditText objects */
-	class vtxExport EditTextFactory : public InstanceFactory<EditText> {};
 	//-----------------------------------------------------------------------
 }
 

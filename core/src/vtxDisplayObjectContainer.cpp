@@ -35,8 +35,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	DisplayObjectContainer::DisplayObjectContainer(Resource* resource) 
-		: InteractiveObject(resource)
+	DisplayObjectContainer::DisplayObjectContainer()
 	{
 
 	}

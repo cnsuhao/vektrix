@@ -47,6 +47,11 @@ namespace vtx
 
 		BoundingBox();
 		BoundingBox(const Vector2& min, const Vector2& max);
+		BoundingBox(
+			const float& xmin, 
+			const float& ymin, 
+			const float& xmax, 
+			const float& ymax);
 
 		BoundingBox& operator=(const BoundingBox& bb)
 		{

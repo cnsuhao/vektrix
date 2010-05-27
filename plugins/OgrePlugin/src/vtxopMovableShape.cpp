@@ -42,9 +42,8 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		OgreMovableShape::OgreMovableShape(vtx::Resource* resource) 
-			: Shape(resource), 
-			MovableInstanceBase(this), 
+		OgreMovableShape::OgreMovableShape() 
+			: MovableInstanceBase(this), 
 			mLayer(0.0f)
 		{
 			_createBuffers();
@@ -59,7 +58,39 @@ namespace vtx
 		void OgreMovableShape::_setParent(Movie* parent)
 		{
 			Shape::_setParent(parent);
-			mParentMovable = dynamic_cast<MovableMovie*>(parent);
+			mParentMovable = static_cast<MovableMovie*>(parent);
+
+			if(mParentMovable)
+			{
+				mPacker = mParentMovable->getPacker();
+
+				if(mPacker)
+				{
+					mPacker->addListener(this);
+				}
+			}
+			else
+			{
+				if(mPacker)
+				{
+					mPacker->removeListener(this);
+				}
+			}
+		}
+		//-----------------------------------------------------------------------
+		void OgreMovableShape::initFromResource(Resource* resource)
+		{
+			Shape::initFromResource(resource);
+
+			if(mPacker)
+			{
+				AtlasPacker::PackResultList list = mPacker->getResultList();
+				AtlasPacker::PackResultList::iterator it = list.find(resource->getID());
+				if(it != list.end())
+				{
+					setAtlasQuad(it->second);
+				}
+			}
 		}
 		//-----------------------------------------------------------------------
 		void OgreMovableShape::_update(const float& delta_time)

@@ -69,8 +69,9 @@ namespace vtx
 	{
 		mRenderStrategy = mCreator->getRenderStrategy(mFile);
 
-		mMainMovieClip = new MovieClip(mFile->getMainMovieClip());
+		mMainMovieClip = new MovieClip();
 		mMainMovieClip->_setParent(this);
+		mMainMovieClip->initFromResource(mFile->getMainMovieClip());
 
 		ScriptEngineFactory* scriptEngineFactory = 
 			InstanceManager::getSingletonPtr()->scriptEngines()->getFactory(mFile->getScriptEngine());
@@ -89,7 +90,6 @@ namespace vtx
 				ScriptObject* root_scriptobject = mScriptEngine->getRootScriptObject();
 				if(root_scriptobject)
 				{
-					root_scriptobject->setNativeObject(mMainMovieClip);
 					mMainMovieClip->setScriptObject(root_scriptobject);
 				}
 			}
@@ -224,10 +224,20 @@ namespace vtx
 		return inst;
 	}
 	//-----------------------------------------------------------------------
+	Instance* Movie::getInstanceByType(const String& type)
+	{
+		Instance* inst = mRenderStrategy->shareInstanceByType(type, this);
+		return inst;
+	}
+	//-----------------------------------------------------------------------
 	void Movie::releaseInstance(Instance* instance)
 	{
 		if(instance)
 		{
+			// TODO: do this more beautifully and somewhere else ??
+			//ScriptObject* so = instance->getScriptObject();
+			//so->setNativeObject(NULL);
+			//instance->setScriptObject(NULL);
 			mRenderStrategy->storeInstance(instance);
 			//VTX_LOG("STORED instance with id %s (%s)", instance->getID().c_str(), instance->getType().c_str());
 		}
@@ -259,6 +269,11 @@ namespace vtx
 	MovieClip* Movie::getMainMovieClip() const
 	{
 		return mMainMovieClip;
+	}
+	//-----------------------------------------------------------------------
+	RenderStrategy* Movie::getRenderStrategy() const
+	{
+		return mRenderStrategy;
 	}
 	//-----------------------------------------------------------------------
 	void Movie::setUserData(void* data)

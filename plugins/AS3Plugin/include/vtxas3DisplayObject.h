@@ -53,8 +53,6 @@ namespace vtx
 			DisplayObject(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 			virtual ~DisplayObject(){}
 
-			virtual void setNativeObject(Instance* inst);
-
 			double get_x();
 			void set_x(double val);
 
@@ -70,10 +68,18 @@ namespace vtx
 			double get_scaleY();
 			void set_scaleY(double val);
 
+			double get_width();
+			void set_width(double val);
+
+			double get_height();
+			void set_height(double val);
+
 			DECLARE_SLOTS_DisplayObject;
 
 		protected:
 			vtx::DisplayObject* mDisplayObject;
+
+			virtual void _setNativeObject(Instance* inst);
 		};
 		//-----------------------------------------------------------------------
 	}

@@ -52,27 +52,37 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	EditText::EditText(Resource* resource) 
-		: DisplayObjectContainer(resource), 
-		HtmlRenderable(resource), 
-		mNeedDomUpdate(true), 
+	const String EditText::TYPE = "EditText";
+	//-----------------------------------------------------------------------
+	EditText::EditText() 
+		: mNeedDomUpdate(true), 
 		mSelectionBeginIndex(0), 
 		mSelectionEndIndex(0), 
 		mHtmlDom(NULL), 
 		mGlyphCount(0), 
 		mSelecting(false)
 	{
-		mEditTextResource = dynamic_cast<EditTextResource*>(resource);
-
-		if(mEditTextResource)
-		{
-			mBoundingBox = mEditTextResource->getBoundingBox();
-		}
+		mBoundingBox = BoundingBox(0, 0, 100, 100);
 	}
 	//-----------------------------------------------------------------------
 	EditText::~EditText()
 	{
 		delete mHtmlDom;
+	}
+	//-----------------------------------------------------------------------
+	void EditText::initFromResource(Resource* resource)
+	{
+		EditTextResource* text_res = dynamic_cast<EditTextResource*>(resource);
+
+		if(text_res)
+		{
+			mBoundingBox = text_res->getBoundingBox();
+		}
+	}
+	//-----------------------------------------------------------------------
+	const String& EditText::getType() const
+	{
+		return TYPE;
 	}
 	//-----------------------------------------------------------------------
 	void EditText::_update(const float& delta_time)
@@ -251,7 +261,7 @@ namespace vtx
 
 		clearLayers();
 
-		interateDomTree(mHtmlDom);
+		interateDomTree(mHtmlDom, mParentMovie->getFile());
 
 		_createStripsAndShapes();
 
@@ -448,6 +458,7 @@ namespace vtx
 						selectBackward(mSelectionBegin);
 
 					// TODO: add "_buildSelectionShapes()" since no DOM update should be necessary here
+					// add special method at EditText for calculating and updating graphical selection properties
 					_buildGraphicsFromDOM();
 				}
 				break;
@@ -463,8 +474,6 @@ namespace vtx
 
 			case KC_BACK:
 				{
-					////eraseBackward(mHtmlDom);
-					////_buildGraphicsFromDOM();
 					if(mSelectionBegin.element && mSelectionEnd.element)
 					{
 						if(mSelectionBegin != mSelectionEnd)
@@ -485,8 +494,6 @@ namespace vtx
 
 			case KC_DELETE:
 				{
-					////eraseForward(mHtmlDom);
-					////_buildGraphicsFromDOM();
 					if(mSelectionBegin.element && mSelectionEnd.element)
 					{
 						if(mSelectionBegin != mSelectionEnd)

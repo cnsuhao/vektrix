@@ -35,6 +35,7 @@ namespace vtx
 	Transform::Transform() 
 		: mParentContainer(NULL), 
 		mAngle(0.0f), 
+		mScale(1.0f, 1.0f), 
 		mLayer(0), 
 		mWorldZOrder(0), 
 		mNeedColorUpdate(true), 

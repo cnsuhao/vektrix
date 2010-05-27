@@ -83,9 +83,9 @@ namespace vtx
 			mMovableShape = new OgreMovableShapeFactory;
 			mMovableStaticText = new OgreMovableStaticTextFactory;
 
-			instMgr->editTexts()->addFactory(mMovableEditText);
-			instMgr->shapes()->addFactory(mMovableShape);
-			instMgr->staticTexts()->addFactory(mMovableStaticText);
+			instMgr->addFactory(mMovableEditText);
+			instMgr->addFactory(mMovableShape);
+			instMgr->addFactory(mMovableStaticText);
 
 			// Movie
 			mMovableMovie = new MovableMovieFactory;
@@ -99,9 +99,9 @@ namespace vtx
 			delete mMovableMovie;
 
 			// Instances
-			instMgr->editTexts()->removeFactory(mMovableEditText);
-			instMgr->shapes()->removeFactory(mMovableShape);
-			instMgr->staticTexts()->removeFactory(mMovableStaticText);
+			instMgr->removeFactory(mMovableEditText);
+			instMgr->removeFactory(mMovableShape);
+			instMgr->removeFactory(mMovableStaticText);
 
 			delete mMovableEditText;
 			delete mMovableShape;

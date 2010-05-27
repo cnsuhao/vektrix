@@ -47,6 +47,8 @@ namespace vtx
 		/** Get the root ScriptObject that will be associated with the main MovieClip of a Movie */
 		virtual ScriptObject* getRootScriptObject() = 0;
 
+		Movie* getParentMovie() const;
+
 	protected:
 		Movie* mParent;
 	};

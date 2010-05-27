@@ -32,7 +32,6 @@ THE SOFTWARE.
 #include "vtxop.h"
 #include "vtxopMovableInstanceBase.h"
 
-#include "vtxAtlasPacker.h"
 #include "vtxRect.h"
 #include "vtxShape.h"
 
@@ -41,16 +40,14 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		class vtxopExport OgreMovableShape : 
-			public vtx::Shape, 
-			public MovableInstanceBase, 
-			public AtlasPacker::Listener
+		class vtxopExport OgreMovableShape : public vtx::Shape, public MovableInstanceBase
 		{
 		public:
-			OgreMovableShape(vtx::Resource* resource);
+			OgreMovableShape();
 			virtual ~OgreMovableShape();
 
 			virtual void _setParent(Movie* parent);
+			virtual void initFromResource(Resource* resource);
 
 			void _update(const float& delta_time);
 			void setAtlasQuad(const AtlasPacker::PackResult& quad);
@@ -65,7 +62,7 @@ namespace vtx
 			Color mADDcolor;
 		};
 		//-----------------------------------------------------------------------
-		FactoryImpl_P1(OgreMovableShape, Shape, Resource*);
+		FactoryImpl_P0(OgreMovableShape, Instance);
 		//-----------------------------------------------------------------------
 	}
 }

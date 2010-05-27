@@ -40,14 +40,27 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	Button::Button(Resource* resource) 
-		: DisplayObjectContainer(resource), 
-		mMouseDown(false), 
+	const String Button::TYPE = "Button";
+	//-----------------------------------------------------------------------
+	Button::Button() 
+		: mMouseDown(false), 
 		mMouseOver(true), 
 		mMouseState(MS_OUT_UP), 
 		mUp(NULL), 
 		mOver(NULL), 
 		mDown(NULL)
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	Button::~Button()
+	{
+		delete mDown;
+		delete mOver;
+		delete mUp;
+	}
+	//-----------------------------------------------------------------------
+	void Button::initFromResource(Resource* resource)
 	{
 		ButtonResource* button_res = dynamic_cast<ButtonResource*>(resource);
 
@@ -63,11 +76,9 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	Button::~Button()
+	const String& Button::getType() const
 	{
-		delete mDown;
-		delete mOver;
-		delete mUp;
+		return TYPE;
 	}
 	//-----------------------------------------------------------------------
 	void Button::_update(const float& delta_time)

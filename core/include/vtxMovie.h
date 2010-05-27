@@ -95,6 +95,9 @@ namespace vtx
 		/** Request an Instance by its id */
 		virtual Instance* getInstance(const String& id);
 
+		/** Request an Instance by its type */
+		virtual Instance* getInstanceByType(const String& type);
+
 		/** Release a previously used Instance */
 		virtual void releaseInstance(Instance* instance);
 
@@ -109,6 +112,8 @@ namespace vtx
 
 		/** Get the main MovieClip of this movie */
 		MovieClip* getMainMovieClip() const;
+
+		RenderStrategy* getRenderStrategy() const;
 
 		/** Attach custom user data to this movie */
 		void setUserData(void* data);

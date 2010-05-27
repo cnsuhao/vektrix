@@ -36,10 +36,10 @@ package flash.display
 	{
 		public native function get x():Number;
 		public native function set x(value:Number):void;
-
+		
 		public native function get y():Number;
 		public native function set y(value:Number):void;
-
+		
 		public native function get rotation():Number;
 		public native function set rotation(value:Number):void;
 		
@@ -48,5 +48,11 @@ package flash.display
 		
 		public native function get scaleY():Number;
 		public native function set scaleY(value:Number):void;
+		
+		public native function get width():Number;
+		public native function set width(value:Number):void;
+		
+		public native function get height():Number;
+		public native function set height(value:Number):void;
 	}
 }

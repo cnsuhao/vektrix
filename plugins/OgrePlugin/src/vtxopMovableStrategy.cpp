@@ -56,7 +56,7 @@ namespace vtx
 		MovableRenderStrategy::MovableRenderStrategy(MovieFactory* factory, File* file) 
 			: RenderStrategy(factory, file)
 		{
-			mPool = new InstancePool;
+			mPool = new InstancePool();
 			mPacker = new AtlasPacker(mFactory->getTextureFactory());
 
 			const ResourceList& shape_list = file->getResourcesByType("Shape");
@@ -117,20 +117,10 @@ namespace vtx
 		{
 			mPool->push(inst);
 			inst->_setParent(NULL);
-
-			// TODO: remove listeners from atlas packer
 		}
 		//-----------------------------------------------------------------------
 		Instance* MovableRenderStrategy::shareInstance(const String& id, Movie* movie)
 		{
-			Instance* inst = mPool->pop(id);
-
-			if(inst)
-			{
-				inst->_setParent(movie);
-				return inst;
-			}
-
 			File* file = movie->getFile();
 			Resource* resource = file->getResource(id);
 
@@ -140,85 +130,73 @@ namespace vtx
 				return NULL;
 			}
 
-			// TODO: improve this, maybe implement it in the base class and add a listener for custom handling
-			if(resource->getType() == "Shape")
+			Instance* inst = mPool->pop(resource->getType());
+
+			// instance received from instance pool
+			if(inst)
 			{
-				if(mFactory)
+				inst->_setParent(movie);
+				inst->initFromResource(resource);
+			}
+			// no instance available, create a new one
+			else
+			{
+				if(!mFactory)
 				{
-					VTX_LOG("\"%s\": CREATED Shape with id %s, using Factory %s", 
-						movie->getName().c_str(), id.c_str(), mFactory->getShapeFactory()->getName().c_str());
+					VTX_WARN("MovieFactory not available");
+					return NULL;
+				}
 
-					OgreMovableShape* inst = dynamic_cast<OgreMovableShape*>(mFactory->getShapeFactory()->createObject(resource));
+				InstanceFactory* factory = mFactory->getFactory(resource->getType());
+				if(factory)
+				{
+					inst = factory->createObject();
 					inst->_setParent(movie);
+					inst->initFromResource(resource);
 
-					AtlasPacker::PackResultList list = mPacker->getResultList();
-					AtlasPacker::PackResultList::iterator it = list.find(id);
-					if(it != list.end())
-					{
-						inst->setAtlasQuad(it->second);
-					}
-					mPacker->addListener(inst);
-
-					return inst;
+					//VTX_LOG("\"%s\": CREATED %s with id %s, using Factory %s", 
+					//	movie->getName().c_str(), inst->getType().c_str(), id.c_str(), factory->getName().c_str());
 				}
 			}
-			else if(resource->getType() == "Button")
-			{
-				VTX_LOG("\"%s\": CREATED Button with id %s", movie->getName().c_str(), id.c_str());
 
-				Button* inst = new Button(resource);
+			if(!inst)
+			{
+				VTX_EXCEPT("No suitable factory for the resource type \"%s\" was found, the object with the id \"%s\" can not be created!!!", 
+					resource->getType().c_str(), id.c_str());
+			}
+
+			return inst;
+		}
+		//-----------------------------------------------------------------------
+		Instance* MovableRenderStrategy::shareInstanceByType(const String& type, Movie* movie)
+		{
+			Instance* inst = mPool->pop(type);
+
+			if(inst)
+			{
 				inst->_setParent(movie);
 				return inst;
 			}
-			else if(resource->getType() == "MovieClip")
-			{
-				VTX_LOG("\"%s\": CREATED MovieClip with id %s", movie->getName().c_str(), id.c_str());
 
-				MovieClip* inst = new MovieClip(resource);
+			InstanceFactory* factory = mFactory->getFactory(type);
+			if(factory)
+			{
+				inst = factory->createObject();
 				inst->_setParent(movie);
+
+				//VTX_LOG("\"%s\": CREATED %s using Factory %s", 
+				//	movie->getName().c_str(), inst->getType().c_str(), factory->getName().c_str());
+
+				if(inst->getType() == EditText::TYPE)
+				{
+					OgreMovableEditText* edit_text = dynamic_cast<OgreMovableEditText*>(inst);
+					//edit_text->setAtlasList(mPacker->getResultList());
+					//edit_text->setPacker(mPacker);
+					mPacker->addListener(edit_text);
+				}
+
 				return inst;
 			}
-			else if(resource->getType() == "StaticText")
-			{
-				if(mFactory)
-				{
-					VTX_LOG("\"%s\": CREATED StaticText with id %s, using Factory %s", 
-						movie->getName().c_str(), id.c_str(), mFactory->getStaticTextFactory()->getName().c_str());
-
-					OgreMovableStaticText* inst = 
-						dynamic_cast<OgreMovableStaticText*>(mFactory->getStaticTextFactory()->createObject(resource));
-
-					StaticTextResource* res = dynamic_cast<StaticTextResource*>(resource);
-
-					inst->_setParent(movie);
-					inst->setGlyphStrips(res->getGlyphStrips(), mPacker->getResultList());
-
-					return inst;
-				}
-			}
-			else if(resource->getType() == "EditText")
-			{
-				if(mFactory)
-				{
-					VTX_LOG("\"%s\": CREATED EditText with id %s, using Factory %s", 
-						movie->getName().c_str(), id.c_str(), mFactory->getEditTextFactory()->getName().c_str());
-
-					OgreMovableEditText* inst = 
-						dynamic_cast<OgreMovableEditText*>(mFactory->getEditTextFactory()->createObject(resource));
-
-					EditTextResource* res = dynamic_cast<EditTextResource*>(resource);
-
-					inst->_setParent(movie);
-					inst->setAtlasList(mPacker->getResultList());
-					inst->setHtmlText(res->getInitialText());
-					mPacker->addListener(inst);
-
-					return inst;
-				}
-			}
-
-			VTX_EXCEPT("No suitable factory for the resource type \"%s\" was found, the object with the id \"%s\" can not be created!!!", 
-				resource->getType().c_str(), id.c_str());
 
 			return NULL;
 		}
@@ -234,6 +212,11 @@ namespace vtx
 					mPacker->packAtlas();
 				}
 			}
+		}
+		//-----------------------------------------------------------------------
+		AtlasPacker* MovableRenderStrategy::getPacker() const
+		{
+			return mPacker;
 		}
 		//-----------------------------------------------------------------------
 	}

@@ -32,8 +32,19 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	StaticText::StaticText(Resource* resource) 
-		: DisplayObject(resource)
+	const String StaticText::TYPE = "StaticText";
+	//-----------------------------------------------------------------------
+	StaticText::StaticText()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	StaticText::~StaticText()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	void StaticText::initFromResource(Resource* resource)
 	{
 		mStaticTextResource = dynamic_cast<StaticTextResource*>(resource);
 
@@ -43,9 +54,9 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	StaticText::~StaticText()
+	const String& StaticText::getType() const
 	{
-
+		return TYPE;
 	}
 	//-----------------------------------------------------------------------
 	const BoundingBox& StaticText::getBoundingBox() const

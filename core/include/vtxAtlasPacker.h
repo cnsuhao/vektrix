@@ -58,7 +58,7 @@ namespace vtx
 			/** All packing information has been cleared */
 			virtual void cleared(){}
 			/** The atlas has been packed */
-			virtual void packed(const PackResultList& pack_result){}
+			virtual void packed(const PackResultList& pack_result) = 0;
 		};
 		typedef std::map<Listener*, Listener*> ListenerMap;
 

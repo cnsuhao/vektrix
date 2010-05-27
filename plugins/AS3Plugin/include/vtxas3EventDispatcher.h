@@ -63,7 +63,6 @@ namespace vtx
 			bool dispatchEvent(as3::Event* event);
 			void removeEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useWeakReference);
 
-			virtual void setNativeObject(Instance* inst);
 			virtual void eventFired(const vtx::Event& evt);
 
 			virtual vtx::ScriptObject* _createChildObject(const String& name);
@@ -71,7 +70,6 @@ namespace vtx
 			DECLARE_SLOTS_EventDispatcher;
 
 		protected:
-			Instance* mNativeObject;
 			FunctionMap mHandlers;
 		};
 		//-----------------------------------------------------------------------

@@ -31,10 +31,6 @@ package flash.display
 	[native(cls="::vtx::as3::DisplayObjectContainerClass", instance="::vtx::as3::DisplayObjectContainer", methods="auto")]
 	public class DisplayObjectContainer extends InteractiveObject
 	{
-		public function addChild(child:DisplayObject):DisplayObject
-		{
-			trace("addChild", child);
-			return null;
-		}
+		public native function addChild(child:DisplayObject):DisplayObject;
 	}
 }

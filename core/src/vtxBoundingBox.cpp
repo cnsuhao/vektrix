@@ -47,6 +47,14 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
+	BoundingBox::BoundingBox(const float& xmin, const float& ymin, const float& xmax, const float& ymax) 
+		: mExtent(EXTENT_NULL), 
+		mMin(xmin, ymin), 
+		mMax(xmax, ymax)
+	{
+
+	}
+	//-----------------------------------------------------------------------
 	void BoundingBox::reset()
 	{
 		mExtent = EXTENT_NULL;

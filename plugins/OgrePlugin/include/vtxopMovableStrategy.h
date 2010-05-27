@@ -46,8 +46,11 @@ namespace vtx
 
 			void storeInstance(Instance* inst);
 			Instance* shareInstance(const String& id, Movie* movie);
+			Instance* shareInstanceByType(const String& type, Movie* movie);
 
 			void resourceAdded(Resource* resource, const File::ResourceGroupType& group);
+
+			AtlasPacker* getPacker() const;
 
 		protected:
 			AtlasPacker* mPacker;

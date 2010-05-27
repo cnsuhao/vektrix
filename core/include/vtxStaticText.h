@@ -39,8 +39,14 @@ namespace vtx
 	class vtxExport StaticText : public DisplayObject
 	{
 	public:
-		StaticText(Resource* resource);
+		static const String TYPE;
+
+		StaticText();
 		virtual ~StaticText();
+
+		virtual void initFromResource(Resource* resource);
+
+		const String& getType() const;
 
 		/** @copybrief DisplayObject::getBoundingBox */
 		const BoundingBox& getBoundingBox() const;
@@ -54,9 +60,6 @@ namespace vtx
 		BoundingBox mBoundingBox;
 		StaticTextResource* mStaticTextResource;
 	};
-	//-----------------------------------------------------------------------
-	/** The InstanceFactory for creating StaticText objects */
-	class vtxExport StaticTextFactory : public InstanceFactory<StaticText> {};
 	//-----------------------------------------------------------------------
 }
 

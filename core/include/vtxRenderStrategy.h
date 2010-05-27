@@ -45,6 +45,8 @@ namespace vtx
 		/** Request an Instance with a given ID for use in a certain Movie */
 		virtual Instance* shareInstance(const String& id, Movie* movie) = 0;
 
+		virtual Instance* shareInstanceByType(const String& type, Movie* movie) = 0;
+
 	protected:
 		File* mFile;
 		MovieFactory* mFactory;

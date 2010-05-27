@@ -37,9 +37,10 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	MovieClip::MovieClip(Resource* resource) 
-		: DisplayObjectContainer(resource), 
-		mTimeline(NULL)
+	const String MovieClip::TYPE = "MovieClip";
+	//-----------------------------------------------------------------------
+	MovieClip::MovieClip() 
+		: mTimeline(NULL)
 	{
 
 	}
@@ -47,6 +48,24 @@ namespace vtx
 	MovieClip::~MovieClip()
 	{
 		delete mTimeline;
+	}
+	//-----------------------------------------------------------------------
+	void MovieClip::initFromResource(Resource* resource)
+	{
+		MovieClipResource* movieclip_res = dynamic_cast<MovieClipResource*>(resource);
+
+		if(movieclip_res)
+		{
+			delete mTimeline;
+
+			mTimeline = movieclip_res->getTimeline()->clone(this);
+			mTimeline->setFrameRate(mParentMovie->getFile()->getHeader().fps);
+		}
+	}
+	//-----------------------------------------------------------------------
+	const String& MovieClip::getType() const
+	{
+		return TYPE;
 	}
 	//-----------------------------------------------------------------------
 	void MovieClip::play()
@@ -109,25 +128,6 @@ namespace vtx
 	const BoundingBox& MovieClip::getBoundingBox() const
 	{
 		return mBB;
-	}
-	//-----------------------------------------------------------------------
-	void MovieClip::_setParent(Movie* parent)
-	{
-		DisplayObjectContainer::_setParent(parent);
-
-		if(parent)
-		{
-			MovieClipResource* movieclip_res = dynamic_cast<MovieClipResource*>(mResource);
-
-			if(movieclip_res)
-			{
-
-				delete mTimeline;
-
-				mTimeline = movieclip_res->getTimeline()->clone(this);
-				mTimeline->setFrameRate(mParentMovie->getFile()->getHeader().fps);
-			}
-		}
 	}
 	//-----------------------------------------------------------------------
 }

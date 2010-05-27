@@ -48,8 +48,16 @@ namespace vtx
 		{
 		public:
 			DisplayObjectContainer(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+			virtual ~DisplayObjectContainer();
+
+			DisplayObject* addChild(DisplayObject* child);
 
 			DECLARE_SLOTS_DisplayObjectContainer;
+
+		protected:
+			vtx::DisplayObjectContainer* mDisplayObjectContainer;
+
+			virtual void _setNativeObject(Instance* inst);
 		};
 	}
 }

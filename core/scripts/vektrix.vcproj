@@ -41,10 +41,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\include;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VEKTRIX_EXPORTS;COMPILED_FROM_DSP"
-				MinimalRebuild="true"
+				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
@@ -123,6 +124,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="..\include;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VEKTRIX_EXPORTS;COMPILED_FROM_DSP"
@@ -203,10 +205,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\include;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;VTX_STATIC_LIB;COMPILED_FROM_DSP"
-				MinimalRebuild="true"
+				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
@@ -273,6 +276,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="2"
 				AdditionalIncludeDirectories="..\include;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VTX_STATIC_LIB;COMPILED_FROM_DSP"
@@ -503,6 +507,38 @@
 					<File
 						RelativePath="..\src\vtxLinuxHelper.cpp"
 						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Static_Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Static_Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\include\vtxOpSysHelper.h"
@@ -1014,26 +1050,6 @@
 				RelativePath="..\include\vtxScriptObject.h"
 				>
 			</File>
-			<Filter
-				Name="Objects"
-				>
-				<File
-					RelativePath="..\include\vtxScriptButton.h"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxScriptEditText.h"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxScriptMovieClip.h"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxScriptStaticText.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Platforms"

@@ -32,9 +32,6 @@ THE SOFTWARE.
 #include "vtxop.h"
 #include "vtxogreMovableTextBase.h"
 
-//#include "vtxAtlasPacker.h"
-//#include "vtxGlyphStrip.h"
-//#include "vtxRect.h"
 #include "vtxStaticText.h"
 
 namespace vtx
@@ -45,19 +42,21 @@ namespace vtx
 		class vtxopExport OgreMovableStaticText : public vtx::StaticText, public MovableTextBase
 		{
 		public:
-			OgreMovableStaticText(vtx::Resource* resource);
+			OgreMovableStaticText();
 			virtual ~OgreMovableStaticText();
 
 			virtual void _setParent(Movie* parent);
+			virtual void initFromResource(Resource* resource);
 
 			void _update(const float& delta_time);
-			void setGlyphStrips(const GlyphStripList& glyph_strips, 
-				const AtlasPacker::PackResultList& atlas_list);
+
+			void packed(const AtlasPacker::PackResultList& pack_result);
 
 		protected:
+			StaticTextResource* mResource;
 		};
 		//-----------------------------------------------------------------------
-		FactoryImpl_P1(OgreMovableStaticText, StaticText, Resource*);
+		FactoryImpl_P0(OgreMovableStaticText, Instance);
 		//-----------------------------------------------------------------------
 	}
 }

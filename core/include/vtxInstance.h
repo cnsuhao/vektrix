@@ -40,32 +40,33 @@ namespace vtx
 	class vtxExport Instance : public EventListener
 	{
 	public:
-		Instance(Resource* resource);
+		Instance();
 		virtual ~Instance();
 
-		/** Get the unique identifier of this instance */
-		const String& getID();
+		virtual void initFromResource(Resource* resource) = 0;
+
 		/** Get the unique type of this instance */
-		const String& getType() const;
+		virtual const String& getType() const = 0;
 
 		/** Notify this instance about its parent Movie */
 		virtual void _setParent(Movie* parent);
+
 		/** Get the current parent Movie of this instance */
 		Movie* getParent() const;
 
 		/** Set the ScriptObject that is associated with this instance */
 		virtual void setScriptObject(ScriptObject* obj);
+
 		/** Get the ScriptObject that is associated with this instance */
 		virtual ScriptObject* getScriptObject() const;
 
 	protected:
 		Movie* mParentMovie;
-		Resource* mResource;
 		ScriptObject* mScriptObject;
 	};
 	//-----------------------------------------------------------------------
 	/** The Factory for creating Instance objects */
-	template<class T> class InstanceFactory : public Factory<T, Resource*> {};
+	class InstanceFactory : public Factory<Instance> {};
 	//-----------------------------------------------------------------------
 }
 

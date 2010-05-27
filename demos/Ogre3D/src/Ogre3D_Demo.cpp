@@ -1,3 +1,5 @@
+#include <conio.h>
+
 #include "vtxFile.h"
 #include "vtxFileManager.h"
 #include "vtxMovie.h"
@@ -187,7 +189,7 @@ public:
 int main(int argc, char **argv)
 {
 	VTX_MEM_DEBUG_ENABLE();
-	//VTX_MEM_DEBUG_BREAK(6707);
+	//VTX_MEM_DEBUG_BREAK(5073);
 
 	// start vektrix
 	vtx::Root* vektrix_root = new vtx::Root();
@@ -223,11 +225,14 @@ int main(int argc, char **argv)
 	vtx::FileManager::getSingletonPtr()->addFileContainer("../demos/media");
 	vtx::FileManager::getSingletonPtr()->addFileContainer("", "WebFileContainer");
 
-	if(!ogre_root->showConfigDialog())
+	//if(!ogre_root->restoreConfig())
 	{
-		delete vtx::Root::getSingletonPtr();
-		delete ogre_root;
-		return false;
+		if(!ogre_root->showConfigDialog())
+		{
+			delete vtx::Root::getSingletonPtr();
+			delete ogre_root;
+			return false;
+		}
 	}
 
 	// override floating point mode
@@ -248,7 +253,7 @@ int main(int argc, char **argv)
 	camera->setNearClipDistance(1);
 
 	Ogre::Viewport* viewPort = mWindow->addViewport(camera);
-	viewPort->setBackgroundColour(Ogre::ColourValue(0.2f, 0.2f, 0.2f, 0.2f));
+	viewPort->setBackgroundColour(Ogre::ColourValue(0.4f, 0.4f, 0.4f));
 	//viewPort->setBackgroundColour(Ogre::ColourValue::White);
 
 	OIS::ParamList pl;
@@ -293,13 +298,27 @@ int main(int argc, char **argv)
 	SimpleFrameListener* frameListener = new SimpleFrameListener(keyboard, mouse);
 	ogre_root->addFrameListener(frameListener);
 
+	vtx::StringList movies;
+	movies.push_back("http://fuse-software.com/vektrix/dyn_text_web.swf");
+	movies.push_back("lorem_ipsum2.swf");
+	movies.push_back("dyn_text.swf");
+	movies.push_back("as3_textfield.swf");
+	movies.push_back("cpp_test.swf");
+	movies.push_back("video_test.swf");
+	movies.push_back("button_test2.swf");
+
+	std::cout << "loadable movies:" << std::endl;
+	for(vtx::uint i=0; i<movies.size(); ++i)
+	{
+		std::cout << "(" << i << ") " << movies.at(i) << std::endl;
+	}
+
 	// VEKTRIX
-	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "http://fuse-software.com/vektrix/dyn_text_web.swf", "OgreMovableMovie");
-	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "lorem_ipsum2.swf", "OgreMovableMovie");
-	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie");
-	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "as3_textfield.swf", "OgreMovableMovie");
-	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "cpp_test.swf", "OgreMovableMovie");
-	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "video_test.swf", "OgreMovableMovie");
+	char opt = getch();
+	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", movies.at(atoi(&opt)), "OgreMovableMovie");
+
+	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie");
+
 	movie->play();
 
 	movie_node = sceneMgr->getRootSceneNode()->createChildSceneNode();

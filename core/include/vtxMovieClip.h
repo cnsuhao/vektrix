@@ -38,8 +38,14 @@ namespace vtx
 	class vtxExport MovieClip : public DisplayObjectContainer
 	{
 	public:
-		MovieClip(Resource* resource);
+		static const String TYPE;
+
+		MovieClip();
 		virtual ~MovieClip();
+
+		virtual void initFromResource(Resource* resource);
+
+		const String& getType() const;
 
 		/** @copybrief Timeline::play */
 		void play();
@@ -56,9 +62,6 @@ namespace vtx
 		void _update(const float& delta_time);
 		/** @copybrief DisplayObject::getBoundingBox */
 		const BoundingBox& getBoundingBox() const;
-
-		/** @copybrief Instance::_setParent */
-		virtual void _setParent(Movie* parent);
 
 	protected:
 		BoundingBox mBB;

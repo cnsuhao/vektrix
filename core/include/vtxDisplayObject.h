@@ -39,7 +39,7 @@ namespace vtx
 	class vtxExport DisplayObject : public Instance
 	{
 	public:
-		DisplayObject(Resource* resource);
+		DisplayObject();
 		virtual ~DisplayObject();
 
 		/** @copybrief Transform::setX */
@@ -80,13 +80,20 @@ namespace vtx
 		/** @copybrief Transform::getMatrix */
 		virtual const Matrix& getMatrix() const;
 
+		/** Set the current width of this object */
+		void setWidth(const float& width);
 		/** Get the current width of this object */
 		float getWidth() const;
+
+		/** Set the current height of this object */
+		void setHeight(const float& height);
 		/** Get the current height of this object */
 		float getHeight() const;
 
 		/** Notify this object about its parent DisplayObjectContainer */
 		void setParentContainer(DisplayObjectContainer* parent);
+
+		DisplayObjectContainer* getParentContainer() const;
 
 		/** Get the local bounding box of this object */
 		virtual const BoundingBox& getBoundingBox() const = 0;

@@ -36,10 +36,7 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	MovieFactory::MovieFactory() 
-		: mEditTextFactory(NULL), 
-		mShapeFactory(NULL), 
-		mStaticTextFactory(NULL), 
-		mTextureFactory(NULL)
+		: mTextureFactory(NULL)
 	{
 	}
 	//-----------------------------------------------------------------------
@@ -69,34 +66,27 @@ namespace vtx
 		return renderStrategy;
 	}
 	//-----------------------------------------------------------------------
-	EditTextFactory* MovieFactory::getEditTextFactory()
-	{
-		return mEditTextFactory;
-	}
-	//-----------------------------------------------------------------------
-	ShapeFactory* MovieFactory::getShapeFactory()
-	{
-		return mShapeFactory;
-	}
-	//-----------------------------------------------------------------------
-	StaticTextFactory* MovieFactory::getStaticTextFactory()
-	{
-		return mStaticTextFactory;
-	}
-	//-----------------------------------------------------------------------
 	TextureFactory* MovieFactory::getTextureFactory()
 	{
 		return mTextureFactory;
+	}
+	//-----------------------------------------------------------------------
+	InstanceFactory* MovieFactory::getFactory(const String& type)
+	{
+		FactoryMap::iterator it = mFactories.find(type);
+		if(it != mFactories.end())
+		{
+			return it->second;
+		}
+
+		return NULL;
 	}
 	//-----------------------------------------------------------------------
 	void MovieFactory::_initialize()
 	{
 		InstanceManager* inst_mgr = InstanceManager::getSingletonPtr();
 
-		mEditTextFactory = inst_mgr->editTexts()->getFactory(mFactoryNames["EditText"]);
-		mShapeFactory = inst_mgr->shapes()->getFactory(mFactoryNames["Shape"]);
-		mStaticTextFactory = inst_mgr->staticTexts()->getFactory(mFactoryNames["StaticText"]);
-		mTextureFactory = inst_mgr->textures()->getFactory(mFactoryNames["Texture"]);
+		mTextureFactory = inst_mgr->textures()->getFactory("OgreTexture");
 	}
 	//-----------------------------------------------------------------------
 }

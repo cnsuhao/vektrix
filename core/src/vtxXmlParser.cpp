@@ -86,7 +86,10 @@ namespace vtx
 
 		while(*atts)
 		{
-			map[*atts++] = *atts++;
+			// read and increment the "key" char* pointer first and seperately!!!
+			// (on linux this really matters, otherwise the key-value pairs are swapped)
+			const char* key = *atts++;
+			map[key] = *atts++;
 		}
 
 		// call non-static method

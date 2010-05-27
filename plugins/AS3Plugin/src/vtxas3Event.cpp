@@ -48,7 +48,7 @@ namespace vtx
 		Event::Event(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
 			: avmplus::ScriptObject(vtable, prototype)
 		{
-			init(this);
+
 		}
 		//-----------------------------------------------------------------------
 	}

@@ -55,28 +55,21 @@ namespace vtx
 		}
 		//-----------------------------------------------------------------------
 		EventDispatcher::EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: avmplus::ScriptObject(vtable, prototype), 
-			mNativeObject(NULL)
+			: avmplus::ScriptObject(vtable, prototype)
 		{
-			init(this);
+
 		}
 		//-----------------------------------------------------------------------
 		void EventDispatcher::addEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useCapture, int priority, bool useWeakReference)
 		{
-			csp::VmCore* core = getCaspinCore();
-
-			String tp = core->csp2stl(type);
+			String tp = mCore->csp2stl(type);
 			mHandlers[tp].push_back(function);
 			function->IncrementRef();
 		}
 		//-----------------------------------------------------------------------
 		bool EventDispatcher::dispatchEvent(as3::Event* event)
 		{
-			csp::VmCore* core = getCaspinCore();
-
-			String type = core->csp2stl(event->getType());
-
-			//std::cout << "As3 dispatch event" << std::endl;
+			String type = mCore->csp2stl(event->getType());
 
 			FunctionMap::const_iterator funcs = mHandlers.find(type);
 			if(funcs != mHandlers.end())
@@ -101,9 +94,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void EventDispatcher::removeEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useWeakReference)
 		{
-			csp::VmCore* core = getCaspinCore();
-
-			String stl_type = core->csp2stl(type);
+			String stl_type = mCore->csp2stl(type);
 
 			FunctionMap::iterator funcs = mHandlers.find(stl_type);
 			if(funcs != mHandlers.end())
@@ -126,35 +117,30 @@ namespace vtx
 
 		}
 		//-----------------------------------------------------------------------
-		void EventDispatcher::setNativeObject(Instance* inst)
-		{
-			mNativeObject = inst;
-		}
-		//-----------------------------------------------------------------------
 		void EventDispatcher::eventFired(const vtx::Event& evt)
 		{
-			csp::VmCore* core = getCaspinCore();
-			csp::ScriptObject* object = getCaspinObject();
-
-			if(!core || !object)
+			if(!mCore || !mScriptObject)
 			{
 				return;
 			}
+
+			MMGC_GCENTER(mCore->mIntCore->GetGC());
 
 			if(evt.getCategory() == MouseEvent::CATEGORY)
 			{
 				const MouseEvent& mouse_evt = dynamic_cast<const MouseEvent&>(evt);
 
 				csp::ArgumentList args;
-				args.push_back(core->newString(evt.getType().c_str()));
-				args.push_back(core->newBoolean(false));
-				args.push_back(core->newBoolean(true));
+				args.push_back(mCore->newString(evt.getType().c_str()));
+				args.push_back(mCore->newBoolean(false));
+				args.push_back(mCore->newBoolean(true));
 
-				csp::ScriptObject* evt = core->createObject("MouseEvent", "flash.events", args);
+				csp::ScriptObject* evt = mCore->createObject("MouseEvent", "flash.events", args);
 				args.clear();
 				args.push_back(evt->atom());
 
-				object->callFunction("dispatchEvent", args);
+				dispatchEvent((as3::Event*)evt->scriptObj());
+				//mScriptObject->callFunction("dispatchEvent", args);
 
 				delete evt;
 			}
@@ -163,15 +149,16 @@ namespace vtx
 				const FocusEvent& focus_evt = dynamic_cast<const FocusEvent&>(evt);
 
 				csp::ArgumentList args;
-				args.push_back(core->newString(evt.getType().c_str()));
-				args.push_back(core->newBoolean(false));
-				args.push_back(core->newBoolean(true));
+				args.push_back(mCore->newString(evt.getType().c_str()));
+				args.push_back(mCore->newBoolean(false));
+				args.push_back(mCore->newBoolean(true));
 
-				csp::ScriptObject* evt = core->createObject("FocusEvent", "flash.events", args);
+				csp::ScriptObject* evt = mCore->createObject("FocusEvent", "flash.events", args);
 				args.clear();
 				args.push_back(evt->atom());
 
-				object->callFunction("dispatchEvent", args);
+				dispatchEvent((as3::Event*)evt->scriptObj());
+				//mScriptObject->callFunction("dispatchEvent", args);
 
 				delete evt;
 			}
@@ -179,10 +166,9 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		vtx::ScriptObject* EventDispatcher::_createChildObject(const String& name)
 		{
-			csp::ScriptObject* parent_obj = getCaspinObject();
-			if(parent_obj)
+			if(mScriptObject)
 			{
-				csp::ScriptObject* slot_obj = parent_obj->createSlotObject(name);
+				csp::ScriptObject* slot_obj = mScriptObject->createSlotObject(name);
 				if(slot_obj)
 				{
 					return dynamic_cast<vtx::ScriptObject*>(slot_obj->scriptObj());

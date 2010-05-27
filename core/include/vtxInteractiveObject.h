@@ -38,7 +38,7 @@ namespace vtx
 	class vtxExport InteractiveObject : public DisplayObject
 	{
 	public:
-		InteractiveObject(Resource* resource);
+		InteractiveObject();
 		virtual ~InteractiveObject();
 
 		// inherited from EventListener

@@ -37,23 +37,29 @@ namespace vtx
 	/** The base class for all scripting objects */
 	class vtxExport ScriptObject : public EventListener
 	{
+		friend class Instance;
+
 	public:
 		typedef std::map<String, vtx::ScriptObject*> ChildMap;
 
 		ScriptObject();
 		virtual ~ScriptObject();
 
-		/** Set the C++ object that is associated with this script object */
-		virtual void setNativeObject(Instance* inst) = 0;
+		virtual Instance* getNativeObject();
 
 		/** Get a child script object contained within this one */
 		ScriptObject* getChildScriptObject(const String& name);
 
 	protected:
 		ChildMap mChildren;
+		Instance* mNativeObject;
 
 		/** Initialize a certain child script object */
 		virtual ScriptObject* _createChildObject(const String& name) = 0;
+
+		/** Set the C++ object that is associated with this script object */
+		virtual void _setNativeObject(Instance* inst);
+
 	};
 }
 

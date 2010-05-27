@@ -124,6 +124,7 @@ namespace vtx
 	class HtmlText;
 	class ImageResource;
 	class Instance;
+	class InstanceFactory;
 	class InstanceManager;
 	class InstancePool;
 	class InteractiveObject;

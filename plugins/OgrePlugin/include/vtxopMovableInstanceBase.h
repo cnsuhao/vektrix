@@ -31,6 +31,8 @@ THE SOFTWARE.
 
 #include "vtxop.h"
 
+#include "vtxAtlasPacker.h"
+
 #include "OgreRenderable.h"
 
 #pragma warning (disable : 4355)
@@ -39,7 +41,7 @@ namespace vtx
 {
 	namespace ogre
 	{
-		class vtxopExport MovableInstanceBase : public Ogre::Renderable
+		class vtxopExport MovableInstanceBase : public AtlasPacker::Listener, public Ogre::Renderable
 		{
 		public:
 			MovableInstanceBase(DisplayObject* display_object);
@@ -63,6 +65,7 @@ namespace vtx
 			Ogre::VertexBufferBinding* mVertexBufferBind;
 
 		protected:
+			AtlasPacker* mPacker;
 			DisplayObject* mDisplayObject;
 			Ogre::MaterialPtr mMaterial;
 			Ogre::Matrix4 mWorldMatrix;

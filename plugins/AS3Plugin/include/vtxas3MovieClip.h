@@ -51,13 +51,14 @@ namespace vtx
 			MovieClip(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 			virtual ~MovieClip();
 
-			void setNativeObject(Instance* inst);
 			void eventFired(const vtx::Event& evt);
 
 			DECLARE_SLOTS_MovieClip;
 
 		protected:
 			vtx::MovieClip* mMovieClip;
+
+			void _setNativeObject(Instance* inst);
 		};
 		//-----------------------------------------------------------------------
 	}

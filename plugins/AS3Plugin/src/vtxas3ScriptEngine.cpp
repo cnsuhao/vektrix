@@ -53,6 +53,7 @@ namespace vtx
 			mRootObject(NULL)
 		{
 			mVmCore = new csp::VmCore(false);
+			mVmCore->setUserData(mParent);
 
 			mVmCore->addListener(this);
 

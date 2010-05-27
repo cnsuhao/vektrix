@@ -51,14 +51,14 @@ namespace vtx
 			StaticText(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 			virtual ~StaticText();
 
-			void setNativeObject(Instance* inst);
-
 			avmplus::Stringp get_text();
 
 			DECLARE_SLOTS_StaticText;
 
 		protected:
 			vtx::StaticText* mStaticText;
+
+			void _setNativeObject(Instance* inst);
 		};
 		//-----------------------------------------------------------------------
 	}

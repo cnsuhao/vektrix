@@ -77,8 +77,6 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void DynLib::unload()
 	{
-		VTX_LOG("Unloading dynamic library \"%s\"", mName.c_str());
-
 		if(DYNLIB_UNLOAD(mInstance))
 		{
 			VTX_EXCEPT("Unable to unload dynamic library \"%s\"\n(\"%s\")", mName.c_str(), getError().c_str());

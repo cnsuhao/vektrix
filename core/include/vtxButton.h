@@ -39,8 +39,7 @@ namespace vtx
 	class vtxExport Button : public DisplayObjectContainer
 	{
 	public:
-		Button(Resource* resource);
-		virtual ~Button();
+		static const String TYPE;
 
 		enum MouseState
 		{
@@ -49,6 +48,13 @@ namespace vtx
 			MS_IN_UP, 
 			MS_IN_DOWN
 		};
+
+		Button();
+		virtual ~Button();
+
+		virtual void initFromResource(Resource* resource);
+
+		const String& getType() const;
 
 		/** @copybrief DisplayObjectContainer::_update */
 		virtual void _update(const float& delta_time = 0.0f);

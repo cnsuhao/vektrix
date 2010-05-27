@@ -33,37 +33,17 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	template<> InstanceManager* Singleton<InstanceManager>::sInstance = 0;
 	//-----------------------------------------------------------------------
-	InstanceManager::InstanceManager()
+	InstanceManager::InstanceManager() 
+		: FactoryManager<InstanceFactory>("Instance")
 	{
-		mEditTexts = new EditTexts;
 		mScriptEngines = new ScriptEngines;
-		mShapes = new Shapes;
-		mStaticTexts = new StaticTexts;
 		mTextures = new Textures;
 	}
 	//-----------------------------------------------------------------------
 	InstanceManager::~InstanceManager()
 	{
-		delete mEditTexts;
 		delete mScriptEngines;
-		delete mShapes;
-		delete mStaticTexts;
 		delete mTextures;
-	}
-	//-----------------------------------------------------------------------
-	InstanceManager::EditTexts* InstanceManager::editTexts()
-	{
-		return mEditTexts;
-	}
-	//-----------------------------------------------------------------------
-	InstanceManager::Shapes* InstanceManager::shapes()
-	{
-		return mShapes;
-	}
-	//-----------------------------------------------------------------------
-	InstanceManager::StaticTexts* InstanceManager::staticTexts()
-	{
-		return mStaticTexts;
 	}
 	//-----------------------------------------------------------------------
 	InstanceManager::Textures* InstanceManager::textures()

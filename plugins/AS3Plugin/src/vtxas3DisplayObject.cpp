@@ -54,12 +54,6 @@ namespace vtx
 
 		}
 		//-----------------------------------------------------------------------
-		void DisplayObject::setNativeObject(Instance* inst)
-		{
-			EventDispatcher::setNativeObject(inst);
-			mDisplayObject = dynamic_cast<vtx::DisplayObject*>(inst);
-		}
-		//-----------------------------------------------------------------------
 		double DisplayObject::get_x()
 		{
 			if(mDisplayObject)
@@ -150,5 +144,48 @@ namespace vtx
 			}
 		}
 		//-----------------------------------------------------------------------
+		double DisplayObject::get_width()
+		{
+			if(mDisplayObject)
+			{
+				return mDisplayObject->getWidth();
+			}
+
+			return 0;
+		}
+		//-----------------------------------------------------------------------
+		void DisplayObject::set_width(double val)
+		{
+			if(mDisplayObject)
+			{
+				mDisplayObject->setWidth((float)val);
+			}
+		}
+		//-----------------------------------------------------------------------
+		double DisplayObject::get_height()
+		{
+			if(mDisplayObject)
+			{
+				return mDisplayObject->getHeight();
+			}
+
+			return 0;
+		}
+		//-----------------------------------------------------------------------
+		void DisplayObject::set_height(double val)
+		{
+			if(mDisplayObject)
+			{
+				mDisplayObject->setHeight((float)val);
+			}
+		}
+		//-----------------------------------------------------------------------
+		void DisplayObject::_setNativeObject(Instance* inst)
+		{
+			EventDispatcher::_setNativeObject(inst);
+			mDisplayObject = dynamic_cast<vtx::DisplayObject*>(inst);
+		}
+		//-----------------------------------------------------------------------
+
 	}
 }

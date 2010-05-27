@@ -33,8 +33,19 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	Shape::Shape(Resource* resource) 
-		: DisplayObject(resource)
+	const String Shape::TYPE = "Shape";
+	//-----------------------------------------------------------------------
+	Shape::Shape()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	Shape::~Shape()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	void Shape::initFromResource(Resource* resource)
 	{
 		mShapeResource = dynamic_cast<ShapeResource*>(resource);
 
@@ -44,9 +55,9 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	Shape::~Shape()
+	const String& Shape::getType() const
 	{
-
+		return TYPE;
 	}
 	//-----------------------------------------------------------------------
 	const BoundingBox& Shape::getBoundingBox() const

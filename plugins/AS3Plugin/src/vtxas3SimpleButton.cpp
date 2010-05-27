@@ -61,19 +61,14 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		SimpleButton::~SimpleButton()
 		{
-			delete getCaspinObject();
+			delete mScriptObject;
 		}
 		//-----------------------------------------------------------------------
-		void SimpleButton::setNativeObject(Instance* inst)
+		void SimpleButton::_setNativeObject(Instance* inst)
 		{
-			InteractiveObject::setNativeObject(inst);
+			InteractiveObject::_setNativeObject(inst);
 			mButton = dynamic_cast<vtx::Button*>(inst);
 		}
-		//-----------------------------------------------------------------------
-		//void SimpleButton::eventFired(const Event& evt)
-		//{
-
-		//}
 		//-----------------------------------------------------------------------
 	}
 }

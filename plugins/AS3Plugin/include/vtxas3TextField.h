@@ -51,10 +51,6 @@ namespace vtx
 			TextField(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 			virtual ~TextField();
 
-			void setNativeObject(Instance* inst);
-
-			//void eventFired(const Event& evt);
-
 			/* getters / setters */
 			avmplus::Stringp get_htmlText();
 			void set_htmlText(avmplus::Stringp htmlText);
@@ -67,6 +63,8 @@ namespace vtx
 
 		protected:
 			vtx::EditText* mEditText;
+
+			void _setNativeObject(Instance* inst);
 		};
 		//-----------------------------------------------------------------------
 	}

@@ -40,7 +40,7 @@ namespace vtx
 	public:
 		typedef std::map<uint, DisplayObject*> LayerMap;
 
-		DisplayObjectContainer(Resource* resource);
+		DisplayObjectContainer();
 		virtual ~DisplayObjectContainer();
 
 		/** Add a child object at the topmost available layer */

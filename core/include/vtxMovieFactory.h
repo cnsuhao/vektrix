@@ -42,6 +42,7 @@ namespace vtx
 		friend class Root;
 		// <"MovieDefinitionName", RenderStrategyPtr>
 		typedef std::map<String, RenderStrategy*> RenderStrategyMap;
+		typedef std::map<String, InstanceFactory*> FactoryMap;
 
 		MovieFactory();
 		virtual ~MovieFactory();
@@ -49,26 +50,19 @@ namespace vtx
 		/** Get a RenderStrategy associated with this factory */
 		RenderStrategy* getRenderStrategy(File* file);
 
-		/** Get the EditTextFactory that is used for creating EditText instances */
-		EditTextFactory* getEditTextFactory();
-		/** Get the ShapeFactory that is used for creating Shape instances */
-		ShapeFactory* getShapeFactory();
-		/** Get the StaticTextFactory that is used for creating StaticText instances */
-		StaticTextFactory* getStaticTextFactory();
 		/** Get the TextureFactory that is used for creating Texture instances */
 		TextureFactory* getTextureFactory();
+
+		InstanceFactory* getFactory(const String& type);
 
 	protected:
 		// map of all RenderStrategies, with the respective filename as key
 		RenderStrategyMap mRenderStrategy;
 
-		// map of the used factories <InstanceType, FactoryName>
-		StringMap mFactoryNames;
+		// map of the used factories <InstanceType, FactoryPtr>
+		FactoryMap mFactories;
 
 		// factories
-		EditTextFactory* mEditTextFactory;
-		ShapeFactory* mShapeFactory;
-		StaticTextFactory* mStaticTextFactory;
 		TextureFactory* mTextureFactory;
 
 		/** Abstract method for creating the RenderStrategy associated with this Factory */

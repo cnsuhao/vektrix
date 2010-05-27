@@ -36,9 +36,8 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	DisplayObject::DisplayObject(Resource* resource) 
-		: Instance(resource), 
-		mParentContainer(NULL)
+	DisplayObject::DisplayObject() 
+		: mParentContainer(NULL)
 	{
 
 	}
@@ -123,9 +122,25 @@ namespace vtx
 		return mTransform.getMatrix();
 	}
 	//-----------------------------------------------------------------------
+	void DisplayObject::setWidth(const float& width)
+	{
+		// TODO: implement boundingbox function for this purpose
+		BoundingBox bbox = getBoundingBox();
+		bbox.setExtents(bbox.getMin(), Vector2(width, bbox.getMaxY()));
+		mTransform.setBounding(bbox);
+	}
+	//-----------------------------------------------------------------------
 	float DisplayObject::getWidth() const
 	{
 		return getBoundingBox().getWidth() * getMatrix().getScale().x;
+	}
+	//-----------------------------------------------------------------------
+	void DisplayObject::setHeight(const float& height)
+	{
+		// TODO: implement boundingbox function for this purpose
+		BoundingBox bbox = getBoundingBox();
+		bbox.setExtents(bbox.getMin(), Vector2(bbox.getMaxX(), height));
+		mTransform.setBounding(bbox);
 	}
 	//-----------------------------------------------------------------------
 	float DisplayObject::getHeight() const
@@ -139,6 +154,11 @@ namespace vtx
 		mTransform.setParentContainer(parent);
 		mTransform.setBounding(getBoundingBox());
 		_update(0);
+	}
+	//-----------------------------------------------------------------------
+	DisplayObjectContainer* DisplayObject::getParentContainer() const
+	{
+		return mParentContainer;
 	}
 	//-----------------------------------------------------------------------
 	const BoundingBox& DisplayObject::getWorldBoundingBox()
@@ -170,10 +190,13 @@ namespace vtx
 	{
 		mTransform.update();
 
-		MovieDebugger* debugger = mParentMovie->getDebugger();
-		if(debugger)
+		if(mParentMovie)
 		{
-			debugger->debugBoundingBox(mTransform.getWorldBounding());
+			MovieDebugger* debugger = mParentMovie->getDebugger();
+			if(debugger)
+			{
+				debugger->debugBoundingBox(mTransform.getWorldBounding());
+			}
 		}
 	}
 	//-----------------------------------------------------------------------

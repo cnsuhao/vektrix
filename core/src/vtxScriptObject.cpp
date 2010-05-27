@@ -33,7 +33,8 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	ScriptObject::ScriptObject()
+	ScriptObject::ScriptObject() 
+		: mNativeObject(NULL)
 	{
 
 	}
@@ -43,7 +44,12 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
-	vtx::ScriptObject* ScriptObject::getChildScriptObject(const String& name)
+	Instance* ScriptObject::getNativeObject()
+	{
+		return mNativeObject;
+	}
+	//-----------------------------------------------------------------------
+	ScriptObject* ScriptObject::getChildScriptObject(const String& name)
 	{
 		ChildMap::iterator it = mChildren.find(name);
 		if(it != mChildren.end())
@@ -59,6 +65,11 @@ namespace vtx
 		}
 
 		return vtx_obj;
+	}
+	//-----------------------------------------------------------------------
+	void ScriptObject::_setNativeObject(Instance* inst)
+	{
+		mNativeObject = inst;
 	}
 	//-----------------------------------------------------------------------
 }

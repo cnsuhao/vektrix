@@ -496,6 +496,11 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void HtmlOperations::_recursiveGenerate(HtmlElement* source_element)
 	{
+		if(!source_element)
+		{
+			return;
+		}
+
 		HtmlElement::ChildList::const_iterator it = source_element->children.begin();
 		HtmlElement::ChildList::const_iterator end = source_element->children.end();
 		while(it != end)

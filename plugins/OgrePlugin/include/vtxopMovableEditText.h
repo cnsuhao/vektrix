@@ -38,29 +38,24 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		class vtxopExport OgreMovableEditText : 
-			public EditText, 
-			public MovableTextBase, 
-			public AtlasPacker::Listener
+		class vtxopExport OgreMovableEditText : public EditText, public MovableTextBase
 		{
 		public:
-			OgreMovableEditText(vtx::Resource* resource);
+			OgreMovableEditText();
 			virtual ~OgreMovableEditText();
 
 			virtual void _setParent(Movie* parent);
+			virtual void initFromResource(Resource* resource);
 
 			void _update(const float& delta_time);
-			void setAtlasList(const AtlasPacker::PackResultList& atlas_list);
 
 			void packed(const AtlasPacker::PackResultList& pack_result);
 
 		protected:
-			AtlasPacker::PackResultList mAtlasList;
-
 			void _updateGraphics();
 		};
 		//-----------------------------------------------------------------------
-		FactoryImpl_P1(OgreMovableEditText, EditText, Resource*);
+		FactoryImpl_P0(OgreMovableEditText, Instance);
 		//-----------------------------------------------------------------------
 	}
 }

@@ -118,11 +118,16 @@ const uint32_t flash_display_DisplayObject_scaleX_get = 61;
 const uint32_t flash_display_DisplayObject_scaleX_set = 62;
 const uint32_t flash_display_DisplayObject_scaleY_get = 63;
 const uint32_t flash_display_DisplayObject_scaleY_set = 64;
-const uint32_t flash_text_StaticText_text_get = 138;
-const uint32_t flash_text_TextField_htmlText_get = 149;
-const uint32_t flash_text_TextField_htmlText_set = 150;
-const uint32_t flash_text_TextField_getLineIndexAtPoint = 155;
-const uint32_t flash_text_TextField_setSelection = 156;
+const uint32_t flash_display_DisplayObject_width_get = 65;
+const uint32_t flash_display_DisplayObject_width_set = 66;
+const uint32_t flash_display_DisplayObject_height_get = 67;
+const uint32_t flash_display_DisplayObject_height_set = 68;
+const uint32_t flash_text_StaticText_text_get = 142;
+const uint32_t flash_display_DisplayObjectContainer_addChild = 146;
+const uint32_t flash_text_TextField_htmlText_get = 153;
+const uint32_t flash_text_TextField_htmlText_set = 154;
+const uint32_t flash_text_TextField_getLineIndexAtPoint = 159;
+const uint32_t flash_text_TextField_setSelection = 160;
 
 extern AvmBox vektrix_EventHandler_add_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox vektrix_EventHandler_handle_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
@@ -139,7 +144,12 @@ extern double flash_display_DisplayObject_scaleX_get_thunk(AvmMethodEnv env, uin
 extern AvmBox flash_display_DisplayObject_scaleX_set_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern double flash_display_DisplayObject_scaleY_get_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_display_DisplayObject_scaleY_set_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+extern double flash_display_DisplayObject_width_get_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+extern AvmBox flash_display_DisplayObject_width_set_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+extern double flash_display_DisplayObject_height_get_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+extern AvmBox flash_display_DisplayObject_height_set_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_text_StaticText_text_get_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+extern AvmBox flash_display_DisplayObjectContainer_addChild_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_text_TextField_htmlText_get_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_text_TextField_htmlText_set_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_text_TextField_getLineIndexAtPoint_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
@@ -151,10 +161,12 @@ extern AvmBox flash_v2a_osob_optbfalse_thunk(AvmMethodEnv env, uint32_t argc, Av
 #define flash_events_EventDispatcher_removeEventListener_thunk  flash_v2a_osob_optbfalse_thunk
 
 extern AvmBox flash_v2a_od_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
-#define flash_display_DisplayObject_scaleY_set_thunk  flash_v2a_od_thunk
-#define flash_display_DisplayObject_y_set_thunk  flash_v2a_od_thunk
-#define flash_display_DisplayObject_scaleX_set_thunk  flash_v2a_od_thunk
 #define flash_display_DisplayObject_rotation_set_thunk  flash_v2a_od_thunk
+#define flash_display_DisplayObject_scaleY_set_thunk  flash_v2a_od_thunk
+#define flash_display_DisplayObject_scaleX_set_thunk  flash_v2a_od_thunk
+#define flash_display_DisplayObject_width_set_thunk  flash_v2a_od_thunk
+#define flash_display_DisplayObject_y_set_thunk  flash_v2a_od_thunk
+#define flash_display_DisplayObject_height_set_thunk  flash_v2a_od_thunk
 #define flash_display_DisplayObject_x_set_thunk  flash_v2a_od_thunk
 
 extern AvmBox flash_v2a_osobib_optbfalse_opti0_optbfalse_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
@@ -172,6 +184,9 @@ extern AvmBox flash_i2a_odd_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv)
 extern AvmBox flash_v2a_os_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 #define flash_text_TextField_htmlText_set_thunk  flash_v2a_os_thunk
 
+extern AvmBox flash_a2a_oo_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+#define flash_display_DisplayObjectContainer_addChild_thunk  flash_a2a_oo_thunk
+
 extern AvmBox flash_v2a_oii_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 #define flash_text_TextField_setSelection_thunk  flash_v2a_oii_thunk
 
@@ -183,11 +198,13 @@ extern AvmBox flash_i2a_oii_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv)
 #define vektrix_EventHandler_add_thunk  flash_i2a_oii_thunk
 
 extern double flash_d2d_o_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+#define flash_display_DisplayObject_scaleY_get_thunk  flash_d2d_o_thunk
+#define flash_display_DisplayObject_width_get_thunk  flash_d2d_o_thunk
+#define flash_display_DisplayObject_height_get_thunk  flash_d2d_o_thunk
 #define flash_display_DisplayObject_rotation_get_thunk  flash_d2d_o_thunk
 #define flash_display_DisplayObject_x_get_thunk  flash_d2d_o_thunk
-#define flash_display_DisplayObject_scaleX_get_thunk  flash_d2d_o_thunk
-#define flash_display_DisplayObject_scaleY_get_thunk  flash_d2d_o_thunk
 #define flash_display_DisplayObject_y_get_thunk  flash_d2d_o_thunk
+#define flash_display_DisplayObject_scaleX_get_thunk  flash_d2d_o_thunk
 
 #endif // VMCFG_INDIRECT_NATIVE_THUNKS
 

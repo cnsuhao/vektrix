@@ -28,18 +28,16 @@ THE SOFTWARE.
 
 #include "vtxopMovableStaticText.h"
 #include "vtxopMovableMovie.h"
-
-// TODO
-#include "vtxResource.h"
+#include "vtxStaticTextResource.h"
 
 namespace vtx
 {
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		OgreMovableStaticText::OgreMovableStaticText(vtx::Resource* resource) 
-			: StaticText(resource), 
-			MovableTextBase(this)
+		OgreMovableStaticText::OgreMovableStaticText() 
+			: MovableTextBase(this), 
+			mResource(NULL)
 		{
 			_createBuffers();
 		}
@@ -52,8 +50,48 @@ namespace vtx
 		void OgreMovableStaticText::_setParent(Movie* parent)
 		{
 			StaticText::_setParent(parent);
+			mParentMovable = static_cast<MovableMovie*>(parent);
 
-			mParentMovable = dynamic_cast<MovableMovie*>(parent);
+			if(mParentMovable)
+			{
+				mPacker = mParentMovable->getPacker();
+
+				if(mPacker)
+				{
+					mPacker->addListener(this);
+				}
+			}
+			else
+			{
+				if(mPacker)
+				{
+					mPacker->removeListener(this);
+				}
+			}
+		}
+		//-----------------------------------------------------------------------
+		void OgreMovableStaticText::initFromResource(Resource* resource)
+		{
+			StaticText::initFromResource(resource);
+
+			mResource = dynamic_cast<StaticTextResource*>(resource);
+
+			uint glyph_count = 0;
+			const GlyphStripList& glyph_strips = mResource->getGlyphStrips();
+			GlyphStripList::const_iterator it = glyph_strips.begin();
+			GlyphStripList::const_iterator end = glyph_strips.end();
+			while(it != end)
+			{
+				glyph_count += (*it).glyphs.size();
+				++it;
+			}
+
+			_resizeBuffers(glyph_count);
+
+			if(mPacker && mParentMovie && mResource)
+			{
+				_updateVertexBuffer(mResource->getGlyphStrips(), mPacker->getResultList(), mParentMovie->getFile());
+			}
 		}
 		//-----------------------------------------------------------------------
 		void OgreMovableStaticText::_update(const float& delta_time)
@@ -69,20 +107,12 @@ namespace vtx
 				0,		  0,		   0,				1);
 		}
 		//-----------------------------------------------------------------------
-		void OgreMovableStaticText::setGlyphStrips(const GlyphStripList& glyph_strips, 
-			const AtlasPacker::PackResultList& atlas_list)
+		void OgreMovableStaticText::packed(const AtlasPacker::PackResultList& pack_result)
 		{
-			uint glyph_count = 0;
-			GlyphStripList::const_iterator it = glyph_strips.begin();
-			GlyphStripList::const_iterator end = glyph_strips.end();
-			while(it != end)
+			if(mPacker && mParentMovie && mResource)
 			{
-				glyph_count += (*it).glyphs.size();
-				++it;
+				_updateVertexBuffer(mResource->getGlyphStrips(), mPacker->getResultList(), mParentMovie->getFile());
 			}
-
-			_resizeBuffers(glyph_count);
-			_updateVertexBuffer(glyph_strips, atlas_list, mResource->getFile());
 		}
 		//-----------------------------------------------------------------------
 	}

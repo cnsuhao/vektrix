@@ -80,9 +80,10 @@ namespace vtx
 			{
 				ScriptObject* script_obj = parent_obj->getChildScriptObject(mName);
 
+				// TODO: remove NULL check, should be safe here
 				if(script_obj)
 				{
-					script_obj->setNativeObject(mObject);
+					//script_obj->setNativeObject(mObject);
 					mObject->setScriptObject(script_obj);
 				}
 			}

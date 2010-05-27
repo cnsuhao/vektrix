@@ -39,8 +39,14 @@ namespace vtx
 	class vtxExport Shape : public DisplayObject
 	{
 	public:
-		Shape(Resource* resource);
+		static const String TYPE;
+
+		Shape();
 		virtual ~Shape();
+
+		virtual void initFromResource(Resource* resource);
+
+		const String& getType() const;
 
 		/** @copybrief DisplayObject::getBoundingBox */
 		const BoundingBox& getBoundingBox() const;
@@ -54,9 +60,6 @@ namespace vtx
 		BoundingBox mBB;
 		ShapeResource* mShapeResource;
 	};
-	//-----------------------------------------------------------------------
-	/** The InstanceFactory for creating Shape objects */
-	class vtxExport ShapeFactory : public InstanceFactory<Shape> {};
 	//-----------------------------------------------------------------------
 }
 

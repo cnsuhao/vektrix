@@ -29,17 +29,15 @@ THE SOFTWARE.
 #include "vtxopMovableEditText.h"
 #include "vtxopMovableMovie.h"
 
-// TODO
-#include "vtxResource.h"
+#include "vtxEditTextResource.h"
 
 namespace vtx
 {
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		OgreMovableEditText::OgreMovableEditText(Resource* resource) 
-			: EditText(resource), 
-			MovableTextBase(this)
+		OgreMovableEditText::OgreMovableEditText() 
+			: MovableTextBase(this)
 		{
 			_createBuffers();
 		}
@@ -52,8 +50,32 @@ namespace vtx
 		void OgreMovableEditText::_setParent(Movie* parent)
 		{
 			EditText::_setParent(parent);
+			mParentMovable = static_cast<MovableMovie*>(parent);
 
-			mParentMovable = dynamic_cast<MovableMovie*>(parent);
+			if(mParentMovable)
+			{
+				mPacker = mParentMovable->getPacker();
+
+				if(mPacker)
+				{
+					mPacker->addListener(this);
+				}
+			}
+			else
+			{
+				if(mPacker)
+				{
+					mPacker->removeListener(this);
+				}
+			}
+		}
+		//-----------------------------------------------------------------------
+		void OgreMovableEditText::initFromResource(Resource* resource)
+		{
+			EditText::initFromResource(resource);
+
+			EditTextResource* res = dynamic_cast<EditTextResource*>(resource);
+			setHtmlText(res->getInitialText());
 		}
 		//-----------------------------------------------------------------------
 		void OgreMovableEditText::_update(const float& delta_time)
@@ -69,21 +91,18 @@ namespace vtx
 				0,		  0,		   0,				1);
 		}
 		//-----------------------------------------------------------------------
-		void OgreMovableEditText::setAtlasList(const AtlasPacker::PackResultList& atlas_list)
-		{
-			mAtlasList = atlas_list;
-		}
-		//-----------------------------------------------------------------------
 		void OgreMovableEditText::packed(const AtlasPacker::PackResultList& pack_result)
 		{
-			setAtlasList(pack_result);
 			_updateGraphics();
 		}
 		//-----------------------------------------------------------------------
 		void OgreMovableEditText::_updateGraphics()
 		{
 			_resizeBuffers(mGlyphCount);
-			_updateVertexBuffer(mGlyphStrips, mAtlasList, mResource->getFile());
+			if(mParentMovie && mPacker)
+			{
+				_updateVertexBuffer(mGlyphStrips, mPacker->getResultList(), mParentMovie->getFile());
+			}
 		}
 		//-----------------------------------------------------------------------
 	}

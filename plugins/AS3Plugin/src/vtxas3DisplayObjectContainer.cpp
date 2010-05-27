@@ -28,6 +28,8 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
+#include "vtxDisplayObjectContainer.h"
+
 namespace vtx
 {
 	namespace as3
@@ -46,9 +48,36 @@ namespace vtx
 		}
 		//-----------------------------------------------------------------------
 		DisplayObjectContainer::DisplayObjectContainer(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: InteractiveObject(vtable, prototype)
+			: InteractiveObject(vtable, prototype), 
+			mDisplayObjectContainer(NULL)
 		{
 
+		}
+		//-----------------------------------------------------------------------
+		DisplayObjectContainer::~DisplayObjectContainer()
+		{
+
+		}
+		//-----------------------------------------------------------------------
+		DisplayObject* DisplayObjectContainer::addChild(DisplayObject* child)
+		{
+			if(mDisplayObjectContainer)
+			{
+				vtx::Instance* inst = child->getNativeObject();
+				vtx::DisplayObject* native_child = dynamic_cast<vtx::DisplayObject*>(inst);
+				if(native_child)
+				{
+					mDisplayObjectContainer->addChild(native_child);
+					return child;
+				}
+			}
+			return NULL;
+		}
+		//-----------------------------------------------------------------------
+		void DisplayObjectContainer::_setNativeObject(Instance* inst)
+		{
+			InteractiveObject::_setNativeObject(inst);
+			mDisplayObjectContainer = dynamic_cast<vtx::DisplayObjectContainer*>(inst);
 		}
 		//-----------------------------------------------------------------------
 	}

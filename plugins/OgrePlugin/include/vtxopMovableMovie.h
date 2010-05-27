@@ -47,7 +47,10 @@ namespace vtx
 			MovableMovie(const String& name, File* file, MovieFactory* creator);
 			virtual ~MovableMovie();
 
+			AtlasPacker* getPacker() const;
+
 			vtx::Instance* getInstance(const String& id);
+			vtx::Instance* getInstanceByType(const String& type);
 			void releaseInstance(vtx::Instance* instance);
 
 			// Ogre functions

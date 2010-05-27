@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "flash_package.h"
 
 #include "vtxEditText.h"
+#include "vtxMovie.h"
 
 #include "cspInternalCore.h"
 #include "cspVmCore.h"
@@ -54,44 +55,34 @@ namespace vtx
 		TextField::TextField(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
 			: InteractiveObject(vtable, prototype)
 		{
+			earlyInit(this, true);
 
+			Movie* movie = static_cast<Movie*>(mCore->getUserData());
+			Instance* inst = movie->getInstanceByType(EditText::TYPE);
+			inst->setScriptObject(this);
 		}
 		//-----------------------------------------------------------------------
 		TextField::~TextField()
 		{
-			delete getCaspinObject();
+			DecrementRef();
+			delete mScriptObject;
 		}
-		//-----------------------------------------------------------------------
-		void TextField::setNativeObject(Instance* inst)
-		{
-			InteractiveObject::setNativeObject(inst);
-			mEditText = dynamic_cast<vtx::EditText*>(inst);
-		}
-		//-----------------------------------------------------------------------
-		//void TextField::eventFired(const Event& evt)
-		//{
-		//	InteractiveObject::eventFired(evt);
-		//}
 		//-----------------------------------------------------------------------
 		avmplus::Stringp TextField::get_htmlText()
 		{
-			csp::VmCore* core = getCaspinCore();
-
-			if(mEditText && core)
+			if(mEditText && mCore)
 			{
-				return core->stl2cspUTF8(mEditText->getHtmlText());
+				return mCore->stl2cspUTF8(mEditText->getHtmlText());
 			}
 
-			return core->stl2csp("");
+			return mCore->stl2csp("");
 		}
 		//-----------------------------------------------------------------------
 		void TextField::set_htmlText(avmplus::Stringp htmlText)
 		{
-			csp::VmCore* core = getCaspinCore();
-
-			if(mEditText && core)
+			if(mEditText && mCore)
 			{
-				mEditText->setHtmlText(core->csp2stlUTF8(htmlText));
+				mEditText->setHtmlText(mCore->csp2stlUTF8(htmlText));
 			}
 		}
 		//-----------------------------------------------------------------------
@@ -111,6 +102,27 @@ namespace vtx
 			{
 				mEditText->setSelection(beginIndex, endIndex);
 			}
+		}
+		//-----------------------------------------------------------------------
+		void TextField::_setNativeObject(Instance* inst)
+		{
+			// TODO: implement this
+			Instance* instance = getNativeObject();
+			if(instance)
+			{
+				Movie* movie = static_cast<Movie*>(mCore->getUserData());
+				vtx::DisplayObject* displ = dynamic_cast<vtx::DisplayObject*>(instance);
+				if(displ)
+				{
+					vtx::DisplayObjectContainer* cont = displ->getParentContainer();
+					if(cont)
+						cont->removeChildAt(displ->getLayer());
+				}
+				movie->releaseInstance(instance);
+			}
+
+			InteractiveObject::_setNativeObject(inst);
+			mEditText = dynamic_cast<vtx::EditText*>(inst);
 		}
 		//-----------------------------------------------------------------------
 	}

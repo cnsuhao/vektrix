@@ -32,9 +32,9 @@ THE SOFTWARE.
 #include "vtxPrerequesites.h"
 #include "vtxSingleton.h"
 
-#define VTX_EXCEPT LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->line(__LINE__); LogManager::getSingletonPtr()->exception
-#define VTX_WARN LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->warning
-#define VTX_LOG LogManager::getSingletonPtr()->log
+#define VTX_EXCEPT vtx::LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->line(__LINE__); LogManager::getSingletonPtr()->exception
+#define VTX_WARN vtx::LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->warning
+#define VTX_LOG vtx::LogManager::getSingletonPtr()->log
 
 namespace vtx
 {

@@ -50,12 +50,11 @@ namespace vtx
 		typedef std::stack<StyleElement> StyleStack;
 		typedef std::stack<HtmlElement::Alignment> AlignmentStack;
 
-		// TODO: remove resource dependency
-		HtmlRenderable(Resource* resource);
+		HtmlRenderable();
 		virtual ~HtmlRenderable();
 
 	protected:
-		void interateDomTree(HtmlElement* root);
+		void interateDomTree(HtmlElement* root, File* file);
 
 		// inline for best performance
 		inline const StyleElement& getCurrentStyle() const
@@ -75,7 +74,7 @@ namespace vtx
 		//}
 
 	private:
-		Resource* mResource2;
+		File* mFile;
 		StyleStack mStyleStack;
 		AlignmentStack mAlignStack;
 

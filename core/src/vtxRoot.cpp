@@ -89,6 +89,8 @@ namespace vtx
 		delete InstanceManager::getSingletonPtr();
 		delete RasterizerManager::getSingletonPtr();
 
+		VTX_LOG("Unloading dynamic libraries...");
+
 		// unload dynamic libraries
 		DynLibMap::iterator dynlib_it = mLibraries.begin();
 		DynLibMap::iterator dynlib_end = mLibraries.end();

@@ -43,7 +43,8 @@ namespace vtx
 	{
 		//-----------------------------------------------------------------------
 		MovableInstanceBase::MovableInstanceBase(DisplayObject* display_object) 
-			: mDisplayObject(display_object), 
+			: mPacker(NULL), 
+			mDisplayObject(display_object), 
 			mVertex(NULL), 
 			mParentMovable(NULL)
 		{
@@ -77,6 +78,11 @@ namespace vtx
 		{
 			Ogre::Matrix4 ogre_mat = mParentMovable->_getParentNodeFullTransform();
 			xform[0] = ogre_mat * mWorldMatrix;
+
+			// DEBUG
+			//Ogre::Matrix4 m = mWorldMatrix;
+			//m[2][3] = (float)mDisplayObject->getZOrder();
+			//xform[0] = ogre_mat * m;
 		}
 		//-----------------------------------------------------------------------
 		const Ogre::Quaternion& MovableInstanceBase::getWorldOrientation() const

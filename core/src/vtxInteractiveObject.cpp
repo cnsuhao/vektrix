@@ -31,15 +31,15 @@ THE SOFTWARE.
 #include "vtxFocusEvent.h"
 #include "vtxMouseEvent.h"
 #include "vtxMovie.h"
+#include "vtxScriptObject.h"
 
 #include "vtxLogManager.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	InteractiveObject::InteractiveObject(Resource* resource) 
-		: DisplayObject(resource), 
-		mHasFocus(false)
+	InteractiveObject::InteractiveObject() 
+		: mHasFocus(false)
 	{
 
 	}

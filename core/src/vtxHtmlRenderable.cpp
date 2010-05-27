@@ -42,9 +42,8 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	HtmlRenderable::HtmlRenderable(Resource* resource) 
-		: mResource2(resource), 
-		mPreviousVisualNode(NULL)
+	HtmlRenderable::HtmlRenderable() 
+		: mPreviousVisualNode(NULL)
 	{
 
 	}
@@ -54,16 +53,23 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
-	void HtmlRenderable::interateDomTree(HtmlElement* root)
+	void HtmlRenderable::interateDomTree(HtmlElement* root, File* file)
 	{
 		assert(!mStyleStack.size() && "Style stacks not cleared");
 
+		mFile = file;
 		mPreviousVisualNode = NULL;
+
 		_recursiveDomIteration(root);
 	}
 	//-----------------------------------------------------------------------
 	void HtmlRenderable::_recursiveDomIteration(HtmlElement* source_element)
 	{
+		if(!source_element)
+		{
+			return;
+		}
+
 		HtmlElement::ChildList::const_iterator it = source_element->children.begin();
 		HtmlElement::ChildList::const_iterator end = source_element->children.end();
 		while(it != end)
@@ -76,74 +82,61 @@ namespace vtx
 			case HtmlElement::Font:
 				{
 					HtmlFont* font = static_cast<HtmlFont*>(*it);
-					//if(!font) break;
-					_addFont(font);
 
-					////mComposedHTMLText += L"<font";
+					_addFont(font);
 
 					StyleElement style;
 
 					if(font->face.length())
 					{
-						//mComposedHTMLText += L" face=";
-						//mComposedHTMLText.append(font->face.begin(), font->face.end());
+						style.font = mFile->getFontByName(font->face);
+					}
 
-						FontResource* new_font = mResource2->getFile()->getFontByName(font->face);
-						if(new_font)
+					if(!style.font)
+					{
+						if(mStyleStack.size())
 						{
-							style.font = new_font;
-						}
-						// font name given, but font unavailable
-						else if(mStyleStack.size())
-						{
-							VTX_WARN("Unable to find font %s", font->face.c_str());
+							//VTX_WARN("vtx::EditText: Unable to find font \"%s\", using previous font", font->face.c_str());
 							style.font = mStyleStack.top().font;
 						}
-					}
-					else if(mStyleStack.size())
-					{
-						style.font = mStyleStack.top().font;
+						else
+						{
+							VTX_EXCEPT("TODO: implement default font ??");
+						}
 					}
 
 					if(font->size.length())
 					{
-						//mComposedHTMLText += L" size=";
-						//mComposedHTMLText.append(font->size.begin(), font->size.end());
-
 						style.size = StringHelper::toFloat(font->size);
 					}
 					else if(mStyleStack.size())
+					{
 						style.size = mStyleStack.top().size;
+					}
+					else
+					{
+						VTX_EXCEPT("TODO: implement default size ??");
+					}
 
 					if(font->color.length())
 					{
-						//mComposedHTMLText += L" color=";
-						//mComposedHTMLText.append(font->color.begin(), font->color.end());
-
 						style.color = StringHelper::colorFromHex(font->color);
 					}
 					else if(mStyleStack.size())
+					{
 						style.color = mStyleStack.top().color;
-
-					//mComposedHTMLText += L">";
+					}
+					else
+					{
+						VTX_EXCEPT("TODO: implement default color ??");
+					}
 
 					mStyleStack.push(style);
 
 					_fontStyleChanged(mStyleStack.top());
 
-					//// add FONT_CHANGE element
-					//TextLineElement font_element;
-					//font_element.type = TextLineElement::ET_FontChange;
-					//font_element.color = mStyleStack.top().color;
-					//font_element.font = mStyleStack.top().font;
-					//font_element.height = mStyleStack.top().size;
-					//font_element.x = mCurrentLine.width;
-					//mCurrentLine.elements.push_back(font_element);
-
-					//// continue recursion
+					// continue recursion
 					_recursiveDomIteration(*it);
-
-					////mComposedHTMLText += L"</font>";
 
 					mStyleStack.pop();
 
@@ -151,18 +144,6 @@ namespace vtx
 					{
 						_fontStyleChanged(mStyleStack.top());
 					}
-
-					//if(mStyleStack.size())
-					//{
-					//	// add FONT_CHANGE element
-					//	font_element.reset();
-					//	font_element.type = TextLineElement::ET_FontChange;
-					//	font_element.color = mStyleStack.top().color;
-					//	font_element.font = mStyleStack.top().font;
-					//	font_element.height = mStyleStack.top().size;
-					//	font_element.x = mCurrentLine.width;
-					//	mCurrentLine.elements.push_back(font_element);
-					//}
 				}
 				break;
 
@@ -172,7 +153,6 @@ namespace vtx
 			case HtmlElement::Image:
 				{
 					HtmlImage* img = static_cast<HtmlImage*>(*it);
-					//if(!img) break;
 
 					// connect this image node to the previous visual node
 					if(mPreviousVisualNode)
@@ -185,8 +165,12 @@ namespace vtx
 					mPreviousVisualNode = img;
 
 					// TODO: check what this is good for and if it could be replaced somehow
+					// TODO2: if image is outside all font elements there is no style on the stack
 					// add FONT_CHANGE element
-					_fontStyleChanged(mStyleStack.top());
+					if(mStyleStack.size())
+					{
+						_fontStyleChanged(mStyleStack.top());
+					}
 
 					_addImage(img);
 
@@ -203,7 +187,6 @@ namespace vtx
 			case HtmlElement::Paragraph:
 				{
 					HtmlParagraph* par = static_cast<HtmlParagraph*>(*it);
-					//if(!par) break;
 
 					mAlignStack.push(par->align);
 
@@ -222,10 +205,8 @@ namespace vtx
 			case HtmlElement::Text:
 				{
 					HtmlText* text = static_cast<HtmlText*>(*it);
-					//if(!text || !mStyleStack.size()) break;
-					if(!mStyleStack.size()) break;
 
-					//mComposedHTMLText.append(text->text.begin(), text->text.end());
+					if(!mStyleStack.size()) break;
 
 					// connect this text node to the previous visual node
 					if(mPreviousVisualNode)

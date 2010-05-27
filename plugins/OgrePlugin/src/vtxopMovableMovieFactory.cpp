@@ -31,6 +31,8 @@ THE SOFTWARE.
 #include "vtxopMovableMovieDebugger.h"
 #include "vtxopMovableStrategy.h"
 
+#include "vtxInstanceManager.h"
+
 namespace vtx
 {
 	namespace ogre
@@ -38,10 +40,11 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		MovableMovieFactory::MovableMovieFactory()
 		{
-			mFactoryNames["EditText"] = "OgreMovableEditText";
-			mFactoryNames["Shape"] = "OgreMovableShape";
-			mFactoryNames["StaticText"] = "OgreMovableStaticText";
-			mFactoryNames["Texture"] = "OgreTexture";
+			InstanceManager* inst_mgr = InstanceManager::getSingletonPtr();
+
+			mFactories[EditText::TYPE] = inst_mgr->getFactory("OgreMovableEditText");
+			mFactories[Shape::TYPE] = inst_mgr->getFactory("OgreMovableShape");
+			mFactories[StaticText::TYPE] = inst_mgr->getFactory("OgreMovableStaticText");
 		}
 		//-----------------------------------------------------------------------
 		MovableMovieFactory::~MovableMovieFactory()

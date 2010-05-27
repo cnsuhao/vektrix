@@ -30,13 +30,13 @@ THE SOFTWARE.
 
 #include "vtxMovie.h"
 #include "vtxResource.h"
+#include "vtxScriptObject.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	Instance::Instance(Resource* resource) 
+	Instance::Instance() 
 		: mParentMovie(NULL), 
-		mResource(resource), 
 		mScriptObject(NULL)
 	{
 
@@ -45,16 +45,6 @@ namespace vtx
 	Instance::~Instance()
 	{
 
-	}
-	//-----------------------------------------------------------------------
-	const String& Instance::getID()
-	{
-		return mResource->getID();
-	}
-	//-----------------------------------------------------------------------
-	const String& Instance::getType() const
-	{
-		return mResource->getType();
 	}
 	//-----------------------------------------------------------------------
 	void Instance::_setParent(Movie* parent)
@@ -69,7 +59,23 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Instance::setScriptObject(ScriptObject* obj)
 	{
+		// remove native object from original script object
+		if(obj)
+		{
+			Instance* inst = obj->getNativeObject();
+			if(inst)
+			{
+				inst->setScriptObject(NULL);
+			}
+			obj->_setNativeObject(NULL);
+		}
+
 		mScriptObject = obj;
+
+		if(mScriptObject)
+		{
+			mScriptObject->_setNativeObject(this);
+		}
 	}
 	//-----------------------------------------------------------------------
 	ScriptObject* Instance::getScriptObject() const
