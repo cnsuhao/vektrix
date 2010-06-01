@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="vektrix"
 	ProjectGUID="{D1476AEC-1BD0-4C99-9726-6B1F09FA72F6}"
 	RootNamespace="vektrix"
@@ -1022,6 +1022,10 @@
 		<Filter
 			Name="Debugging"
 			>
+			<File
+				RelativePath="..\include\vtxAssert.h"
+				>
+			</File>
 			<File
 				RelativePath="..\src\vtxMovieDebugger.cpp"
 				>
