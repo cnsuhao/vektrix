@@ -209,7 +209,7 @@ namespace vtx
 						zlib_stream.next_out = (Bytef*)&mBuffer[bufStart];
 
 						ret = inflate(&zlib_stream, Z_NO_FLUSH);
-						assert(ret != Z_STREAM_ERROR);
+						vtxDebugAssert(ret != Z_STREAM_ERROR, "");
 						switch(ret)
 						{
 						case Z_NEED_DICT:
@@ -540,7 +540,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		int SwfParser::readSBits(UI32 n)
 		{
-			assert(n <= 32);
+			vtxDebugAssert(n <= 32, "");
 			int num = readUBits(n);
 			int shift = 32 - n;
 			return (num << shift) >> shift; // sign extend

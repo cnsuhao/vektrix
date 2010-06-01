@@ -99,7 +99,7 @@ namespace vtx
 
 			if(has_clip_actions)
 			{
-				assert(false && "Currently not supporting clip actions");
+				vtxDebugFail("Currently not supporting clip actions");
 			}
 
 			if(has_move)

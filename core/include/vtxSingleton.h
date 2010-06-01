@@ -39,13 +39,13 @@ namespace vtx
 	public:
 		Singleton()
 		{
-			assert(!sInstance);
+			vtxDebugAssert(!sInstance, "");
 			sInstance = (T*)this;
 		}
 
 		virtual ~Singleton()
 		{
-			assert(sInstance);
+			vtxDebugAssert(sInstance, "");
 			sInstance = 0;
 		}
 

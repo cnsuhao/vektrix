@@ -48,7 +48,7 @@ namespace vtx
 			// end of the entire file
 			else
 			{
-				assert(!(mFileLength - mReadPos) && "Unread bytes after TT_End tag");
+				vtxDebugAssert(!(mFileLength - mReadPos), "Unread bytes after TT_End tag");
 			}
 		}
 		//-----------------------------------------------------------------------

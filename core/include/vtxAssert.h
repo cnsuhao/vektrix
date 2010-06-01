@@ -80,4 +80,4 @@ namespace vtx
 #endif 
 }
 
-#endif DEBUGWIN32_H_INCLUDED
+#endif //__vtxAssert_H__

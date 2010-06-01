@@ -55,7 +55,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void HtmlRenderable::interateDomTree(HtmlElement* root, File* file)
 	{
-		assert(!mStyleStack.size() && "Style stacks not cleared");
+		vtxDebugAssert(!mStyleStack.size(), "Style stacks not cleared");
 
 		mFile = file;
 		mPreviousVisualNode = NULL;

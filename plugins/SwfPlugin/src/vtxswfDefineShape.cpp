@@ -174,7 +174,7 @@ namespace vtx
 						(type == TT_DefineShape2 || 
 						type == TT_DefineShape3))
 					{
-						//assert(false && "new styles not tested yet");
+						//vtxDebugFail("new styles not tested yet");
 						readFillstyleArray(type, result.fillstyles);
 						readLinestyleArray(type, result.linestyles);
 						num_fill_bits = readUBits(4);
@@ -243,7 +243,7 @@ namespace vtx
 					break;
 
 				default:
-					assert("SWF shape fillstyle type not implemented" && false);
+					vtxDebugFail("SWF shape fillstyle type not implemented");
 					break;
 				}
 			}
@@ -617,7 +617,7 @@ namespace vtx
 				} // while(elements)
 
 				//std::cout << "ELEMENTS LEFT: " << chunks.size() << std::endl;
-				assert("There should be no elements left here" && !chunks.size());
+				vtxDebugAssert(!chunks.size(), "There should be no elements left here");
 
 #if defined DEBUG_FLASH_SHAPES && defined _DEBUG
 

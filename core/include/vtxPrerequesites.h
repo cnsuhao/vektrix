@@ -46,6 +46,7 @@ THE SOFTWARE.
 #include <vector>
 
 #include "vtxConfig.h"
+#include "vtxAssert.h"
 
 // version
 #define VTX_VERSION_MAJOR 0
