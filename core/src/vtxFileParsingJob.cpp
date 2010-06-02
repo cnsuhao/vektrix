@@ -26,47 +26,63 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxcurlPlugin.h"
-#include "vtxcurlWebFileContainer.h"
+#include "vtxFileParsingJob.h"
+#include "vtxFile.h"
 #include "vtxFileManager.h"
-#include "vtxRoot.h"
+#include "vtxFileStream.h"
 
-#define CURL_STATICLIB
-#include "curl/curl.h"
-
-//-----------------------------------------------------------------------
-#ifdef VTX_STATIC_LIB
-	void vektrix_cURLPlugin_startPlugin()
-#else
-	extern "C" void vtxcurlExport startPlugin() throw()
-#endif
-{
-	vtx::Root::getSingletonPtr()->registerPlugin(new vtx::curl::cURLPlugin());
-}
-//-----------------------------------------------------------------------
+#include "vtxThreadingDefines.h"
+#include "vtxThreadingHeaders.h"
 
 namespace vtx
 {
-	namespace curl
+	//-----------------------------------------------------------------------
+	FileParsingJob::FileParsingJob(FileParser* parser, File* file) 
+		: mParser(parser), 
+		mFile(file)
 	{
-		//-----------------------------------------------------------------------
-		cURLPlugin::cURLPlugin()
-		{
-			curl_global_init(CURL_GLOBAL_DEFAULT);
 
-			mWebFactory = new WebFileContainerFactory();
-			FileManager::getSingletonPtr()->getContainerManager().addFactory(mWebFactory);
-		}
-		//-----------------------------------------------------------------------
-		cURLPlugin::~cURLPlugin()
-		{
-			FileManager::getSingletonPtr()->getContainerManager().removeFactory(mWebFactory);
-
-			delete mWebFactory;
-			mWebFactory = NULL;
-
-			curl_global_cleanup();
-		}
-		//-----------------------------------------------------------------------
 	}
+	//-----------------------------------------------------------------------
+	FileParsingJob::~FileParsingJob()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	void FileParsingJob::start()
+	{
+		FileManager* file_mgr = FileManager::getSingletonPtr();
+
+		const String& filename = mFile->getFilename();
+		FileStream* stream = file_mgr->getFileStream(filename);
+
+		if(!stream)
+		{
+			// no container found
+			VTX_WARN("Unable to find container to load file '%s'.", filename.c_str());
+			return;
+		}
+
+		mParser->parse(stream, mFile);
+
+		if(mParser->errorsOccured())
+		{
+			String error = mParser->getError();
+			while(error.length())
+			{
+				VTX_WARN(error.c_str());
+				error = mParser->getError();
+			}
+
+			VTX_EXCEPT("An error occured while parsing the file \"%s\", see the log for details.", filename.c_str());
+		}
+
+		// TODO: implement FileStreamPtr, so we don't need to destroy instances by hand ?
+		stream->close();
+		delete stream;
+
+		// TODO: use factory ???
+		delete mParser;
+	}
+	//-----------------------------------------------------------------------
 }

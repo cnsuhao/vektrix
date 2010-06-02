@@ -52,6 +52,7 @@ namespace vtx
 	namespace freeimg
 	{
 		class ImageParser;
+		class ImageParserFactory;
 	}
 }
 

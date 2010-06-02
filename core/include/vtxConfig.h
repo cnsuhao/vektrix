@@ -29,7 +29,17 @@ THE SOFTWARE.
 #ifndef __vtxConfig_H__
 #define __vtxConfig_H__
 
-// uncomment this to disable memory debugging for debug builds
+// disable memory debugging for debug builds
 //#define NO_MEM_DBG
+
+// enumerate supported threading libraries
+#define VTX_THREADING_NONE 0
+#define VTX_THREADING_BOOST 1
+
+// enable threading
+#define VTX_THREADING_ENABLED
+
+// select which threading library shall be used
+#define VTX_THREADING_LIB VTX_THREADING_BOOST
 
 #endif

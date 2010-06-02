@@ -46,7 +46,8 @@ namespace vtx
 	template<> Root* Singleton<Root>::sInstance = 0;
 	//-----------------------------------------------------------------------
 	Root::Root() 
-		: FactoryManager<MovieFactory>("Movie")
+		: FactoryManager<MovieFactory>("Movie"), 
+		mFileManager(NULL)
 	{
 		new LogManager();
 
@@ -56,7 +57,7 @@ namespace vtx
 		new RasterizerManager();
 		new InstanceManager();
 
-		new FileManager();
+		mFileManager = new FileManager();
 	}
 	//-----------------------------------------------------------------------
 	Root::~Root()
@@ -84,7 +85,7 @@ namespace vtx
 			++plugin_it;
 		}
 
-		delete FileManager::getSingletonPtr();
+		delete mFileManager;
 
 		delete InstanceManager::getSingletonPtr();
 		delete RasterizerManager::getSingletonPtr();
@@ -190,6 +191,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Root::update(float delta_time)
 	{
+		mFileManager->update();
+
 		MovieMap::const_iterator it = mMovies.begin();
 		MovieMap::const_iterator end = mMovies.end();
 

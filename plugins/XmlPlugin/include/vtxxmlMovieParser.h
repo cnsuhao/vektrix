@@ -35,12 +35,17 @@ namespace vtx
 {
 	namespace xml
 	{
-		class MovieParser : public FileParser
+		//-----------------------------------------------------------------------
+		class XmlMovieParser : public FileParser
 		{
 		public:
 			const StringList& getExtensions() const;
-			File* parse(FileStream* stream);
+			void parse(FileStream* stream, File* file);
 		};
+		//-----------------------------------------------------------------------
+		/** The FileParserFactory for creating FileParser objects */
+		FactoryImpl_P0(XmlMovieParser, FileParser);
+		//-----------------------------------------------------------------------
 	}
 }
 

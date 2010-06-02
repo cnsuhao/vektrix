@@ -50,14 +50,14 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		FreeImagePlugin::FreeImagePlugin()
 		{
-			mImageParser = new ImageParser();
-			FileManager::getSingletonPtr()->addFileParser(mImageParser);
+			mParserFactory = new ImageParserFactory();
+			FileManager::getSingletonPtr()->addParserFactory(mParserFactory);
 		}
 		//-----------------------------------------------------------------------
 		FreeImagePlugin::~FreeImagePlugin()
 		{
-			FileManager::getSingletonPtr()->removeFileParser(mImageParser);
-			delete mImageParser;
+			FileManager::getSingletonPtr()->removeParserFactory(mParserFactory);
+			delete mParserFactory;
 		}
 		//-----------------------------------------------------------------------
 	}

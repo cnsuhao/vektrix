@@ -49,7 +49,7 @@ namespace vtx
 			virtual ~FreeImagePlugin();
 
 		protected:
-			ImageParser* mImageParser;
+			ImageParserFactory* mParserFactory;
 		};
 	}
 }

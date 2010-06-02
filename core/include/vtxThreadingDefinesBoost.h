@@ -26,43 +26,23 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxcurlWebFileContainer_H__
-#define __vtxcurlWebFileContainer_H__
+#ifndef __vtxThreadingDefinesBoost_H__
+#define __vtxThreadingDefinesBoost_H__
 
-#include "vtxcurl.h"
-#include "vtxFileContainer.h"
+#define VTX_MUTEX(name) mutable boost::recursive_mutex name
+#define VTX_AUTO_MUTEX mutable boost::recursive_mutex VTX_MUTEX_ID
+#define VTX_LOCK_MUTEX(name) boost::recursive_mutex::scoped_lock vtxMutexLock(name)
+#define VTX_LOCK_AUTO_MUTEX boost::recursive_mutex::scoped_lock vtxMutexLock(VTX_MUTEX_ID)
 
-namespace vtx
-{
-	namespace curl
-	{
-		//-----------------------------------------------------------------------
-		class WebFileContainer : public FileContainer
-		{
-		public:
-			WebFileContainer(const String& base_uri);
-			virtual ~WebFileContainer();
+// creation & destruction
+#define VTX_CREATE_THREAD(name, job) boost::thread* name = new boost::thread(job)
+#define VTX_DESTROY_THREAD(name) delete name
 
-			/** @copybrief FileContainer::openFile */
-			FileStream* openFile(const String& filename);
-			/** @copybrief FileContainer::hasFile */
-			bool hasFile(const String& filename);
+// type
+#define VTX_THREAD_TYPE boost::thread
 
-		protected:
-			const String mBaseURL;
-			void* mCurl;
-			uint mSize;
-			uchar* mBuffer;
-
-			long fetchURL(const String& url);
-			void freeBuffer();
-			static uint memoryCallback(void* ptr, uint size, uint nmemb, void* data);
-		};
-		//-----------------------------------------------------------------------
-		/** The FileContainerFactory for creating WebFileContainer objects */
-		FactoryImpl_P1(WebFileContainer, FileContainer, const String&);
-		//-----------------------------------------------------------------------
-	}
-}
+// utility
+#define VTX_SLEEP_THREAD(ms) boost::this_thread::sleep(boost::posix_time::millisec(ms))
+#define VTX_THREAD_SYNCHRONISER(sync) boost::condition sync
 
 #endif

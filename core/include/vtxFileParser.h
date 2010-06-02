@@ -30,9 +30,11 @@ THE SOFTWARE.
 #define __vtxFileParser_H__
 
 #include "vtxPrerequesites.h"
+#include "vtxFactory.h"
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A class for creating File instances from data streams  */
 	class vtxExport FileParser
 	{
@@ -44,8 +46,12 @@ namespace vtx
 
 		/** Get the file extensions that are associated with this parser */
 		virtual const StringList& getExtensions() const = 0;
+
 		/** Parse a given FileStream and return the resulting File definition */
-		virtual File* parse(FileStream* stream) = 0;
+		virtual void parse(FileStream* stream, File* file) = 0;
+
+		/** Check if errors occured during the parsing */
+		bool errorsOccured() const;
 
 		/** Get errors that might have occured during the parsing */
 		String getError();
@@ -58,9 +64,14 @@ namespace vtx
 	protected:
 		/** Add an error to the error list */
 		void error(const String& error);
+
 		/** Clear all stored errors */
 		void clearErrors();
 	};
+	//-----------------------------------------------------------------------
+	/** The Factory that is used for creating FileParser objects */
+	class FileParserFactory : public Factory<FileParser> {};
+	//-----------------------------------------------------------------------
 }
 
 #endif

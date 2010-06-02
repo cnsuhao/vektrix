@@ -1,1 +1,0 @@
-To setup your environment variables you must download and install the Windows XP Service Pack 2 Support Tools: http://www.microsoft.com/downloads/details.aspx?FamilyId=49AE8576-9BB9-4126-9761-BA8011FABF38&displaylang=en

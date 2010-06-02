@@ -48,16 +48,16 @@ namespace vtx
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		SwfPlugin::SwfPlugin() 
-			: mSwfParser(new SwfParser)
+		SwfPlugin::SwfPlugin()
 		{
-			FileManager::getSingletonPtr()->addFileParser(mSwfParser);
+			mParserFactory = new SwfParserFactory();
+			FileManager::getSingletonPtr()->addParserFactory(mParserFactory);
 		}
 		//-----------------------------------------------------------------------
 		SwfPlugin::~SwfPlugin()
 		{
-			FileManager::getSingletonPtr()->removeFileParser(mSwfParser);
-			delete mSwfParser;
+			FileManager::getSingletonPtr()->removeParserFactory(mParserFactory);
+			delete mParserFactory;
 		}
 		//-----------------------------------------------------------------------
 	}

@@ -83,12 +83,12 @@ namespace vtx
 			return extensions;
 		}
 		//-----------------------------------------------------------------------
-		File* ImageParser::parse(FileStream* stream)
+		void ImageParser::parse(FileStream* stream, File* file)
 		{
 			mCurrentStream = stream;
 			const String& filename = stream->getFilename();
 
-			File* file = new File(filename);
+			//File* file = new File(filename);
 
 			const uint& stream_size = stream->size();
 
@@ -190,7 +190,7 @@ namespace vtx
 			file->setHeader(header);
 
 			mCurrentStream = NULL;
-			return file;
+			//return file;
 		}
 		//-----------------------------------------------------------------------
 	}

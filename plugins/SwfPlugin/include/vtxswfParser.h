@@ -52,7 +52,7 @@ namespace vtx
 			virtual ~SwfParser();
 
 			const StringList& getExtensions() const;
-			File* parse(FileStream* stream);
+			void parse(FileStream* stream, File* file);
 
 		protected:
 			bool mCompressed;
@@ -155,6 +155,10 @@ namespace vtx
 			int readSBits(UI32 n);
 			void readByteBlock(char* buf, UI32 n);
 		};
+		//-----------------------------------------------------------------------
+		/** The FileParserFactory for creating FileParser objects */
+		FactoryImpl_P0(SwfParser, FileParser);
+		//-----------------------------------------------------------------------
 	}
 }
 

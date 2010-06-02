@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="vektrix"
 	ProjectGUID="{D1476AEC-1BD0-4C99-9726-6B1F09FA72F6}"
 	RootNamespace="vektrix"
@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;&quot;$(EXPAT_HOME)\lib&quot;"
+				AdditionalIncludeDirectories="..\include;&quot;$(BOOST_HOME)&quot;;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VEKTRIX_EXPORTS;COMPILED_FROM_DSP"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -69,7 +69,7 @@
 				AdditionalDependencies="libexpatMT.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(EXPAT_HOME)\win32\bin\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_HOME)\lib&quot;;&quot;$(EXPAT_HOME)\win32\bin\Debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
@@ -126,7 +126,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="2"
-				AdditionalIncludeDirectories="..\include;&quot;$(EXPAT_HOME)\lib&quot;"
+				AdditionalIncludeDirectories="..\include;&quot;$(BOOST_HOME)&quot;;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VEKTRIX_EXPORTS;COMPILED_FROM_DSP"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -149,7 +149,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libexpatMT.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(EXPAT_HOME)\win32\bin\Release&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_HOME)\lib&quot;;&quot;$(EXPAT_HOME)\win32\bin\Release&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -207,7 +207,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;&quot;$(EXPAT_HOME)\lib&quot;"
+				AdditionalIncludeDirectories="..\include;&quot;$(BOOST_HOME)&quot;;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;VTX_STATIC_LIB;COMPILED_FROM_DSP"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -232,7 +232,7 @@
 				Name="VCLibrarianTool"
 				AdditionalDependencies="libexpatMT.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_static_d.lib"
-				AdditionalLibraryDirectories="&quot;$(EXPAT_HOME)\win32\bin\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_HOME)\lib&quot;;&quot;$(EXPAT_HOME)\win32\bin\Debug&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -278,7 +278,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="2"
-				AdditionalIncludeDirectories="..\include;&quot;$(EXPAT_HOME)\lib&quot;"
+				AdditionalIncludeDirectories="..\include;&quot;$(BOOST_HOME)&quot;;&quot;$(EXPAT_HOME)\lib&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VTX_STATIC_LIB;COMPILED_FROM_DSP"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -301,7 +301,7 @@
 				Name="VCLibrarianTool"
 				AdditionalDependencies="libexpatMT.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_static.lib"
-				AdditionalLibraryDirectories="&quot;$(EXPAT_HOME)\win32\bin\Release&quot;"
+				AdditionalLibraryDirectories="&quot;$(BOOST_HOME)\lib&quot;;&quot;$(EXPAT_HOME)\win32\bin\Release&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1390,6 +1390,54 @@
 				RelativePath="..\include\vtxMouseEvent.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Threading"
+			>
+			<File
+				RelativePath="..\include\vtxThreadJob.h"
+				>
+			</File>
+			<Filter
+				Name="Defines"
+				>
+				<File
+					RelativePath="..\include\vtxThreadingDefines.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxThreadingDefinesBoost.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxThreadingDefinesNone.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Headers"
+				>
+				<File
+					RelativePath="..\include\vtxThreadingHeaders.h"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxThreadingHeadersBoost.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="File Loading"
+				>
+				<File
+					RelativePath="..\src\vtxFileParsingJob.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\include\vtxFileParsingJob.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath="..\include\vektrix.h"

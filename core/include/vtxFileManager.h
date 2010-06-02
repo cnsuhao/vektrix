@@ -32,31 +32,46 @@ THE SOFTWARE.
 #include "vtxPrerequesites.h"
 #include "vtxDefaultFileContainer.h"
 #include "vtxFactoryManager.h"
+#include "vtxFileParser.h"
 #include "vtxSingleton.h"
+
+#include "vtxThreadingDefines.h"
+#include "vtxThreadingHeaders.h"
 
 namespace vtx
 {
 	/** The manager that keeps track of File definitions, FileParser instances and FileContainer resources */
-	class vtxExport FileManager : public Singleton<FileManager>, public FactoryManager<FileContainerFactory>
+	class vtxExport FileManager : public Singleton<FileManager>
 	{
 		friend class Root;
 
 	public:
 		typedef std::map<String, File*> FileMap;
+		typedef std::vector<File*> FileVector;
 		typedef std::map<String, FileContainer*> FileContainerMap;
-		typedef std::map<String, FileParser*> FileParserMap;
+		typedef std::map<String, FileParserFactory*> ParserExtensionMap;
+
+		typedef FactoryManager<FileContainerFactory> ContainerManager;
+		typedef FactoryManager<FileParserFactory> ParserManager;
+
+		void update();
 
 		/** Request to load a File by filename */
-		File* getFile(const String& filename);
+		File* getFile(const String& filename, const bool& threadedParsing = false);
+
 		/** Open a new FileStream */
 		FileStream* getFileStream(const String& filename);
 
-		/** Register a FileParser instance to the manager */
-		void addFileParser(FileParser* parser);
-		/** Get a FileParser instance by its associated file extension */
-		FileParser* getFileParser(const String extension);
-		/** Remove a FileParser instance from the manager */
-		void removeFileParser(FileParser* parser);
+		/** Register a FileParserFactory to the manager */
+		void addParserFactory(FileParserFactory* factory);
+
+		/** Get a FileParserFactory by its associated file extension */
+		FileParserFactory* getParserFactory(const String extension);
+		
+		/** Remove a FileParserFactory from the manager */
+		void removeParserFactory(FileParserFactory* factory);
+
+		ContainerManager& getContainerManager();
 
 		/** Add a FileContainer resource location */
 		FileContainer* addFileContainer(const String& name, const String& type = DefaultFileContainer::FACTORY_NAME);
@@ -65,12 +80,33 @@ namespace vtx
 		void unloadAllFiles();
 
 	protected:
-		// map of the already loaded files
-		FileMap mLoadedFiles;
-		// map of registered file parsers
-		FileParserMap mParsers;
-		// map of containers (folders, zip files, databases, etc)
+		/// map of the already loaded files
+		FileMap mFiles;
+		/// map of registered file parser factories
+		ParserExtensionMap mParsersByExt;
+
+		/// mutex that protects mContainers
+		VTX_MUTEX(mContainersMutex);
+		/// map of containers (folders, zip files, databases, etc)
 		FileContainerMap mContainers;
+
+		ContainerManager mContainerFactories;
+		ParserManager mParserFactories;
+
+#ifdef VTX_THREADING_ENABLED
+		typedef std::vector<VTX_THREAD_TYPE*> ThreadList;
+		ThreadList mThreads;
+
+		/// mutex that protects mParsingFiles
+		VTX_MUTEX(mParsingFilesMutex);
+		/// the files that are currently parsing
+		FileMap mParsingFiles;
+
+		/// mutex that protects mFinishedFiles
+		VTX_MUTEX(mFinishedFilesMutex);
+		/// the files that have just finished parsing
+		FileVector mFinishedFiles;
+#endif
 
 		FileManager();
 		virtual ~FileManager();

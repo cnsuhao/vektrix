@@ -189,7 +189,7 @@ public:
 int main(int argc, char **argv)
 {
 	VTX_MEM_DEBUG_ENABLE();
-	//VTX_MEM_DEBUG_BREAK(5073);
+	//VTX_MEM_DEBUG_BREAK(5032);
 
 	// start vektrix
 	vtx::Root* vektrix_root = new vtx::Root();
@@ -314,10 +314,10 @@ int main(int argc, char **argv)
 	}
 
 	// VEKTRIX
-	char opt = getch();
-	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", movies.at(atoi(&opt)), "OgreMovableMovie");
+	//char opt = getch();
+	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", movies.at(atoi(&opt)), "OgreMovableMovie");
 
-	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie");
+	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie");
 
 	movie->play();
 

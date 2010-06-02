@@ -49,7 +49,7 @@ namespace vtx
 			virtual ~XmlPlugin();
 
 		protected:
-			MovieParser* mXmlParser;
+			XmlMovieParserFactory* mParserFactory;
 		};
 	}
 }

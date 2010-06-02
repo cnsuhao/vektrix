@@ -42,17 +42,15 @@ namespace vtx
 	namespace xml
 	{
 		//-----------------------------------------------------------------------
-		const StringList& MovieParser::getExtensions() const
+		const StringList& XmlMovieParser::getExtensions() const
 		{
 			static StringList extensions;
 			extensions.push_back(".xml");
 			return extensions;
 		}
 		//-----------------------------------------------------------------------
-		File* MovieParser::parse(FileStream* stream)
+		void XmlMovieParser::parse(FileStream* stream, File* file)
 		{
-			File* file = new File(stream->getFilename());
-
 			DocumentParser movie_parser(file);
 
 			std::string hdrDH[] = 
@@ -84,8 +82,6 @@ namespace vtx
 			movie_parser.addDataHandler(tmlnDH, size_of(tmlnDH), new TimelineDataHandler);
 
 			movie_parser.parse(stream);
-
-			return file;
 		}
 		//-----------------------------------------------------------------------
 	}

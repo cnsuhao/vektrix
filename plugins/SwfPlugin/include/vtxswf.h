@@ -67,6 +67,7 @@ namespace vtx
 		class ContourPoint;
 		class SubShape;
 		class SwfParser;
+		class SwfParserFactory;
 	}
 }
 

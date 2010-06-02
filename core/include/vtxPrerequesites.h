@@ -40,6 +40,7 @@ THE SOFTWARE.
 #include <iostream>
 #include <list>
 #include <map>
+#include <queue>
 #include <sstream>
 #include <stack>
 #include <string>
@@ -112,6 +113,7 @@ namespace vtx
 	class FileContainer;
 	class FileContainerFactory;
 	class FileParser;
+	class FileParserFactory;
 	class FileManager;
 	class FileStream;
 	class FontResource;

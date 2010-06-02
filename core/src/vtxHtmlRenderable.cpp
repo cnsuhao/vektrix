@@ -31,13 +31,10 @@ THE SOFTWARE.
 #include "vtxHtmlImage.h"
 #include "vtxHtmlParagraph.h"
 #include "vtxHtmlText.h"
+#include "vtxFile.h"
 #include "vtxLogManager.h"
 #include "vtxStringHelper.h"
 #include "vtxTextLineElement.h"
-
-// TODO: remove resource
-#include "vtxFile.h"
-#include "vtxResource.h"
 
 namespace vtx
 {

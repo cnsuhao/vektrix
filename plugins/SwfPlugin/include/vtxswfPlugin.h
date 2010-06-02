@@ -49,7 +49,7 @@ namespace vtx
 			virtual ~SwfPlugin();
 
 		protected:
-			SwfParser* mSwfParser;
+			SwfParserFactory* mParserFactory;
 		};
 	}
 }

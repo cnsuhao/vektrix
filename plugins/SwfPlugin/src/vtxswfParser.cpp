@@ -78,7 +78,7 @@ namespace vtx
 			return extensions;
 		}
 		//-----------------------------------------------------------------------
-		File* SwfParser::parse(FileStream* stream)
+		void SwfParser::parse(FileStream* stream, File* file)
 		{
 			resetData();
 
@@ -86,10 +86,11 @@ namespace vtx
 
 			if(!parseHeader())
 			{
-				return NULL;
+				return/* NULL*/;
 			}
 
-			mCurrentFile = new File(stream->getFilename());
+			//mCurrentFile = new File(stream->getFilename());
+			mCurrentFile = file;
 
 			mMainMovieClip = new MovieClipResource("__MainMovieClip__");
 			mMainTimeline = new Timeline;
@@ -115,7 +116,7 @@ namespace vtx
 			mMainMovieClip->setTimeline(mMainTimeline);
 			mCurrentFile->setMainMovieClip(mMainMovieClip);
 
-			return mCurrentFile;
+			//return mCurrentFile;
 		}
 		//-----------------------------------------------------------------------
 		void SwfParser::resetData()

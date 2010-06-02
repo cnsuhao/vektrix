@@ -71,6 +71,7 @@ namespace vtx
 		DynLibMap mLibraries;
 		MovieMap mMovies;
 		PluginList mPlugins;
+		FileManager* mFileManager;
 	};
 }
 

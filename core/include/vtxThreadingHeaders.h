@@ -26,43 +26,11 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxcurlWebFileContainer_H__
-#define __vtxcurlWebFileContainer_H__
+#ifndef __vtxThreadingHeaders_H__
+#define __vtxThreadingHeaders_H__
 
-#include "vtxcurl.h"
-#include "vtxFileContainer.h"
-
-namespace vtx
-{
-	namespace curl
-	{
-		//-----------------------------------------------------------------------
-		class WebFileContainer : public FileContainer
-		{
-		public:
-			WebFileContainer(const String& base_uri);
-			virtual ~WebFileContainer();
-
-			/** @copybrief FileContainer::openFile */
-			FileStream* openFile(const String& filename);
-			/** @copybrief FileContainer::hasFile */
-			bool hasFile(const String& filename);
-
-		protected:
-			const String mBaseURL;
-			void* mCurl;
-			uint mSize;
-			uchar* mBuffer;
-
-			long fetchURL(const String& url);
-			void freeBuffer();
-			static uint memoryCallback(void* ptr, uint size, uint nmemb, void* data);
-		};
-		//-----------------------------------------------------------------------
-		/** The FileContainerFactory for creating WebFileContainer objects */
-		FactoryImpl_P1(WebFileContainer, FileContainer, const String&);
-		//-----------------------------------------------------------------------
-	}
-}
+#if VTX_THREADING_LIB == VTX_THREADING_BOOST
+#	include "vtxThreadingHeadersBoost.h"
+#endif
 
 #endif

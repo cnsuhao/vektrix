@@ -106,7 +106,7 @@ namespace vtx
 		delete mMainMovieClip;
 	}
 	//-----------------------------------------------------------------------
-	const String& File::getFilename()
+	const String& File::getFilename() const
 	{
 		return mFilename;
 	}
@@ -251,6 +251,17 @@ namespace vtx
 		}
 
 		return false;
+	}
+	//-----------------------------------------------------------------------
+	void File::_loadingCompleted()
+	{
+		ListenerMap::iterator listener_it = mListeners.begin();
+		ListenerMap::iterator listener_end = mListeners.end();
+		while(listener_it != listener_end)
+		{
+			listener_it->second->loadingCompleted(this);
+			++listener_it;
+		}
 	}
 	//-----------------------------------------------------------------------
 }

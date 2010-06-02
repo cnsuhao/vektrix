@@ -53,7 +53,8 @@ namespace vtx
 	{
 		class DataHandler;
 		class DocumentParser;
-		class MovieParser;
+		class XmlMovieParser;
+		class XmlMovieParserFactory;
 	}
 }
 

@@ -42,6 +42,11 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
+	bool FileParser::errorsOccured() const
+	{
+		return (mErrors.size() != 0);
+	}
+	//-----------------------------------------------------------------------
 	String FileParser::getError()
 	{
 		if(mFirst == mLast)

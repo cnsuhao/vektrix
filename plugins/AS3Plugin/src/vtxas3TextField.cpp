@@ -106,7 +106,6 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void TextField::_setNativeObject(Instance* inst)
 		{
-			// TODO: implement this
 			Instance* instance = getNativeObject();
 			if(instance)
 			{
@@ -116,9 +115,14 @@ namespace vtx
 				{
 					vtx::DisplayObjectContainer* cont = displ->getParentContainer();
 					if(cont)
+					{
 						cont->removeChildAt(displ->getLayer());
+					}
+					else
+					{
+						movie->releaseInstance(instance);
+					}
 				}
-				movie->releaseInstance(instance);
 			}
 
 			InteractiveObject::_setNativeObject(inst);

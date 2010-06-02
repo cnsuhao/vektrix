@@ -26,43 +26,28 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxcurlWebFileContainer_H__
-#define __vtxcurlWebFileContainer_H__
+#ifndef __vtxThreadJob_H__
+#define __vtxThreadJob_H__
 
-#include "vtxcurl.h"
-#include "vtxFileContainer.h"
+#include "vtxPrerequesites.h"
 
 namespace vtx
 {
-	namespace curl
+	class ThreadJob
 	{
-		//-----------------------------------------------------------------------
-		class WebFileContainer : public FileContainer
+	public:
+		void operator()()
 		{
-		public:
-			WebFileContainer(const String& base_uri);
-			virtual ~WebFileContainer();
+			start();
+		}
 
-			/** @copybrief FileContainer::openFile */
-			FileStream* openFile(const String& filename);
-			/** @copybrief FileContainer::hasFile */
-			bool hasFile(const String& filename);
+		void run()
+		{
+			start();
+		}
 
-		protected:
-			const String mBaseURL;
-			void* mCurl;
-			uint mSize;
-			uchar* mBuffer;
-
-			long fetchURL(const String& url);
-			void freeBuffer();
-			static uint memoryCallback(void* ptr, uint size, uint nmemb, void* data);
-		};
-		//-----------------------------------------------------------------------
-		/** The FileContainerFactory for creating WebFileContainer objects */
-		FactoryImpl_P1(WebFileContainer, FileContainer, const String&);
-		//-----------------------------------------------------------------------
-	}
+		virtual void start() = 0;
+	};
 }
 
 #endif

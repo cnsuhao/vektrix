@@ -26,43 +26,20 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxcurlWebFileContainer_H__
-#define __vtxcurlWebFileContainer_H__
+#ifndef __vtxThreadingHeadersBoost_H__
+#define __vtxThreadingHeadersBoost_H__
 
-#include "vtxcurl.h"
-#include "vtxFileContainer.h"
+// disable memory debugging temporarly
+#undef new
 
-namespace vtx
-{
-	namespace curl
-	{
-		//-----------------------------------------------------------------------
-		class WebFileContainer : public FileContainer
-		{
-		public:
-			WebFileContainer(const String& base_uri);
-			virtual ~WebFileContainer();
+#include <boost/thread/condition.hpp>
+#include <boost/thread/locks.hpp>
+#include <boost/thread/recursive_mutex.hpp>
+#include <boost/thread/shared_mutex.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/thread/tss.hpp>
 
-			/** @copybrief FileContainer::openFile */
-			FileStream* openFile(const String& filename);
-			/** @copybrief FileContainer::hasFile */
-			bool hasFile(const String& filename);
-
-		protected:
-			const String mBaseURL;
-			void* mCurl;
-			uint mSize;
-			uchar* mBuffer;
-
-			long fetchURL(const String& url);
-			void freeBuffer();
-			static uint memoryCallback(void* ptr, uint size, uint nmemb, void* data);
-		};
-		//-----------------------------------------------------------------------
-		/** The FileContainerFactory for creating WebFileContainer objects */
-		FactoryImpl_P1(WebFileContainer, FileContainer, const String&);
-		//-----------------------------------------------------------------------
-	}
-}
+// reactivate memory debugging
+#include "vtxPrerequesites.h"
 
 #endif

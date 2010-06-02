@@ -49,15 +49,15 @@ namespace vtx
 	{
 		//-----------------------------------------------------------------------
 		XmlPlugin::XmlPlugin() 
-			: mXmlParser(new MovieParser)
 		{
-			FileManager::getSingletonPtr()->addFileParser(mXmlParser);
+			mParserFactory = new XmlMovieParserFactory();
+			FileManager::getSingletonPtr()->addParserFactory(mParserFactory);
 		}
 		//-----------------------------------------------------------------------
 		XmlPlugin::~XmlPlugin()
 		{
-			FileManager::getSingletonPtr()->removeFileParser(mXmlParser);
-			delete mXmlParser;
+			FileManager::getSingletonPtr()->removeParserFactory(mParserFactory);
+			delete mParserFactory;
 		}
 		//-----------------------------------------------------------------------
 	}

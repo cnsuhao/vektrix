@@ -36,6 +36,7 @@ namespace vtx
 {
 	namespace freeimg
 	{
+		//-----------------------------------------------------------------------
 		class vtxfreeimgExport ImageParser : public FileParser
 		{
 		public:
@@ -43,11 +44,15 @@ namespace vtx
 			virtual ~ImageParser();
 
 			const StringList& getExtensions() const;
-			File* parse(FileStream* stream);
+			void parse(FileStream* stream, File* file);
 
 		protected:
 			FileStream* mCurrentStream;
 		};
+		//-----------------------------------------------------------------------
+		/** The FileParserFactory for creating FileParser objects */
+		FactoryImpl_P0(ImageParser, FileParser);
+		//-----------------------------------------------------------------------
 	}
 }
 
