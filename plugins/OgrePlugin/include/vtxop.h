@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxop_H__
 #define __vtxop_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 #if VTX_OS == VTX_WIN32
 #	ifdef VTX_STATIC_LIB

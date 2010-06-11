@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxFileManager_H__
 #define __vtxFileManager_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxDefaultFileContainer.h"
 #include "vtxFactoryManager.h"
 #include "vtxFileParser.h"

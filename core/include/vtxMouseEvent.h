@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxMouseEvent_H__
 #define __vtxMouseEvent_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxEvent.h"
 
 // on windows there is a macro named "DOUBLE_CLICK"

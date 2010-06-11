@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxMaterialResource_H__
 #define __vtxMaterialResource_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxColor.h"
 #include "vtxMatrix.h"
 #include "vtxResource.h"

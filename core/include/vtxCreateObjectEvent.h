@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxCreateObjectEvent_H__
 #define __vtxCreateObjectEvent_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxCXForm.h"
 #include "vtxFrameEvent.h"
 #include "vtxMatrix.h"

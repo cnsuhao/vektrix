@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxThreadJob_H__
 #define __vtxThreadJob_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 namespace vtx
 {

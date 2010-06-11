@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxDefaultFileContainer_H__
 #define __vtxDefaultFileContainer_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxFileContainer.h"
 
 namespace vtx

@@ -36,7 +36,7 @@ THE SOFTWARE.
 #include "vtxTimeline.h"
 
 #ifdef USE_ZLIB
-#include "zlib.h"
+#include "zlib/zlib.h"
 #endif
 
 namespace vtx
@@ -53,6 +53,8 @@ namespace vtx
 			mFileLength(0), 
 			mCurrentFile(NULL), 
 			mCurrentStream(NULL), 
+			// jpeg tables
+			mJPEGTables(NULL),
 			// movieclips
 			mMovieClipFrameIndex(0), 
 			mCurrentMovieClip(NULL), 
@@ -129,6 +131,13 @@ namespace vtx
 			mFileLength = 0; 
 			mCurrentFile = NULL; 
 			mCurrentStream = NULL; 
+
+			// jpeg tables
+			if(mJPEGTables)
+			{
+				delete[] mJPEGTables;
+				mJPEGTables = NULL;
+			}
 
 			// movieclips
 			mMovieClipFrameIndex = 0;
@@ -298,6 +307,15 @@ namespace vtx
 			case TT_DefineBitsLossless2:
 				handleDefineBitsLossless((TagTypes)type);
 				break;
+
+			case TT_JPEGTables:
+				handleJPEGTables(length);
+
+			case TT_DefineBits:
+			case TT_DefineBitsJPEG2:
+			case TT_DefineBitsJPEG3:
+			case TT_DefineBitsJPEG4:
+				handleDefineBitsJPEG((TagTypes)type, length);
 
 			case TT_SetBackgroundColor:
 				{

@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxScriptObject_H__
 #define __vtxScriptObject_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxEventListener.h"
 
 namespace vtx

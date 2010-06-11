@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxRoot_H__
 #define __vtxRoot_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxMovieFactory.h"
 #include "vtxFactoryManager.h"
 #include "vtxSingleton.h"

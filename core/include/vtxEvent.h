@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxEvent_H__
 #define __vtxEvent_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 namespace vtx
 {

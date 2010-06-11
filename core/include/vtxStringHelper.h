@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxStringHelper_H__
 #define __vtxStringHelper_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 namespace vtx
 {

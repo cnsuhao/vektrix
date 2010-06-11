@@ -30,7 +30,7 @@ THE SOFTWARE.
 #define __vtxas3_H__
 
 #define NO_MEM_DBG
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 #if VTX_OS == VTX_WIN32
 #

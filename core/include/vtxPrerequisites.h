@@ -26,8 +26,8 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxPrerequesites_H__
-#define __vtxPrerequesites_H__
+#ifndef __vtxPrerequisites_H__
+#define __vtxPrerequisites_H__
 
 #include <stdarg.h>
 #include <assert.h>
@@ -54,6 +54,7 @@ THE SOFTWARE.
 #define VTX_VERSION_MINOR 1
 #define VTX_VERSION_PATCH 0
 #define VTX_VERSION_NAME "Valus"
+#define VTX_VERSION_SUFFIX ""
 
 #define VTX_VERSION ((VTX_VERSION_MAJOR << 16) | (VTX_VERSION_MINOR << 8) | VTX_VERSION_PATCH)
 

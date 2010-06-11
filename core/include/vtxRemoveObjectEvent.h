@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxRemoveObjectEvent_H__
 #define __vtxRemoveObjectEvent_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxFrameEvent.h"
 
 namespace vtx

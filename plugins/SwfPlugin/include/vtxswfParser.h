@@ -78,6 +78,9 @@ namespace vtx
 			SubShapeList mSubShapeList; // the sub-shapes
 			SubLineList mSubLineList; // the sub-lines
 
+			// jpeg tables
+			char* mJPEGTables;
+
 			// movieclips
 			uint mMovieClipFrameIndex;
 			MovieClipResource* mCurrentMovieClip;
@@ -98,7 +101,9 @@ namespace vtx
 			void handleShowFrame();
 			void handleDefineShape(const TagTypes& type);
 			void handleDefineText(const TagTypes& type);
+			void handleJPEGTables(uint tag_length);
 			void handleDefineBitsLossless(const TagTypes& type);
+			void handleDefineBitsJPEG(const TagTypes& type, uint tag_length);
 			void handlePlaceObject2();
 			void handleDefineButton2();
 			void handleDefineEditText(const TagTypes& type);

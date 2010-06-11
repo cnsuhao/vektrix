@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxAtlasNode_H__
 #define __vtxAtlasNode_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxRect.h"
 
 namespace vtx

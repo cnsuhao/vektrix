@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxMaterial_H__
 #define __vtxMaterial_H__
 
-//#include "vtxPrerequesites.h"
+//#include "vtxPrerequisites.h"
 //
 //namespace vtx
 //{

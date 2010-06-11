@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxXmlParser_H__
 #define __vtxXmlParser_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 // predeclarations for EXPAT
 #define XMLCALL

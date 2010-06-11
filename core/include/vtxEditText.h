@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxEditText_H__
 #define __vtxEditText_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxDisplayObjectContainer.h"
 #include "vtxHtmlOperations.h"
 #include "vtxHtmlRenderable.h"

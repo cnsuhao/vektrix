@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxStaticTextResource_H__
 #define __vtxStaticTextResource_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxBoundingBox.h"
 #include "vtxGlyphStrip.h"
 #include "vtxResource.h"

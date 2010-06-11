@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxFocusEvent_H__
 #define __vtxFocusEvent_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxEvent.h"
 #include "vtxKeyCodes.h"
 

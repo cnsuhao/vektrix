@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxKeyCodes_H__
 #define __vtxKeyCodes_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 namespace vtx
 {

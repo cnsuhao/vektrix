@@ -31,8 +31,7 @@ THE SOFTWARE.
 
 #include "vtxcai.h"
 #include "vtxRastarizer.h"
-
-#include <cairo.h>
+#include "cairo.h"
 
 namespace vtx
 {

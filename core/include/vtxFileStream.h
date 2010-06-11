@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxFileStream_H__
 #define __vtxFileStream_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 namespace vtx
 {

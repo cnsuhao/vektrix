@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxHtmlElement_H__
 #define __vtxHtmlElement_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 namespace vtx
 {

@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxAtlasPacker_H__
 #define __vtxAtlasPacker_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxFile.h"
 #include "vtxVector2.h"
 

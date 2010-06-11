@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxShapeResource_H__
 #define __vtxShapeResource_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxAtlasElement.h"
 #include "vtxBoundingBox.h"
 #include "vtxResource.h"

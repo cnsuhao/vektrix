@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxHtmlParser_H__
 #define __vtxHtmlParser_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxXmlParser.h"
 
 namespace vtx

@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include "vtxTimeline.h"
 
 #define FREEIMAGE_LIB
-#include "FreeImage.h"
+#include "freeimage/FreeImage.h"
 
 namespace vtx
 {

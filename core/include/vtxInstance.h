@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxInstance_H__
 #define __vtxInstance_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxEventListener.h"
 #include "vtxFactory.h"
 

@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxFile_H__
 #define __vtxFile_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxColor.h"
 
 namespace vtx
