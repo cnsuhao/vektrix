@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxGlyphResource_H__
 #define __vtxGlyphResource_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxAtlasElement.h"
 #include "vtxBoundingBox.h"
 #include "vtxShapeElement.h"

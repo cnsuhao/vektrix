@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxLogManager_H__
 #define __vtxLogManager_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxSingleton.h"
 
 #define VTX_EXCEPT vtx::LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->line(__LINE__); LogManager::getSingletonPtr()->exception

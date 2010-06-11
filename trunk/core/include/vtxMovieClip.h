@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxMovieClip_H__
 #define __vtxMovieClip_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxDisplayObjectContainer.h"
 
 namespace vtx

@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxShape_H__
 #define __vtxShape_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxDisplayObject.h"
 
 namespace vtx

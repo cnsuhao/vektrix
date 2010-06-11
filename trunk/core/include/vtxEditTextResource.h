@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxEditTextResource_H__
 #define __vtxEditTextResource_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxBoundingBox.h"
 #include "vtxResource.h"
 

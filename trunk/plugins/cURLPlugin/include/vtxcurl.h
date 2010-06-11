@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxcurl_H__
 #define __vtxcurl_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 #if VTX_OS == VTX_WIN32
 #	ifdef VTX_STATIC_LIB

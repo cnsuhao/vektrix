@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxHtmlRenderable_H__
 #define __vtxHtmlRenderable_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxColor.h"
 #include "vtxHtmlElement.h"
 

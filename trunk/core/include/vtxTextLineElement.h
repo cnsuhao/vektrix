@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxTextLineElement_H__
 #define __vtxTextLineElement_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxGlyphStrip.h"
 
 namespace vtx

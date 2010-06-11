@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxInstanceManager_H__
 #define __vtxInstanceManager_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxEditText.h"
 #include "vtxFactoryManager.h"
 #include "vtxScriptEngine.h"

@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxKeyframe_H__
 #define __vtxKeyframe_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxEventContainer.h"
 
 namespace vtx

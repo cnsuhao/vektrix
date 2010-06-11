@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxTransform_H__
 #define __vtxTransform_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxBoundingBox.h"
 #include "vtxCXForm.h"
 #include "vtxMatrix.h"

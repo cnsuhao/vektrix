@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxFrameEvent_H__
 #define __vtxFrameEvent_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 namespace vtx
 {

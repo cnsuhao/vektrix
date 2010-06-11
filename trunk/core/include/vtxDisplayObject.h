@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxDisplayObject_H__
 #define __vtxDisplayObject_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxInstance.h"
 #include "vtxTransform.h"
 

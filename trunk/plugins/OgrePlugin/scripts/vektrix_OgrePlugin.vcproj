@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="vektrix_OgrePlugin"
 	ProjectGUID="{6D274FC6-C549-4224-AE60-1677AEE8824C}"
 	RootNamespace="vektrix_OgrePlugin"
@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\..\..\core\include;&quot;$(OGRE_HOME)\include&quot;;&quot;$(OGRE_HOME)\include\OGRE&quot;;&quot;$(OGRE_HOME)\boost_1_42&quot;"
+				AdditionalIncludeDirectories="..\include;..\..\..\core\include;..\..\..\dependencies\include;..\..\..\dependencies\include\OGRE"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VEKTRIX_OGREPLUGIN_EXPORTS"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -67,7 +67,7 @@
 				AdditionalDependencies="OgreMain_d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(OGRE_HOME)\lib\Debug&quot;;&quot;$(OGRE_HOME)\boost_1_42\lib&quot;"
+				AdditionalLibraryDirectories="..\..\..\dependencies\lib\debug"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
@@ -123,7 +123,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
-				AdditionalIncludeDirectories="..\include;..\..\..\core\include;&quot;$(OGRE_HOME)\include&quot;;&quot;$(OGRE_HOME)\include\OGRE&quot;;&quot;$(OGRE_HOME)\boost_1_42&quot;"
+				AdditionalIncludeDirectories="..\include;..\..\..\core\include;..\..\..\dependencies\include;..\..\..\dependencies\include\OGRE"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VEKTRIX_OGREPLUGIN_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -145,7 +145,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="OgreMain.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(OGRE_HOME)\lib\Release&quot;;&quot;$(OGRE_HOME)\boost_1_42\lib&quot;"
+				AdditionalLibraryDirectories="..\..\..\dependencies\lib\release"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -203,7 +203,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include;..\..\..\core\include;&quot;$(OGRE_HOME)\include&quot;;&quot;$(OGRE_HOME)\include\OGRE&quot;;&quot;$(OGRE_HOME)\boost_1_42&quot;"
+				AdditionalIncludeDirectories="..\include;..\..\..\core\include;..\..\..\dependencies\include;..\..\..\dependencies\include\OGRE"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;VTX_STATIC_LIB"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -226,6 +226,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				OutputFile="$(OutDir)\$(ProjectName)_static_d.lib"
+				AdditionalLibraryDirectories="..\..\..\dependencies\lib\debug"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -270,7 +271,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
-				AdditionalIncludeDirectories="..\include;..\..\..\core\include;&quot;$(OGRE_HOME)\include&quot;;&quot;$(OGRE_HOME)\include\OGRE&quot;;&quot;$(OGRE_HOME)\boost_1_42&quot;"
+				AdditionalIncludeDirectories="..\include;..\..\..\core\include;..\..\..\dependencies\include;..\..\..\dependencies\include\OGRE"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VTX_STATIC_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -291,6 +292,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				OutputFile="$(OutDir)\$(ProjectName)_static.lib"
+				AdditionalLibraryDirectories="..\..\..\dependencies\lib\release"
 			/>
 			<Tool
 				Name="VCALinkTool"

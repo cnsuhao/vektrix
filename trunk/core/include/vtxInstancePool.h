@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxInstancePool_H__
 #define __vtxInstancePool_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 namespace vtx
 {

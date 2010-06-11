@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxOpSysHelper_H__
 #define __vtxOpSysHelper_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 namespace vtx
 {

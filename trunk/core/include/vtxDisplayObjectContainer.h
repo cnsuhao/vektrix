@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxDisplayObjectContainer_H__
 #define __vtxDisplayObjectContainer_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxInteractiveObject.h"
 
 namespace vtx

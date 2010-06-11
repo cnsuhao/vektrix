@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxRasterizerManager_H__
 #define __vtxRasterizerManager_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxRastarizer.h"
 #include "vtxFactoryManager.h"
 #include "vtxSingleton.h"

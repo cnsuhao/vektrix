@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxxmlShapeDataHandler_H__
 #define __vtxxmlShapeDataHandler_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxxmlDataHandler.h"
 
 namespace vtx

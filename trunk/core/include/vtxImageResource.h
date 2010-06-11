@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxImageResource_H__
 #define __vtxImageResource_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxResource.h"
 
 namespace vtx

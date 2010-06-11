@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxHtmlFont_H__
 #define __vtxHtmlFont_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxColor.h"
 #include "vtxHtmlElement.h"
 

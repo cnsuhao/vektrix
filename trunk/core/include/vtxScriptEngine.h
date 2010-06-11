@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxScriptEngine_H__
 #define __vtxScriptEngine_H__
 
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 #include "vtxFactory.h"
 
 namespace vtx

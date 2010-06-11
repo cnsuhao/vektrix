@@ -40,6 +40,6 @@ THE SOFTWARE.
 #include <boost/thread/tss.hpp>
 
 // reactivate memory debugging
-#include "vtxPrerequesites.h"
+#include "vtxPrerequisites.h"
 
 #endif

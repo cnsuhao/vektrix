@@ -48,15 +48,19 @@ namespace vtx
 			TT_End = 0, 
 			TT_ShowFrame = 1, 
 			TT_DefineShape = 2, 
+			TT_DefineBits = 6,
+			TT_JPEGTables = 8,
 			TT_SetBackgroundColor = 9, 
 			TT_DefineFont = 10, 
 			TT_DefineText = 11, 
 			TT_DefineBitsLossless = 20, 
+			TT_DefineBitsJPEG2 = 21,
 			TT_DefineShape2 = 22, 
 			TT_PlaceObject2 = 26, 
 			TT_DefineShape3 = 32, 
 			TT_DefineText2 = 33, 
 			TT_DefineButton2 = 34, 
+			TT_DefineBitsJPEG3 = 35,
 			TT_DefineBitsLossless2 = 36, 
 			TT_DefineEditText = 37, 
 			TT_DefineSprite = 39, 
@@ -66,7 +70,8 @@ namespace vtx
 			TT_MetaData = 77, 
 			TT_DoABC = 82, 
 			TT_DefineShape4 = 83, 
-			TT_DefineSceneAndFrameLabelData = 86
+			TT_DefineSceneAndFrameLabelData = 86,
+			TT_DefineBitsJPEG4 = 90
 		};
 
 		enum BitmapFormat
