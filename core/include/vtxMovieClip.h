@@ -51,7 +51,7 @@ namespace vtx
 		void play();
 		/** @copybrief Timeline::stop */
 		void stop();
-		/** @copybrief Timeline::goto_frame */
+		/** @copybrief Timeline::gotoFrame */
 		bool gotoFrame(uint frame);
 		/** @copybrief Timeline::gotoTime */
 		bool gotoTime(const float& time);

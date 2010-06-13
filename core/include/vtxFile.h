@@ -73,15 +73,17 @@ namespace vtx
 		};
 
 		/** Listen to File events */
-		class Listener
+		class vtxExport Listener
 		{
 		public:
 			/** A Resource has been added to this File */
 			virtual void resourceAdded(Resource* resource, const File::ResourceGroupType& group){}
 			/** A Resource has been removed from this File */
-			virtual void resourceRemoved(Resource* resource){}
+			virtual void resourceRemoved(Resource* resource) {}
 			/** The file has been successfully loaded */
-			virtual void loadingCompleted(File* file){}
+			virtual void loadingCompleted(File* file) {}
+			/** The file has failed to load properly */
+			virtual void loadingFailed(File* file) {}
 		};
 		typedef std::map<Listener*, Listener*> ListenerMap;
 
@@ -135,6 +137,7 @@ namespace vtx
 		MovieClipResource* mMainMovieClip;
 
 		void _loadingCompleted();
+		void _loadingFailed();
 
 		void _addResourceToGroup(
 			ResourceMap& res_map, 

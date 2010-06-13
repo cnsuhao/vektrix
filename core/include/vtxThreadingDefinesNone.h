@@ -29,11 +29,30 @@ THE SOFTWARE.
 #ifndef __vtxThreadingDefinesNone_H__
 #define __vtxThreadingDefinesNone_H__
 
+// synchronization
 #define VTX_MUTEX(name)
-#define VTX_AUTO_MUTEX
-#define VTX_LOCK_MUTEX
+#define VTX_LOCK_MUTEX(name)
+#define VTX_LOCK_MUTEX_NAMED(mutex_name, lock_name)
 
-// utility
+#define VTX_TRY_MUTEX_LOCK(mutex_name) true
+#define VTX_MANUAL_MUTEX_LOCK(mutex_name)
+#define VTX_MANUAL_MUTEX_UNLOCK(mutex_name)
+
+#define VTX_AUTO_MUTEX
+#define VTX_LOCK_AUTO_MUTEX
+
+#define VTX_CRITICAL_SECTION(lock_name, mutex_name)
+#define VTX_CRITICAL_SECTION_END }
+
+// thread creation & destruction
+#define VTX_CREATE_THREAD(name, job)
+#define VTX_DESTROY_THREAD(name)
+
+// thread C++ type
+#define VTX_THREAD_TYPE void
+
+// threading utilities
 #define VTX_SLEEP_THREAD(ms)
+#define VTX_THREAD_SYNCHRONISER(sync)
 
 #endif

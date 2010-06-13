@@ -33,7 +33,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	bool FileHelper::doesFileExist(String name)
 	{
-		return (access(name.c_str(), F_OK ) != -1);
+		return (access(name.c_str(), F_OK) != -1);
 	}
 	//-----------------------------------------------------------------------
 	bool FileHelper::doesDirectoryExist(String name)

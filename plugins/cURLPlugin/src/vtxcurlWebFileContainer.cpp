@@ -27,11 +27,10 @@ THE SOFTWARE.
 */
 
 #include "vtxcurlWebFileContainer.h"
+#include "vtxcurlWebRequest.h"
+
 #include "vtxLogManager.h"
 #include "vtxMemoryFileStream.h"
-
-#define CURL_STATICLIB
-#include "curl.h"
 
 namespace vtx
 {
@@ -39,52 +38,31 @@ namespace vtx
 	{
 		//-----------------------------------------------------------------------
 		WebFileContainer::WebFileContainer(const String& base_uri) 
-			: mBaseURL(base_uri), 
-			mCurl(NULL), 
-			mSize(0), 
-			mBuffer(NULL)
+			: mBaseURL(base_uri)
 		{
-			mCurl = curl_easy_init();
-			curl_easy_setopt(mCurl, CURLOPT_WRITEFUNCTION, &memoryCallback);
-			curl_easy_setopt(mCurl, CURLOPT_CONNECTTIMEOUT_MS, 1000);
+
 		}
 		//-----------------------------------------------------------------------
 		WebFileContainer::~WebFileContainer()
 		{
-			if(mCurl)
-			{
-				curl_easy_cleanup(mCurl);
-				mCurl = NULL;
-			}
 
-			freeBuffer();
 		}
 		//-----------------------------------------------------------------------
 		FileStream* WebFileContainer::openFile(const String& filename)
 		{
-			freeBuffer();
-
 			String full_url = mBaseURL + filename;
 
-			long statLong = fetchURL(full_url);
-
-			if(statLong != 200 || mBuffer == NULL)
+			WebRequest request;
+			if(!request.openURL(full_url))
 			{
 				VTX_EXCEPT("Unable to open file '%s'!", full_url.c_str());
 			}
 
-			return (FileStream*)new MemoryFileStream(filename, mBuffer, mSize);
+			return new MemoryFileStream(filename, request.getBuffer(), request.getSize(), true);
 		}
 		//-----------------------------------------------------------------------
 		bool WebFileContainer::hasFile(const String& filename)
 		{
-			if(!filename.length())
-			{
-				return false;
-			}
-
-			freeBuffer();
-
 			String full_url = mBaseURL + filename;
 
 			if(full_url.length() < 7)
@@ -99,55 +77,8 @@ namespace vtx
 				return false;
 			}
 
-			long statLong = fetchURL(full_url);
-
-			if(statLong != 200)
-			{
-				freeBuffer();
-			}
-
-			return (statLong == 200);
-		}
-		//-----------------------------------------------------------------------
-		long WebFileContainer::fetchURL(const String& url)
-		{
-			curl_easy_setopt(mCurl, CURLOPT_URL, url.c_str());
-			curl_easy_setopt(mCurl, CURLOPT_WRITEDATA, this);
-			CURLcode res = curl_easy_perform(mCurl);
-
-			long statLong = 0;
-			if(res == CURLE_OK)
-			{
-				curl_easy_getinfo(mCurl, CURLINFO_HTTP_CODE, &statLong);
-			}
-
-			return statLong;
-		}
-		//-----------------------------------------------------------------------
-		void WebFileContainer::freeBuffer()
-		{
-			if(mBuffer)
-			{
-				free(mBuffer);
-				mBuffer = NULL;
-				mSize = 0;
-			}
-		}
-		//-----------------------------------------------------------------------
-		uint WebFileContainer::memoryCallback(void* ptr, uint size, uint nmemb, void* data)
-		{
-			uint realsize = size * nmemb;
-			WebFileContainer* thisPtr = (WebFileContainer*)data;
-
-			thisPtr->mBuffer = (uchar*)realloc(thisPtr->mBuffer, thisPtr->mSize + realsize);
-
-			if(thisPtr->mBuffer)
-			{
-				memcpy(&thisPtr->mBuffer[thisPtr->mSize], ptr, realsize);
-				thisPtr->mSize += realsize;
-			}
-
-			return realsize;
+			WebRequest request;
+			return request.doesFileExist(full_url);
 		}
 		//-----------------------------------------------------------------------
 	}

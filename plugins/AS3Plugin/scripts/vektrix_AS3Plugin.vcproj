@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="vektrix_AS3Plugin"
 	ProjectGUID="{55423201-D3E3-4B52-9E3D-C9491CE82731}"
 	RootNamespace="vektrix_AS3Plugin"
@@ -40,11 +40,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\include;..\..\..\core\include;..\..\..\dependencies\include\caspin;..\..\..\dependencies\include\caspin\tamarin\core;..\..\..\dependencies\include\caspin\tamarin\vmpi;..\..\..\dependencies\include\caspin\tamarin\shell;..\..\..\dependencies\include\caspin\tamarin\platform;..\..\..\dependencies\include\caspin\tamarin\mmgc;..\..\..\dependencies\include\caspin\tamarin\eval;..\..\..\dependencies\include\caspin\tamarin\extensions"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VEKTRIX_AS3PLUGIN_EXPORTS;CSP_USE_RUNTIME_DEBUGGER"
-				MinimalRebuild="false"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"

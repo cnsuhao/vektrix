@@ -115,6 +115,7 @@ namespace vtx
 	class FileContainerFactory;
 	class FileParser;
 	class FileParserFactory;
+	class FileParsingJob;
 	class FileManager;
 	class FileStream;
 	class FontResource;

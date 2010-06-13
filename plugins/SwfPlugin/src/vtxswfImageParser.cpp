@@ -26,57 +26,75 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxopMovableMovieFactory.h"
-#include "vtxopMovableMovie.h"
-#include "vtxopMovableMovieDebugger.h"
-#include "vtxopMovableStrategy.h"
-
-#include "vtxInstanceManager.h"
+#include "vtxswfImageParser.h"
+#include "vtxswfParser.h"
 
 namespace vtx
 {
-	namespace ogre
+	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		MovableMovieFactory::MovableMovieFactory()
-		{
-			InstanceManager* inst_mgr = InstanceManager::getSingletonPtr();
-
-			mFactories[EditText::TYPE] = inst_mgr->getFactory("OgreMovableEditText");
-			mFactories[Shape::TYPE] = inst_mgr->getFactory("OgreMovableShape");
-			mFactories[StaticText::TYPE] = inst_mgr->getFactory("OgreMovableStaticText");
-		}
-		//-----------------------------------------------------------------------
-		MovableMovieFactory::~MovableMovieFactory()
+		ImageParser::ImageParser() 
+			: mJPEGTables(NULL)
 		{
 
 		}
 		//-----------------------------------------------------------------------
-		const String& MovableMovieFactory::getName() const
+		ImageParser::~ImageParser()
 		{
-			static String name = "OgreMovableMovie";
-			return name;
+			// jpeg tables
+			if(mJPEGTables)
+			{
+				delete[] mJPEGTables;
+				mJPEGTables = NULL;
+			}
 		}
 		//-----------------------------------------------------------------------
-		Movie* MovableMovieFactory::createObject(String name)
+		void ImageParser::handleDefineBitsLossless(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
 		{
-			return new MovableMovie(name, this);
+			UI16 id = parser->readU16();
+
+			UI8 bitmap_format = parser->readU8();
+
+			UI16 width = parser->readU16();
+			UI16 height = parser->readU16();
+
+			UI32 img_data_size = width * height;
+
+			if(bitmap_format == BF_8BIT_COLOR_MAPPED)
+			{
+				UI8 color_table_size = parser->readU8(); // color table size
+
+				// COLORMAPDATA
+				for(UI8 i=0; i<color_table_size; ++i)
+				{
+					// COLORS
+					parser->readColor();
+				}
+
+				for(UI32 i=0; i<img_data_size; ++i)
+				{
+					// INDICES
+					parser->readU8();
+				}
+			}
+			else if(bitmap_format == BF_15BIT_RGB || bitmap_format == BF_24BIT_RGB)
+			{
+				// BITMAPDATA
+			}
 		}
 		//-----------------------------------------------------------------------
-		void MovableMovieFactory::destroyObject(Movie* instance)
+		void ImageParser::handleJPEGTables(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
 		{
-			delete dynamic_cast<MovableMovie*>(instance);
-			instance = NULL;
+			char* pBuf = new char[tag_length];
+			parser->readByteBlock(pBuf, tag_length);
+			mJPEGTables = pBuf;
 		}
 		//-----------------------------------------------------------------------
-		vtx::RenderStrategy* MovableMovieFactory::_createRenderStrategy(File* file)
+		void ImageParser::handleDefineBitsJPEG(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
 		{
-			return new MovableRenderStrategy(this, file);
-		}
-		//-----------------------------------------------------------------------
-		MovieDebugger* MovableMovieFactory::_newDebugger(Movie* movie)
-		{
-			return new MovableMovieDebugger(movie);
+			UI16 characterId = parser->readU16();
+			//readByteBlock(pJpegData, tag_length-2);
 		}
 		//-----------------------------------------------------------------------
 	}

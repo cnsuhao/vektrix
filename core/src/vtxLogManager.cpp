@@ -77,7 +77,7 @@ namespace vtx
 #ifdef WIN32
 		MessageBox(NULL, temp.c_str(), "vektrix exception", MB_OK | MB_ICONSTOP);
 #endif
-		vtxDebugFail("Exception Assert");
+		VTX_DEBUG_FAIL("Exception Assert");
 	}
 	//-----------------------------------------------------------------------
 	void LogManager::warning(const char* format, ...)

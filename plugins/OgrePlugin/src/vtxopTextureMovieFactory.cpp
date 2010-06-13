@@ -41,9 +41,9 @@ namespace vtx
 			return name;
 		}
 		//-----------------------------------------------------------------------
-		vtx::Movie* TextureMovieFactory::createObject(std::string name, vtx::File* file)
+		vtx::Movie* TextureMovieFactory::createObject(String name)
 		{
-			return new TextureMovie(name, file, this);
+			return new TextureMovie(name, this);
 		}
 		//-----------------------------------------------------------------------
 		void TextureMovieFactory::destroyObject(Movie* instance)

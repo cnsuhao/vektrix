@@ -25,24 +25,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
-#include "vtxswfParser.h"
 
-#include "vtxMovieClipResource.h"
-#include "vtxStringHelper.h"
-#include "vtxTimeline.h"
+#ifndef __vtxswfImageParser_H__
+#define __vtxswfImageParser_H__
+
+#include "vtxswf.h"
+#include "vtxswfParserTypes.h"
 
 namespace vtx
 {
 	namespace swf
 	{
-		//-----------------------------------------------------------------------
-		void SwfParser::handleDefineSprite()
+		class ImageParser
 		{
-			UI16 sprite_id = readU16();
-			UI16 frame_count = readU16();
-			mCurrentMovieClip = new MovieClipResource(StringHelper::toString(sprite_id));
-			mMovieClipTimeline = new Timeline;
-		}
-		//-----------------------------------------------------------------------
+		public:
+			ImageParser();
+			virtual ~ImageParser();
+
+			void handleDefineBitsLossless(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+			void handleJPEGTables(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+			void handleDefineBitsJPEG(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+
+		protected:
+			// jpeg tables
+			char* mJPEGTables;
+		};
 	}
 }
+
+#endif // __vtxswfImageParser_H__

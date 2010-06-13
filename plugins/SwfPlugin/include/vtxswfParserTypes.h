@@ -42,7 +42,7 @@ namespace vtx
 		// signed types
 		typedef signed short	SI16;
 		typedef signed			SBits;
-
+		//-----------------------------------------------------------------------
 		enum TagTypes
 		{
 			TT_End = 0, 
@@ -73,7 +73,7 @@ namespace vtx
 			TT_DefineSceneAndFrameLabelData = 86,
 			TT_DefineBitsJPEG4 = 90
 		};
-
+		//-----------------------------------------------------------------------
 		enum BitmapFormat
 		{
 			BF_8BIT_COLOR_MAPPED = 3, 
@@ -81,7 +81,7 @@ namespace vtx
 			BF_24BIT_RGB = 5, 
 			BF_32BIT_ARGB = 5
 		};
-
+		//-----------------------------------------------------------------------
 		enum LanguageCode
 		{
 			LC_Latin = 1, 
@@ -90,14 +90,14 @@ namespace vtx
 			LC_Simplified_Chinese = 4, 
 			LC_Traditional_Chinese = 5
 		};
-
+		//-----------------------------------------------------------------------
 		enum ShapeElementType
 		{
 			SET_MOVE = 0, 
 			SET_LINE, 
 			SET_BEZIER
 		};
-
+		//-----------------------------------------------------------------------
 		enum FillStyleType
 		{
 			FST_Solid = 0, 

@@ -53,9 +53,9 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	Movie::Movie(const String& name, File* file, MovieFactory* creator) 
+	Movie::Movie(const String& name, MovieFactory* creator) 
 		: mName(name), 
-		mFile(file), 
+		mFile(NULL), 
 		mCreator(creator), 
 		mMousePosition(0.0f, 0.0f), 
 		mUserData(NULL), 
@@ -63,53 +63,18 @@ namespace vtx
 		mDebugger(NULL), 
 		mMainMovieClip(NULL), 
 		mScriptEngine(NULL)
-		//mMouseArrow(NULL), 
-		//mMouseHand(NULL), 
-		//mMouseTextCursor(NULL)
 	{
-		mRenderStrategy = mCreator->getRenderStrategy(mFile);
 
-		mMainMovieClip = new MovieClip();
-		mMainMovieClip->_setParent(this);
-		mMainMovieClip->initFromResource(mFile->getMainMovieClip());
-
-		ScriptEngineFactory* scriptEngineFactory = 
-			InstanceManager::getSingletonPtr()->scriptEngines()->getFactory(mFile->getScriptEngine());
-
-		// create script VM if available
-		if(scriptEngineFactory)
-		{
-			mScriptEngine = scriptEngineFactory->createObject(this);
-		}
-
-		ScriptResource* script = dynamic_cast<ScriptResource*>(mFile->getResource("Script"));
-		if(mScriptEngine && script)
-		{
-			if(mScriptEngine->executeCode(script->getBuffer(), script->getLength()))
-			{
-				ScriptObject* root_scriptobject = mScriptEngine->getRootScriptObject();
-				if(root_scriptobject)
-				{
-					mMainMovieClip->setScriptObject(root_scriptobject);
-				}
-			}
-		}
-
-		//mMouseArrow = mCreator->getShapeFactory()->createObject(this, mFile->getResource("__Reserved__MouseArrow"));
-		//mMouseHand = mCreator->getShapeFactory()->createObject(this, mFile->getResource("__Reserved__MouseHand"));
-		//mMouseTextCursor = mCreator->getShapeFactory()->createObject(this, mFile->getResource("__Reserved__TextCursor"));
-
-		//mMainMovieClip->addChildAt(mMouseArrow, -1);
 	}
 	//-----------------------------------------------------------------------
 	Movie::~Movie()
 	{
+		if(mFile)
+		{
+			mFile->removeListener(this);
+		}
+
 		delete mDebugger;
-
-		//delete mMouseTextCursor;
-		//delete mMouseHand;
-		//delete mMouseArrow;
-
 		delete mScriptEngine;
 		delete mMainMovieClip;
 	}
@@ -131,11 +96,19 @@ namespace vtx
 			mDebugger->preDebug();
 		}
 
-		mMainMovieClip->_update(delta_time);
+		if(mMainMovieClip)
+		{
+			mMainMovieClip->_update(delta_time);
+		}
 	}
 	//-----------------------------------------------------------------------
 	void Movie::setMouseAbs(uint x, uint y)
 	{
+		if(!mFile)
+		{
+			return;
+		}
+
 		const File::FileHeader& header = mFile->getHeader();
 		// clamp x
 		if(x < 0) x = 0;
@@ -147,14 +120,22 @@ namespace vtx
 
 		mMousePosition = Vector2((float)x, (float)y);
 
-		MouseEvent evt(MouseEvent::MOUSE_MOVE);
-		evt.stageX = mMousePosition.x;
-		evt.stageY = mMousePosition.y;
-		mMainMovieClip->eventFired(evt);
+		if(mMainMovieClip)
+		{
+			MouseEvent evt(MouseEvent::MOUSE_MOVE);
+			evt.stageX = mMousePosition.x;
+			evt.stageY = mMousePosition.y;
+			mMainMovieClip->eventFired(evt);
+		}
 	}
 	//-----------------------------------------------------------------------
 	void Movie::setMouseRel(float x, float y)
 	{
+		if(!mFile)
+		{
+			return;
+		}
+
 		// clamp x
 		if(x < 0.0f) x = 0.0f;
 		else if(x > 1.0f) x = 1.0f;
@@ -173,33 +154,48 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Movie::mouseDown()
 	{
-		MouseEvent evt(MouseEvent::MOUSE_DOWN);
-		evt.stageX = mMousePosition.x;
-		evt.stageY = mMousePosition.y;
-		mMainMovieClip->eventFired(evt);
+		if(mMainMovieClip)
+		{
+			MouseEvent evt(MouseEvent::MOUSE_DOWN);
+			evt.stageX = mMousePosition.x;
+			evt.stageY = mMousePosition.y;
+			mMainMovieClip->eventFired(evt);
+		}
 	}
 	//-----------------------------------------------------------------------
 	void Movie::mouseUp()
 	{
-		MouseEvent evt(MouseEvent::MOUSE_UP);
-		evt.stageX = mMousePosition.x;
-		evt.stageY = mMousePosition.y;
-		mMainMovieClip->eventFired(evt);
+		if(mMainMovieClip)
+		{
+			MouseEvent evt(MouseEvent::MOUSE_UP);
+			evt.stageX = mMousePosition.x;
+			evt.stageY = mMousePosition.y;
+			mMainMovieClip->eventFired(evt);
+		}
 	}
 	//-----------------------------------------------------------------------
 	void Movie::keyDown(const uint& keyCode, const uint& charCode)
 	{
-		mMainMovieClip->eventFired(KeyboardEvent(KeyboardEvent::KEY_DOWN, (KeyCode)keyCode, charCode));
+		if(mMainMovieClip)
+		{
+			mMainMovieClip->eventFired(KeyboardEvent(KeyboardEvent::KEY_DOWN, (KeyCode)keyCode, charCode));
+		}
 	}
 	//-----------------------------------------------------------------------
 	void Movie::keyUp(const uint& keyCode, const uint& charCode)
 	{
-		mMainMovieClip->eventFired(KeyboardEvent(KeyboardEvent::KEY_UP, (KeyCode)keyCode, charCode));
+		if(mMainMovieClip)
+		{
+			mMainMovieClip->eventFired(KeyboardEvent(KeyboardEvent::KEY_UP, (KeyCode)keyCode, charCode));
+		}
 	}
 	//-----------------------------------------------------------------------
 	void Movie::play()
 	{
-		mMainMovieClip->play();
+		if(mMainMovieClip)
+		{
+			mMainMovieClip->play();
+		}
 	}
 	//-----------------------------------------------------------------------
 	void Movie::stop()
@@ -276,6 +272,29 @@ namespace vtx
 		return mRenderStrategy;
 	}
 	//-----------------------------------------------------------------------
+	bool Movie::addListener(Movie::Listener* listener)
+	{
+		if(mListeners.find(listener) == mListeners.end())
+		{
+			mListeners.insert(std::make_pair(listener, listener));
+			return true;
+		}
+
+		return false;
+	}
+	//-----------------------------------------------------------------------
+	bool Movie::removeListener(Movie::Listener* listener)
+	{
+		ListenerMap::iterator it = mListeners.find(listener);
+		if(it != mListeners.end())
+		{
+			mListeners.erase(it);
+			return true;
+		}
+
+		return false;
+	}
+	//-----------------------------------------------------------------------
 	void Movie::setUserData(void* data)
 	{
 		mUserData = data;
@@ -289,6 +308,71 @@ namespace vtx
 	void Movie::_setFocusedObject(InteractiveObject* focused_object)
 	{
 		mFocusedObject = focused_object;
+	}
+	//-----------------------------------------------------------------------
+	void Movie::loadingCompleted(File* file)
+	{
+		if(mFile)
+		{
+			VTX_EXCEPT("Movie \"%s\" was already initialized with file \"%s\", ignoring second attempt to initialize with file \"%s\"", 
+				mName.c_str(), mFile->getFilename().c_str(), file->getFilename().c_str());
+			return;
+		}
+
+		mFile = file;
+		mRenderStrategy = mCreator->getRenderStrategy(mFile);
+
+		mMainMovieClip = new MovieClip();
+		mMainMovieClip->_setParent(this);
+		mMainMovieClip->initFromResource(mFile->getMainMovieClip());
+
+		ScriptEngineFactory* scriptEngineFactory = 
+			InstanceManager::getSingletonPtr()->scriptEngines()->getFactory(mFile->getScriptEngine());
+
+		// create script VM if available
+		if(scriptEngineFactory)
+		{
+			mScriptEngine = scriptEngineFactory->createObject(this);
+		}
+
+		ScriptResource* script = dynamic_cast<ScriptResource*>(mFile->getResource("Script"));
+		if(mScriptEngine && script)
+		{
+			if(mScriptEngine->executeCode(script->getBuffer(), script->getLength()))
+			{
+				ScriptObject* root_scriptobject = mScriptEngine->getRootScriptObject();
+				if(root_scriptobject)
+				{
+					mMainMovieClip->setScriptObject(root_scriptobject);
+				}
+			}
+		}
+
+		ListenerMap::iterator it = mListeners.begin();
+		ListenerMap::iterator end = mListeners.end();
+		while(it != end)
+		{
+			it->second->loadingCompleted(this);
+			++it;
+		}
+	}
+	//-----------------------------------------------------------------------
+	void Movie::loadingFailed(File* file)
+	{
+		bool destroy = false;
+
+		ListenerMap::iterator it = mListeners.begin();
+		ListenerMap::iterator end = mListeners.end();
+		while(it != end)
+		{
+			destroy = destroy || it->second->loadingFailed(this);
+			++it;
+		}
+
+		if(destroy)
+		{
+			Root::getSingletonPtr()->destroyMovie(this);
+		}
 	}
 	//-----------------------------------------------------------------------
 }

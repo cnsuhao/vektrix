@@ -26,23 +26,44 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxswfParser.h"
+#ifndef __vtxswfShapeParser_H__
+#define __vtxswfShapeParser_H__
+
+#include "vtxswf.h"
+#include "vtxswfContourElement.h"
+#include "vtxswfParserTypes.h"
+#include "vtxswfSubLine.h"
+#include "vtxswfSubShape.h"
 
 namespace vtx
 {
 	namespace swf
 	{
-		void SwfParser::handleJPEGTables(uint tag_length)
+		class ShapeParser
 		{
-			char* pBuf = new char[tag_length];
-			readByteBlock(pBuf, tag_length);
-			mJPEGTables = pBuf;
-		}
+		public:
+			void handleDefineShape(const TagTypes& tag_type, SwfParser* parser);
 
-		void SwfParser::handleDefineBitsJPEG(const TagTypes& type, uint tag_length)
-		{
-			UI16 characterId = readU16();
-			//readByteBlock(pJpegData, tag_length-2);
-		}
+		protected:
+			SHAPE mFlashShape;
+			FillstyleMap mFillstyles; // only the USED! fillstyles
+			LinestyleMap mLinestyles; // only the USED! linestyles
+			ContourChunkMap mChunkLists;
+			SubShapeList mSubShapeList; // the sub-shapes
+			SubLineList mSubLineList; // the sub-lines
+
+			// reading
+			void getFlashStyles();
+			void getFlashChunks();
+			// processing
+			void generateSubshapes();
+			void generateGlyphs();
+			void generateSublines();
+			// writing
+			void writeFillstyles(const UI16& shape_id, File* file);
+			void writeSubshapes(ShapeResource* shape_resource);
+		};
 	}
 }
+
+#endif // __vtxswfShapeParser_H__

@@ -29,53 +29,53 @@ THE SOFTWARE.
 #ifndef __vtxAssert_H__
 #define __vtxAssert_H__
 
-#include <stdio.h>
+#include "vtxPrerequisites.h"
 
 namespace vtx
 {
 #if defined (_DEBUG)
 
-#	define vtxDebugBreak()														\
-	if ( true ) 																\
+#	define VTX_DEBUG_BREAK()													\
+	if (true) 																	\
 	{ 																			\
 		__debugbreak(); 														\
 	} 																			\
 	else 																		\
 		(void)0
-#	define vtxDebugAssert( condition, message ) 								\
-	if ( !( condition ) ) 														\
+#	define VTX_DEBUG_ASSERT(condition, message) 								\
+	if (!(condition)) 															\
 	{ 																			\
-		printf( "vtxDebugAssert(%s:%d): %s\n", __FILE__, __LINE__, message ); 	\
-		vtxDebugBreak(); 														\
+		printf("VTX_DEBUG_ASSERT(%s:%d): %s\n", __FILE__, __LINE__, message);	\
+		VTX_DEBUG_BREAK(); 														\
 	} 																			\
 	else 																		\
 		(void)0
-#	define vtxDebugWarning( condition, message ) 								\
-	if ( !( condition ) ) 														\
+#	define VTX_DEBUG_WARNING(condition, message) 								\
+	if (!(condition)) 															\
 	{ 																			\
-		printf( "vtxDebugWarning(%s:%d): %s\n", __FILE__, __LINE__, message ); 	\
+		printf("VTX_DEBUG_WARNING(%s:%d): %s\n", __FILE__, __LINE__, message);	\
 	} 																			\
 	else 																		\
 		(void)0
-#	define vtxDebugFail( message ) 												\
-	if ( true ) 																\
+#	define VTX_DEBUG_FAIL(message) 												\
+	if (true) 																	\
 	{ 																			\
-		printf( "vtxDebugFail(%s:%d): %s\n", __FILE__, __LINE__, message ); 	\
-		vtxDebugBreak(); 														\
+		printf("VTX_DEBUG_FAIL(%s:%d): %s\n", __FILE__, __LINE__, message); 	\
+		VTX_DEBUG_BREAK(); 														\
 	} 																			\
 	else 																		\
 		(void)0
-#	define vtxDebugPrint( message ) printf( message )
-#	define vtxDebugPrintVA( arguments ) printf arguments
+#	define VTX_DEBUG_PRINT(message) printf(message)
+#	define VTX_DEBUG_PRINT_VA(arguments) printf arguments
 
 #else
 
-#	define vtxDebugBreak() (void(0))
-#	define vtxDebugAssert( condition, message ) (void(0))
-#	define vtxDebugWarning( condition, message ) (void(0))
-#	define vtxDebugFail( message ) (void(0))
-#	define vtxDebugPrint( message ) (void(0))
-#	define vtxDebugPrintVA( arguments ) (void(0))
+#	define VTX_DEBUG_BREAK() (void(0))
+#	define VTX_DEBUG_ASSERT(condition, message) (void(0))
+#	define VTX_DEBUG_WARNING(condition, message) (void(0))
+#	define VTX_DEBUG_FAIL(message) (void(0))
+#	define VTX_DEBUG_PRINT(message) (void(0))
+#	define VTX_DEBUG_PRINT_VA(arguments) (void(0))
 
 #endif 
 }

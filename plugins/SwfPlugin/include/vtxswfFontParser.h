@@ -25,32 +25,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
-#include "vtxswfParser.h"
 
-#include "vtxMovieClipResource.h"
-#include "vtxTimeline.h"
+#ifndef __vtxswfFontParser_H__
+#define __vtxswfFontParser_H__
+
+#include "vtxswf.h"
+#include "vtxswfParserTypes.h"
 
 namespace vtx
 {
 	namespace swf
 	{
-		//-----------------------------------------------------------------------
-		void SwfParser::handleEnd()
+		class FontParser
 		{
-			// end of a movieclip definition
-			if(mCurrentMovieClip)
-			{
-				mCurrentMovieClip->setTimeline(mMovieClipTimeline);
-				mCurrentFile->addResource(mCurrentMovieClip);
-				mMovieClipFrameIndex = 0;
-				mCurrentMovieClip = NULL;
-			}
-			// end of the entire file
-			else
-			{
-				vtxDebugAssert(!(mFileLength - mReadPos), "Unread bytes after TT_End tag");
-			}
-		}
-		//-----------------------------------------------------------------------
+		public:
+			void handleDefineFont(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+
+		protected:
+			// -> FLASH
+			SHAPE mFlashGlyph;
+
+			void writeGlyphContours(GlyphResource* glyph_resource);
+		};
 	}
 }
+
+#endif // __vtxswfFontParser_H__

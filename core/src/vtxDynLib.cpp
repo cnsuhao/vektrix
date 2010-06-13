@@ -90,7 +90,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void* DynLib::getSymbol(const String& name) const throw()
 	{
-		return (void*)DYNLIB_GETSYM(mInstance, name.c_str() );
+		return (void*)DYNLIB_GETSYM(mInstance, name.c_str());
 	}
 	//-----------------------------------------------------------------------
 	String DynLib::getError() 

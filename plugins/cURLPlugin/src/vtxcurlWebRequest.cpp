@@ -26,57 +26,113 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxopMovableMovieFactory.h"
-#include "vtxopMovableMovie.h"
-#include "vtxopMovableMovieDebugger.h"
-#include "vtxopMovableStrategy.h"
+#include "vtxcurlWebRequest.h"
 
-#include "vtxInstanceManager.h"
+#define CURL_STATICLIB
+#include "curl/curl.h"
 
 namespace vtx
 {
-	namespace ogre
+	namespace curl
 	{
 		//-----------------------------------------------------------------------
-		MovableMovieFactory::MovableMovieFactory()
+		WebRequest::WebRequest(const uint& timeout) 
+			: mCurl(NULL), 
+			mSize(0), 
+			mBuffer(NULL)
 		{
-			InstanceManager* inst_mgr = InstanceManager::getSingletonPtr();
+			mCurl = curl_easy_init();
+			curl_easy_setopt(mCurl, CURLOPT_WRITEDATA, this);
+			curl_easy_setopt(mCurl, CURLOPT_WRITEFUNCTION, &memoryCallback);
+			curl_easy_setopt(mCurl, CURLOPT_CONNECTTIMEOUT_MS, timeout);
+		}
+		//-----------------------------------------------------------------------
+		WebRequest::~WebRequest()
+		{
+			if(mCurl)
+			{
+				curl_easy_cleanup(mCurl);
+				mCurl = NULL;
+			}
+		}
+		//-----------------------------------------------------------------------
+		bool WebRequest::openURL(const String& url)
+		{
+			freeBuffer();
 
-			mFactories[EditText::TYPE] = inst_mgr->getFactory("OgreMovableEditText");
-			mFactories[Shape::TYPE] = inst_mgr->getFactory("OgreMovableShape");
-			mFactories[StaticText::TYPE] = inst_mgr->getFactory("OgreMovableStaticText");
-		}
-		//-----------------------------------------------------------------------
-		MovableMovieFactory::~MovableMovieFactory()
-		{
+			curl_easy_setopt(mCurl, CURLOPT_NOBODY, false);
 
+			curl_easy_setopt(mCurl, CURLOPT_URL, url.c_str());
+			CURLcode result = curl_easy_perform(mCurl);
+
+			if(result == CURLE_OK)
+			{
+				long statLong = 0;
+				curl_easy_getinfo(mCurl, CURLINFO_HTTP_CODE, &statLong);
+
+				if(statLong == 200 && mBuffer != NULL)
+				{
+					return true;
+				}
+				else
+				{
+					freeBuffer();
+				}
+			}
+
+			return false;
 		}
 		//-----------------------------------------------------------------------
-		const String& MovableMovieFactory::getName() const
+		bool WebRequest::doesFileExist(const String& url)
 		{
-			static String name = "OgreMovableMovie";
-			return name;
+			curl_easy_setopt(mCurl, CURLOPT_NOBODY, true);
+
+			curl_easy_setopt(mCurl, CURLOPT_URL, url.c_str()); 
+			curl_easy_perform(mCurl); 
+
+			CURLcode result;
+			if(curl_easy_getinfo(mCurl, CURLINFO_HTTP_CODE, &result) == CURLE_OK) 
+			{
+				return (result == 200);
+			}
+
+			return false;
 		}
 		//-----------------------------------------------------------------------
-		Movie* MovableMovieFactory::createObject(String name)
+		uchar* WebRequest::getBuffer() const
 		{
-			return new MovableMovie(name, this);
+			return mBuffer;
 		}
 		//-----------------------------------------------------------------------
-		void MovableMovieFactory::destroyObject(Movie* instance)
+		const uint& WebRequest::getSize() const
 		{
-			delete dynamic_cast<MovableMovie*>(instance);
-			instance = NULL;
+			return mSize;
 		}
 		//-----------------------------------------------------------------------
-		vtx::RenderStrategy* MovableMovieFactory::_createRenderStrategy(File* file)
+		void WebRequest::freeBuffer()
 		{
-			return new MovableRenderStrategy(this, file);
+			if(mBuffer)
+			{
+				free(mBuffer);
+				mBuffer = NULL;
+				mSize = 0;
+			}
 		}
 		//-----------------------------------------------------------------------
-		MovieDebugger* MovableMovieFactory::_newDebugger(Movie* movie)
+		uint WebRequest::memoryCallback(void* ptr, uint size, uint nmemb, void* data)
 		{
-			return new MovableMovieDebugger(movie);
+			uint realsize = size * nmemb;
+			WebRequest* thisPtr = static_cast<WebRequest*>(data);
+
+			thisPtr->mBuffer = (uchar*)realloc(thisPtr->mBuffer, thisPtr->mSize + realsize);
+
+			if(thisPtr->mBuffer)
+			{
+				memcpy(&thisPtr->mBuffer[thisPtr->mSize], ptr, realsize);
+				thisPtr->mSize += realsize;
+			}
+
+			return realsize;
 		}
 		//-----------------------------------------------------------------------
 	}

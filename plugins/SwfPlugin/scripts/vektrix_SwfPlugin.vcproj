@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="vektrix_SwfPlugin"
 	ProjectGUID="{73342FD9-94BA-484C-85FD-0FDEB0DD56ED}"
 	RootNamespace="vektrix_SwfPlugin"
@@ -40,11 +40,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\include;..\..\..\core\include;..\..\..\dependencies\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VEKTRIX_SWFPLUGIN_EXPORTS"
-				MinimalRebuild="false"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
@@ -348,58 +347,54 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Handlers"
+			Name="TagParsers"
 			>
 			<File
-				RelativePath="..\src\vtxswfDefineBitsLossless.cpp"
+				RelativePath="..\src\vtxswfFontParser.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfDefineButton2.cpp"
+				RelativePath="..\include\vtxswfFontParser.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfDefineEditText.cpp"
+				RelativePath="..\src\vtxswfImageParser.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfDefineFont3.cpp"
+				RelativePath="..\include\vtxswfImageParser.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfDefineJPEG.cpp"
+				RelativePath="..\src\vtxswfScriptParser.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfDefineShape.cpp"
+				RelativePath="..\include\vtxswfScriptParser.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfDefineSprite.cpp"
+				RelativePath="..\src\vtxswfShapeParser.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfDefineText.cpp"
+				RelativePath="..\include\vtxswfShapeParser.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfDoABC.cpp"
+				RelativePath="..\src\vtxswfStructureParser.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfEnd.cpp"
+				RelativePath="..\include\vtxswfStructureParser.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfPlaceObject2.cpp"
+				RelativePath="..\src\vtxswfTextParser.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfShowFrame.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\vtxswfSymbolClass.cpp"
+				RelativePath="..\include\vtxswfTextParser.h"
 				>
 			</File>
 			<Filter

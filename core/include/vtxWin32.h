@@ -56,8 +56,10 @@ THE SOFTWARE.
 #		include <stdlib.h>
 #		include <crtdbg.h>
 #
-#		define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#		define VTX_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #		define malloc(x) _malloc_dbg(x, _NORMAL_BLOCK, __FILE__, __LINE__);
+#
+#		define new VTX_NEW
 #
 #		define VTX_MEM_DEBUG_ENABLE() _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF)
 #		define VTX_MEM_DEBUG_BREAK(a) _CrtSetBreakAlloc(a)

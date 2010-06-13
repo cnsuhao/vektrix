@@ -74,6 +74,13 @@ namespace vtx
 				mDown = button_res->getState(ButtonResource::SID_DOWN)->clone(this);
 			//mPressed = button_res->getState(ButtonResource::SID_PRESSED)->clone();
 		}
+
+		clearLayers();
+
+		if(mParentMovie)
+		{
+			mUp->execute();
+		}
 	}
 	//-----------------------------------------------------------------------
 	const String& Button::getType() const
@@ -112,18 +119,6 @@ namespace vtx
 	const BoundingBox& Button::getBoundingBox() const
 	{
 		return mBB;
-	}
-	//-----------------------------------------------------------------------
-	void Button::_setParent(Movie* parent)
-	{
-		DisplayObjectContainer::_setParent(parent);
-
-		clearLayers();
-
-		if(parent)
-		{
-			mUp->execute();
-		}
 	}
 	//-----------------------------------------------------------------------
 	void Button::eventFired(const Event& evt)

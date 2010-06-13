@@ -264,4 +264,15 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
+	void File::_loadingFailed()
+	{
+		ListenerMap::iterator listener_it = mListeners.begin();
+		ListenerMap::iterator listener_end = mListeners.end();
+		while(listener_it != listener_end)
+		{
+			listener_it->second->loadingFailed(this);
+			++listener_it;
+		}
+	}
+	//-----------------------------------------------------------------------
 }
