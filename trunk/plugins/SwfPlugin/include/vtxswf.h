@@ -68,6 +68,14 @@ namespace vtx
 		class SubShape;
 		class SwfParser;
 		class SwfParserFactory;
+
+		// TagParsers
+		class FontParser;
+		class ImageParser;
+		class ScriptParser;
+		class ShapeParser;
+		class StructureParser;
+		class TextParser;
 	}
 }
 

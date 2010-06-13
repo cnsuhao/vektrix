@@ -29,19 +29,29 @@ THE SOFTWARE.
 #ifndef __vtxThreadingDefinesBoost_H__
 #define __vtxThreadingDefinesBoost_H__
 
+// synchronization
 #define VTX_MUTEX(name) mutable boost::recursive_mutex name
+#define VTX_LOCK_MUTEX(mutex_name) boost::recursive_mutex::scoped_lock vtxMutexLock(mutex_name)
+#define VTX_LOCK_MUTEX_NAMED(lock_name, mutex_name) boost::recursive_mutex::scoped_lock lock_name(mutex_name)
+
+#define VTX_TRY_MUTEX_LOCK(mutex_name) mutex_name.try_lock()
+#define VTX_MANUAL_MUTEX_LOCK(mutex_name) mutex_name.lock()
+#define VTX_MANUAL_MUTEX_UNLOCK(mutex_name) mutex_name.unlock()
+
 #define VTX_AUTO_MUTEX mutable boost::recursive_mutex VTX_MUTEX_ID
-#define VTX_LOCK_MUTEX(name) boost::recursive_mutex::scoped_lock vtxMutexLock(name)
 #define VTX_LOCK_AUTO_MUTEX boost::recursive_mutex::scoped_lock vtxMutexLock(VTX_MUTEX_ID)
 
-// creation & destruction
+#define VTX_CRITICAL_SECTION(lock_name, mutex_name) {boost::recursive_mutex::scoped_lock lock_name(mutex_name)
+#define VTX_CRITICAL_SECTION_END }
+
+// thread creation & destruction
 #define VTX_CREATE_THREAD(name, job) boost::thread* name = new boost::thread(job)
 #define VTX_DESTROY_THREAD(name) delete name
 
-// type
+// thread C++ type
 #define VTX_THREAD_TYPE boost::thread
 
-// utility
+// threading utilities
 #define VTX_SLEEP_THREAD(ms) boost::this_thread::sleep(boost::posix_time::millisec(ms))
 #define VTX_THREAD_SYNCHRONISER(sync) boost::condition sync
 

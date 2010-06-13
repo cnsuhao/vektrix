@@ -25,48 +25,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
-#include "vtxswfParser.h"
 
-#include "vtxKeyframe.h"
-#include "vtxTimeline.h"
+#ifndef __vtxcurlWebRequest_H__
+#define __vtxcurlWebRequest_H__
+
+#include "vtxcurl.h"
 
 namespace vtx
 {
-	namespace swf
+	namespace curl
 	{
-		//-----------------------------------------------------------------------
-		void SwfParser::handleShowFrame()
+		class WebRequest
 		{
-			// main timeline
-			if(!mCurrentMovieClip)
-			{
-				++mMainFrameIndex;
+		public:
+			WebRequest(const uint& timeout = 5000);
+			virtual ~WebRequest();
 
-				//if(mCurrentKeyframe->getEventCount())
-				{
-					mCurrentKeyframe->setIndex(mMainFrameIndex);
-					mMainTimeline->addKeyframe(mCurrentKeyframe);
-					mCurrentKeyframe = NULL;
-				}
+			bool openURL(const String& url);
+			bool doesFileExist(const String& url);
 
-				if(mMainFrameIndex < mHeader.frames)
-				{
-					mCurrentKeyframe = new Keyframe;
-				}
-			}
-			// movieclip timeline
-			else
-			{
-				++mMovieClipFrameIndex;
+			uchar* getBuffer() const;
+			const uint& getSize() const;
 
-				if(mCurrentKeyframe->getEventCount())
-				{
-					mCurrentKeyframe->setIndex(mMovieClipFrameIndex);
-					mMovieClipTimeline->addKeyframe(mCurrentKeyframe);
-					mCurrentKeyframe = new Keyframe;
-				}
-			}
-		}
-		//-----------------------------------------------------------------------
+		protected:
+			CURL* mCurl;
+			uint mSize;
+			uchar* mBuffer;
+
+			void freeBuffer();
+			static uint memoryCallback(void* ptr, uint size, uint nmemb, void* data);
+		};
 	}
 }
+
+#endif

@@ -47,12 +47,15 @@ THE SOFTWARE.
 #	define vtxcurlExport
 #endif
 
+typedef void CURL;
+
 namespace vtx
 {
 	namespace curl
 	{
 		class WebFileContainer;
 		class WebFileContainerFactory;
+		class WebRequest;
 	}
 }
 

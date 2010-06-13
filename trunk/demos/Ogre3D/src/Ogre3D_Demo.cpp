@@ -24,6 +24,7 @@
 #include <OIS/OIS.h>
 
 vtx::ogre::MovableMovie* movie = NULL;
+Ogre::Camera* camera = NULL;
 Ogre::SceneNode* movie_node = NULL;
 Ogre::RenderWindow* mWindow = NULL;
 
@@ -98,12 +99,13 @@ public:
 	{
 		return true;
 	}
+
 private: 
 	OIS::Keyboard* mKeyboard;
 	OIS::Mouse* mMouse;
 };
 //-----------------------------------------------------------------------
-class SimpleKeyListener : public OIS::KeyListener 
+class SimpleKeyListener : public OIS::KeyListener , /* DEBUG */ public vtx::File::Listener
 {
 public: 
 	bool keyPressed(const OIS::KeyEvent& e)
@@ -147,8 +149,18 @@ public:
 				movie->enableDebugger(true);
 			}
 		}
+		else if(e.key == OIS::KC_F10)
+		{
+			vtx::File* file = vtx::FileManager::getSingletonPtr()->getFile("http://www.geneburch.com/wallpaper/01/1920x1200.jpg", true);
+			file->addListener(this);
+		}
 
 		return true;
+	}
+
+	void loadingCompleted(vtx::File* file)
+	{
+		std::cout << "loading of file: " << file->getFilename() << " completed...." << std::endl;
 	}
 };
 //-----------------------------------------------------------------------
@@ -186,10 +198,61 @@ public:
 	}
 };
 //-----------------------------------------------------------------------
+class MovieListener : public vtx::Movie::Listener
+{
+public:
+	MovieListener(OIS::Mouse* mouse) 
+		: mMouse(mouse)
+	{
+
+	}
+
+	void loadingCompleted(vtx::Movie* movie)
+	{
+		movie->enableDebugger(true);
+
+		int width = movie->getFile()->getHeader().width;
+		int height = movie->getFile()->getHeader().height;
+
+		if(!mWindow->isFullScreen())
+		{
+			mWindow->resize(width * 2, height * 2);
+		}
+
+		const OIS::MouseState& ms = mMouse->getMouseState();
+		ms.width = mWindow->getWidth();
+		ms.height = mWindow->getHeight();
+
+		float movie_ratio = (float)width/height;
+		float window_ratio = camera->getAspectRatio();
+		if(movie_ratio > window_ratio)
+		{
+			// zoom to width
+			movie_node->setPosition(-width/2.0f, height/2.0f, 
+				-(float)width*0.5f/window_ratio/tanf(camera->getFOVy().valueRadians()*0.5f));
+		}
+		else
+		{
+			// zoom to height
+			movie_node->setPosition(-width/2.0f, height/2.0f, 
+				-(float)height*0.5f/tanf(camera->getFOVy().valueRadians()*0.5f));
+		}
+	}
+
+	bool loadingFailed(vtx::Movie* movie)
+	{
+		std::cout << "loading of the movie failed !!!" << std::endl;
+		return true;
+	}
+
+private:
+	OIS::Mouse* mMouse;
+};
+//-----------------------------------------------------------------------
 int main(int argc, char **argv)
 {
 	VTX_MEM_DEBUG_ENABLE();
-	//VTX_MEM_DEBUG_BREAK(5032);
+	//VTX_MEM_DEBUG_BREAK(3184);
 
 	// start vektrix
 	vtx::Root* vektrix_root = new vtx::Root();
@@ -248,7 +311,7 @@ int main(int argc, char **argv)
 
 	Ogre::SceneManager* sceneMgr = ogre_root->createSceneManager(Ogre::ST_GENERIC);
 
-	Ogre::Camera* camera = sceneMgr->createCamera("MainCamera");
+	camera = sceneMgr->createCamera("MainCamera");
 	camera->setAutoAspectRatio(true);
 	camera->setNearClipDistance(1);
 
@@ -317,40 +380,15 @@ int main(int argc, char **argv)
 	//char opt = getch();
 	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", movies.at(atoi(&opt)), "OgreMovableMovie");
 
-	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie");
+	MovieListener listener(mouse);
 
+	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie", &listener);
 	movie->play();
 
 	movie_node = sceneMgr->getRootSceneNode()->createChildSceneNode();
 	movie_node->attachObject(movie);
 
-	movie->enableDebugger(true);
-
-	if(!mWindow->isFullScreen())
-	{
-		mWindow->resize(movie->getFile()->getHeader().width * 2, movie->getFile()->getHeader().height * 2);
-	}
-
-	ms.width = mWindow->getWidth();
-	ms.height = mWindow->getHeight();
-
-	int width = movie->getFile()->getHeader().width;
-	int height = movie->getFile()->getHeader().height;
-
-	float movie_ratio = (float)width/height;
-	float window_ratio = viewPort->getCamera()->getAspectRatio();
-	if(movie_ratio > window_ratio)
-	{
-		// zoom to width
-		movie_node->setPosition(-width/2.0f, height/2.0f, 
-			-(float)width*0.5f/window_ratio/tanf(viewPort->getCamera()->getFOVy().valueRadians()*0.5f));
-	}
-	else
-	{
-		// zoom to height
-		movie_node->setPosition(-width/2.0f, height/2.0f, 
-			-(float)height*0.5f/tanf(camera->getFOVy().valueRadians()*0.5f));
-	}
+	movie_node->setPosition(0, 0, -500);
 
 	// start the ogre rendering
 	ogre_root->startRendering();

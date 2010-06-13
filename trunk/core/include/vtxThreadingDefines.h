@@ -33,8 +33,10 @@ THE SOFTWARE.
 
 #if VTX_THREADING_LIB == VTX_THREADING_NONE
 #	include "vtxThreadingDefinesNone.h"
-#else if VTX_THREADING_LIB == VTX_THREADING_BOOST
+#elif VTX_THREADING_LIB == VTX_THREADING_BOOST
 #	include "vtxThreadingDefinesBoost.h"
+#else
+#	include "vtxThreadingDefinesNone.h"
 #endif
 
 #endif

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="vektrix_Ogre3D_Demo"
 	ProjectGUID="{D8141219-3E74-46F9-909C-0D3605746A4B}"
 	RootNamespace="ogredemo_simple01"
@@ -41,11 +41,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\include;..\..\..\core\include;..\..\..\plugins\AS3Plugin\include;..\..\..\plugins\CairoPlugin\include;..\..\..\plugins\cURLPlugin\include;..\..\..\plugins\D3D9Plugin\include;..\..\..\plugins\FreeImgPlugin\include;..\..\..\plugins\OgrePlugin\include;..\..\..\plugins\SwfPlugin\include;..\..\..\plugins\XmlPlugin\include;..\..\..\dependencies\include;..\..\..\dependencies\include\OGRE"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
-				MinimalRebuild="false"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"

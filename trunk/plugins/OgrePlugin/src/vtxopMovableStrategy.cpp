@@ -130,6 +130,21 @@ namespace vtx
 				return NULL;
 			}
 
+			if(resource->getType() == Button::TYPE)
+			{
+				Button* button = new Button();
+				button->_setParent(movie);
+				button->initFromResource(resource);
+				return button;
+			}
+			else if(resource->getType() == MovieClip::TYPE)
+			{
+				MovieClip* movieclip = new MovieClip();
+				movieclip->_setParent(movie);
+				movieclip->initFromResource(resource);
+				return movieclip;
+			}
+
 			Instance* inst = mPool->pop(resource->getType());
 
 			// instance received from instance pool

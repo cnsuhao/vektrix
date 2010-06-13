@@ -30,25 +30,29 @@ THE SOFTWARE.
 #define __vtxMovie_H__
 
 #include "vtxPrerequisites.h"
+#include "vtxFile.h"
 #include "vtxVector2.h"
 
 namespace vtx
 {
 	/** Defines a movie instance, which can be created by using Root::createMovie() */
-	class vtxExport Movie
+	class vtxExport Movie : public File::Listener
 	{
 		friend class InteractiveObject;
 		friend class Root;
 
 	protected:
-		Movie(const String& name, File* file, MovieFactory* creator);
+		Movie(const String& name, MovieFactory* creator);
 		virtual ~Movie();
 
 	public:
 		class vtxExport Listener
 		{
-			virtual void movieDestroyed(Movie* movie) = 0;
+		public:
+			virtual void loadingCompleted(Movie* movie) {}
+			virtual bool loadingFailed(Movie* movie) { return false; }
 		};
+		typedef std::map<Listener*, Listener*> ListenerMap;
 
 		/** Get the unique name that is associated with this movie */
 		const String& getName();
@@ -115,6 +119,9 @@ namespace vtx
 
 		RenderStrategy* getRenderStrategy() const;
 
+		bool addListener(Listener* listener);
+		bool removeListener(Listener* listener);
+
 		/** Attach custom user data to this movie */
 		void setUserData(void* data);
 		/** Get the custom user data of this movie */
@@ -126,6 +133,7 @@ namespace vtx
 		MovieFactory* mCreator;
 		RenderStrategy* mRenderStrategy;
 		Vector2 mMousePosition;
+		ListenerMap mListeners;
 		void* mUserData;
 
 		InteractiveObject* mFocusedObject;
@@ -135,9 +143,8 @@ namespace vtx
 
 		void _setFocusedObject(InteractiveObject* focused_object);
 
-		//Shape* mMouseArrow;
-		//Shape* mMouseHand;
-		//Shape* mMouseTextCursor;
+		void loadingCompleted(File* file);
+		void loadingFailed(File* file);
 	};
 }
 

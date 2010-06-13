@@ -26,46 +26,43 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxopMovableMovie_H__
-#define __vtxopMovableMovie_H__
+#ifndef __vtxswfStructureParser_H__
+#define __vtxswfStructureParser_H__
 
-#include "vtxop.h"
-
-#include "vtxMovie.h"
-
-#include "OgreMovableObject.h"
+#include "vtxswf.h"
+#include "vtxswfParserTypes.h"
 
 namespace vtx
 {
-	namespace ogre
+	namespace swf
 	{
-		class MovableMovie : public vtx::Movie, public Ogre::MovableObject
+		class StructureParser
 		{
 		public:
-			typedef std::map<Ogre::Renderable*, Ogre::Renderable*> RenderableMap;
+			StructureParser(SwfParser* parser);
+			virtual ~StructureParser();
 
-			MovableMovie(const String& name, MovieFactory* creator);
-			virtual ~MovableMovie();
-
-			AtlasPacker* getPacker() const;
-
-			vtx::Instance* getInstance(const String& id);
-			vtx::Instance* getInstanceByType(const String& type);
-			void releaseInstance(vtx::Instance* instance);
-
-			// Ogre functions
-			const Ogre::String& getMovableType() const;
-			const Ogre::AxisAlignedBox& getBoundingBox() const;
-			Ogre::Real getBoundingRadius() const;
-			void _updateRenderQueue(Ogre::RenderQueue* queue);
-			void visitRenderables(Ogre::Renderable::Visitor* visitor, bool debugRenderables);
+			void handleDefineButton2();
+			void handleDefineSprite();
+			void handlePlaceObject2();
+			void handleShowFrame();
+			void handleEnd();
 
 		protected:
-			Ogre::AxisAlignedBox mAAB;
-			//ShapeList mShapes;
-			RenderableMap mRenderables;
+			SwfParser* mParser;
+
+			// movieclips
+			uint mMovieClipFrameIndex;
+			MovieClipResource* mCurrentMovieClip;
+			Timeline* mMovieClipTimeline;
+
+			// main movieclip
+			uint mMainFrameIndex;
+			MovieClipResource* mMainMovieClip;
+			Timeline* mMainTimeline;
+			Keyframe* mCurrentKeyframe;
 		};
 	}
 }
 
-#endif
+#endif // __vtxswfStructureParser_H__

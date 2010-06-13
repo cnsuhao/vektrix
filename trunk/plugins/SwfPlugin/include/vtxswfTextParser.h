@@ -26,46 +26,23 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxopMovableMovie_H__
-#define __vtxopMovableMovie_H__
+#ifndef __vtxswfTextParser_H__
+#define __vtxswfTextParser_H__
 
-#include "vtxop.h"
-
-#include "vtxMovie.h"
-
-#include "OgreMovableObject.h"
+#include "vtxswf.h"
+#include "vtxswfParserTypes.h"
 
 namespace vtx
 {
-	namespace ogre
+	namespace swf
 	{
-		class MovableMovie : public vtx::Movie, public Ogre::MovableObject
+		class TextParser
 		{
 		public:
-			typedef std::map<Ogre::Renderable*, Ogre::Renderable*> RenderableMap;
-
-			MovableMovie(const String& name, MovieFactory* creator);
-			virtual ~MovableMovie();
-
-			AtlasPacker* getPacker() const;
-
-			vtx::Instance* getInstance(const String& id);
-			vtx::Instance* getInstanceByType(const String& type);
-			void releaseInstance(vtx::Instance* instance);
-
-			// Ogre functions
-			const Ogre::String& getMovableType() const;
-			const Ogre::AxisAlignedBox& getBoundingBox() const;
-			Ogre::Real getBoundingRadius() const;
-			void _updateRenderQueue(Ogre::RenderQueue* queue);
-			void visitRenderables(Ogre::Renderable::Visitor* visitor, bool debugRenderables);
-
-		protected:
-			Ogre::AxisAlignedBox mAAB;
-			//ShapeList mShapes;
-			RenderableMap mRenderables;
+			void handleDefineText(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+			void handleDefineEditText(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
 		};
 	}
 }
 
-#endif
+#endif // __vtxswfTextParser_H__

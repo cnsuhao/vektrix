@@ -38,8 +38,8 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		TextureMovie::TextureMovie(const String& name, vtx::File* file, MovieFactory* creator) 
-			: vtx::Movie(name, file, creator)
+		TextureMovie::TextureMovie(const String& name, MovieFactory* creator) 
+			: vtx::Movie(name, creator)
 		{
 			mMovieTexture = mCreator->getTextureFactory()->createObject();
 		}

@@ -48,7 +48,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void MemoryFileStream::seek(uint pos)
 	{
-		vtxDebugAssert(mFirst + pos <= mLast, "");
+		VTX_DEBUG_ASSERT(mFirst + pos <= mLast, "");
 		mCurrent = mFirst + pos;
 	}
 	//-----------------------------------------------------------------------
@@ -71,7 +71,7 @@ namespace vtx
 			return 0;
 		}
 
-		vtxDebugAssert(cnt <= count, "");
+		VTX_DEBUG_ASSERT(cnt <= count, "");
 
 		memcpy(buf, mCurrent, cnt);
 		mCurrent += cnt;

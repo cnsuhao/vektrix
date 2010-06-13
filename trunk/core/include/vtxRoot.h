@@ -30,8 +30,9 @@ THE SOFTWARE.
 #define __vtxRoot_H__
 
 #include "vtxPrerequisites.h"
-#include "vtxMovieFactory.h"
 #include "vtxFactoryManager.h"
+#include "vtxMovie.h"
+#include "vtxMovieFactory.h"
 #include "vtxSingleton.h"
 
 namespace vtx
@@ -56,7 +57,7 @@ namespace vtx
 		void registerPlugin(Plugin* plugin);
 
 		/** Create an instance of a movie */
-		Movie* createMovie(const String& name, const String& filename, const String& factoryname);
+		Movie* createMovie(const String& name, const String& filename, const String& factoryname, Movie::Listener* listener = NULL);
 
 		/** Destroy an instance of a movie by name */
 		bool destroyMovie(const String& name);

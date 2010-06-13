@@ -61,9 +61,6 @@ namespace vtx
 		/** @copybrief DisplayObject::getBoundingBox */
 		const BoundingBox& getBoundingBox() const;
 
-		/** @copybrief Instance::_setParent */
-		virtual void _setParent(Movie* parent);
-
 		// inherited from EventListener
 		void eventFired(const Event& evt);
 

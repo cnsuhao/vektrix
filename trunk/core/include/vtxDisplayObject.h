@@ -72,7 +72,7 @@ namespace vtx
 		/** @copybrief Transform::getLayer */
 		virtual const uint& getLayer() const;
 
-		/** @copybrief Transform::setCXForm */
+		/** @copybrief Transform::setColor */
 		virtual void setCXForm(const CXForm& cx);
 
 		/** @copybrief Transform::setMatrix */

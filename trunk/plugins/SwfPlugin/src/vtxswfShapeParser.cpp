@@ -25,6 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
+#include "vtxswfShapeParser.h"
 #include "vtxswfParser.h"
 
 #include "vtxFileHelper.h"
@@ -39,262 +40,7 @@ namespace vtx
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		void SwfParser::readShape(const TagTypes& type, SHAPE& result)
-		{
-			resetReadBits();
-			UI8 num_fill_bits = readUBits(4);
-			UI8 num_line_bits = readUBits(4);
-
-			int x = 0;
-			int y = 0;
-			int fillstyle0 = 0;
-			int fillstyle1 = 0;
-			int linestyle = 0;
-
-			while(true)
-			{
-				UI8 flags = readUBits(1);
-				// edge record
-				if(flags)
-				{
-					flags = readUBits(1);
-					// straight edge
-					if(flags)
-					{
-						UI8 num_bits = readUBits(4) + 2;
-
-						// general line
-						flags = readUBits(1);
-						if(flags)
-						{
-							// line flag
-							x += readSBits(num_bits); // delta x
-							y += readSBits(num_bits); // delta y
-						}
-						// vertical/horizontal line
-						else
-						{
-							UI8 vertical = readUBits(1);
-							if(vertical)
-							{
-								y += readSBits(num_bits);;
-							}
-							else
-							{
-								x += readSBits(num_bits);;
-							}
-						}
-
-						SHAPEELEMENT se;
-						se.type = SET_LINE;
-						se.x = x;
-						se.y = y;
-						se.cx = se.cy = 0;
-						se.fill0 = fillstyle0;
-						se.fill1 = fillstyle1;
-						se.line = linestyle;
-
-						//std::cout << "[" << fillstyle0 << "|" << fillstyle1 << "]{" << linestyle << "} X: " << x/20.0 << ", Y: " << y/20.0 << std::endl;
-						result.elements.push_back(se);
-					}
-					// curved edge
-					else
-					{
-						UI8 num_bits = readUBits(4) + 2;
-
-						x += readSBits(num_bits); // delta x
-						y += readSBits(num_bits); // delta y
-
-						int cx = x;
-						int cy = y;
-
-						x += readSBits(num_bits); // delta x
-						y += readSBits(num_bits); // delta y
-
-						SHAPEELEMENT se;
-						se.type = SET_BEZIER;
-						se.x = x;
-						se.y = y;
-						se.cx = cx;
-						se.cy = cy;
-						se.fill0 = fillstyle0;
-						se.fill1 = fillstyle1;
-						se.line = linestyle;
-
-						//std::cout << "[" << fillstyle0 << "|" << fillstyle1 << "]{" << linestyle << "} X: " << x/20.0 << ", Y: " << y/20.0 << std::endl;
-						result.elements.push_back(se);
-					}
-				}
-				// non-edge record
-				else
-				{
-					flags = readUBits(5);
-
-					// end-shape record
-					if(!flags)
-					{
-						break;
-					}
-					// move
-					if(flags & 1)
-					{
-						UI8 num_move_bits = readUBits(5);
-						x = readSBits(num_move_bits);
-						y = readSBits(num_move_bits);
-
-						SHAPEELEMENT se;
-						se.type = SET_MOVE;
-						se.x = x;
-						se.y = y;
-						se.cx = se.cy = 0;
-						se.fill0 = fillstyle0;
-						se.fill1 = fillstyle1;
-						se.line = linestyle;
-
-						//std::cout << "[" << fillstyle0 << "|" << fillstyle1 << "]{" << linestyle << "} X: " << x/20.0 << ", Y: " << y/20.0 << std::endl;
-						result.elements.push_back(se);
-					}
-					// fillstyle 0
-					if(flags & 2)
-					{
-						fillstyle0 = readUBits(num_fill_bits);
-					}
-					// fillstyle 1
-					if(flags & 4)
-					{
-						fillstyle1 = readUBits(num_fill_bits);
-					}
-					// linestyle
-					if(flags & 8)
-					{
-						linestyle = readUBits(num_line_bits);
-					}
-					// new styles
-					if(flags & 16 && 
-						(type == TT_DefineShape2 || 
-						type == TT_DefineShape3))
-					{
-						//vtxDebugFail("new styles not tested yet");
-						readFillstyleArray(type, result.fillstyles);
-						readLinestyleArray(type, result.linestyles);
-						num_fill_bits = readUBits(4);
-						num_line_bits = readUBits(4);
-					}
-				}
-			} // while(true)
-		}
-		//-----------------------------------------------------------------------
-		void SwfParser::readShapeWithStyle(const TagTypes& type, SHAPE& result)
-		{
-			readFillstyleArray(type, result.fillstyles);
-			readLinestyleArray(type, result.linestyles);
-
-			readShape(type, result);
-		}
-		//-----------------------------------------------------------------------
-		void SwfParser::readFillstyleArray(const TagTypes& type, FillstyleList& result)
-		{
-			UI16 fillstyle_count = readU8();
-
-			if(fillstyle_count == 255 && 
-				(type == TT_DefineShape2 || 
-				type == TT_DefineShape3))
-			{
-				fillstyle_count = readU16();
-			}
-
-			// FILLSTYLE ARRAY
-			for(UI16 i=0; i<fillstyle_count; ++i)
-			{
-				UI8 fill_type = readU8();
-
-				switch(fill_type)
-				{
-				case FST_Solid:
-					{
-						FILLSTYLE fs;
-						fs.type = FST_Solid;
-						fs.color = readColor(type == TT_DefineShape3 || type == TT_DefineShape4);
-						result.push_back(fs);
-					}
-					break;
-
-				case FST_LinearGradient:
-				case FST_RadialGradient:
-					{
-						FILLSTYLE fs;
-						fs.type = (FillStyleType)fill_type;
-						fs.matrix = readMatrix();
-						resetReadBits();
-
-						UI8 spread_mode = readUBits(2);
-						UI8 interp_mode = readUBits(2);
-						UI8 num_gradients = readUBits(4);
-
-						for(UI8 j=0; j<num_gradients; ++j)
-						{
-							UI8 ratio = readU8();
-							COLOR color = readColor(type == TT_DefineShape3 || type == TT_DefineShape4);
-							fs.gradient[ratio] = color;
-						}
-
-						result.push_back(fs);
-					}
-					break;
-
-				default:
-					vtxDebugFail("SWF shape fillstyle type not implemented");
-					break;
-				}
-			}
-		}
-		//-----------------------------------------------------------------------
-		void SwfParser::readLinestyleArray(const TagTypes& type, LinestyleList& result)
-		{
-			UI16 linestyle_count = readU8();
-
-			if(linestyle_count == 255)
-			{
-				linestyle_count = readU16();
-			}
-
-			// LINESTYLE ARRAY
-			for(UI16 i=0; i<linestyle_count; ++i)
-			{
-				UI16 line_width = readU16();
-
-				bool filled_line = false;
-				if(type == TT_DefineShape4)
-				{
-					UI16 flags = readU16();
-
-					if(((flags >> 12) & 3) == 2)
-					{
-						readU16(); // miter limit
-					}
-
-					if(flags & 8)
-					{
-						filled_line = true;
-						VTX_WARN("Filled lines not yet supported");
-					}
-				}
-
-				if(filled_line)
-				{
-
-				}
-				else
-				{
-					LINESTYLE ls;
-					ls.width = line_width;
-					ls.color = readColor(type == TT_DefineShape3 || type == TT_DefineShape4);
-					result.push_back(ls);
-				}
-			}
-		}
-		//-----------------------------------------------------------------------
-		void SwfParser::handleDefineShape(const TagTypes& type)
+		void ShapeParser::handleDefineShape(const TagTypes& tag_type, SwfParser* parser)
 		{
 			// clear all lists
 			// -> FLASH
@@ -307,18 +53,18 @@ namespace vtx
 			mSubShapeList.clear();
 			mSubLineList.clear();
 
-			UI16 shape_id = readU16();
+			UI16 shape_id = parser->readU16();
 
-			RECT bounds = readRect();
+			RECT bounds = parser->readRect();
 
-			if(type == TT_DefineShape4)
+			if(tag_type == TT_DefineShape4)
 			{
-				readRect(); // edge bounds
-				readU8(); // line flags
+				parser->readRect(); // edge bounds
+				parser->readU8(); // line flags
 			}
 
 			ShapeResource* shape_resource = new ShapeResource(StringHelper::toString(shape_id));
-			mCurrentFile->addResource(shape_resource);
+			parser->getCurrentFile()->addResource(shape_resource);
 
 			BoundingBox box(
 				Vector2(bounds.xmin/20.0f, bounds.ymin/20.0f), 
@@ -327,7 +73,7 @@ namespace vtx
 			shape_resource->setBoundingBox(box);
 
 			// parse the flash shape
-			readShapeWithStyle(type, mFlashShape);
+			parser->readShapeWithStyle(tag_type, mFlashShape);
 
 			// now the actual "translation" to a vektrix shape takes place
 
@@ -342,11 +88,11 @@ namespace vtx
 			generateSublines();
 
 			// write the processed data to our own format
-			writeFillstyles(shape_id);
+			writeFillstyles(shape_id, parser->getCurrentFile());
 			writeSubshapes(shape_resource);
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser::getFlashStyles()
+		void ShapeParser::getFlashStyles()
 		{
 			ShapeElementList::iterator it = mFlashShape.elements.begin();
 			ShapeElementList::iterator end = mFlashShape.elements.end();
@@ -379,7 +125,7 @@ namespace vtx
 			}
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser::getFlashChunks()
+		void ShapeParser::getFlashChunks()
 		{
 			uint count = 0;
 
@@ -524,7 +270,7 @@ namespace vtx
 #endif
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser::generateSubshapes()
+		void ShapeParser::generateSubshapes()
 		{
 			// loop through all fillstyles
 			FillstyleMap::iterator fill_it = mFillstyles.begin();
@@ -617,7 +363,7 @@ namespace vtx
 				} // while(elements)
 
 				//std::cout << "ELEMENTS LEFT: " << chunks.size() << std::endl;
-				vtxDebugAssert(!chunks.size(), "There should be no elements left here");
+				VTX_DEBUG_ASSERT(!chunks.size(), "There should be no elements left here");
 
 #if defined DEBUG_FLASH_SHAPES && defined _DEBUG
 
@@ -650,12 +396,12 @@ namespace vtx
 			} // while (fillstyles)
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser::generateSublines()
+		void ShapeParser::generateSublines()
 		{
 
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser::writeFillstyles(const UI16& shape_id)
+		void ShapeParser::writeFillstyles(const UI16& shape_id, File* file)
 		{
 			FillstyleMap::iterator it = mFillstyles.begin();
 			FillstyleMap::iterator end = mFillstyles.end();
@@ -736,20 +482,20 @@ namespace vtx
 					break;
 				};
 
-				mCurrentFile->addResource(material);
+				file->addResource(material);
 
 				++it;
 			}// while(fillstyles)
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser::writeSubshapes(ShapeResource* shape_resource)
+		void ShapeParser::writeSubshapes(ShapeResource* shape_resource)
 		{
 			SubShapeList::iterator subshape_it = mSubShapeList.begin();
 			SubShapeList::iterator subshape_end = mSubShapeList.end();
 			while(subshape_it != subshape_end)
 			{
 				MaterialResource* mat = dynamic_cast<MaterialResource*>(
-					mCurrentFile->getResource(shape_resource->getID() + 
+					shape_resource->getFile()->getResource(shape_resource->getID() + 
 					"->" + StringHelper::toString((*subshape_it).fillstyle)));
 
 				if(!mat)

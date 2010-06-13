@@ -25,6 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
+#include "vtxswfFontParser.h"
 #include "vtxswfParser.h"
 
 #include "vtxFontResource.h"
@@ -36,62 +37,39 @@ namespace vtx
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		KERNINGRECORD SwfParser::readKerningRecord(const UI8& wide_codes)
+		void FontParser::handleDefineFont(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
 		{
-			KERNINGRECORD record;
-
-			if(wide_codes)
-			{
-				record.left_char_code = readU16();
-				record.right_char_code = readU16();
-			}
-			else
-			{
-				record.left_char_code = readU8();
-				record.right_char_code = readU8();
-			}
-
-			record.adjustment = readS16();
-
-			return record;
-		}
-		//-----------------------------------------------------------------------
-		void SwfParser::handleDefineFont3()
-		{
-			// DEBUG
-			//mDebugFile = 0;
-
-			UI16 id = readU16();
+			UI16 id = parser->readU16();
 
 			FontResource* font = new FontResource(StringHelper::toString(id));
 
-			resetReadBits();
-			UI8 has_layout =	readUBits(1);
-			UI8 shift_JIS =		readUBits(1);
-			UI8 small_text =	readUBits(1);
-			UI8 ANSI =			readUBits(1);
-			UI8 wide_offsets =	readUBits(1);
-			UI8 wide_codes =	readUBits(1);
-			UI8 italic =		readUBits(1);
-			UI8 bold =			readUBits(1);
+			parser->resetReadBits();
+			UI8 has_layout =	parser->readUBits(1);
+			UI8 shift_JIS =		parser->readUBits(1);
+			UI8 small_text =	parser->readUBits(1);
+			UI8 ANSI =			parser->readUBits(1);
+			UI8 wide_offsets =	parser->readUBits(1);
+			UI8 wide_codes =	parser->readUBits(1);
+			UI8 italic =		parser->readUBits(1);
+			UI8 bold =			parser->readUBits(1);
 
-			UI8 lang_code = readU8();
+			UI8 lang_code = parser->readU8();
 
 			// read non-ZERO terminated strings
-			String font_name = readString(false);
+			String font_name = parser->readString(false);
 			font->setName(font_name);
 
 			// Offset Table
-			UI16 num_glyphs = readU16();
+			UI16 num_glyphs = parser->readU16();
 			for(UI16 i=0; i<num_glyphs; ++i)
 			{
 				if(wide_offsets)
 				{
-					readU32();
+					parser->readU32();
 				}
 				else
 				{
-					readU16();
+					parser->readU16();
 				}
 			}
 
@@ -99,52 +77,41 @@ namespace vtx
 			UI32 codetable_offset = 0;
 			if(wide_offsets)
 			{
-				codetable_offset = readU32();
+				codetable_offset = parser->readU32();
 			}
 			else
 			{
-				codetable_offset = readU16();
+				codetable_offset = parser->readU16();
 			}
 
 			// Glyph Shapes
 			for(UI16 i=0; i<num_glyphs; ++i)
 			{
-				//char filename[512];
-				//sprintf_s(filename, "%sfont_%d_glyph_%d.txt", DEBUG_OUTPUT_PATH, id, i);
-				//mDebugFile = fopen(filename, "w");
+				// reset the glyph data
+				mFlashGlyph.clear();
 
-				// clear all lists
-				// -> FLASH
-				mFlashShape.clear();
-
-				// -> VEKTRIX
-				mChunkLists.clear();
-				mSubShapeList.clear();
-
-				// parse the flash shape
-				readShape(TT_DefineShape, mFlashShape);
+				// parse the flash glyph
+				parser->readShape(TT_DefineShape, mFlashGlyph);
 
 				GlyphResource* glyph = new GlyphResource(font);
 				glyph->setIndex(i);
 				writeGlyphContours(glyph);
 				font->addGlyph(glyph);
-
-				//fclose(mDebugFile);
 			}
 
 			// Code Table
 			for(UI16 i=0; i<num_glyphs; ++i)
 			{
 				GlyphResource* glyph = font->getGlyphByIndex(i);
-				glyph->setCode(readU16());
+				glyph->setCode(parser->readU16());
 			}
 
 			// Font Layout
 			if(has_layout)
 			{
-				SI16 ascender_height = readS16();
-				SI16 descender_height = readS16();
-				SI16 leading_height = readS16();
+				SI16 ascender_height = parser->readS16();
+				SI16 descender_height = parser->readS16();
+				SI16 leading_height = parser->readS16();
 
 				font->setAscender(ascender_height/1024.0f);
 				font->setDescender(descender_height/1024.0f);
@@ -153,7 +120,7 @@ namespace vtx
 				// Advance Table
 				for(UI16 i=0; i<num_glyphs; ++i)
 				{
-					SI16 advance = readS16();
+					SI16 advance = parser->readS16();
 					GlyphResource* glyph = font->getGlyphByIndex(i);
 					glyph->setAdvance(advance/1024.0f);
 				}
@@ -161,27 +128,27 @@ namespace vtx
 				// Bounds Table
 				for(UI16 i=0; i<num_glyphs; ++i)
 				{
-					readRect();
+					parser->readRect();
 				}
 
 				// Kerning Table
-				UI16 kerning_count = readU16();
+				UI16 kerning_count = parser->readU16();
 				for(UI16 i=0; i<kerning_count; ++i)
 				{
-					readKerningRecord(wide_codes);
+					parser->readKerningRecord(wide_codes);
 				}
 			}
 
-			mCurrentFile->addResource(font);
+			parser->getCurrentFile()->addResource(font);
 		}
 		//-----------------------------------------------------------------------
-		void SwfParser::writeGlyphContours(GlyphResource* glyph_resource)
+		void FontParser::writeGlyphContours(GlyphResource* glyph_resource)
 		{
 			Vector2 min;
 			Vector2 max;
 
-			ShapeElementList::iterator element_it = mFlashShape.elements.begin();
-			ShapeElementList::iterator element_end = mFlashShape.elements.end();
+			ShapeElementList::iterator element_it = mFlashGlyph.elements.begin();
+			ShapeElementList::iterator element_end = mFlashGlyph.elements.end();
 			while(element_it != element_end)
 			{
 				// the current element
@@ -215,7 +182,7 @@ namespace vtx
 				if(element_ctrl.y > max.y)
 					max.y = element_ctrl.y;
 
-				// what type is it?
+				// which type is it?
 				switch(element.type)
 				{
 				case SET_MOVE:
@@ -225,7 +192,6 @@ namespace vtx
 						shape_element.pos = element_pos;
 
 						glyph_resource->addShapeElement(shape_element);
-						//debug_shape_element(shape_element, mDebugFile);
 					}
 					break;
 
@@ -236,7 +202,6 @@ namespace vtx
 						shape_element.pos = element_pos;
 
 						glyph_resource->addShapeElement(shape_element);
-						//debug_shape_element(shape_element, mDebugFile);
 					}
 					break;
 
@@ -248,7 +213,6 @@ namespace vtx
 						shape_element.pos = element_pos;
 
 						glyph_resource->addShapeElement(shape_element);
-						//debug_shape_element(shape_element, mDebugFile);
 					}
 					break;
 				}; // switch(element.type)

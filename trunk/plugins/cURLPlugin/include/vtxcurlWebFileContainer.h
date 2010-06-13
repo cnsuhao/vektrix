@@ -50,13 +50,6 @@ namespace vtx
 
 		protected:
 			const String mBaseURL;
-			void* mCurl;
-			uint mSize;
-			uchar* mBuffer;
-
-			long fetchURL(const String& url);
-			void freeBuffer();
-			static uint memoryCallback(void* ptr, uint size, uint nmemb, void* data);
 		};
 		//-----------------------------------------------------------------------
 		/** The FileContainerFactory for creating WebFileContainer objects */

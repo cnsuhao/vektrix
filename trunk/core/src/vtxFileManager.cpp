@@ -64,13 +64,31 @@ namespace vtx
 	{
 #ifdef VTX_THREADING_ENABLED
 
-		VTX_LOCK_MUTEX(mFinishedFilesMutex);
-
-		while(mFinishedFiles.size())
+		if(VTX_TRY_MUTEX_LOCK(mMutex))
 		{
-			File* file = mFinishedFiles.back();
-			file->_loadingCompleted();
-			mFinishedFiles.pop_back();
+			//VTX_LOCK_MUTEX(mMutex);
+
+			while(mFinishedFiles.size())
+			{
+				const FinishedFile& finished_file = mFinishedFiles.back();
+				File* file = finished_file.second;
+
+				// loading succeeded
+				if(finished_file.first)
+				{
+					file->_loadingCompleted();
+				}
+				// loading failed
+				else
+				{
+					file->_loadingFailed();
+					delete file;
+				}
+
+				mFinishedFiles.pop_back();
+			}
+
+			VTX_MANUAL_MUTEX_UNLOCK(mMutex);
 		}
 
 #endif // VTX_THREADING_ENABLED
@@ -85,16 +103,18 @@ namespace vtx
 			return NULL;
 		}
 
-		FileMap::iterator file_it = mFiles.find(filename);
+		VTX_LOCK_MUTEX(mMutex);
+		FileMap::iterator file_it = mReadyFiles.find(filename);
 
-		if(file_it != mFiles.end())
+		if(file_it != mReadyFiles.end())
 		{
 			VTX_LOG("Reloading file '%s' from memory.", filename.c_str());
 
 			return file_it->second;
 		}
 
-		VTX_LOCK_MUTEX(mParsingFilesMutex);
+#ifdef VTX_THREADING_ENABLED
+
 		file_it = mParsingFiles.find(filename);
 
 		if(file_it != mParsingFiles.end())
@@ -103,6 +123,8 @@ namespace vtx
 
 			return file_it->second;
 		}
+
+#endif // VTX_THREADING_ENABLED
 
 		// not loaded yet ---> load it
 		VTX_LOG("Trying to load file '%s'...", filename.c_str());
@@ -121,14 +143,17 @@ namespace vtx
 		FileParser* parser = factory->createObject();
 
 		File* file = new File(filename);
-		mParsingFiles.insert(std::make_pair(filename, file));
 
 #ifdef VTX_THREADING_ENABLED
+
+		mParsingFiles.insert(std::make_pair(filename, file));
+
 		if(threadedParsing)
 		{
 			FileParsingJob* job = new FileParsingJob(parser, file);
 			VTX_CREATE_THREAD(thread, *job);
-			mThreads.push_back(thread);
+			mThreads.push_back(ThreadJob(thread, job));
+			return file;
 		}
 		else
 #endif // VTX_THREADING_ENABLED
@@ -162,7 +187,7 @@ namespace vtx
 
 			factory->destroyObject(parser);
 
-			mFiles.insert(FileMap::value_type(filename, file));
+			mReadyFiles.insert(FileMap::value_type(filename, file));
 			VTX_LOG("Successfully loaded '%s'.", filename.c_str());
 			return file;
 		}
@@ -295,10 +320,30 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void FileManager::unloadAllFiles()
 	{
+#ifdef VTX_THREADING_ENABLED
+
+		VTX_LOG("Waiting for parsing jobs to finish...");
+
+		ThreadJobList::iterator thread_it = mThreads.begin();
+		ThreadJobList::iterator thread_end = mThreads.end();
+		while(thread_it != thread_end)
+		{
+			ThreadJob& job = *thread_it;
+			job.first->join();
+			delete job.first;
+			delete job.second;
+			++thread_it;
+		}
+
+		// inform all file listeners before continuing the shutdown
+		update();
+
+#endif // VTX_THREADING_ENABLED
+
 		VTX_LOG("Unloading files...");
 
-		FileMap::iterator it = mFiles.begin();
-		FileMap::iterator end = mFiles.end();
+		FileMap::iterator it = mReadyFiles.begin();
+		FileMap::iterator end = mReadyFiles.end();
 		while(it != end)
 		{
 			VTX_LOG("Unloading file %s", it->second->getFilename().c_str());
@@ -306,5 +351,37 @@ namespace vtx
 			++it;
 		}
 	}
+	//-----------------------------------------------------------------------
+#ifdef VTX_THREADING_ENABLED
+
+	void FileManager::_finishedParsing(File* file)
+	{
+		VTX_LOCK_MUTEX(mMutex);
+
+		FileMap::iterator it = mParsingFiles.find(file->getFilename());
+		if(it != mParsingFiles.end())
+		{
+			mParsingFiles.erase(it);
+		}
+
+		mFinishedFiles.push_back(FinishedFile(true, file));
+
+		mReadyFiles.insert(FileMap::value_type(file->getFilename(), file));
+	}
+
+	void FileManager::_failedParsing(File* file)
+	{
+		VTX_LOCK_MUTEX(mMutex);
+
+		FileMap::iterator it = mParsingFiles.find(file->getFilename());
+		if(it != mParsingFiles.end())
+		{
+			mParsingFiles.erase(it);
+		}
+
+		mFinishedFiles.push_back(FinishedFile(false, file));
+	}
+
+#endif // VTX_THREADING_ENABLED
 	//-----------------------------------------------------------------------
 }

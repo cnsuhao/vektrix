@@ -34,6 +34,8 @@ THE SOFTWARE.
 #include "vtxThreadingDefines.h"
 #include "vtxThreadingHeaders.h"
 
+#ifdef VTX_THREADING_ENABLED
+
 namespace vtx
 {
 	//-----------------------------------------------------------------------
@@ -60,6 +62,8 @@ namespace vtx
 		{
 			// no container found
 			VTX_WARN("Unable to find container to load file '%s'.", filename.c_str());
+			file_mgr->_failedParsing(mFile);
+			delete mParser;
 			return;
 		}
 
@@ -83,6 +87,12 @@ namespace vtx
 
 		// TODO: use factory ???
 		delete mParser;
+
+		file_mgr->_finishedParsing(mFile);
+
+		VTX_LOG("FileParsingJob finished (%s)...", mFile->getFilename().c_str());
 	}
 	//-----------------------------------------------------------------------
 }
+
+#endif // VTX_THREADING_ENABLED

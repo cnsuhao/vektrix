@@ -32,7 +32,6 @@ THE SOFTWARE.
 #include "vtxFileManager.h"
 #include "vtxInstanceManager.h"
 #include "vtxLogManager.h"
-#include "vtxMovie.h"
 #include "vtxMovieFactory.h"
 #include "vtxPlugin.h"
 #include "vtxStringHelper.h"
@@ -145,11 +144,11 @@ namespace vtx
 		mPlugins.push_back(plugin);
 	}
 	//-----------------------------------------------------------------------
-	Movie* Root::createMovie(const String& name, const String& filename, const String& factoryname)
+	Movie* Root::createMovie(const String& name, const String& filename, const String& factoryname, Movie::Listener* listener)
 	{
 		if(mMovies.find(name) == mMovies.end())
 		{
-			File* file = FileManager::getSingletonPtr()->getFile(filename);
+			File* file = FileManager::getSingletonPtr()->getFile(filename, true);
 
 			MovieFactory* factory = getFactory(factoryname);
 
@@ -159,8 +158,19 @@ namespace vtx
 				return NULL;
 			}
 
-			Movie* movie = factory->createObject(name, file);
+			Movie* movie = factory->createObject(name);
 			//movie->goto_frame(1);
+
+			file->addListener(movie);
+
+			if(listener)
+			{
+				movie->addListener(listener);
+			}
+
+#ifndef VTX_THREADING_ENABLED
+			movie->loadingCompleted(file);
+#endif
 
 			mMovies.insert(MovieMap::value_type(name, movie));
 			return movie;

@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxThreadingHeadersBoost_H__
 #define __vtxThreadingHeadersBoost_H__
 
-// disable memory debugging temporarly
+// disable memory debugging temporarily
 #undef new
 
 #include <boost/thread/condition.hpp>
@@ -40,6 +40,8 @@ THE SOFTWARE.
 #include <boost/thread/tss.hpp>
 
 // reactivate memory debugging
-#include "vtxPrerequisites.h"
+#if VTX_OS == VTX_WIN32 && defined _DEBUG && !defined NO_MEM_DBG
+#	define new VTX_NEW
+#endif
 
 #endif

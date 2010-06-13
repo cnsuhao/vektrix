@@ -29,14 +29,12 @@ THE SOFTWARE.
 #ifndef __vtxswfParser_H__
 #define __vtxswfParser_H__
 
+#include "vtxswf.h"
+#include "vtxswfContourElement.h"
+#include "vtxswfParserTypes.h"
+
 #include "vtxFile.h"
 #include "vtxFileParser.h"
-#include "vtxSubshapeResource.h"
-
-#include "vtxswfParserTypes.h"
-#include "vtxswfContourElement.h"
-#include "vtxswfSubShape.h"
-#include "vtxswfSubLine.h"
 
 //#define DEBUG_FLASH_SHAPES
 //#define DEBUG_OUTPUT_PATH "C:/vektrix_debug/"
@@ -54,6 +52,11 @@ namespace vtx
 			const StringList& getExtensions() const;
 			void parse(FileStream* stream, File* file);
 
+			File* getCurrentFile() const { return mCurrentFile; }
+			const uint& getFileLength() const { return mFileLength; }
+			const uint& getReadPosition() const { return mReadPos; }
+			File::FileHeader& getHeader() { return mHeader; }
+
 		protected:
 			bool mCompressed;
 			uint mReadPos;
@@ -68,97 +71,48 @@ namespace vtx
 			File* mCurrentFile;
 			FileStream* mCurrentStream;
 
-			// shapes
-			// -> FLASH
-			SHAPE mFlashShape;
-			// -> VEKTRIX
-			FillstyleMap mFillstyles; // only the USED! fillstyles
-			LinestyleMap mLinestyles; // only the USED! linestyles
-			ContourChunkMap mChunkLists;
-			SubShapeList mSubShapeList; // the sub-shapes
-			SubLineList mSubLineList; // the sub-lines
-
-			// jpeg tables
-			char* mJPEGTables;
-
-			// movieclips
-			uint mMovieClipFrameIndex;
-			MovieClipResource* mCurrentMovieClip;
-			Timeline* mMovieClipTimeline;
-
-			// main movieclip
-			uint mMainFrameIndex;
-			MovieClipResource* mMainMovieClip;
-			Timeline* mMainTimeline;
-			Keyframe* mCurrentKeyframe;
+			// tag parsers
+			FontParser* mFontParser;
+			ImageParser* mImageParser;
+			ScriptParser* mScriptParser;
+			ShapeParser* mShapeParser;
+			StructureParser* mStructureParser;
+			TextParser* mTextParser;
 
 			void resetData();
-
 			bool parseHeader();
 			void readTag();
-
-			void handleEnd();
-			void handleShowFrame();
-			void handleDefineShape(const TagTypes& type);
-			void handleDefineText(const TagTypes& type);
-			void handleJPEGTables(uint tag_length);
-			void handleDefineBitsLossless(const TagTypes& type);
-			void handleDefineBitsJPEG(const TagTypes& type, uint tag_length);
-			void handlePlaceObject2();
-			void handleDefineButton2();
-			void handleDefineEditText(const TagTypes& type);
-			void handleDefineSprite();
-			void handleDefineFont3();
-			void handleSymbolClass();
-			void handleDoABC(const uint& tag_length);
-
-			// reading
-			void getFlashStyles();
-			void getFlashChunks();
-			// processing
-			void generateSubshapes();
-			void generateGlyphs();
-			void generateSublines();
-			// writing
-			void writeFillstyles(const UI16& shape_id);
-			void writeSubshapes(ShapeResource* shape_resource);
-			void writeGlyphContours(GlyphResource* glyph_resource);
 
 			void debug_contour_element(const ContourElement& element, FILE* file);
 			void debug_shape_element(const ShapeElement& element, FILE* file);
 
+		public:
+			// read basic types
 			UI8 readU8();
 			UI16 readU16();
 			UI32 readU32();
-
+			UI32 readUBits(UI32 n);
 			SI16 readS16();
+			int readSBits(UI32 n);
+			void readByteBlock(char* buf, UI32 n);
+
+			void resetReadBits();
 
 			RECT readRect();
 			COLOR readColor(const bool& alpha = false);
 			MATRIX readMatrix();
 			CXFORM readCxForm(const bool& alpha = false);
 			String readString(const bool& zero_terminated = true);
-
-			// FONT METHODS
 			KERNINGRECORD readKerningRecord(const UI8& wide_codes);
 
-			// DEBUG
-			//FILE* mDebugFile;
-
-			// TEXT METHODS
-			ShapeResource* readGlyphShape();
-
-			// SHAPE METHODS
+			// read shapes and fill-/line-styles
 			void readShape(const TagTypes& type, SHAPE& result);
 			void readShapeWithStyle(const TagTypes& type, SHAPE& result);
 			void readFillstyleArray(const TagTypes& type, FillstyleList& result);
 			void readLinestyleArray(const TagTypes& type, LinestyleList& result);
 
+		protected:
 			void fillReadBits();
-			void resetReadBits();
-			UI32 readUBits(UI32 n);
-			int readSBits(UI32 n);
-			void readByteBlock(char* buf, UI32 n);
 		};
 		//-----------------------------------------------------------------------
 		/** The FileParserFactory for creating FileParser objects */

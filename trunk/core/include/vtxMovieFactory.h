@@ -35,7 +35,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	/** The Factory that is used for creating Movie objects */
-	class vtxExport MovieFactory : public Factory<Movie, String, File*>
+	class vtxExport MovieFactory : public Factory<Movie, String>
 	{
 	public:
 		friend class Movie;

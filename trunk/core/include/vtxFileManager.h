@@ -43,6 +43,7 @@ namespace vtx
 	/** The manager that keeps track of File definitions, FileParser instances and FileContainer resources */
 	class vtxExport FileManager : public Singleton<FileManager>
 	{
+		friend class FileParsingJob;
 		friend class Root;
 
 	public:
@@ -81,7 +82,7 @@ namespace vtx
 
 	protected:
 		/// map of the already loaded files
-		FileMap mFiles;
+		FileMap mReadyFiles;
 		/// map of registered file parser factories
 		ParserExtensionMap mParsersByExt;
 
@@ -94,19 +95,26 @@ namespace vtx
 		ParserManager mParserFactories;
 
 #ifdef VTX_THREADING_ENABLED
-		typedef std::vector<VTX_THREAD_TYPE*> ThreadList;
-		ThreadList mThreads;
 
-		/// mutex that protects mParsingFiles
-		VTX_MUTEX(mParsingFilesMutex);
+		typedef std::pair<VTX_THREAD_TYPE*, FileParsingJob*> ThreadJob;
+		typedef std::vector<ThreadJob> ThreadJobList;
+		ThreadJobList mThreads;
+
+		/// mutex that protects mReadyFiles
+		VTX_MUTEX(mMutex);
+
 		/// the files that are currently parsing
 		FileMap mParsingFiles;
 
-		/// mutex that protects mFinishedFiles
-		VTX_MUTEX(mFinishedFilesMutex);
 		/// the files that have just finished parsing
-		FileVector mFinishedFiles;
-#endif
+		typedef std::pair<bool, File*> FinishedFile;
+		typedef std::vector<FinishedFile> FinishedFileList;
+		FinishedFileList mFinishedFiles;
+
+		void _finishedParsing(File* file);
+		void _failedParsing(File* file);
+
+#endif // VTX_THREADING_ENABLED
 
 		FileManager();
 		virtual ~FileManager();

@@ -44,7 +44,7 @@ namespace vtx
 			virtual ~MovableMovieFactory();
 
 			const String& getName() const;
-			Movie* createObject(String name, File* file);
+			Movie* createObject(String name);
 			void destroyObject(Movie* instance);
 
 		protected:

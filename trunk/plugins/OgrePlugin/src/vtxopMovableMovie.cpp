@@ -36,8 +36,8 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		MovableMovie::MovableMovie(const String& name, File* file, MovieFactory* creator) 
-			: Movie(name, file, creator)
+		MovableMovie::MovableMovie(const String& name, MovieFactory* creator) 
+			: Movie(name, creator)
 		{
 			mAAB.setInfinite();
 		}
