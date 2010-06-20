@@ -28,12 +28,92 @@ THE SOFTWARE.
 #include "vtxswfParser.h"
 
 // TagParsers
-#include "vtxswfFontParser.h"
 #include "vtxswfImageParser.h"
-#include "vtxswfScriptParser.h"
 #include "vtxswfShapeParser.h"
 #include "vtxswfStructureParser.h"
-#include "vtxswfTextParser.h"
+// Miscellaneous
+#include "vtxswfTag.h"
+#include "vtxswfTagMalformedTag.h"
+#include "vtxswfTagUnknownTag.h"
+#include "vtxswfTagProductInfo.h"
+#include "vtxswfTagFlashTypeSettings.h"
+// Actions
+#include "vtxswfTagDoABC.h"
+#include "vtxswfTagDoABCDefine.h"
+#include "vtxswfTagDoAction.h"
+#include "vtxswfTagDoInitAction.h"
+// Binary Data
+#include "vtxswfTagDefineBinaryData.h"
+// Bitmaps
+#include "vtxswfTagDefineBits.h"
+#include "vtxswfTagDefineBitsJPEG2.h"
+#include "vtxswfTagDefineBitsJPEG3.h"
+#include "vtxswfTagDefineBitsJPEG4.h"
+#include "vtxswfTagDefineBitsLossless.h"
+#include "vtxswfTagDefineBitsLossless2.h"
+#include "vtxswfTagJPEGTables.h"
+// Buttons
+#include "vtxswfTagButton.h"
+#include "vtxswfTagButton2.h"
+#include "vtxswfTagButtonCXform.h"
+#include "vtxswfTagButtonSound.h"
+// Control
+#include "vtxswfTagDefineSceneFrameData.h"
+#include "vtxswfTagEnableDebugger.h"
+#include "vtxswfTagEnableDebugger2.h"
+#include "vtxswfTagEnd.h"
+#include "vtxswfTagExportAssets.h"
+#include "vtxswfTagFileAttributes.h"
+#include "vtxswfTagFrameLabel.h"
+#include "vtxswfTagImportAssets.h"
+#include "vtxswfTagImportAssets2.h"
+#include "vtxswfTagMetadata.h"
+#include "vtxswfTagProtect.h"
+#include "vtxswfTagScale9Grid.h"
+#include "vtxswfTagScriptLimits.h"
+#include "vtxswfTagSetBackgroundColor.h"
+#include "vtxswfTagSetTabIndex.h"
+#include "vtxswfTagSymbolClass.h"
+// DisplayList
+#include "vtxswfTagPlaceObject.h"
+#include "vtxswfTagPlaceObject2.h"
+#include "vtxswfTagPlaceObject3.h"
+#include "vtxswfTagRemoveObject.h"
+#include "vtxswfTagRemoveObject2.h"
+#include "vtxswfTagShowFrame.h"
+// Fonts & Text
+#include "vtxswfTagDefineText.h"
+#include "vtxswfTagDefineText2.h"
+#include "vtxswfTagEditText.h"
+#include "vtxswfTagFont.h"
+#include "vtxswfTagFont2.h"
+#include "vtxswfTagFont3.h"
+#include "vtxswfTagFont4.h"
+#include "vtxswfTagFontAlignment.h"
+#include "vtxswfTagFontInfo.h"
+#include "vtxswfTagFontInfo2.h"
+#include "vtxswfTagFontName.h"
+#include "vtxswfTagFreeCharacter.h"
+// Shape Morphing
+#include "vtxswfTagMorphShape.h"
+#include "vtxswfTagMorphShape2.h"
+// Shapes
+#include "vtxswfTagDefineShape.h"
+#include "vtxswfTagDefineShape2.h"
+#include "vtxswfTagDefineShape3.h"
+#include "vtxswfTagDefineShape4.h"
+// Sounds 
+#include "vtxswfTagDefineSound.h"
+#include "vtxswfTagSoundStreamBlock.h"
+#include "vtxswfTagSoundStreamHead.h"
+#include "vtxswfTagSoundStreamHead2.h"
+#include "vtxswfTagStartSound.h"
+#include "vtxswfTagStartSound2.h"
+// Sprites & Movie Clips
+#include "vtxswfTagDefineSprite.h"
+// Video
+#include "vtxswfTagDefineVideoStream.h"
+#include "vtxswfTagVideoFrame.h"
 
 #include "vtxFileStream.h"
 #include "vtxLogManager.h"
@@ -81,12 +161,9 @@ namespace vtx
 			mCurrentFile = file;
 			mCurrentFile->setScriptEngine("AS3ScriptEngine");
 
-			mFontParser = new FontParser();
 			mImageParser = new ImageParser();
-			mScriptParser = new ScriptParser;
 			mShapeParser = new ShapeParser();
 			mStructureParser = new StructureParser(this);
-			mTextParser = new TextParser;
 
 			if(!parseHeader())
 			{
@@ -102,12 +179,9 @@ namespace vtx
 
 			delete[] mBuffer;
 
-			delete mFontParser;
 			delete mImageParser;
-			delete mScriptParser;
 			delete mShapeParser;
 			delete mStructureParser;
-			delete mTextParser;
 		}
 		//-----------------------------------------------------------------------
 		void SwfParser::resetData()
@@ -252,115 +326,238 @@ namespace vtx
 				length = readU32();
 			}
 
+			SwfTag* pTag = NULL;
 			switch(type)
 			{
-				// fonts
-			case TT_DefineFont3:
-				{
-					mFontParser->handleDefineFont(type, length, this);
-				}
+			case TT_MalformedTag:
+				pTag = new SwfTagMalformedTag(length, (uchar*)&mBuffer[mReadPos]);
 				break;
-
-				// images
-			case TT_JPEGTables:
-				{
-					mImageParser->handleJPEGTables(type, length, this);
-				}
-				break;
-
-			case TT_DefineBits:
-			case TT_DefineBitsJPEG2:
-			case TT_DefineBitsJPEG3:
-			case TT_DefineBitsJPEG4:
-				{
-					mImageParser->handleDefineBitsJPEG(type, length, this);
-				}
-				break;
-
-			case TT_DefineBitsLossless:
-			case TT_DefineBitsLossless2:
-				{
-					mImageParser->handleDefineBitsLossless(type, length, this);
-				}
-				break;
-
-				// shapes
-			case TT_DefineShape:
-			case TT_DefineShape2:
-			case TT_DefineShape3:
-			case TT_DefineShape4:
-				{
-					mShapeParser->handleDefineShape(type, this);
-				}
-				break;
-
-				// structure
-			case TT_DefineButton2:
-				mStructureParser->handleDefineButton2();
-				break;
-
-			case TT_DefineSprite:
-				mStructureParser->handleDefineSprite();
-				break;
-
-			case TT_PlaceObject2:
-				mStructureParser->handlePlaceObject2();
-				break;
-
-			case TT_ShowFrame:
-				mStructureParser->handleShowFrame();
-				break;
-
 			case TT_End:
 				mStructureParser->handleEnd();
+				//pTag = new SwfTagEnd(length, (uchar*)&mBuffer[mReadPos]);
 				break;
-
+			case TT_ShowFrame:
+				mStructureParser->handleShowFrame();
+				//pTag = new SwfTagShowFrame(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineShape:
+				mShapeParser->handleDefineShape(type, this);
+				//pTag = new SwfTagDefineShape(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_FreeCharacter:
+				pTag = new SwfTagFreeCharacter(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_PlaceObject:
+				pTag = new SwfTagPlaceObject(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_RemoveObject:
+				pTag = new SwfTagRemoveObject(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineBits:
+				pTag = new SwfTagDefineBits(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineButton:
+				pTag = new SwfTagButton(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_JPEGTables:
+				pTag = new SwfTagJPEGTables(length, (uchar*)&mBuffer[mReadPos]);
+				break;
 			case TT_SetBackgroundColor:
-				{
-					COLOR color = readColor();
-					mHeader.bgcolor = Color(
-						(float)color.red/255.0f, 
-						(float)color.green/255.0f, 
-						(float)color.blue/255.0f, 
-						(float)color.alpha/255.0f);
-				}
+				pTag = new SwfTagSetBackgroundColor(length, (uchar*)&mBuffer[mReadPos]);
 				break;
-
-
-				// dynamic text
-			case TT_DefineEditText:
-				mTextParser->handleDefineEditText(type, length, this);
+			case TT_DefineFont:
+				pTag = new SwfTagFont(length, (uchar*)&mBuffer[mReadPos]);
 				break;
-
-				// static text
 			case TT_DefineText:
+				pTag = new SwfTagDefineText(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DoAction:
+				pTag = new SwfTagDoAction(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineFontInfo:
+				pTag = new SwfTagFontInfo(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineSound:
+				pTag = new SwfTagDefineSound(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_StartSound:
+				pTag = new SwfTagStartSound(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineButtonSound:
+				pTag = new SwfTagButtonSound(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_SoundStreamHead:
+				pTag = new SwfTagSoundStreamHead(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_SoundStreamBlock:
+				pTag = new SwfTagSoundStreamBlock(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineBitsLossless:
+				pTag = new SwfTagDefineBitsLossless(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineBitsJPEG2:
+				pTag = new SwfTagDefineBitsJPEG2(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineShape2:
+				mShapeParser->handleDefineShape(type, this);
+				//pTag = new SwfTagDefineShape2(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineButtonCXform:
+				pTag = new SwfTagButtonCXform(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_Protect:
+				pTag = new SwfTagProtect(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_PlaceObject2:
+				mStructureParser->handlePlaceObject2();
+				//pTag = new SwfTagPlaceObject2(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_RemoveObject2:
+				pTag = new SwfTagRemoveObject2(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineShape3:
+				mShapeParser->handleDefineShape(type, this);
+				//pTag = new SwfTagDefineShape3(length, (uchar*)&mBuffer[mReadPos]);
+				break;
 			case TT_DefineText2:
-				{
-					mTextParser->handleDefineText(type, length, this);
-				}
+				pTag = new SwfTagDefineText2(length, (uchar*)&mBuffer[mReadPos]);
 				break;
-
-				// ActionScript
-			case TT_SymbolClass:
-				mScriptParser->handleSymbolClass(type, length, this);
+			case TT_DefineButton2:
+				mStructureParser->handleDefineButton2();
+				//pTag = new SwfTagButton2(length, (uchar*)&mBuffer[mReadPos]);
 				break;
-
-			case TT_DoABC:
-				mScriptParser->handleDoABC(type, length, this);
+			case TT_DefineBitsJPEG3:
+				pTag = new SwfTagDefineBitsJPEG3(length, (uchar*)&mBuffer[mReadPos]);
 				break;
-
-				// skip tags that don't need to be parsed (yet?)
+			case TT_DefineBitsLossless2:
+				pTag = new SwfTagDefineBitsLossless2(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineEditText:
+				pTag = new SwfTagEditText(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineSprite:
+				mStructureParser->handleDefineSprite();
+				//pTag = new SwfTagDefineSprite(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_ProductInfo:
+				pTag = new SwfTagProductInfo(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_FrameLabel:
+				pTag = new SwfTagFrameLabel(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_SoundStreamHead2:
+				pTag = new SwfTagSoundStreamHead2(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineMorphShape:
+				pTag = new SwfTagMorphShape(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineFont2:
+				pTag = new SwfTagFont2(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_ExportAssets:
+				pTag = new SwfTagExportAssets(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_ImportAssets:
+				pTag = new SwfTagImportAssets(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_EnableDebugger:
+				pTag = new SwfTagEnableDebugger(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DoInitAction:
+				pTag = new SwfTagDoInitAction(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineVideoStream:
+				pTag = new SwfTagDefineVideoStream(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_VideoFrame:
+				pTag = new SwfTagVideoFrame(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineFontInfo2:
+				pTag = new SwfTagFontInfo2(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			//case TT_DebugId:
+			//	pTag = new SwfTagDebugId(length, (uchar*)&mBuffer[mReadPos]);
+			//	break;
+			case TT_EnableDebugger2:
+				pTag = new SwfTagEnableDebugger2(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_ScriptLimits:
+				pTag = new SwfTagScriptLimits(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_SetTabIndex:
+				pTag = new SwfTagSetTabIndex(length, (uchar*)&mBuffer[mReadPos]);
+				break;
 			case TT_FileAttributes:
-			case TT_MetaData:
-			case TT_DefineSceneAndFrameLabelData:
-				mReadPos += length;
+				pTag = new SwfTagFileAttributes(length, (uchar*)&mBuffer[mReadPos]);
 				break;
-
+			case TT_PlaceObject3:
+				pTag = new SwfTagPlaceObject3(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_ImportAssets2:
+				pTag = new SwfTagImportAssets2(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DoABCDefine:
+				pTag = new SwfTagDoABCDefine(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineFontAlignment:
+				pTag = new SwfTagFontAlignment(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_FlashTypeSettings:
+				pTag = new SwfTagFlashTypeSettings(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineFont3:
+				pTag = new SwfTagFont3(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_SymbolClass:
+				pTag = new SwfTagSymbolClass(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_MetaData:
+				pTag = new SwfTagMetadata(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_Scale9Grid:
+				pTag = new SwfTagScale9Grid(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DoABC:
+				pTag = new SwfTagDoABC(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineShape4:
+				mShapeParser->handleDefineShape(type, this);
+				//pTag = new SwfTagDefineShape4(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineMorphShape2:
+				pTag = new SwfTagMorphShape2(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineSceneAndFrameLabelData:
+				pTag = new SwfTagDefineSceneFrameData(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineBinaryData:
+				pTag = new SwfTagUnknownTag(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineFontName:
+				pTag = new SwfTagFontName(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_StartSound2:
+				pTag = new SwfTagStartSound2(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineBitsJPEG4:
+				pTag = new SwfTagDefineBitsJPEG4(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_DefineFont4:
+				pTag = new SwfTagFont4(length, (uchar*)&mBuffer[mReadPos]);
+				break;
+			case TT_UnknownTag:
 			default:
 				VTX_WARN("SWF tag type not implemented: %d", type);
-				mReadPos += length;
+				pTag = new SwfTagUnknownTag(length, (uchar*)&mBuffer[mReadPos]);
 				break;
 			}
+			VTX_DEBUG_ASSERT(pTag, "pTag should never be NULL, but it is. This is a bad thing.");
+			if( pTag )
+			{
+				pTag->ParseData(this);
+				delete pTag;
+			}
+			mReadPos += length;
 		}
 		//-----------------------------------------------------------------------
 		UI8 SwfParser::readU8()
