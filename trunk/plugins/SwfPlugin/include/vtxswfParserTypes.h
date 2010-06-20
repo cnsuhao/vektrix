@@ -45,18 +45,33 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		enum TagTypes
 		{
+			TT_MalformedTag = -1,
 			TT_End = 0, 
 			TT_ShowFrame = 1, 
 			TT_DefineShape = 2, 
+			TT_FreeCharacter = 3,
+			TT_PlaceObject = 4,
+			TT_RemoveObject = 5,
 			TT_DefineBits = 6,
+			TT_DefineButton = 7,
 			TT_JPEGTables = 8,
 			TT_SetBackgroundColor = 9, 
 			TT_DefineFont = 10, 
 			TT_DefineText = 11, 
+			TT_DoAction = 12,
+			TT_DefineFontInfo = 13,
+			TT_DefineSound = 14,
+			TT_StartSound = 15,
+			TT_DefineButtonSound = 17,
+			TT_SoundStreamHead = 18,
+			TT_SoundStreamBlock = 19,
 			TT_DefineBitsLossless = 20, 
 			TT_DefineBitsJPEG2 = 21,
-			TT_DefineShape2 = 22, 
+			TT_DefineShape2 = 22,
+			TT_DefineButtonCXform = 23,
+			TT_Protect = 24,
 			TT_PlaceObject2 = 26, 
+			TT_RemoveObject2 = 28,
 			TT_DefineShape3 = 32, 
 			TT_DefineText2 = 33, 
 			TT_DefineButton2 = 34, 
@@ -64,14 +79,42 @@ namespace vtx
 			TT_DefineBitsLossless2 = 36, 
 			TT_DefineEditText = 37, 
 			TT_DefineSprite = 39, 
+			TT_ProductInfo = 41,
+			TT_FrameLabel = 43,
+			TT_SoundStreamHead2 = 45,
+			TT_DefineMorphShape = 46,
+			TT_DefineFont2 = 48,
+			TT_ExportAssets = 56,
+			TT_ImportAssets = 57,
+			TT_EnableDebugger = 58,
+			TT_DoInitAction = 59,
+			TT_DefineVideoStream = 60,
+			TT_VideoFrame = 61,
+			TT_DefineFontInfo2 = 62,
+			TT_DebugId = 63,
+			TT_EnableDebugger2 = 64,
+			TT_ScriptLimits = 65,
+			TT_SetTabIndex = 66,
 			TT_FileAttributes = 69, 
+			TT_PlaceObject3 = 70,
+			TT_ImportAssets2 = 71,
+			TT_DoABCDefine = 72,
+			TT_DefineFontAlignment = 73,
+			TT_FlashTypeSettings = 74,
 			TT_DefineFont3 = 75, 
 			TT_SymbolClass = 76, 
 			TT_MetaData = 77, 
+			TT_Scale9Grid = 78,
 			TT_DoABC = 82, 
 			TT_DefineShape4 = 83, 
+			TT_DefineMorphShape2 = 84,
 			TT_DefineSceneAndFrameLabelData = 86,
-			TT_DefineBitsJPEG4 = 90
+			TT_DefineBinaryData = 87,
+			TT_DefineFontName = 88,
+			TT_StartSound2 = 89,
+			TT_DefineBitsJPEG4 = 90,
+			TT_DefineFont4 = 91,
+			TT_UnknownTag,
 		};
 		//-----------------------------------------------------------------------
 		enum BitmapFormat
@@ -108,6 +151,84 @@ namespace vtx
 			FST_ClippedBitmap = 65, 
 			FST_NonSmoothedRepeatingBitmap = 66, 
 			FST_NonSmoothedClippedBitmap = 67
+		};
+		//-----------------------------------------------------------------------
+		enum InterpolationMethod
+		{
+			IM_RGB = 0,
+			IM_LINEAR_RGB = 1,
+			IM_RESERVED1 = 2,
+			IM_RESERVED2 = 3,
+		};
+		//-----------------------------------------------------------------------
+		enum SpreadMethod
+		{
+			SM_PAD = 0,
+			SM_REFLECT = 1,
+			SM_REPEAT = 2,
+			SM_RESERVED = 3,
+		};
+		//-----------------------------------------------------------------------
+		enum BlendMode
+		{
+			BM_NORMAL = 1,
+			BM_LAYER = 2,
+			BM_MULTIPLY = 3,
+			BM_SCREEN = 4,
+			BM_LIGHTEN = 5,
+			BM_DARKEN = 6,
+			BM_DIFFERENCE = 7,
+			BM_ADD = 8,
+			BM_SUBTRACT = 9,
+			BM_INVERT = 10,
+			BM_ALPHA = 11,
+			BM_ERASE = 12,
+			BM_OVERLAY = 13,
+			BM_HARD_LIGHT = 14,
+		};
+		//-----------------------------------------------------------------------
+		enum FilterType
+		{
+			FT_DROP_SHADOW = 0,
+			FT_BLUR = 1,
+			FT_GLOW = 2,
+			FT_BEVEL = 3,
+			FT_GRADIENT_GLOW = 4,
+			FT_CONVOLUTION = 5,
+			FT_COLOR_MATRIX = 6,
+			FT_GRADIENT_BEVEL = 7,
+		};
+		//-----------------------------------------------------------------------
+		enum LangCode
+		{
+			LC_UNDEFINED = 0,
+			LC_LATIN = 1,
+			LC_JAPANESE = 2,
+			LC_KOREAN = 3,
+			LC_SIMPLIFIED_CHINESE = 4,
+			LC_TRADITIONAL_CHINESE = 5,
+		};
+		//-----------------------------------------------------------------------
+		enum ScaleStrokeMethod
+		{
+			SSM_NONE = 0,
+			SSM_VERTICAL = 1,
+			SSM_HORIZONTAL = 2,
+			SSM_BOTH = 3,
+		};
+		//-----------------------------------------------------------------------
+		enum CapStyle
+		{
+			CS_ROUND = 0,
+			CS_NONE = 1,
+			CS_SQUARE = 2,
+		};
+		//-----------------------------------------------------------------------
+		enum JointStyle
+		{
+			JS_ROUND = 0,
+			JS_BEVEL = 1,
+			JS_MITER = 2,
 		};
 		//-----------------------------------------------------------------------
 		class RECT

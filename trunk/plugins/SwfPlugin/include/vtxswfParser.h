@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "vtxswf.h"
 #include "vtxswfContourElement.h"
 #include "vtxswfParserTypes.h"
+#include "vtxswfDocument.h"
 
 #include "vtxFile.h"
 #include "vtxFileParser.h"
@@ -56,6 +57,7 @@ namespace vtx
 			const uint& getFileLength() const { return mFileLength; }
 			const uint& getReadPosition() const { return mReadPos; }
 			File::FileHeader& getHeader() { return mHeader; }
+			SwfDocument* getSwfDocument() { return mSwfDocument; }
 
 		protected:
 			bool mCompressed;
@@ -71,13 +73,12 @@ namespace vtx
 			File* mCurrentFile;
 			FileStream* mCurrentStream;
 
+			SwfDocument* mSwfDocument;
+
 			// tag parsers
-			FontParser* mFontParser;
 			ImageParser* mImageParser;
-			ScriptParser* mScriptParser;
 			ShapeParser* mShapeParser;
 			StructureParser* mStructureParser;
-			TextParser* mTextParser;
 
 			void resetData();
 			bool parseHeader();
