@@ -98,24 +98,28 @@ namespace vtx
 			}
 
 			uint bufStart = 0;
+			uint remainingBytes = mBufLen-mOffset;
 			unsigned char* readBuf = new unsigned char[chunk_size];
-			unsigned char* mNewBuffer = new unsigned char[mBufLen - mOffset];
+			unsigned char* newBuffer = new unsigned char[chunk_size];
+			readBytes(remainingBytes, readBuf);
+			mBuffer = newBuffer;
+			mBufLen = 0;
+			mCompressed = true;
+			mOffset = 0;
 
 			do 
 			{
-				// TODO: only read available data :S
-				readBytes(chunk_size, readBuf);
 				zlib_stream.avail_in = chunk_size;
-
 				if(zlib_stream.avail_in == 0)
 				{
 					break;
 				}
-				zlib_stream.next_in = readBuf;
+				zlib_stream.next_in = (Bytef*)readBuf;
+
 				do
 				{
 					zlib_stream.avail_out = chunk_size;
-					zlib_stream.next_out = &mNewBuffer[bufStart];
+					zlib_stream.next_out = (Bytef*)&newBuffer[bufStart];
 
 					ret = inflate(&zlib_stream, Z_NO_FLUSH);
 					VTX_DEBUG_ASSERT(ret != Z_STREAM_ERROR, "");
@@ -129,16 +133,18 @@ namespace vtx
 						return;
 					}
 
+					// calculate the written bytes
 					uint written = chunk_size - zlib_stream.avail_out;
 					bufStart += written;
+					mBufLen += written;
+
 				} while(zlib_stream.avail_out == 0);
+
 			} while(ret != Z_STREAM_END);
 
+			// clean up
 			(void)inflateEnd(&zlib_stream);
 			delete[] readBuf;
-
-			mBuffer = readBuf;
-			mCompressed = true;
 #else
 			VTX_DEBUG_FAIL("Unable to decompress!");
 #endif
@@ -151,7 +157,8 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void MemoryBlockReader::readBytes( size_t len, unsigned char* pBuf )
 		{
-			memcpy(pBuf, mBuffer, len); mOffset += len;
+			memcpy(pBuf, mBuffer + mOffset, len);
+			mOffset += len;
 			align();
 		}
 		//-----------------------------------------------------------------------

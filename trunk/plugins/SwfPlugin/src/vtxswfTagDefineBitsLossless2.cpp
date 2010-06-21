@@ -73,10 +73,10 @@ namespace vtx
 			switch (mFormat)
 			{
 			case BF_8BIT_COLOR_MAPPED:
-				mZlibBitmapData = new SwfRecordAlphaColorMapData(mBlockReader, colorTableSize, mWidth, mHeight);
+				mZlibBitmapData = new SwfRecordAlphaColorMapData(zBlock, colorTableSize, mWidth, mHeight);
 				break;
 			case BF_32BIT_ARGB:
-				mZlibBitmapData = new SwfRecordAlphaBitmapData(mBlockReader, mWidth, mHeight);
+				mZlibBitmapData = new SwfRecordAlphaBitmapData(zBlock, mWidth, mHeight);
 				break;
 			default:
 				VTX_DEBUG_FAIL("Unknown bitmap format!");
