@@ -43,7 +43,10 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void SwfTagSetBackgroundColor::ParseData(SwfParser* parser)
 		{
-			COLOR color = parser->readColor();
+			COLOR color;
+			color.red = mBlockReader.readUI8();
+			color.green = mBlockReader.readUI8();
+			color.blue = mBlockReader.readUI8();
 			parser->getHeader().bgcolor = Color(
 				(float)color.red/255.0f, 
 				(float)color.green/255.0f, 
