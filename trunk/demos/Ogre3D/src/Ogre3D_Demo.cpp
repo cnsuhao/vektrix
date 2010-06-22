@@ -383,7 +383,7 @@ int main(int argc, char **argv)
 
 	MovieListener listener(mouse);
 
-	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie", &listener);
+	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "image_test.swf", "OgreMovableMovie", &listener);
 	movie->play();
 
 	movie_node = sceneMgr->getRootSceneNode()->createChildSceneNode();

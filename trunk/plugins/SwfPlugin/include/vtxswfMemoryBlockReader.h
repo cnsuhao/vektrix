@@ -90,6 +90,9 @@ namespace vtx
 			void fillBitBuffer();
 
 		protected:
+			uint zlibInflate(unsigned char *compr, unsigned long comprLen, unsigned char *uncompr, unsigned long uncomprLen);
+
+		protected:
 			bool mCompressed;
 			bool mAnsi;
 			bool mShiftJIS;

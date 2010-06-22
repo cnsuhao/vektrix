@@ -44,6 +44,7 @@ namespace vtx
 			virtual ~SwfTag();
 
 			virtual void ParseData(SwfParser* parser) = 0;
+			MemoryBlockReader& GetBlockReader() { return mBlockReader; }
 
 		protected:
 			TagTypes mTagType;
