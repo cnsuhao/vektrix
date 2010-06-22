@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="zlibd.lib"
+				AdditionalDependencies="zlibd.lib FreeImaged.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\dependencies\lib\debug"
@@ -141,7 +141,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="zlib.lib"
+				AdditionalDependencies="zlib.lib FreeImage.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\dependencies\lib\release"
 				GenerateDebugInformation="true"
@@ -220,7 +220,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="zlibd.lib"
+				AdditionalDependencies="zlibd.lib FreeImaged.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_static_d.lib"
 				AdditionalLibraryDirectories="..\..\..\dependencies\lib\debug"
 			/>
@@ -289,7 +289,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="zlib.lib"
+				AdditionalDependencies="zlib.lib FreeImage.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_static.lib"
 				AdditionalLibraryDirectories="..\..\..\dependencies\lib\release"
 			/>

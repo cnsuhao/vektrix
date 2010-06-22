@@ -80,73 +80,56 @@ namespace vtx
 		void MemoryBlockReader::enableCompression()
 		{
 #ifdef USE_ZLIB
-			uint chunk_size = 0x40000; // 256 kBytes
-
-			z_stream zlib_stream;
-			zlib_stream.zalloc = Z_NULL;
-			zlib_stream.zfree = Z_NULL;
-			zlib_stream.opaque = Z_NULL;
-
-			zlib_stream.avail_in = 0;
-			zlib_stream.next_in = Z_NULL;
-
-			int ret = inflateInit(&zlib_stream);
-			if(ret != Z_OK)
-			{
-				VTX_DEBUG_FAIL("ZLIB error: unknown startup error");
-				return;
-			}
-
-			uint bufStart = 0;
+			const uint chunk_size = 1024*512;
 			uint remainingBytes = mBufLen-mOffset;
-			unsigned char* readBuf = new unsigned char[chunk_size];
-			unsigned char* newBuffer = new unsigned char[chunk_size];
+
+			unsigned char* readBuf = new unsigned char[remainingBytes];
 			readBytes(remainingBytes, readBuf);
+
+			unsigned char* newBuffer = new unsigned char[chunk_size];
+			uint inflatedBytes = zlibInflate(readBuf, remainingBytes, newBuffer, chunk_size);
+
+			delete[] readBuf;
 			mBuffer = newBuffer;
-			mBufLen = 0;
+			mBufLen = inflatedBytes;
 			mCompressed = true;
 			mOffset = 0;
-
-			do 
-			{
-				zlib_stream.avail_in = chunk_size;
-				if(zlib_stream.avail_in == 0)
-				{
-					break;
-				}
-				zlib_stream.next_in = (Bytef*)readBuf;
-
-				do
-				{
-					zlib_stream.avail_out = chunk_size;
-					zlib_stream.next_out = (Bytef*)&newBuffer[bufStart];
-
-					ret = inflate(&zlib_stream, Z_NO_FLUSH);
-					VTX_DEBUG_ASSERT(ret != Z_STREAM_ERROR, "");
-					switch(ret)
-					{
-					case Z_NEED_DICT:
-					case Z_DATA_ERROR:
-					case Z_MEM_ERROR:
-						(void)inflateEnd(&zlib_stream);
-						VTX_DEBUG_FAIL("ZLIB error: extraction failed");
-						return;
-					}
-
-					// calculate the written bytes
-					uint written = chunk_size - zlib_stream.avail_out;
-					bufStart += written;
-					mBufLen += written;
-
-				} while(zlib_stream.avail_out == 0);
-
-			} while(ret != Z_STREAM_END);
-
-			// clean up
-			(void)inflateEnd(&zlib_stream);
-			delete[] readBuf;
 #else
 			VTX_DEBUG_FAIL("Unable to decompress!");
+#endif
+		}
+		//-----------------------------------------------------------------------
+		uint MemoryBlockReader::zlibInflate(unsigned char *compr, unsigned long comprLen, unsigned char *uncompr, unsigned long uncomprLen)
+		{
+#ifdef USE_ZLIB
+			int err;
+			z_stream d_stream;
+
+			d_stream.zalloc = (alloc_func)0;
+			d_stream.zfree = (free_func)0;
+			d_stream.opaque = (voidpf)0;
+
+			d_stream.next_in  = compr;
+			d_stream.avail_in = (uInt)comprLen;
+
+			err = inflateInit(&d_stream);
+			VTX_DEBUG_ASSERT(err==Z_OK, "inflateInit failed");
+
+			for (;;)
+			{
+				d_stream.next_out = uncompr;            /* discard the output */
+				d_stream.avail_out = (uInt)uncomprLen;
+				err = inflate(&d_stream, Z_NO_FLUSH);
+				if (err == Z_STREAM_END) break;
+				VTX_DEBUG_ASSERT(err==Z_OK, "large inflate failed");
+			}
+
+			err = inflateEnd(&d_stream);
+			VTX_DEBUG_ASSERT(err==Z_OK, "inflateEnd failed");
+			return d_stream.total_out;
+#else
+			VTX_DEBUG_FAIL("Unable to decompress!");
+			return 0;
 #endif
 		}
 		//-----------------------------------------------------------------------
