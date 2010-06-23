@@ -40,10 +40,7 @@ namespace vtx
 		SwfRecordRegisterParam::SwfRecordRegisterParam(MemoryBlockReader& memoryReader)
 			: mRegister(0)
 			, mParamName(String(""))
-		{
-			mRegister = memoryReader.readUI8();
-			mParamName = memoryReader.readString();
-		}
+		{}
 		//-----------------------------------------------------------------------
 		SwfRecordRegisterParam::~SwfRecordRegisterParam()
 		{}

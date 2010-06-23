@@ -32,13 +32,15 @@ THE SOFTWARE.
 #include "vtxswf.h"
 #include "vtxswfContourElement.h"
 #include "vtxswfParserTypes.h"
-#include "vtxswfDocument.h"
-
 #include "vtxFile.h"
 #include "vtxFileParser.h"
-
-//#define DEBUG_FLASH_SHAPES
-//#define DEBUG_OUTPUT_PATH "C:/vektrix_debug/"
+#include "vtxswfMemoryBlockReader.h"
+#include "vtxswfImageParser.h"
+#include "vtxswfShapeParser.h"
+#include "vtxswfStructureParser.h"
+#include "vtxswfFontParser.h"
+#include "vtxswfTextParser.h"
+#include "vtxswfScriptParser.h"
 
 namespace vtx
 {
@@ -55,65 +57,29 @@ namespace vtx
 
 			File* getCurrentFile() const { return mCurrentFile; }
 			const uint& getFileLength() const { return mFileLength; }
-			const uint& getReadPosition() const { return mReadPos; }
 			File::FileHeader& getHeader() { return mHeader; }
-			SwfDocument* getSwfDocument() { return mSwfDocument; }
+			MemoryBlockReader& getMemoryBlock() { return mMemoryBlockReader; }
 
 		protected:
 			bool mCompressed;
-			uint mReadPos;
-			char* mBuffer;
-
-			int mBitPos;
-			int mBitBuf;
-
+			uchar* mBuffer;
 			UI32 mFileLength;
-			File::FileHeader mHeader;
-
 			File* mCurrentFile;
 			FileStream* mCurrentStream;
-
-			SwfDocument* mSwfDocument;
+			MemoryBlockReader mMemoryBlockReader;
+			File::FileHeader mHeader;
 
 			// tag parsers
-			ImageParser* mImageParser;
-			ShapeParser* mShapeParser;
-			StructureParser* mStructureParser;
+			ImageParser mImageParser;
+			ShapeParser mShapeParser;
+			StructureParser mStructureParser;
+			FontParser mFontParser;
+			TextParser mTextParser;
+			ScriptParser mScriptParser;
 
 			void resetData();
 			bool parseHeader();
 			void readTag();
-
-			void debug_contour_element(const ContourElement& element, FILE* file);
-			void debug_shape_element(const ShapeElement& element, FILE* file);
-
-		public:
-			// read basic types
-			UI8 readU8();
-			UI16 readU16();
-			UI32 readU32();
-			UI32 readUBits(UI32 n);
-			SI16 readS16();
-			int readSBits(UI32 n);
-			void readByteBlock(char* buf, UI32 n);
-
-			void resetReadBits();
-
-			RECT readRect();
-			COLOR readColor(const bool& alpha = false);
-			MATRIX readMatrix();
-			CXFORM readCxForm(const bool& alpha = false);
-			String readString(const bool& zero_terminated = true);
-			KERNINGRECORD readKerningRecord(const UI8& wide_codes);
-
-			// read shapes and fill-/line-styles
-			void readShape(const TagTypes& type, SHAPE& result);
-			void readShapeWithStyle(const TagTypes& type, SHAPE& result);
-			void readFillstyleArray(const TagTypes& type, FillstyleList& result);
-			void readLinestyleArray(const TagTypes& type, LinestyleList& result);
-
-		protected:
-			void fillReadBits();
 		};
 		//-----------------------------------------------------------------------
 		/** The FileParserFactory for creating FileParser objects */

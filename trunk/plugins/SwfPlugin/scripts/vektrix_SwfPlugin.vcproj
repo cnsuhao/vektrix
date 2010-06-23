@@ -334,14 +334,6 @@
 			Name="Parser"
 			>
 			<File
-				RelativePath="..\src\vtxswfDocument.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxswfDocument.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\vtxswfMemoryBlockReader.cpp"
 				>
 			</File>
@@ -395,6 +387,14 @@
 			</File>
 			<File
 				RelativePath="..\include\vtxswfShapeParser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxswfStructParserHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxswfStructParserHelper.h"
 				>
 			</File>
 			<File
@@ -462,43 +462,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\vtxswfTagMalformedTag.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxswfTagMalformedTag.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\vtxswfTagProductInfo.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\include\vtxswfTagProductInfo.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\vtxswfTagReader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxswfTagReader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\vtxswfTagTagHeader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxswfTagTagHeader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\vtxswfTagUnknownTag.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxswfTagUnknownTag.h"
 				>
 			</File>
 			<Filter

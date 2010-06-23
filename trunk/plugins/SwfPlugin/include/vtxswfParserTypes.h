@@ -259,17 +259,35 @@ namespace vtx
 				green(255), 
 				blue(255), 
 				alpha(255){}
+
+			COLOR(UI8 R, UI8 G, UI8 B, UI8 A) 
+				: red(255), 
+				green(255), 
+				blue(255), 
+				alpha(255){}
 		};
+		static const COLOR COLOR_BLACK = COLOR(0, 0, 0, 255);
+		static const COLOR COLOR_WHITE = COLOR(255, 255, 255, 255);
+		static const COLOR COLOR_ALLZERO = COLOR(0, 0, 0, 0);
 		//-----------------------------------------------------------------------
 		class MATRIX
 		{
 		public:
-			SBits sx, cx, tx, 
-				  cy, sy, ty;
+			float scale_x, scale_y;
+			float rotate_x, rotate_y;
+			float trans_x, trans_y;
+			bool hasScale, hasRotate;
 
-			MATRIX() 
-				: sx(65536), cx(0), tx(0), 
-				  cy(0), sy(65536), ty(0){}
+			MATRIX()
+				: scale_x(0.f)
+				, scale_y(0.f)
+				, rotate_x(0.f)
+				, rotate_y(0.f)
+				, trans_x(0.f)
+				, trans_y(0.f)
+				, hasScale(false)
+				, hasRotate(false)
+			{}
 		};
 		//-----------------------------------------------------------------------
 		class CXFORM
@@ -277,10 +295,33 @@ namespace vtx
 		public:
 			SBits add_red, add_green, add_blue, add_alpha, 
 				  mul_red, mul_green, mul_blue, mul_alpha;
+			bool has_add, has_mul;
 
 			CXFORM() 
 				: add_red(255), add_green(255), add_blue(255), add_alpha(255), 
-				mul_red(255), mul_green(255), mul_blue(255), mul_alpha(255){}
+				mul_red(255), mul_green(255), mul_blue(255), mul_alpha(255),
+				has_add(true), has_mul(true){}
+		};
+		//-----------------------------------------------------------------------
+		class GRADRECORD
+		{
+		public:
+			int ratio;
+			COLOR color;
+		};
+		//-----------------------------------------------------------------------
+		class GRADIENT
+		{
+		public:
+			static const int kMaxGradientRecords = 16;
+			GRADRECORD gradientRecords[kMaxGradientRecords];
+			int numRecords;
+
+			SpreadMethod spreadMethod;
+			InterpolationMethod interpolationMethod;
+
+			// focal gradient
+			float focalPointRatio;
 		};
 		//-----------------------------------------------------------------------
 		// FONT TYPES
@@ -316,24 +357,77 @@ namespace vtx
 		class FILLSTYLE
 		{
 		public:
-			typedef std::map<UI8, COLOR> GradientMap;
-
 			FillStyleType type;
 			COLOR color;
-			GradientMap gradient;
-			MATRIX matrix;
+			MATRIX gradientMatrix;
+			GRADIENT gradient;
+			int bitmapId;
+			MATRIX bitmapMatrix;
 		};
 		typedef std::vector<FILLSTYLE> FillstyleList;
 		typedef std::map<uint, FILLSTYLE> FillstyleMap;
 		//-----------------------------------------------------------------------
+		class FILLSTYLEARRAY
+		{
+		public:
+			FILLSTYLE* styles;
+			int numStyles;
+
+			FILLSTYLEARRAY()
+				: styles(NULL)
+				, numStyles(0)
+			{}
+
+			~FILLSTYLEARRAY()
+			{
+				if(styles)
+				{
+					delete[] styles;
+				}
+			}
+		};
+		//-----------------------------------------------------------------------
 		class LINESTYLE
 		{
 		public:
+			// linestyle
 			COLOR color;
 			UI16 width;
+
+			// enhanced stroke style
+			CapStyle startCapStyle;
+			CapStyle endCapStyle;
+			JointStyle jointStyle;
+			ScaleStrokeMethod scaleStroke;
+			bool close;
+			float miterLimit;
+			bool pixelHinting;
+
+			// linestyle2
+			FILLSTYLE fillStyle;
 		};
 		typedef std::vector<LINESTYLE> LinestyleList;
 		typedef std::map<uint, LINESTYLE> LinestyleMap;
+		//-----------------------------------------------------------------------
+		class LINESTYLEARRAY
+		{
+		public:
+			LINESTYLE* styles;
+			int numStyles;
+
+			LINESTYLEARRAY()
+				: styles(NULL)
+				, numStyles(0)
+			{}
+
+			~LINESTYLEARRAY()
+			{
+				if(styles)
+				{
+					delete[] styles;
+				}
+			}
+		};
 		//-----------------------------------------------------------------------
 		class SHAPEELEMENT
 		{
@@ -341,6 +435,16 @@ namespace vtx
 			SBits x, y, cx, cy;
 			int fill0, fill1, line;
 			ShapeElementType type;
+
+			// SET_LINE
+			int deltaX;
+			int deltaY;
+
+			// SET_BEZIER
+			int controlDeltaX;
+			int controlDeltaY;
+			int anchorDeltaX;
+			int anchorDeltaY;
 
 			SHAPEELEMENT() 
 				: x(0), y(0), 
@@ -352,6 +456,7 @@ namespace vtx
 		class SHAPE
 		{
 		public:
+			// shape
 			FillstyleList fillstyles;
 			LinestyleList linestyles;
 			ShapeElementList elements;

@@ -185,41 +185,47 @@ namespace vtx
 			return result;
 		}
 		//-----------------------------------------------------------------------
-		vtx::String MemoryBlockReader::readString()
+		vtx::String MemoryBlockReader::readString(bool zero_terminated)
 		{
-			// read the string byte for byte until we get a null-byte
-			vtx::String str;
-			fillBitBuffer();
-			while (mBitBuffer != 0) {
-				str.push_back(mBitBuffer);
-				fillBitBuffer();
+			String result;
+			if(zero_terminated)
+			{
+				UI8 cur_char = readUI8();
+				while(cur_char != 0)
+				{
+					result.append(1, cur_char);
+					cur_char = readUI8();
+				}
 			}
-			//byte[] buffer = baos.toByteArray();
-			//String encoding;
-			//if (mShiftJIS) {
-			//	encoding = "SJIS";
-			//} else if (mAnsi) {
-			//	encoding = "cp1252";
-			//} else {
-			//	encoding = "UTF-8";
-			//}
-			return str;
+			else
+			{
+				UI8 name_length = readUI8();
+				for(UI8 i=0; i<name_length; ++i)
+				{
+					UI8 cur_char = readUI8();
+					if(cur_char)
+						result.append(1, cur_char);
+				}
+			}
+			return result;
 		}
 		//-----------------------------------------------------------------------
-		int MemoryBlockReader::readUI16()
+		unsigned short MemoryBlockReader::readUI16()
 		{
+			unsigned short result = 0;
 			fillBitBuffer();
-			int result = mBitBuffer;
+			result |= mBitBuffer;
 			fillBitBuffer();
 			result |= (mBitBuffer << 8);
 			align();
 			return result;
 		}
 		//-----------------------------------------------------------------------
-		long MemoryBlockReader::readUI32()
+		unsigned int MemoryBlockReader::readUI32()
 		{
+			unsigned int result = 0;
 			fillBitBuffer();
-			long result = mBitBuffer;
+			result |= mBitBuffer;
 			fillBitBuffer();
 			result |= (mBitBuffer << 8);
 			fillBitBuffer();

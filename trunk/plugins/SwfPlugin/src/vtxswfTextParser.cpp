@@ -32,20 +32,25 @@ THE SOFTWARE.
 #include "vtxEditTextResource.h"
 #include "vtxStaticTextResource.h"
 #include "vtxStringHelper.h"
+#include "vtxswfStructParserHelper.h"
 
 namespace vtx
 {
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		void TextParser::handleDefineText(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
+		void TextParser::handleDefineText(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser)
 		{
-			UI16 id = parser->readU16();
-			RECT bounds = parser->readRect();
-			MATRIX transform = parser->readMatrix();
+			UI16 id = tag_reader.readUI16();
 
-			UI8 glyph_bits = parser->readU8();
-			UI8 advance_bits = parser->readU8();
+			RECT bounds;
+			ParserHelper::readRect(tag_reader, bounds);
+
+			MATRIX transform;
+			ParserHelper::readMatrix(tag_reader, transform);
+
+			UI8 glyph_bits = tag_reader.readUI8();
+			UI8 advance_bits = tag_reader.readUI8();
 
 			StaticTextResource* statictext = new StaticTextResource(StringHelper::toString(id));
 
@@ -61,7 +66,7 @@ namespace vtx
 			TextRecordList records;
 			while(true)
 			{
-				UI8 flags = parser->readU8();
+				UI8 flags = tag_reader.readUI8();
 
 				// end of records
 				if(!flags)
@@ -78,13 +83,15 @@ namespace vtx
 				// has font
 				if(flags & 8)
 				{
-					text_record.font_id = parser->readU16();
+					text_record.font_id = tag_reader.readUI16();
 					glyph_strip.fontid = StringHelper::toString(text_record.font_id);
 				}
 				// has color
 				if(flags & 4)
 				{
-					text_record.color = parser->readColor(tag_type == TT_DefineText2);
+					(tag_type == TT_DefineText2)
+						? ParserHelper::readColorRGB(tag_reader, text_record.color)
+						: ParserHelper::readColorRGBA(tag_reader, false, text_record.color);
 					glyph_strip.color = Color(
 						(float)text_record.color.red/255.0f, 
 						(float)text_record.color.green/255.0f, 
@@ -94,32 +101,32 @@ namespace vtx
 				// has x offset
 				if(flags & 1)
 				{
-					text_record.x = parser->readS16();
+					text_record.x = tag_reader.readSI16();
 					glyph_strip.x = text_record.x / 20.0f;
 				}
 				// has y offset
 				if(flags & 2)
 				{
-					text_record.y = parser->readS16();
+					text_record.y = tag_reader.readSI16();
 					glyph_strip.y = text_record.y / 20.0f;
 					glyph_strip.newline = true;
 				}
 				// has font -> text height
 				if(flags & 8)
 				{
-					text_record.size = parser->readU16();
+					text_record.size = tag_reader.readUI16();
 					glyph_strip.size = text_record.size / 20.0f;
 				}
 
-				parser->resetReadBits();
+				tag_reader.align();
 
 				// Glyph Entries
-				UI8 glyph_count = parser->readU8();
+				UI8 glyph_count = tag_reader.readUI8();
 				for(UI8 i=0; i<glyph_count; ++i)
 				{
 					GLYPHENTRY entry;
-					entry.index = parser->readUBits(glyph_bits);
-					entry.x_advance = parser->readSBits(advance_bits);
+					entry.index = tag_reader.readUnsignedBits(glyph_bits);
+					entry.x_advance = tag_reader.readSignedBits(advance_bits);
 
 					GlyphStrip::Glyph glyph;
 					glyph.index = entry.index;
@@ -140,10 +147,12 @@ namespace vtx
 			parser->getCurrentFile()->addResource(statictext);
 		}
 		//-----------------------------------------------------------------------
-		void TextParser::handleDefineEditText(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
+		void TextParser::handleDefineEditText(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser)
 		{
-			UI16 id = parser->readU16();
-			RECT bounds = parser->readRect();
+			UI16 id = tag_reader.readUI16();
+
+			RECT bounds;
+			ParserHelper::readRect(tag_reader, bounds);
 
 			EditTextResource* edit_text = new EditTextResource(StringHelper::toString(id));
 
@@ -153,72 +162,73 @@ namespace vtx
 
 			edit_text->setBoundingBox(box);
 
-			parser->resetReadBits();
-			UI8 has_text =		parser->readUBits(1);
-			UI8 word_wrap =		parser->readUBits(1);
-			UI8 multi_line =	parser->readUBits(1);
-			UI8 password =		parser->readUBits(1);
-			UI8 read_only =		parser->readUBits(1);
-			UI8 has_color =		parser->readUBits(1);
-			UI8 has_max_len =	parser->readUBits(1);
-			UI8 has_font =		parser->readUBits(1);
+			tag_reader.align();
+			UI8 has_text =		(UI8)tag_reader.readUnsignedBits(1);
+			UI8 word_wrap =		(UI8)tag_reader.readUnsignedBits(1);
+			UI8 multi_line =	(UI8)tag_reader.readUnsignedBits(1);
+			UI8 password =		(UI8)tag_reader.readUnsignedBits(1);
+			UI8 read_only =		(UI8)tag_reader.readUnsignedBits(1);
+			UI8 has_color =		(UI8)tag_reader.readUnsignedBits(1);
+			UI8 has_max_len =	(UI8)tag_reader.readUnsignedBits(1);
+			UI8 has_font =		(UI8)tag_reader.readUnsignedBits(1);
 
-			parser->resetReadBits();
-			UI8 has_font_class =	parser->readUBits(1);
-			UI8 auto_size =			parser->readUBits(1);
-			UI8 has_layout =		parser->readUBits(1);
-			UI8 no_select =			parser->readUBits(1);
-			UI8 border =			parser->readUBits(1);
-			UI8 was_static =		parser->readUBits(1);
-			UI8 html_text =			parser->readUBits(1);
-			UI8 use_glyph_font =	parser->readUBits(1);
+			tag_reader.align();
+			UI8 has_font_class =	(UI8)tag_reader.readUnsignedBits(1);
+			UI8 auto_size =			(UI8)tag_reader.readUnsignedBits(1);
+			UI8 has_layout =		(UI8)tag_reader.readUnsignedBits(1);
+			UI8 no_select =			(UI8)tag_reader.readUnsignedBits(1);
+			UI8 border =			(UI8)tag_reader.readUnsignedBits(1);
+			UI8 was_static =		(UI8)tag_reader.readUnsignedBits(1);
+			UI8 html_text =			(UI8)tag_reader.readUnsignedBits(1);
+			UI8 use_glyph_font =	(UI8)tag_reader.readUnsignedBits(1);
 
 			if(has_font)
 			{
 				// font id
-				UI16 fontid = parser->readU16();
+				UI16 fontid = tag_reader.readUI16();
 			}
 
 			if(has_font_class)
 			{
 				// font as3 class
-				String font_class = parser->readString();
+				String font_class = tag_reader.readString(true);
 			}
 
 			if(has_font)
 			{
 				// font height
-				UI16 font_size = parser->readU16();
+				UI16 font_size = tag_reader.readUI16();
 			}
 
 			if(has_color)
 			{
 				// text color
-				COLOR color = parser->readColor(true);
+				COLOR color;
+				ParserHelper::readColorRGBA(tag_reader, false, color);
 			}
 
 			if(has_max_len)
 			{
 				// max text length
-				parser->readU16();
+				tag_reader.readUI16();
 			}
 
 			if(has_layout)
 			{
-				parser->readU8(); // align (left = 0, right, center, justify)
-				parser->readU16(); // left margin
-				parser->readU16(); // right margin
-				parser->readU16(); // ident
-				parser->readS16(); // leading
+				tag_reader.readUI8();  // align (left = 0, right, center, justify)
+				tag_reader.readUI16(); // left margin
+				tag_reader.readUI16(); // right margin
+				tag_reader.readUI16(); // ident
+				tag_reader.readSI16(); // leading
 			}
 
 			// variable name
-			parser->readString();
+			tag_reader.readString(true);
 
 			if(has_text)
 			{
 				// initial text
-				String html_text = parser->readString();
+				String html_text = tag_reader.readString(true);
 				edit_text->setInitialText(StringHelper::utf8Decode(html_text));
 			}
 

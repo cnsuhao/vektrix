@@ -43,21 +43,7 @@ namespace vtx
 		{}
 		//-----------------------------------------------------------------------
 		void SwfTagSymbolClass::ParseData(SwfParser* parser)
-		{
-			UI16 num_symbols = parser->readU16();
-
-			for(UI16 i=0; i<num_symbols; ++i)
-			{
-				UI16 id = parser->readU16();
-
-				String name = parser->readString();
-
-				if(id == 0)
-				{
-					parser->getHeader().script_root_class = name;
-				}
-			}
-		}
+		{}
 		//-----------------------------------------------------------------------
 	}
 }

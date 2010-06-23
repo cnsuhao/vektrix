@@ -47,7 +47,6 @@ namespace vtx
 
 			void setANSI(bool ansi) { mAnsi = ansi; }
 			bool isANSI() { return mAnsi; }
-
 			void setShiftJIS(bool shift_jis) { mShiftJIS = shift_jis; }
 			bool isShiftJIS() { return mShiftJIS; }
 
@@ -56,37 +55,33 @@ namespace vtx
 			void enableCompression();
 			void move(size_t delta) { mOffset += delta; }
 			size_t getOffset() { return mOffset; }
+			uchar* getBufferCurrentPtr() { return &mBuffer[mOffset]; }
 
-			bool readBooleanBit();
-
-			void readBytes(size_t len, unsigned char* pBuf);
-
+			float readFloat16();
+			float readFloat() { return ((float)readSI32()); }
 			double readDouble();
 
-			double readFP16() { return (readSI16() / 256.0); }
-			double readFP32() { return (readSI32() / 65536.0); }
-			double readFPBits(size_t nBits) { return (readSignedBits(nBits) / 65536.0); }
+			float readFP16() { return (readSI16() / 256.0f); }
+			float readFP32() { return (readSI32() / 65536.0f); }
+			float readFPBits(size_t nBits) { return (readSignedBits(nBits) / 65536.0f); }
 
-			float readFloat() { return ((float)readSI32()); }
-			float readFloat16();
-
-			short readSI16() { return (short)readUI16(); }
-			int readSI32() { return (int)readUI32(); }
 			char readSI8() { return (char)readUI8(); }
-			long readSignedBits(size_t nBits);
-
-			String readString();
-
-			int readUI16();
-			long readUI32();
-			int64 readSI64();
-			unsigned char readUI8();
-			long readUnsignedBits(size_t nBits);
-
+			short readSI16() { return (short)readUI16(); }
 			int readSI24();
+			int readSI32() { return (int)readUI32(); }
+			int64 readSI64();
 
+			unsigned char readUI8();
+			unsigned short readUI16();
+			unsigned int readUI32();
+
+			bool readBooleanBit();
+			long readSignedBits(size_t nBits);
+			long readUnsignedBits(size_t nBits);
+			void readBytes(size_t len, unsigned char* pBuf);
+
+			String readString(bool zero_terminated);
 			int readAbcInt();
-
 			void fillBitBuffer();
 
 		protected:
@@ -101,7 +96,7 @@ namespace vtx
 			size_t mBufLen;
 			size_t mOffset;
 
-			char mBitBuffer;
+			unsigned char mBitBuffer;
 			size_t mBitCursor;
 		};
 	}

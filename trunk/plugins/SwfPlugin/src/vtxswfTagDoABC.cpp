@@ -43,20 +43,7 @@ namespace vtx
 		{}
 		//-----------------------------------------------------------------------
 		void SwfTagDoABC::ParseData(SwfParser* parser)
-		{
-			const uint& read_pos = parser->getReadPosition();
-			uint start_pos = read_pos;
-
-			UI32 flags = parser->readU32();
-			String name = parser->readString();
-
-			uint abc_len = mTagLength - (read_pos - start_pos);
-
-			char* abc_buf = new char[abc_len];
-			parser->readByteBlock(abc_buf, abc_len);
-
-			parser->getCurrentFile()->addResource(new ScriptResource("Script", abc_buf, abc_len));
-		}
+		{}
 		//-----------------------------------------------------------------------
 	}
 }

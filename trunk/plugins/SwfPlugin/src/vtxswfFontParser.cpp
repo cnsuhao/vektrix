@@ -31,45 +31,46 @@ THE SOFTWARE.
 #include "vtxFontResource.h"
 #include "vtxGlyphResource.h"
 #include "vtxStringHelper.h"
+#include "vtxswfStructParserHelper.h"
 
 namespace vtx
 {
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		void FontParser::handleDefineFont(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
+		void FontParser::handleDefineFont(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser)
 		{
-			UI16 id = parser->readU16();
+			UI16 id = tag_reader.readUI16();
 
 			FontResource* font = new FontResource(StringHelper::toString(id));
 
-			parser->resetReadBits();
-			UI8 has_layout =	parser->readUBits(1);
-			UI8 shift_JIS =		parser->readUBits(1);
-			UI8 small_text =	parser->readUBits(1);
-			UI8 ANSI =			parser->readUBits(1);
-			UI8 wide_offsets =	parser->readUBits(1);
-			UI8 wide_codes =	parser->readUBits(1);
-			UI8 italic =		parser->readUBits(1);
-			UI8 bold =			parser->readUBits(1);
+			tag_reader.align();
+			UI8 has_layout =	(UI8)tag_reader.readUnsignedBits(1);
+			UI8 shift_JIS =		(UI8)tag_reader.readUnsignedBits(1);
+			UI8 small_text =	(UI8)tag_reader.readUnsignedBits(1);
+			UI8 ANSI =			(UI8)tag_reader.readUnsignedBits(1);
+			UI8 wide_offsets =	(UI8)tag_reader.readUnsignedBits(1);
+			UI8 wide_codes =	(UI8)tag_reader.readUnsignedBits(1);
+			UI8 italic =		(UI8)tag_reader.readUnsignedBits(1);
+			UI8 bold =			(UI8)tag_reader.readUnsignedBits(1);
 
-			UI8 lang_code = parser->readU8();
+			UI8 lang_code = tag_reader.readUI8();
 
 			// read non-ZERO terminated strings
-			String font_name = parser->readString(false);
+			String font_name = tag_reader.readString(false);
 			font->setName(font_name);
 
 			// Offset Table
-			UI16 num_glyphs = parser->readU16();
+			UI16 num_glyphs = tag_reader.readUI16();
 			for(UI16 i=0; i<num_glyphs; ++i)
 			{
 				if(wide_offsets)
 				{
-					parser->readU32();
+					tag_reader.readUI32();
 				}
 				else
 				{
-					parser->readU16();
+					tag_reader.readUI16();
 				}
 			}
 
@@ -77,11 +78,11 @@ namespace vtx
 			UI32 codetable_offset = 0;
 			if(wide_offsets)
 			{
-				codetable_offset = parser->readU32();
+				codetable_offset = tag_reader.readUI32();
 			}
 			else
 			{
-				codetable_offset = parser->readU16();
+				codetable_offset = tag_reader.readUI16();
 			}
 
 			// Glyph Shapes
@@ -91,7 +92,7 @@ namespace vtx
 				mFlashGlyph.clear();
 
 				// parse the flash glyph
-				parser->readShape(TT_DefineShape, mFlashGlyph);
+				//parser->readShape(TT_DefineShape, mFlashGlyph);
 
 				GlyphResource* glyph = new GlyphResource(font);
 				glyph->setIndex(i);
@@ -103,15 +104,15 @@ namespace vtx
 			for(UI16 i=0; i<num_glyphs; ++i)
 			{
 				GlyphResource* glyph = font->getGlyphByIndex(i);
-				glyph->setCode(parser->readU16());
+				glyph->setCode(tag_reader.readUI16());
 			}
 
 			// Font Layout
 			if(has_layout)
 			{
-				SI16 ascender_height = parser->readS16();
-				SI16 descender_height = parser->readS16();
-				SI16 leading_height = parser->readS16();
+				SI16 ascender_height = tag_reader.readSI16();
+				SI16 descender_height = tag_reader.readSI16();
+				SI16 leading_height = tag_reader.readSI16();
 
 				font->setAscender(ascender_height/1024.0f);
 				font->setDescender(descender_height/1024.0f);
@@ -120,7 +121,7 @@ namespace vtx
 				// Advance Table
 				for(UI16 i=0; i<num_glyphs; ++i)
 				{
-					SI16 advance = parser->readS16();
+					SI16 advance = tag_reader.readSI16();
 					GlyphResource* glyph = font->getGlyphByIndex(i);
 					glyph->setAdvance(advance/1024.0f);
 				}
@@ -128,17 +129,18 @@ namespace vtx
 				// Bounds Table
 				for(UI16 i=0; i<num_glyphs; ++i)
 				{
-					parser->readRect();
+					RECT bounds;
+					ParserHelper::readRect(tag_reader, bounds);
 				}
 
 				// Kerning Table
-				UI16 kerning_count = parser->readU16();
+				UI16 kerning_count = tag_reader.readUI16();
 				for(UI16 i=0; i<kerning_count; ++i)
 				{
-					parser->readKerningRecord(wide_codes);
+					KERNINGRECORD kerning;
+					ParserHelper::readKerningRecord(tag_reader, false, kerning);
 				}
 			}
-
 			parser->getCurrentFile()->addResource(font);
 		}
 		//-----------------------------------------------------------------------

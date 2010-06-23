@@ -145,7 +145,7 @@ namespace vtx
 				finish(parser->getCurrentFile(), pixel_data, width, height, character_id);
 		}
 		//-----------------------------------------------------------------------
-		void ImageParser::handleJPEGTables(MemoryBlockReader& tag_reader)
+		void ImageParser::handleJPEGTables(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser)
 		{
 			mJPEGTableLen = tag_reader.available();
 			mJPEGTables = new uchar[mJPEGTableLen];
@@ -325,7 +325,6 @@ namespace vtx
 					pixel_data[(y*width)+(x*4)+3] = mColorTableRGBA[(mColorMapPixelData[(y*width)+x]*4)+3];
 				}
 			}
-
 			return pixel_data;
 		}
 		//-----------------------------------------------------------------------
@@ -350,7 +349,6 @@ namespace vtx
 					pixel_data[(y*width)+(x*4)+3] = mColorTableRGB[(mColorMapPixelData[(y*width)+x]*3)+2];
 				}
 			}
-
 			return pixel_data;
 		}
 		//-----------------------------------------------------------------------
@@ -359,6 +357,17 @@ namespace vtx
 			int imageDataSize = width * height;
 			uchar* pixel_data = new uchar[imageDataSize*4];
 			tag_reader.readBytes(imageDataSize*4, pixel_data);
+
+			// swizzle RGBA format to ARGB
+			for(int y = 0; y < height; ++y)
+			{
+				for(int x = 0; x < width; ++x)
+				{
+					uchar temp = pixel_data[(y*width)+(x*4)+0];
+					pixel_data[(y*width)+(x*4)+0] = pixel_data[(y*width)+(x*4)+3];
+					pixel_data[(y*width)+(x*4)+3] = temp;
+				}
+			}
 			return pixel_data;
 		}
 		//-----------------------------------------------------------------------
@@ -427,7 +436,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void ImageParser::finish(File* file, uchar* bitmap_data, int width, int height, int character_id)
 		{
-			char strResourceId[256];
+			char strResourceId[16];
 			sprintf((char*)&strResourceId, "%d", character_id);
 			String resourceId = String((char*)&strResourceId);
 
