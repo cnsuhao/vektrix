@@ -31,6 +31,7 @@ THE SOFTWARE.
 
 #include "vtxswf.h"
 #include "vtxswfParserTypes.h"
+#include "vtxswfMemoryBlockReader.h"
 
 namespace vtx
 {
@@ -39,8 +40,8 @@ namespace vtx
 		class TextParser
 		{
 		public:
-			void handleDefineText(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
-			void handleDefineEditText(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+			void handleDefineText(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
+			void handleDefineEditText(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
 		};
 	}
 }

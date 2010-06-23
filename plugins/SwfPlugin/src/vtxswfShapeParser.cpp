@@ -34,13 +34,14 @@ THE SOFTWARE.
 #include "vtxShapeResource.h"
 #include "vtxStringHelper.h"
 #include "vtxSubshapeResource.h"
+#include "vtxswfStructParserHelper.h"
 
 namespace vtx
 {
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		void ShapeParser::handleDefineShape(const TagTypes& tag_type, SwfParser* parser)
+		void ShapeParser::handleDefineShape(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser)
 		{
 			// clear all lists
 			// -> FLASH
@@ -53,14 +54,15 @@ namespace vtx
 			mSubShapeList.clear();
 			mSubLineList.clear();
 
-			UI16 shape_id = parser->readU16();
+			UI16 shape_id = tag_reader.readUI16();
 
-			RECT bounds = parser->readRect();
-
+			RECT bounds;
+			ParserHelper::readRect(tag_reader, bounds);
 			if(tag_type == TT_DefineShape4)
 			{
-				parser->readRect(); // edge bounds
-				parser->readU8(); // line flags
+				RECT edge_bounds;
+				ParserHelper::readRect(tag_reader, edge_bounds);
+				tag_reader.readUI8(); // line flags
 			}
 
 			ShapeResource* shape_resource = new ShapeResource(StringHelper::toString(shape_id));
@@ -73,7 +75,7 @@ namespace vtx
 			shape_resource->setBoundingBox(box);
 
 			// parse the flash shape
-			parser->readShapeWithStyle(tag_type, mFlashShape);
+			//tag_reader.readShapeWithStyle(tag_type, mFlashShape);
 
 			// now the actual "translation" to a vektrix shape takes place
 
@@ -86,16 +88,13 @@ namespace vtx
 			// process the flash data
 			generateSubshapes();
 			generateSublines();
-
-			// write the processed data to our own format
-			writeFillstyles(shape_id, parser->getCurrentFile());
-			writeSubshapes(shape_resource);
 		}
 		//-----------------------------------------------------------------------
 		void ShapeParser::getFlashStyles()
 		{
 			ShapeElementList::iterator it = mFlashShape.elements.begin();
 			ShapeElementList::iterator end = mFlashShape.elements.end();
+
 			while(it != end)
 			{
 				const SHAPEELEMENT& se = *it;
@@ -131,6 +130,7 @@ namespace vtx
 
 			FillstyleMap::iterator fill_it = mFillstyles.begin();
 			FillstyleMap::iterator fill_end = mFillstyles.end();
+
 			while(fill_it != fill_end)
 			{
 				ContourElementList curr_chunk;
@@ -190,84 +190,12 @@ namespace vtx
 							}
 						}
 					}
-
 					prev_elem = &se;
 					++elem_it;
-				} // while(shape_elements)
-
+				}
 				mChunkLists[fill_it->first] = curr_chunk;
-
 				++fill_it;
-			} // while(fillstyle)
-
-			//std::cout << "Num Elements: " << count << std::endl;
-
-#if defined DEBUG_FLASH_SHAPES && defined _DEBUG
-
-			if(!FileHelper::doesDirectoryExist(DEBUG_OUTPUT_PATH))
-				return;
-
-			// DEBUG
-			char filename[512];
-			sprintf_s(filename, "%sall_elements.txt", DEBUG_OUTPUT_PATH);
-			FILE* file = fopen(filename, "w");
-
-			ShapeElementList::iterator elem_it = mFlashShape.elements.begin();
-			ShapeElementList::iterator elem_end = mFlashShape.elements.end();
-			while(elem_it != elem_end)
-			{
-				SHAPEELEMENT& se = *elem_it;
-
-				if(se.type == SET_BEZIER)
-				{
-					fprintf(file, "%4.2f %4.2f (C) [%d|%d][%d]\n", 
-						se.cx / 20.0f, -se.cy / 20.0f, 
-						se.fill0, se.fill1, 
-						se.line);
-					fprintf(file, "%4.2f %4.2f (S) [%d|%d][%d]\n", 
-						se.x / 20.0f, -se.y / 20.0f, 
-						se.fill0, se.fill1, 
-						se.line);
-				}
-				else if(se.type == SET_LINE)
-				{
-					fprintf(file, "%4.2f %4.2f (L) [%d|%d][%d]\n", 
-						se.x / 20.0f, -se.y / 20.0f, 
-						se.fill0, se.fill1, 
-						se.line);
-				}
-				else if(se.type == SET_MOVE)
-				{
-					fprintf(file, "%4.2f %4.2f (M) [%d|%d][%d]\n", 
-						se.x / 20.0f, -se.y / 20.0f, 
-						se.fill0, se.fill1, 
-						se.line);
-				}
-
-				++elem_it;
-			} // while(shape_elements)
-
-			fclose(file);
-
-			// DEBUG chunks
-			ContourChunkMap::iterator map_it = mChunkLists.begin();
-			ContourChunkMap::iterator map_end = mChunkLists.end();
-			for( ; map_it != map_end; ++map_it)
-			{
-				char filename[512];
-				sprintf_s(filename, "%schunks_%d.txt", DEBUG_OUTPUT_PATH, map_it->first);
-				FILE* file = fopen(filename, "w");
-
-				ContourElementList::const_iterator chunk_it = map_it->second.begin();
-				ContourElementList::const_iterator chunk_end = map_it->second.end();
-				for( ; chunk_it != chunk_end; ++chunk_it)
-				{
-					debug_contour_element(*chunk_it, file);
-				}
-
-				fclose(file);
 			}
-#endif
 		}
 		//-----------------------------------------------------------------------
 		void ShapeParser::generateSubshapes()
@@ -334,7 +262,6 @@ namespace vtx
 							else if((*elem_it).connectsReverseTo(subshape.elements.back()))
 							{
 								// found a element that connects reverse
-								//std::cout << "found a element that connects reverse" << std::endl;
 								subshape.elements.push_back(*elem_it);
 								subshape.elements.back().reverse();
 								chunks.erase(elem_it);
@@ -351,7 +278,6 @@ namespace vtx
 					if(subshape.elements.back().connectsTo(first_element) && subshape.elements.size() > 1)
 					{
 						// reached a closed loop
-						//std::cout << "reached a closed loop" << std::endl;
 						state = STATE_INIT;
 						elem_it = chunks.begin();
 						elem_end = chunks.end();
@@ -361,33 +287,7 @@ namespace vtx
 					++elem_it;
 
 				} // while(elements)
-
-				//std::cout << "ELEMENTS LEFT: " << chunks.size() << std::endl;
 				VTX_DEBUG_ASSERT(!chunks.size(), "There should be no elements left here");
-
-#if defined DEBUG_FLASH_SHAPES && defined _DEBUG
-
-				if(FileHelper::doesDirectoryExist(DEBUG_OUTPUT_PATH))
-				{
-					char filename[512];
-					sprintf_s(filename, "%ssubshapes_%d.txt", DEBUG_OUTPUT_PATH, fill_it->first);
-					FILE* file = fopen(filename, "w");
-
-					elem_it = subshape.elements.begin();
-					elem_end = subshape.elements.end();
-					while(elem_it != elem_end)
-					{
-						if((*elem_it).isStartElement)
-						{
-							fprintf(file, "start\n");
-						}
-						debug_contour_element(*elem_it, file);
-						++elem_it;
-					}
-
-					fclose(file);
-				}
-#endif
 
 				// store the result
 				mSubShapeList.push_back(subshape);
@@ -397,237 +297,7 @@ namespace vtx
 		}
 		//-----------------------------------------------------------------------
 		void ShapeParser::generateSublines()
-		{
-
-		}
-		//-----------------------------------------------------------------------
-		void ShapeParser::writeFillstyles(const UI16& shape_id, File* file)
-		{
-			FillstyleMap::iterator it = mFillstyles.begin();
-			FillstyleMap::iterator end = mFillstyles.end();
-			while(it != end)
-			{
-				MaterialResource* material = NULL;
-
-				switch(it->second.type)
-				{
-					// COLOR
-				case FST_Solid:
-					{
-						const COLOR& swfColor = it->second.color;
-						material = new MaterialResource(
-							StringHelper::toString(shape_id)+"->"+StringHelper::toString(it->first), 
-							MaterialResource::MT_COLOR);
-
-						Color color = Color(
-							(float)swfColor.red/255.0f, 
-							(float)swfColor.green/255.0f, 
-							(float)swfColor.blue/255.0f, 
-							(float)swfColor.alpha/255.0f);
-
-						material->setColor(color);
-					}
-					break;
-
-				case FST_ClippedBitmap:
-					{
-						material = new MaterialResource(
-							StringHelper::toString(shape_id)+"->"+StringHelper::toString(it->first), 
-							MaterialResource::MT_IMAGE);
-
-						//material->setImageID(it->second.color);
-					}
-					break;
-
-				case FST_LinearGradient:
-				case FST_RadialGradient:
-					{
-						material = new MaterialResource(
-							StringHelper::toString(shape_id)+"->"+StringHelper::toString(it->first), 
-							(it->second.type == FST_LinearGradient)?
-							MaterialResource::MT_LINEAR_GRADIENT:
-							MaterialResource::MT_RADIAL_GRADIENT);
-
-						const MATRIX& m = it->second.matrix;
-						Matrix matrix = Matrix(
-							m.sx/65536.0f, m.cx/65536.0f, m.tx/20.0f, 
-							m.cy/65536.0f, m.sy/65536.0f, m.ty/20.0f);
-
-						material->setTransformMatrix(matrix);
-
-						const FILLSTYLE::GradientMap& gradient = it->second.gradient;
-						FILLSTYLE::GradientMap::const_iterator grd_it = gradient.begin();
-						FILLSTYLE::GradientMap::const_iterator grd_end = gradient.end();
-
-						while(grd_it != grd_end)
-						{
-							const COLOR& swfColor = grd_it->second;
-
-							Color color = Color(
-								(float)swfColor.red/255.0f, 
-								(float)swfColor.green/255.0f, 
-								(float)swfColor.blue/255.0f, 
-								(float)swfColor.alpha/255.0f);
-
-							material->setGradientColor(grd_it->first, color);
-							++grd_it;
-						}
-					}
-					break;
-
-				default:
-					{
-						VTX_EXCEPT("vtxswf: Unimplemented Material Type");
-					}
-					break;
-				};
-
-				file->addResource(material);
-
-				++it;
-			}// while(fillstyles)
-		}
-		//-----------------------------------------------------------------------
-		void ShapeParser::writeSubshapes(ShapeResource* shape_resource)
-		{
-			SubShapeList::iterator subshape_it = mSubShapeList.begin();
-			SubShapeList::iterator subshape_end = mSubShapeList.end();
-			while(subshape_it != subshape_end)
-			{
-				MaterialResource* mat = dynamic_cast<MaterialResource*>(
-					shape_resource->getFile()->getResource(shape_resource->getID() + 
-					"->" + StringHelper::toString((*subshape_it).fillstyle)));
-
-				if(!mat)
-				{
-					VTX_EXCEPT("The requested Resource with the ID: %d is no MaterialResource.", (*subshape_it).fillstyle);
-				}
-
-				SubshapeResource* subshape = new SubshapeResource();
-				subshape->setMaterial(mat);
-				shape_resource->addSubshapeResource(subshape);
-
-				ContourElementList::iterator element_it = (*subshape_it).elements.begin();
-				ContourElementList::iterator element_end = (*subshape_it).elements.end();
-				while(element_it != element_end)
-				{
-					// the current element
-					ContourElement& element = *element_it;
-
-					// what type is it?
-					switch(element.type)
-					{
-					case CID_LINE:
-						{
-							if(element.isStartElement)
-							{
-								ShapeElement shape_element;
-								shape_element.type = ShapeElement::SID_MOVE_TO;
-								shape_element.pos = Vector2(element.p0.x/20.0f, element.p0.y/20.0f);
-								subshape->addShapeElement(shape_element);
-							}
-
-							ShapeElement shape_element;
-							shape_element.type = ShapeElement::SID_LINE_TO;
-							shape_element.pos = Vector2(element.p1.x/20.0f, element.p1.y/20.0f);
-
-							subshape->addShapeElement(shape_element);
-						}
-						break;
-					case CID_BEZIER:
-						{
-							if(element.isStartElement)
-							{
-								ShapeElement shape_element;
-								shape_element.type = ShapeElement::SID_MOVE_TO;
-								shape_element.pos = Vector2(element.p0.x/20.0f, element.p0.y/20.0f);
-								subshape->addShapeElement(shape_element);
-							}
-
-							ShapeElement shape_element;
-							shape_element.type = ShapeElement::SID_CURVE_TO;
-							shape_element.ctrl = Vector2(element.ctrl.x/20.0f, element.ctrl.y/20.0f);
-							shape_element.pos = Vector2(element.p1.x/20.0f, element.p1.y/20.0f);
-
-							subshape->addShapeElement(shape_element);
-						}
-						break;
-					}; // switch(element.type)
-
-					++element_it;
-
-				} // for(elements)
-
-				++subshape_it;
-
-			} // for(subshapes)
-		}
-		//-----------------------------------------------------------------------
-		void SwfParser::debug_contour_element(const ContourElement& element, FILE* file)
-		{
-#if defined DEBUG_FLASH_SHAPES && defined _DEBUG
-
-			if(!FileHelper::doesDirectoryExist(DEBUG_OUTPUT_PATH))
-				return;
-
-			switch(element.type)
-			{
-				//case CID_MOVE:
-				//	if(file)
-				//		fprintf(file, "%4.2f %4.2f (M)\n", element.x / 20.0f, element.y / 20.0f);
-				//else
-				//	printf("%4.2f %4.2f (M)\n", element.x / 20.0f, element.y / 20.0f);
-				break;
-
-			case CID_LINE:
-				if(file)
-				{
-					fprintf(file, "%4.2f %4.2f (L0)\n", element.p0.x / 20.0f, element.p0.y / 20.0f);
-					fprintf(file, "%4.2f %4.2f (L1)\n\n", element.p1.x / 20.0f, element.p1.y / 20.0f);
-				}
-				//else
-				//	printf("%4.2f %4.2f (L)\n", element.x / 20.0f, element.y / 20.0f);
-				break;
-
-			case CID_BEZIER:
-				if(file)
-				{
-					fprintf(file, "%4.2f %4.2f (B0)\n", element.p0.x / 20.0f, element.p0.y / 20.0f);
-					fprintf(file, "%4.2f %4.2f (C)\n", element.ctrl.x / 20.0f, element.ctrl.y / 20.0f);
-					fprintf(file, "%4.2f %4.2f (B1)\n\n", element.p1.x / 20.0f, element.p1.y / 20.0f);
-				}
-				//	fprintf(file, "%4.2f %4.2f (S)\n", element.x / 20.0f, element.y / 20.0f);
-				//else
-				//	printf("%4.2f %4.2f (S)\n", element.x / 20.0f, element.y / 20.0f);
-				break;
-			}
-#endif
-		}
-		//-----------------------------------------------------------------------
-		void SwfParser::debug_shape_element(const ShapeElement& element, FILE* file)
-		{
-#if defined DEBUG_FLASH_SHAPES && defined _DEBUG
-
-			if(!FileHelper::doesDirectoryExist(DEBUG_OUTPUT_PATH))
-				return;
-
-			switch(element.type)
-			{
-			case ShapeElement::SID_MOVE_TO:
-				fprintf(file, "%4.2f %4.2f (M)\n", element.pos.x, element.pos.y);
-				break;
-
-			case ShapeElement::SID_LINE_TO:
-				fprintf(file, "%4.2f %4.2f (L)\n", element.pos.x, element.pos.y);
-				break;
-
-			case ShapeElement::SID_CURVE_TO:
-				fprintf(file, "%4.2f %4.2f (C)\n", element.ctrl.x, element.ctrl.y);
-				fprintf(file, "%4.2f %4.2f (S)\n", element.pos.x, element.pos.y);
-				break;
-			}
-#endif
-		}
+		{}
 		//-----------------------------------------------------------------------
 	}
 }

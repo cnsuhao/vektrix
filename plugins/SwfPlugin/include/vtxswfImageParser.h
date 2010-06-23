@@ -44,7 +44,7 @@ namespace vtx
 			virtual ~ImageParser();
 
 			void handleDefineBitsLossless(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
-			void handleJPEGTables(MemoryBlockReader& tag_reader);
+			void handleJPEGTables(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
 			void handleDefineBitsJPEG(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
 
 		protected:
