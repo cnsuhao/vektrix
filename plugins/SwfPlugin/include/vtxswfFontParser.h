@@ -31,7 +31,6 @@ THE SOFTWARE.
 
 #include "vtxswf.h"
 #include "vtxswfParserTypes.h"
-#include "vtxswfMemoryBlockReader.h"
 
 namespace vtx
 {
@@ -40,7 +39,7 @@ namespace vtx
 		class FontParser
 		{
 		public:
-			void handleDefineFont(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
+			void handleDefineFont(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
 
 		protected:
 			// -> FLASH

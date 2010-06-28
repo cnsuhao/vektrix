@@ -34,7 +34,6 @@ THE SOFTWARE.
 #include "vtxswfParserTypes.h"
 #include "vtxswfSubLine.h"
 #include "vtxswfSubShape.h"
-#include "vtxswfMemoryBlockReader.h"
 
 namespace vtx
 {
@@ -43,7 +42,7 @@ namespace vtx
 		class ShapeParser
 		{
 		public:
-			void handleDefineShape(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
+			void handleDefineShape(const TagTypes& tag_type, SwfParser* parser);
 
 		protected:
 			SHAPE mFlashShape;
@@ -53,12 +52,16 @@ namespace vtx
 			SubShapeList mSubShapeList; // the sub-shapes
 			SubLineList mSubLineList; // the sub-lines
 
+			// reading
 			void getFlashStyles();
 			void getFlashChunks();
-
+			// processing
 			void generateSubshapes();
 			void generateGlyphs();
 			void generateSublines();
+			// writing
+			void writeFillstyles(const UI16& shape_id, File* file);
+			void writeSubshapes(ShapeResource* shape_resource);
 		};
 	}
 }
