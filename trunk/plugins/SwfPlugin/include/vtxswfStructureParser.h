@@ -31,7 +31,6 @@ THE SOFTWARE.
 
 #include "vtxswf.h"
 #include "vtxswfParserTypes.h"
-#include "vtxswfMemoryBlockReader.h"
 
 namespace vtx
 {
@@ -40,16 +39,18 @@ namespace vtx
 		class StructureParser
 		{
 		public:
-			StructureParser();
+			StructureParser(SwfParser* parser);
 			virtual ~StructureParser();
 
-			void handleDefineButton2(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
-			void handleDefineSprite(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
-			void handlePlaceObject2(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
-			void handleShowFrame(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
-			void handleEnd(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
+			void handleDefineButton2();
+			void handleDefineSprite();
+			void handlePlaceObject2();
+			void handleShowFrame();
+			void handleEnd();
 
 		protected:
+			SwfParser* mParser;
+
 			// movieclips
 			uint mMovieClipFrameIndex;
 			MovieClipResource* mCurrentMovieClip;

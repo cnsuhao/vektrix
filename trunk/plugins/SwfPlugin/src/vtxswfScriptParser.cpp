@@ -36,28 +36,32 @@ namespace vtx
 	namespace swf
 	{
 		//-----------------------------------------------------------------------
-		void ScriptParser::handleDoABC(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser)
+		void ScriptParser::handleDoABC(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
 		{
-			const uint& read_pos = tag_reader.getOffset();
+			const uint& read_pos = parser->getReadPosition();
 			uint start_pos = read_pos;
 
-			UI32 flags = tag_reader.readUI32();
-			String name = tag_reader.readString(true);
+			UI32 flags = parser->readU32();
+			String name = parser->readString();
 
-			uint abc_len = tag_reader.available();
-			uchar* abc_buf = new uchar[abc_len];
-			tag_reader.readBytes(abc_len, abc_buf);
+			uint abc_len = tag_length - (read_pos - start_pos);
 
-			parser->getCurrentFile()->addResource(new ScriptResource("Script", (char*)abc_buf, abc_len));
+			char* abc_buf = new char[abc_len];
+			parser->readByteBlock(abc_buf, abc_len);
+
+			parser->getCurrentFile()->addResource(new ScriptResource("Script", abc_buf, abc_len));
 		}
 		//-----------------------------------------------------------------------
-		void ScriptParser::handleSymbolClass(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser)
+		void ScriptParser::handleSymbolClass(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
 		{
-			UI16 num_symbols = tag_reader.readUI16();
+			UI16 num_symbols = parser->readU16();
+
 			for(UI16 i=0; i<num_symbols; ++i)
 			{
-				UI16 id = tag_reader.readUI16();
-				String name = tag_reader.readString(true);
+				UI16 id = parser->readU16();
+
+				String name = parser->readString();
+
 				if(id == 0)
 				{
 					parser->getHeader().script_root_class = name;

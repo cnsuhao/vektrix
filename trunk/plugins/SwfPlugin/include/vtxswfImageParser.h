@@ -31,7 +31,6 @@ THE SOFTWARE.
 
 #include "vtxswf.h"
 #include "vtxswfParserTypes.h"
-#include "vtxswfMemoryBlockReader.h"
 
 namespace vtx
 {
@@ -43,39 +42,13 @@ namespace vtx
 			ImageParser();
 			virtual ~ImageParser();
 
-			void handleDefineBitsLossless(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
-			void handleJPEGTables(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
-			void handleDefineBitsJPEG(const TagTypes& tag_type, MemoryBlockReader& tag_reader, SwfParser* parser);
+			void handleDefineBitsLossless(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+			void handleJPEGTables(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+			void handleDefineBitsJPEG(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
 
 		protected:
-			// jpeg parsing functions
-			uchar* readDefineBitsJPEG(MemoryBlockReader& tag_reader, int& width, int& height);
-			uchar* readDefineBitsJPEG2(MemoryBlockReader& tag_reader, int& width, int& height);
-			uchar* readDefineBitsJPEG3(MemoryBlockReader& tag_reader, int& width, int& height);
-			uchar* readDefineBitsJPEG4(MemoryBlockReader& tag_reader, int& width, int& height);
-
-			uchar* readJpegData(MemoryBlockReader& tag_reader, size_t len);
-			uchar* readBitmapAlphaData(MemoryBlockReader& tag_reader, size_t len);
-			uchar* decodeJPEGData(uchar* jpeg_data, size_t data_len, int& width, int& height, uchar* table_data = NULL, size_t table_len = 0);
-
-			// lossless bitmap parsing functions
-			uchar* readAlphaColorMapData(MemoryBlockReader& tag_reader, size_t colorTableSize, int width, int height);
-			uchar* readColorMapData(MemoryBlockReader& tag_reader, size_t colorTableSize, int width, int height);
-			uchar* readAlphaBitmapData(MemoryBlockReader& tag_reader, int width, int height);
-			uchar* readBitmapData(MemoryBlockReader& tag_reader, BitmapFormat format, int width, int height);
-			uchar* readPix15BitmapData(MemoryBlockReader& tag_reader, int data_size, int width, int height);
-			uchar* readPix24BitmapData(MemoryBlockReader& tag_reader, int data_size, int width, int height);
-
-			int getScanlinePadLength(int width);
-			int getScanlinePadLength2(int width);
-
-			// shared
-			void finish(File* file, uchar* bitmap_data, int width, int height, int character_id);
-
-		protected:
-			// jpeg parsing data
-			uchar* mJPEGTables;
-			size_t mJPEGTableLen;
+			// jpeg tables
+			char* mJPEGTables;
 		};
 	}
 }

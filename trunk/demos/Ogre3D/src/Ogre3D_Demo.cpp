@@ -369,7 +369,6 @@ int main(int argc, char **argv)
 	movies.push_back("cpp_test.swf");
 	movies.push_back("video_test.swf");
 	movies.push_back("button_test2.swf");
-	movies.push_back("image_test.swf");
 
 	std::cout << "loadable movies:" << std::endl;
 	for(vtx::uint i=0; i<movies.size(); ++i)
@@ -383,7 +382,7 @@ int main(int argc, char **argv)
 
 	MovieListener listener(mouse);
 
-	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "image_test.swf", "OgreMovableMovie", &listener);
+	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie", &listener);
 	movie->play();
 
 	movie_node = sceneMgr->getRootSceneNode()->createChildSceneNode();
