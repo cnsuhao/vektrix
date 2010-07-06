@@ -44,8 +44,15 @@ namespace vtx
 
 		/** Execute a given script code buffer */
 		virtual bool executeCode(const char* code, const uint& len) = 0;
+
 		/** Get the root ScriptObject that will be associated with the main MovieClip of a Movie */
 		virtual ScriptObject* getRootScriptObject() = 0;
+
+		/** Create a ScriptObject for the given type */
+		virtual ScriptObject* createScriptObject(const String& type) = 0;
+
+		/** Destroy the given ScriptObject */
+		virtual void destroyScriptObject(ScriptObject* script_object) = 0;
 
 		Movie* getParentMovie() const;
 

@@ -31,7 +31,13 @@ THE SOFTWARE.
 #include "vtxopMovableMovieDebugger.h"
 #include "vtxopMovableStrategy.h"
 
+#include "vtxAtlasPacker.h"
+#include "vtxFileManager.h"
+#include "vtxFontResource.h"
+#include "vtxGlyphResource.h"
 #include "vtxInstanceManager.h"
+#include "vtxInstancePool.h"
+#include "vtxShapeResource.h"
 
 namespace vtx
 {
@@ -45,11 +51,20 @@ namespace vtx
 			mFactories[EditText::TYPE] = inst_mgr->getFactory("OgreMovableEditText");
 			mFactories[Shape::TYPE] = inst_mgr->getFactory("OgreMovableShape");
 			mFactories[StaticText::TYPE] = inst_mgr->getFactory("OgreMovableStaticText");
+
+			TextureFactory* texture_factory = inst_mgr->textures()->getFactory("OgreTexture");
+
+			mPacker = new AtlasPacker(texture_factory);
+			mPool = new InstancePool();
 		}
 		//-----------------------------------------------------------------------
 		MovableMovieFactory::~MovableMovieFactory()
 		{
+			delete mPool;
+			mPool = NULL;
 
+			delete mPacker;
+			mPacker = NULL;
 		}
 		//-----------------------------------------------------------------------
 		const String& MovableMovieFactory::getName() const
@@ -60,7 +75,9 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		Movie* MovableMovieFactory::createObject(String name)
 		{
-			return new MovableMovie(name, this);
+			MovableMovie* movie = new MovableMovie(name, this);
+			movie->addListener(this);
+			return movie; 
 		}
 		//-----------------------------------------------------------------------
 		void MovableMovieFactory::destroyObject(Movie* instance)
@@ -69,14 +86,70 @@ namespace vtx
 			instance = NULL;
 		}
 		//-----------------------------------------------------------------------
-		vtx::RenderStrategy* MovableMovieFactory::_createRenderStrategy(File* file)
+		AtlasPacker* MovableMovieFactory::getPacker() const
 		{
-			return new MovableRenderStrategy(this, file);
+			return mPacker;
+		}
+		//-----------------------------------------------------------------------
+		InstancePool* MovableMovieFactory::getInstancePool() const
+		{
+			return mPool;
 		}
 		//-----------------------------------------------------------------------
 		MovieDebugger* MovableMovieFactory::_newDebugger(Movie* movie)
 		{
 			return new MovableMovieDebugger(movie);
+		}
+		//-----------------------------------------------------------------------
+		bool MovableMovieFactory::loadingCompleted(Movie* movie)
+		{
+			const File* file = movie->getFile();
+			std::cout << "packing file: " << file->getFilename() << std::endl;
+
+			const ResourceList& shape_list = file->getResourcesByType("Shape");
+			ResourceList::const_iterator shape_it = shape_list.begin();
+			ResourceList::const_iterator shape_end = shape_list.end();
+
+			// add shapes
+			while(shape_it != shape_end)
+			{
+				ShapeResource* shape = static_cast<ShapeResource*>(*shape_it);
+				if(shape)
+				{
+					mPacker->addElement(shape);
+				}
+
+				++shape_it;
+			}
+
+			const ResourceList& font_list = file->getResourcesByType("Font");
+			ResourceList::const_iterator font_it = font_list.begin();
+			ResourceList::const_iterator font_end = font_list.end();
+
+			// add glyphs
+			while(font_it != font_end)
+			{
+				FontResource* font = static_cast<FontResource*>(*font_it);
+				if(font)
+				{
+					const FontResource::GlyphList& glyphs = font->getGlyphList();
+					FontResource::GlyphList::const_iterator glyph_it = glyphs.begin();
+					FontResource::GlyphList::const_iterator glyph_end = glyphs.end();
+
+					while(glyph_it != glyph_end)
+					{
+						mPacker->addElement(*glyph_it);
+						++glyph_it;
+					}
+				}
+
+				++font_it;
+			}
+
+			mPacker->packAtlas();
+
+			// stop listening to this movie
+			return true;
 		}
 		//-----------------------------------------------------------------------
 	}

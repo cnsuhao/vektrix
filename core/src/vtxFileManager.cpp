@@ -28,13 +28,14 @@ THE SOFTWARE.
 
 #include "vtxFileManager.h"
 
-#include "vtxFile.h"
 #include "vtxFileParsingJob.h"
 #include "vtxFileStream.h"
 #include "vtxFileContainer.h"
 #include "vtxLogManager.h"
 #include "vtxMovieClipResource.h"
+#include "vtxRoot.h"
 #include "vtxStringHelper.h"
+#include "vtxThreadJobQueue.h"
 #include "vtxTimeline.h"
 
 namespace vtx
@@ -62,16 +63,16 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void FileManager::update()
 	{
-#ifdef VTX_THREADING_ENABLED
+#ifdef VTX_THREADED_LOADING_ENABLED
 
 		if(VTX_TRY_MUTEX_LOCK(mMutex))
 		{
-			//VTX_LOCK_MUTEX(mMutex);
-
 			while(mFinishedFiles.size())
 			{
 				const FinishedFile& finished_file = mFinishedFiles.back();
 				File* file = finished_file.second;
+
+				VTX_LOG("Calling file listeners for %s", file->getFilename().c_str());
 
 				// loading succeeded
 				if(finished_file.first)
@@ -91,10 +92,27 @@ namespace vtx
 			VTX_MANUAL_MUTEX_UNLOCK(mMutex);
 		}
 
-#endif // VTX_THREADING_ENABLED
+#endif // VTX_THREADED_LOADING_ENABLED
 	}
 	//-----------------------------------------------------------------------
-	File* FileManager::getFile(const String& filename, const bool& threadedParsing)
+	bool FileManager::doesFileExist(const String& filename)
+	{
+		VTX_LOCK_MUTEX(mContainersMutex);
+
+		FileContainerMap::iterator container_it = mContainers.begin();
+
+		for( ; container_it != mContainers.end(); ++container_it)
+		{
+			if(container_it->second->hasFile(filename))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+	//-----------------------------------------------------------------------
+	File* FileManager::getFile(const String& filename, const bool& threadedParsing, File::Listener* listener)
 	{
 		// empty filename
 		if(!filename.length())
@@ -103,17 +121,27 @@ namespace vtx
 			return NULL;
 		}
 
+#ifdef VTX_THREADED_LOADING_ENABLED
 		VTX_LOCK_MUTEX(mMutex);
+#endif
+
 		FileMap::iterator file_it = mReadyFiles.find(filename);
 
 		if(file_it != mReadyFiles.end())
 		{
 			VTX_LOG("Reloading file '%s' from memory.", filename.c_str());
 
+			if(listener)
+			{
+				file_it->second->addListener(listener);
+			}
+
+			listener->loadingCompleted(file_it->second);
+
 			return file_it->second;
 		}
 
-#ifdef VTX_THREADING_ENABLED
+#ifdef VTX_THREADED_LOADING_ENABLED
 
 		file_it = mParsingFiles.find(filename);
 
@@ -121,10 +149,15 @@ namespace vtx
 		{
 			VTX_LOG("Requested file '%s' is currently being parsed.", filename.c_str());
 
+			if(listener)
+			{
+				file_it->second->addListener(listener);
+			}
+
 			return file_it->second;
 		}
 
-#endif // VTX_THREADING_ENABLED
+#endif // VTX_THREADED_LOADING_ENABLED
 
 		// not loaded yet ---> load it
 		VTX_LOG("Trying to load file '%s'...", filename.c_str());
@@ -143,56 +176,31 @@ namespace vtx
 		FileParser* parser = factory->createObject();
 
 		File* file = new File(filename);
+		FileParsingJob* job = new FileParsingJob(parser, file);
 
-#ifdef VTX_THREADING_ENABLED
-
-		mParsingFiles.insert(std::make_pair(filename, file));
+		if(listener)
+		{
+			file->addListener(listener);
+		}
 
 		if(threadedParsing)
 		{
-			FileParsingJob* job = new FileParsingJob(parser, file);
-			VTX_CREATE_THREAD(thread, *job);
-			mThreads.push_back(ThreadJob(thread, job));
-			return file;
+#ifdef VTX_THREADED_LOADING_ENABLED
+			mParsingFiles.insert(std::make_pair(filename, file));
+			Root::getSingletonPtr()->getMainJobQueue()->queueJob(job);
+#else
+			VTX_WARN("Requested threaded loading but vektrix was compiled without threading support.");
+			job->start();
+			delete job;
+#endif
 		}
 		else
-#endif // VTX_THREADING_ENABLED
 		{
-			FileStream* stream = getFileStream(filename);
-
-			if(!stream)
-			{
-				// no container found
-				VTX_WARN("Unable to find container to load file '%s'.", filename.c_str());
-				return NULL;
-			}
-
-			parser->parse(stream, file);
-
-			if(parser->errorsOccured())
-			{
-				String error = parser->getError();
-				while(error.length())
-				{
-					VTX_WARN(error.c_str());
-					error = parser->getError();
-				}
-
-				VTX_EXCEPT("An error occured while parsing the file \"%s\", see the log for details.", filename.c_str());
-			}
-
-			// TODO: implement FileStreamPtr, so we don't need to destroy instances by hand ?
-			stream->close();
-			delete stream;
-
-			factory->destroyObject(parser);
-
-			mReadyFiles.insert(FileMap::value_type(filename, file));
-			VTX_LOG("Successfully loaded '%s'.", filename.c_str());
-			return file;
+			job->start();
+			delete job;
 		}
 
-		return NULL;
+		return file;
 	}
 	//-----------------------------------------------------------------------
 	FileStream* FileManager::getFileStream(const String& filename)
@@ -266,27 +274,22 @@ namespace vtx
 
 		if(factory)
 		{
-			FileParser* parser = factory->createObject();
-
-			const StringList& extensions = parser->getExtensions();
-
-			StringList::const_iterator ext_it = extensions.begin();
-			StringList::const_iterator ext_end = extensions.end();
-			while(ext_it != ext_end)
+			ParserExtensionMap::iterator it = mParsersByExt.begin();
+			ParserExtensionMap::iterator end = mParsersByExt.end();
+			while(it != end)
 			{
-				const String& ext = *ext_it;
-				ParserExtensionMap::iterator it = mParsersByExt.find(ext);
-
-				if(it != mParsersByExt.end())
+				if(it->second == factory)
 				{
+					VTX_LOG("Removed FileParser for extension \"%s\".", it->first.c_str());
+
 					mParsersByExt.erase(it);
-					VTX_LOG("Removed FileParser for extension \"%s\".", ext.c_str());
+					it = mParsersByExt.begin();
+					end = mParsersByExt.end();
+					continue;
 				}
 
-				++ext_it;
+				++it;
 			}
-
-			factory->destroyObject(parser);
 		}
 	}
 	//-----------------------------------------------------------------------
@@ -303,14 +306,15 @@ namespace vtx
 
 		if(factory)
 		{
-			if(mContainers.find(name) == mContainers.end())
+			String uri = type + "://" + name;
+			if(mContainers.find(uri) == mContainers.end())
 			{
 				FileContainer* container = factory->createObject(name);
-				mContainers.insert(FileContainerMap::value_type(name, container));
+				mContainers.insert(FileContainerMap::value_type(uri, container));
 				return container;
 			}
 
-			VTX_EXCEPT("A container with the name '%s' already exists!", name.c_str());
+			VTX_EXCEPT("A container with the URI '%s' already exists!", uri.c_str());
 			return NULL;
 		}
 
@@ -320,25 +324,12 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void FileManager::unloadAllFiles()
 	{
-#ifdef VTX_THREADING_ENABLED
+#ifdef VTX_THREADED_LOADING_ENABLED
 
-		VTX_LOG("Waiting for parsing jobs to finish...");
-
-		ThreadJobList::iterator thread_it = mThreads.begin();
-		ThreadJobList::iterator thread_end = mThreads.end();
-		while(thread_it != thread_end)
-		{
-			ThreadJob& job = *thread_it;
-			job.first->join();
-			delete job.first;
-			delete job.second;
-			++thread_it;
-		}
-
-		// inform all file listeners before continuing the shutdown
+		// make sure that all file listeners have been informed before continuing the shutdown
 		update();
 
-#endif // VTX_THREADING_ENABLED
+#endif // VTX_THREADED_LOADING_ENABLED
 
 		VTX_LOG("Unloading files...");
 
@@ -352,10 +343,9 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-#ifdef VTX_THREADING_ENABLED
-
 	void FileManager::_finishedParsing(File* file)
 	{
+#ifdef VTX_THREADED_LOADING_ENABLED
 		VTX_LOCK_MUTEX(mMutex);
 
 		FileMap::iterator it = mParsingFiles.find(file->getFilename());
@@ -367,10 +357,15 @@ namespace vtx
 		mFinishedFiles.push_back(FinishedFile(true, file));
 
 		mReadyFiles.insert(FileMap::value_type(file->getFilename(), file));
+#else
+		mReadyFiles.insert(FileMap::value_type(file->getFilename(), file));
+		file->_loadingCompleted();
+#endif
 	}
-
+	//-----------------------------------------------------------------------
 	void FileManager::_failedParsing(File* file)
 	{
+#ifdef VTX_THREADED_LOADING_ENABLED
 		VTX_LOCK_MUTEX(mMutex);
 
 		FileMap::iterator it = mParsingFiles.find(file->getFilename());
@@ -380,8 +375,9 @@ namespace vtx
 		}
 
 		mFinishedFiles.push_back(FinishedFile(false, file));
+#else
+		file->_loadingFailed();
+#endif
 	}
-
-#endif // VTX_THREADING_ENABLED
 	//-----------------------------------------------------------------------
 }

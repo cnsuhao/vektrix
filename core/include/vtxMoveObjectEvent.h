@@ -36,6 +36,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** An event which moves an existing DisplayObject from a certain layer of an DisplayObjectContainer */
 	class vtxExport MoveObjectEvent : public FrameEvent
 	{
@@ -54,6 +55,7 @@ namespace vtx
 		CXForm mCXForm;
 		DisplayObject* mObject;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

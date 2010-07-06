@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A class for displaying visual debugging information about movies */
 	class vtxExport MovieDebugger
 	{
@@ -65,6 +66,7 @@ namespace vtx
 		/** Finish the current debug line strip */
 		virtual void endDebugLine() = 0;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

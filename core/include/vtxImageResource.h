@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A Resource which contains all necessary data for rendering an image */
 	class vtxExport ImageResource : public Resource
 	{
@@ -59,6 +60,7 @@ namespace vtx
 		uint mHeight;
 		char* mPixelData;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

@@ -25,28 +25,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
-#include "vtxswfParser.h"
 
-#include "vtxScriptResource.h"
+#include "flash_package.h"
 
 namespace vtx
 {
-	namespace swf
+	namespace as3
 	{
 		//-----------------------------------------------------------------------
-		void SwfParser::handleDoABC(const uint& tag_length)
+		LoaderContextClass::LoaderContextClass(avmplus::VTable* cvtable) 
+			: ClassClosure(cvtable)
 		{
-			uint start_pos = mReadPos;
+			AvmAssert(traits()->getSizeOfInstance() == sizeof(URLRequestClass));
+			createVanillaPrototype();
+		}
+		//-----------------------------------------------------------------------
+		avmplus::ScriptObject* LoaderContextClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
+		{
+			return new (core()->GetGC(), ivtable->getExtraSize()) LoaderContext(ivtable, prototype);
+		}
+		//-----------------------------------------------------------------------
+		LoaderContext::LoaderContext(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
+			: avmplus::ScriptObject(vtable, prototype)
+		{
 
-			UI32 flags = readU32();
-			String name = readString();
-
-			uint abc_len = tag_length - (mReadPos-start_pos);
-
-			char* abc_buf = new char[abc_len];
-			readByteBlock(abc_buf, abc_len);
-
-			mCurrentFile->addResource(new ScriptResource("Script", abc_buf, abc_len));
 		}
 		//-----------------------------------------------------------------------
 	}

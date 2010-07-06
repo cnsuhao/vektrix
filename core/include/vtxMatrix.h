@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Represents a row-major 3x2 matrix */
 	class vtxExport Matrix
 	{
@@ -79,6 +80,7 @@ namespace vtx
 		/**  */
 		Vector2 transformInverse(const Vector2& v) const;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

@@ -31,6 +31,7 @@ THE SOFTWARE.
 
 #include "vtxPrerequisites.h"
 #include "vtxDisplayObjectContainer.h"
+#include "vtxFile.h"
 #include "vtxHtmlOperations.h"
 #include "vtxHtmlRenderable.h"
 #include "vtxTextLine.h"
@@ -39,11 +40,16 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	/** A visual dynamic/editable textfield that can be displayed inside a Movie */
-	class vtxExport EditText : public DisplayObjectContainer, public HtmlOperations, public HtmlRenderable
+	class vtxExport EditText : 
+		public DisplayObjectContainer, 
+		public HtmlOperations, 
+		public HtmlRenderable, 
+		public File::Listener
 	{
 	public:
 		static const String TYPE;
 		typedef std::vector<TextLine> LineList;
+		typedef std::map<String, File*> LoadedFiles;
 
 		EditText();
 		virtual ~EditText();
@@ -113,6 +119,8 @@ namespace vtx
 		TextLine mCurrentLine;
 		LineList mLines;
 
+		LoadedFiles mLoadedFiles;
+
 		void _buildGraphicsFromDOM();
 
 		/** Inform textfield implementations that they need to update their graphics */
@@ -155,6 +163,9 @@ namespace vtx
 		void _clearSelectionShapes();
 
 		HtmlSelection _getSelectionAtPoint(const Vector2& point);
+
+		void loadingCompleted(File* file);
+		void loadingFailed(File* file);
 	};
 	//-----------------------------------------------------------------------
 }

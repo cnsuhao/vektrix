@@ -29,8 +29,6 @@ THE SOFTWARE.
 #include "vtxRemoveObjectEvent.h"
 
 #include "vtxDisplayObjectContainer.h"
-#include "vtxLogManager.h"
-#include "vtxMovie.h"
 
 namespace vtx
 {
@@ -49,18 +47,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void RemoveObjectEvent::execute()
 	{
-		Instance* inst = (Instance*)mObjectContainer->getChildAt(mLayer);
-
 		mObjectContainer->removeChildAt(mLayer);
-
-		if(inst)
-		{
-			mObjectContainer->getParent()->releaseInstance(inst);
-		}
-		else
-		{
-			VTX_WARN("Can't release Instance from layer %u, layer is empty!", mLayer);
-		}
 	}
 	//-----------------------------------------------------------------------
 }

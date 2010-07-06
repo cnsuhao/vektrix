@@ -32,28 +32,24 @@ THE SOFTWARE.
 #include "vtxfreeimg.h"
 #include "vtxFileParser.h"
 
-namespace vtx
-{
-	namespace freeimg
+namespace vtx { namespace freeimg {
+	//-----------------------------------------------------------------------
+	class vtxfreeimgExport ImageParser : public FileParser
 	{
-		//-----------------------------------------------------------------------
-		class vtxfreeimgExport ImageParser : public FileParser
-		{
-		public:
-			ImageParser();
-			virtual ~ImageParser();
+	public:
+		ImageParser();
+		virtual ~ImageParser();
 
-			const StringList& getExtensions() const;
-			void parse(FileStream* stream, File* file);
+		const StringList& getExtensions() const;
+		void parse(FileStream* stream, File* file);
 
-		protected:
-			FileStream* mCurrentStream;
-		};
-		//-----------------------------------------------------------------------
-		/** The FileParserFactory for creating FileParser objects */
-		FactoryImpl_P0(ImageParser, FileParser);
-		//-----------------------------------------------------------------------
-	}
-}
+	protected:
+		FileStream* mCurrentStream;
+	};
+	//-----------------------------------------------------------------------
+	/** The FileParserFactory for creating FileParser objects */
+	FactoryImpl_P0(ImageParser, FileParser);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

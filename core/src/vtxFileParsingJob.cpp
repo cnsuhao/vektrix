@@ -34,8 +34,6 @@ THE SOFTWARE.
 #include "vtxThreadingDefines.h"
 #include "vtxThreadingHeaders.h"
 
-#ifdef VTX_THREADING_ENABLED
-
 namespace vtx
 {
 	//-----------------------------------------------------------------------
@@ -53,6 +51,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void FileParsingJob::start()
 	{
+		VTX_LOG("FileParsingJob started (%s)...", mFile->getFilename().c_str());
+
 		FileManager* file_mgr = FileManager::getSingletonPtr();
 
 		const String& filename = mFile->getFilename();
@@ -94,5 +94,3 @@ namespace vtx
 	}
 	//-----------------------------------------------------------------------
 }
-
-#endif // VTX_THREADING_ENABLED

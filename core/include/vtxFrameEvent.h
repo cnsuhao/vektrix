@@ -33,12 +33,12 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport FrameEvent
 	{
 	public:
-		FrameEvent() : mObjectContainer(NULL){}
-		FrameEvent(DisplayObjectContainer* object_container) : mObjectContainer(object_container){}
-		virtual ~FrameEvent(){}
+		FrameEvent(DisplayObjectContainer* object_container);
+		virtual ~FrameEvent();
 
 		/** Create an identical clone of this event */
 		virtual FrameEvent* clone(DisplayObjectContainer* container) = 0;
@@ -48,6 +48,7 @@ namespace vtx
 	protected:
 		DisplayObjectContainer* mObjectContainer;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

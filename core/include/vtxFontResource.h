@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A Resource which contains all necessary data for rendering a font */
 	class vtxExport FontResource : public Resource
 	{
@@ -89,6 +90,7 @@ namespace vtx
 		// TODO: refractor this, this should happen automatically when adding glyphs
 		void _notifyGlyphCode(const ushort& code, GlyphResource* glyph);
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

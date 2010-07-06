@@ -48,6 +48,8 @@ THE SOFTWARE.
 #include "vtxopMovableShape.h"
 #include "vtxopMovableStaticText.h"
 
+#ifdef false
+
 namespace vtx
 {
 	namespace ogre
@@ -216,7 +218,7 @@ namespace vtx
 			return NULL;
 		}
 		//-----------------------------------------------------------------------
-		void MovableRenderStrategy::resourceAdded(Resource* resource, const File::ResourceGroupType& group)
+		void MovableRenderStrategy::resourceAdded(Resource* resource)
 		{
 			if(resource->getType() == "Shape")
 			{
@@ -236,3 +238,5 @@ namespace vtx
 		//-----------------------------------------------------------------------
 	}
 }
+
+#endif

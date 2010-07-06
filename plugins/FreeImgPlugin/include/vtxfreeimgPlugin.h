@@ -33,25 +33,23 @@ THE SOFTWARE.
 #include "vtxPlugin.h"
 
 #ifdef VTX_STATIC_LIB
-	void vektrix_FreeImgPlugin_startPlugin();
+void vektrix_FreeImgPlugin_startPlugin();
 #else
-	extern "C" void vtxfreeimgExport startPlugin() throw();
+extern "C" void vtxfreeimgExport startPlugin() throw();
 #endif
 
-namespace vtx
-{
-	namespace freeimg
+namespace vtx { namespace freeimg {
+	//-----------------------------------------------------------------------
+	class FreeImagePlugin : public Plugin
 	{
-		class FreeImagePlugin : public Plugin
-		{
-		public:
-			FreeImagePlugin();
-			virtual ~FreeImagePlugin();
+	public:
+		FreeImagePlugin();
+		virtual ~FreeImagePlugin();
 
-		protected:
-			ImageParserFactory* mParserFactory;
-		};
-	}
-}
+	protected:
+		ImageParserFactory* mParserFactory;
+	};
+	//-----------------------------------------------------------------------
+}}
 
 #endif

@@ -47,13 +47,11 @@ THE SOFTWARE.
 #	define vtxfreeimgExport
 #endif
 
-namespace vtx
-{
-	namespace freeimg
-	{
-		class ImageParser;
-		class ImageParserFactory;
-	}
-}
+namespace vtx { namespace freeimg {
+	//-----------------------------------------------------------------------
+	class ImageParser;
+	class ImageParserFactory;
+	//-----------------------------------------------------------------------
+}}
 
 #endif

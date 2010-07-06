@@ -58,7 +58,7 @@ namespace vtx
 	{
 	public:
 		virtual ~Factory() {};
-	
+
 		/** Create an object with this factory using one creation parameter */
 		virtual T* createObject(P1) = 0;    
 	};

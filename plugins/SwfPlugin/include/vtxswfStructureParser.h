@@ -45,6 +45,7 @@ namespace vtx
 			void handleDefineButton2();
 			void handleDefineSprite();
 			void handlePlaceObject2();
+			void handleRemoveObject2();
 			void handleShowFrame();
 			void handleEnd();
 
@@ -65,4 +66,4 @@ namespace vtx
 	}
 }
 
-#endif // __vtxswfStructureParser_H__
+#endif

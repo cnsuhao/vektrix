@@ -35,6 +35,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A subshape which is contained within a ShapeResource */
 	class vtxExport SubshapeResource
 	{
@@ -53,6 +54,7 @@ namespace vtx
 		MaterialResource* mMaterial;
 		ShapeElementList mShapeElements;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

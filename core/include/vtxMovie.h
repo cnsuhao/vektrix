@@ -35,6 +35,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Defines a movie instance, which can be created by using Root::createMovie() */
 	class vtxExport Movie : public File::Listener
 	{
@@ -49,7 +50,8 @@ namespace vtx
 		class vtxExport Listener
 		{
 		public:
-			virtual void loadingCompleted(Movie* movie) {}
+			/** Called once a Movie has finished to load */
+			virtual bool loadingCompleted(Movie* movie) { return false; }
 			virtual bool loadingFailed(Movie* movie) { return false; }
 		};
 		typedef std::map<Listener*, Listener*> ListenerMap;
@@ -96,14 +98,14 @@ namespace vtx
 		/** @copybrief MovieClip::gotoTime */
 		bool gotoTime(const float& time);
 
-		/** Request an Instance by its id */
-		virtual Instance* getInstance(const String& id);
+		/** Request an Instance with the given id */
+		virtual Instance* getInstance(Resource* resource) = 0;
 
-		/** Request an Instance by its type */
-		virtual Instance* getInstanceByType(const String& type);
+		/** Request an Instance with the given type */
+		virtual Instance* getInstanceByType(const String& type) = 0;
 
-		/** Release a previously used Instance */
-		virtual void releaseInstance(Instance* instance);
+		/** Release a previously requested Instance */
+		virtual void releaseInstance(Instance* instance) = 0;
 
 		/** Get the ScriptEngine that is associated with this movie */
 		ScriptEngine* getScriptEngine() const;
@@ -117,8 +119,6 @@ namespace vtx
 		/** Get the main MovieClip of this movie */
 		MovieClip* getMainMovieClip() const;
 
-		RenderStrategy* getRenderStrategy() const;
-
 		bool addListener(Listener* listener);
 		bool removeListener(Listener* listener);
 
@@ -131,7 +131,6 @@ namespace vtx
 		String mName;
 		File* mFile;
 		MovieFactory* mCreator;
-		RenderStrategy* mRenderStrategy;
 		Vector2 mMousePosition;
 		ListenerMap mListeners;
 		void* mUserData;
@@ -145,7 +144,10 @@ namespace vtx
 
 		void loadingCompleted(File* file);
 		void loadingFailed(File* file);
+
+		void destroy();
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

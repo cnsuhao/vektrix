@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A class for pooling Instance objects */
 	class vtxExport InstancePool
 	{
@@ -54,6 +55,7 @@ namespace vtx
 		/** Get the sub-pool for Instance objects with the given type */
 		Pool* _getPool(const String& type);
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

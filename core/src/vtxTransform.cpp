@@ -115,6 +115,26 @@ namespace vtx
 		return mScale.y;
 	}
 	//-----------------------------------------------------------------------
+	void Transform::setWidth(const float& width)
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	const float Transform::getWidth() const
+	{
+		return mBounding.getWidth() * mScale.x;
+	}
+	//-----------------------------------------------------------------------
+	void Transform::setHeight(const float& width)
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	const float Transform::getHeight() const
+	{
+		return mBounding.getHeight() * mScale.y;
+	}
+	//-----------------------------------------------------------------------
 	void Transform::setLayer(const uint& layer)
 	{
 		mLayer = layer;

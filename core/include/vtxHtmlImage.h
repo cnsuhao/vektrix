@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport HtmlImage : public HtmlElement
 	{
 	public:
@@ -51,6 +52,7 @@ namespace vtx
 		/// get the nearest HtmlText node that is located <b>AFTER</b> this element inside the DOM tree
 		//HtmlText* nextTextNode;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

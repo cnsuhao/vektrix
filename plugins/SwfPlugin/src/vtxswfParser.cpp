@@ -307,6 +307,10 @@ namespace vtx
 				mStructureParser->handlePlaceObject2();
 				break;
 
+			case TT_RemoveObject2:
+				mStructureParser->handleRemoveObject2();
+				break;
+
 			case TT_ShowFrame:
 				mStructureParser->handleShowFrame();
 				break;
@@ -733,6 +737,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void SwfParser::readFillstyleArray(const TagTypes& type, FillstyleList& result)
 		{
+			resetReadBits();
 			UI16 fillstyle_count = readU8();
 
 			if(fillstyle_count == 255 && 
@@ -790,6 +795,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void SwfParser::readLinestyleArray(const TagTypes& type, LinestyleList& result)
 		{
+			resetReadBits();
 			UI16 linestyle_count = readU8();
 
 			if(linestyle_count == 255)

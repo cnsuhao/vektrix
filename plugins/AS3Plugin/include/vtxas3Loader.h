@@ -25,29 +25,48 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
-#include "vtxswfParser.h"
+
+#ifndef __vtxas3Loader_H__
+#define __vtxas3Loader_H__
+
+#include "cspPrerequesites.h"
+
+#include "vtxFile.h"
 
 namespace vtx
 {
-	namespace swf
+	namespace as3
 	{
 		//-----------------------------------------------------------------------
-		void SwfParser::handleSymbolClass()
+		class LoaderClass : public avmplus::ClassClosure
 		{
-			UI16 num_symbols = readU16();
+		public:
+			LoaderClass(avmplus::VTable* cvtable);
+			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
 
-			for(UI16 i=0; i<num_symbols; ++i)
-			{
-				UI16 id = readU16();
+			AS3_ClassSlots(Loader);
+		};
+		//-----------------------------------------------------------------------
+		class Loader : public DisplayObjectContainer, public File::Listener
+		{
+		public:
+			Loader(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+			virtual ~Loader();
 
-				String name = readString();
+			void load(URLRequest* request, LoaderContext* context);
 
-				if(id == 0)
-				{
-					mHeader.script_root_class = name;
-				}
-			}
-		}
+			void eventFired(const vtx::Event& evt);
+
+			AS3_InstSlots(Loader);
+
+		protected:
+			void _setNativeObject(Instance* inst);
+
+			void loadingCompleted(File* file);
+			void loadingFailed(File* file);
+		};
 		//-----------------------------------------------------------------------
 	}
 }
+
+#endif

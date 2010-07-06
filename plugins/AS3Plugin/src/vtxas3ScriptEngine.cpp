@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include "vtxFile.h"
 #include "vtxLogManager.h"
 #include "vtxMovie.h"
+#include "vtxMovieClip.h"
 #include "vtxScriptObject.h"
 #include "vtxStringHelper.h"
 
@@ -93,11 +94,25 @@ namespace vtx
 						mRoot = mVmCore->createObject(vec.at(0));
 					}
 
-					mRootObject = dynamic_cast<vtx::as3::MovieClip*>(mRoot->scriptObj());
+					mRootObject = static_cast<vtx::as3::MovieClip*>(mRoot->scriptObj());
 				}
 			}
 
 			return mRootObject;
+		}
+		//-----------------------------------------------------------------------
+		ScriptObject* AS3ScriptEngine::createScriptObject(const String& type)
+		{
+			if(type == vtx::MovieClip::TYPE)
+			{
+				return static_cast<MovieClip*>(mVmCore->createObject("MovieClip", "flash.display")->scriptObj());
+			}
+			return NULL;
+		}
+		//-----------------------------------------------------------------------
+		void AS3ScriptEngine::destroyScriptObject(ScriptObject* script_object)
+		{
+
 		}
 		//-----------------------------------------------------------------------
 		void AS3ScriptEngine::output(const String& message)

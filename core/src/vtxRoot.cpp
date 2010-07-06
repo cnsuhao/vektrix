@@ -36,6 +36,7 @@ THE SOFTWARE.
 #include "vtxPlugin.h"
 #include "vtxStringHelper.h"
 #include "vtxTexture.h"
+#include "vtxThreadJobQueue.h"
 
 #include "vtxRasterizerManager.h"
 
@@ -57,6 +58,7 @@ namespace vtx
 		new InstanceManager();
 
 		mFileManager = new FileManager();
+		mMainJobQueue = new ThreadJobQueue();
 	}
 	//-----------------------------------------------------------------------
 	Root::~Root()
@@ -84,6 +86,7 @@ namespace vtx
 			++plugin_it;
 		}
 
+		delete mMainJobQueue;
 		delete mFileManager;
 
 		delete InstanceManager::getSingletonPtr();
@@ -168,7 +171,7 @@ namespace vtx
 				movie->addListener(listener);
 			}
 
-#ifndef VTX_THREADING_ENABLED
+#ifndef VTX_THREADED_LOADING_ENABLED
 			movie->loadingCompleted(file);
 #endif
 
@@ -197,6 +200,11 @@ namespace vtx
 	bool Root::destroyMovie(Movie* instance)
 	{
 		return destroyMovie(instance->getName());
+	}
+	//-----------------------------------------------------------------------
+	ThreadJobQueue* Root::getMainJobQueue() const
+	{
+		return mMainJobQueue;
 	}
 	//-----------------------------------------------------------------------
 	void Root::update(float delta_time)

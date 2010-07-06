@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Represents a single keyframe which is contained within a Timeline */
 	class vtxExport Keyframe : public EventContainer
 	{
@@ -56,6 +57,7 @@ namespace vtx
 	protected:
 		uint mIndex;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

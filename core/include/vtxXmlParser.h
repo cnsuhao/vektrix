@@ -38,6 +38,7 @@ typedef struct XML_ParserStruct* XML_Parser;
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport XmlParser
 	{
 	public:
@@ -59,6 +60,7 @@ namespace vtx
 		virtual void endElement(String name) = 0;
 		virtual void elementData(String text) = 0;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

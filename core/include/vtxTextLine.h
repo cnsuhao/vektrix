@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Represents a single line of an EditText textfield */
 	class TextLine
 	{
@@ -59,6 +60,7 @@ namespace vtx
 		HtmlElement::Alignment align;
 		ElementList elements;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

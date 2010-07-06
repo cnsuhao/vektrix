@@ -27,11 +27,11 @@ THE SOFTWARE.
 */
 
 #include "vtxLogManager.h"
-
+#include "vtxOpSysHelper.h"
 #include "vtxStringHelper.h"
 
-#ifdef WIN32
-#include "windows.h"
+#if VTX_OS == VTX_WIN32
+#	include "windows.h"
 #endif
 
 namespace vtx
@@ -59,6 +59,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void LogManager::exception(const char* format, ...)
 	{
+		VTX_LOCK_MUTEX(mLogMutex);
+
 		va_list argptr;
 		va_start(argptr, format);
 		vsprintf(mMessageBuffer, format, argptr);
@@ -74,14 +76,16 @@ namespace vtx
 			std::cout << "<VTX> " << temp << std::endl;
 		}
 
-#ifdef WIN32
-		MessageBox(NULL, temp.c_str(), "vektrix exception", MB_OK | MB_ICONSTOP);
+#if VTX_OS == VTX_WIN32
+		MessageBox(NULL, temp.c_str(), "vektrix exception", MB_OK | MB_ICONERROR);
 #endif
 		VTX_DEBUG_FAIL("Exception Assert");
 	}
 	//-----------------------------------------------------------------------
 	void LogManager::warning(const char* format, ...)
 	{
+		VTX_LOCK_MUTEX(mLogMutex);
+
 		va_list argptr;
 		va_start(argptr, format);
 		vsprintf(mMessageBuffer, format, argptr);
@@ -97,6 +101,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void LogManager::log(const char* format, ...)
 	{
+		VTX_LOCK_MUTEX(mLogMutex);
+
 		va_list argptr;
 		va_start(argptr, format);
 		vsprintf(mMessageBuffer, format, argptr);
@@ -107,17 +113,21 @@ namespace vtx
 			std::cout << "<VTX> " << mMessageBuffer << std::endl;
 		}
 
-		mLogFile << mMessageBuffer << std::endl;
+		mLogFile << "[" << OpSysHelper::getSystemTime() << "]" << mMessageBuffer << std::endl;
 	}
 	//-----------------------------------------------------------------------
 	void LogManager::file(const String& source)
 	{
+		VTX_LOCK_MUTEX(mLogMutex);
+
 		uint pos = (uint)source.find_last_of('\\')+1;
 		mFilename = source.substr(pos, source.length()-pos);
 	}
 	//-----------------------------------------------------------------------
 	void LogManager::line(const uint& line)
 	{
+		VTX_LOCK_MUTEX(mLogMutex);
+
 		mLineNr = line;
 	}
 	//-----------------------------------------------------------------------

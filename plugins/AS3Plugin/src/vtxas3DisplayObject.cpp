@@ -180,6 +180,24 @@ namespace vtx
 			}
 		}
 		//-----------------------------------------------------------------------
+		void DisplayObject::set_visible(bool val)
+		{
+			if(mDisplayObject)
+			{
+				mDisplayObject->setVisible(val);
+			}
+		}
+		//-----------------------------------------------------------------------
+		bool DisplayObject::get_visible()
+		{
+			if(mDisplayObject)
+			{
+				return mDisplayObject->getVisible();
+			}
+
+			return true;
+		}
+		//-----------------------------------------------------------------------
 		void DisplayObject::_setNativeObject(Instance* inst)
 		{
 			EventDispatcher::_setNativeObject(inst);

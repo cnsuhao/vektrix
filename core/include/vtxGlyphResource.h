@@ -36,6 +36,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A Resource which contains information about a single glyph contained within a FontResource */
 	class vtxExport GlyphResource : public AtlasElement
 	{
@@ -69,8 +70,6 @@ namespace vtx
 		const BoundingBox& getBoundingBox() const;
 
 		// AtlasElement
-		/** @copybrief AtlasElement::getPackID */
-		const String getPackID();
 		/** @copybrief AtlasElement::getPackableWidth */
 		const uint getPackableWidth();
 		/** @copybrief AtlasElement::getPackableHeight */
@@ -84,6 +83,7 @@ namespace vtx
 		FontResource* mParent;
 		ShapeElementList mShapeElements;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

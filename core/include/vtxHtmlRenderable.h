@@ -35,6 +35,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport HtmlRenderable
 	{
 	public:
@@ -90,6 +91,7 @@ namespace vtx
 		/** Recursive method to iterate over the HTML DOM tree */
 		void _recursiveDomIteration(HtmlElement* source_element);
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

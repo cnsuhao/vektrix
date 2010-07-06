@@ -100,11 +100,6 @@ namespace vtx
 		return mBoundingBox;
 	}
 	//-----------------------------------------------------------------------
-	const String GlyphResource::getPackID()
-	{
-		return mParent->getID() + "->" + StringHelper::toString(mIndex);
-	}
-	//-----------------------------------------------------------------------
 	const uint GlyphResource::getPackableWidth()
 	{
 		return MathHelper::findClosestPowerOfTwo(mBoundingBox.getWidth()) * 2;

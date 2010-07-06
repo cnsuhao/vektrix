@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class HtmlSelection
 	{
 	public:
@@ -122,6 +123,7 @@ namespace vtx
 		Type type;
 		HtmlElement* parent;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

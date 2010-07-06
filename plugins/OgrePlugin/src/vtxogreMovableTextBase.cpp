@@ -93,7 +93,7 @@ namespace vtx
 						GlyphResource* glyph_res = font->getGlyphByIndex(glyph.index);
 						if(glyph_res)
 						{
-							AtlasPacker::PackResultList::const_iterator atlas_it = atlas_list.find(glyph_res->getPackID());
+							AtlasPacker::PackResultList::const_iterator atlas_it = atlas_list.find(glyph_res);
 							if(atlas_it != atlas_list.end())
 							{
 								const AtlasPacker::PackResult& atlas_quad = atlas_it->second;

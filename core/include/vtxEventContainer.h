@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A container which can encapsulate a set of frame events */
 	class vtxExport EventContainer
 	{
@@ -55,6 +56,7 @@ namespace vtx
 	protected:
 		EventList mEvents;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

@@ -38,9 +38,6 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	bool FileHelper::doesDirectoryExist(String name)
 	{
-		if(!doesFileExist(name))
-			return false;
-
 		struct stat buf;
 		stat(name.c_str(), &buf);
 		return (buf.st_mode & S_IFDIR) != 0;

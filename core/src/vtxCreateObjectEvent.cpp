@@ -42,9 +42,10 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	CreateObjectEvent::CreateObjectEvent(DisplayObjectContainer* object_container, 
+	CreateObjectEvent::CreateObjectEvent(DisplayObjectContainer* object_container, File* source_file, 
 		const String& id, const uint& layer, const Matrix& matrix, const CXForm& cxform, const String& name) 
 		: FrameEvent(object_container), 
+		mSourceFile(source_file), 
 		mID(id), 
 		mLayer(layer), 
 		mMatrix(matrix), 
@@ -56,19 +57,21 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	FrameEvent* CreateObjectEvent::clone(DisplayObjectContainer* container)
 	{
-		return new CreateObjectEvent(container, mID, mLayer, mMatrix, mCXForm, mName);
+		return new CreateObjectEvent(container, mSourceFile, mID, mLayer, mMatrix, mCXForm, mName);
 	}
 	//-----------------------------------------------------------------------
 	void CreateObjectEvent::execute()
 	{
-		mObject = dynamic_cast<DisplayObject*>(mObjectContainer->getParent()->getInstance(mID));
+		Resource* resource = mSourceFile->getResource(mID);
+		Instance* instance = mObjectContainer->getParent()->getInstance(resource);
 
-		if(!mObject)
+		if(!instance/* //TODO: || !instance->isDisplayable()*/)
 		{
 			VTX_EXCEPT("%s: CreateObjectEvent requested an object (id: \"%s\") that is not a DisplayObject.", 
 				mObjectContainer->getParent()->getFile()->getFilename().c_str(), mID.c_str());
 		}
 
+		mObject = static_cast<DisplayObject*>(instance);
 		mObject->setMatrix(mMatrix);
 		mObject->setCXForm(mCXForm);
 		mObjectContainer->addChildAt(mObject, mLayer);
@@ -83,7 +86,6 @@ namespace vtx
 				// TODO: remove NULL check, should be safe here
 				if(script_obj)
 				{
-					//script_obj->setNativeObject(mObject);
 					mObject->setScriptObject(script_obj);
 				}
 			}

@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxas3MovieClip_H__
 #define __vtxas3MovieClip_H__
 
-#include "cspPrerequesites.h"
+#include "vtxas3.h"
 
 namespace vtx
 {

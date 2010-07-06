@@ -26,43 +26,17 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxResourceGroup_H__
-#define __vtxResourceGroup_H__
+#ifndef __vtxThreadingConfig_H__
+#define __vtxThreadingConfig_H__
 
-#include "vtxPrerequisites.h"
+// enumerate supported threading libraries
+#define VTX_THREADING_NONE 0
+#define VTX_THREADING_BOOST 1
 
-namespace vtx
-{
-	class ResourceGroup
-	{
-	public:
-		ResourceGroup(File* file);
-		virtual ~ResourceGroup();
+// enable threaded loading of files
+#define VTX_THREADED_LOADING_ENABLED
 
-		/** Add a Resource instance to this File */
-		bool addResource(Resource* res);
-
-		/** Retrieve a Resource instance from this File by its unique ID */
-		Resource* getResource(const String& id);
-
-		/** Query all resouces from this File that match the given type */
-		const ResourceList& getResourcesByType(const String& type) const;
-
-		/** Get all resources of this File */
-		const ResourceMap& getResources() const;
-
-		void destroyResources();
-
-		/** Get a particular FontResource by its font name */
-		FontResource* getFontByName(const String& font_name);
-
-	protected:
-		File* mParent;
-		ResourceMap mResources;
-		ResourceTypeMap mResourcesByType;
-
-		FontMap mFonts;
-	};
-}
+// select which threading library shall be used
+#define VTX_THREADING_LIB VTX_THREADING_BOOST
 
 #endif

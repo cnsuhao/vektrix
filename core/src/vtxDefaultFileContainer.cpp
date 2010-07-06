@@ -45,7 +45,7 @@ namespace vtx
 			VTX_EXCEPT("The FileContainer '%s' does not exist!", location.c_str());
 		}
 
-		if(mLocation.substr(mLocation.length()-1, 1) != "/")
+		if(mLocation.length() > 0 && mLocation.substr(mLocation.length()-1, 1) != "/")
 		{
 			mLocation += "/";
 		}

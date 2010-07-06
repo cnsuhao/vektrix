@@ -40,6 +40,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** The manager that keeps track of all different kinds of Instance factories */
 	class vtxExport InstanceManager : public Singleton<InstanceManager>, public FactoryManager<InstanceFactory>
 	{
@@ -63,6 +64,7 @@ namespace vtx
 		InstanceManager();
 		virtual ~InstanceManager();
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

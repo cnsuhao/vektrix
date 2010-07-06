@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A helper class for string operations */
 	class vtxExport StringHelper
 	{
@@ -64,7 +65,7 @@ namespace vtx
 
 		static String toString(Matrix val);
 		static Matrix toMatrix(const String& str);
-		
+
 		static String toString(CXForm val);
 		static CXForm toCXForm(const String& str);
 
@@ -77,6 +78,7 @@ namespace vtx
 		static String toString(BoundingBox val);
 		static BoundingBox toBoundingBox(const String& str);
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

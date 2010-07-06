@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "vtxswfScriptParser.h"
 #include "vtxswfParser.h"
 
+#include "vtxLogManager.h"
 #include "vtxScriptResource.h"
 
 namespace vtx
@@ -65,6 +66,10 @@ namespace vtx
 				if(id == 0)
 				{
 					parser->getHeader().script_root_class = name;
+				}
+				else
+				{
+					VTX_LOG("ST_SymbolClass: %s", name.c_str());
 				}
 			}
 		}

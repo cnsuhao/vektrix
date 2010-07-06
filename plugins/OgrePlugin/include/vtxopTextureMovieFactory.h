@@ -45,7 +45,6 @@ namespace vtx
 			void destroyObject(Movie* instance);
 
 		protected:
-			vtx::RenderStrategy* _createRenderStrategy(File* file);
 			MovieDebugger* _newDebugger(Movie* movie);
 		};
 	}

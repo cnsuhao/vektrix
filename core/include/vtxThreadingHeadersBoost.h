@@ -29,19 +29,25 @@ THE SOFTWARE.
 #ifndef __vtxThreadingHeadersBoost_H__
 #define __vtxThreadingHeadersBoost_H__
 
+#if VTX_THREADING_LIB == VTX_THREADING_BOOST
+
 // disable memory debugging temporarily
 #undef new
 
+#pragma warning(push, 0)
 #include <boost/thread/condition.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/tss.hpp>
+#pragma warning(pop)
 
 // reactivate memory debugging
 #if VTX_OS == VTX_WIN32 && defined _DEBUG && !defined NO_MEM_DBG
 #	define new VTX_NEW
 #endif
+
+#endif // VTX_THREADING_LIB == VTX_THREADING_BOOST
 
 #endif

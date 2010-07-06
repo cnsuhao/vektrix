@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** An abstract interface describing a rasterizer which paints elements to textures */
 	class vtxExport Rasterizer
 	{
@@ -45,6 +46,7 @@ namespace vtx
 		/** Render a given element to a Texture */
 		virtual void renderElementToTexture(Texture* texture, AtlasElement* element, AtlasNode* node) = 0;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

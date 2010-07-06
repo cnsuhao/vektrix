@@ -35,6 +35,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A class to pack two-dimensional objects into a given atlas */
 	class vtxExport AtlasPacker
 	{
@@ -49,7 +50,7 @@ namespace vtx
 			Texture* texture;
 			AtlasNode* node;
 		};
-		typedef std::map<String, PackResult> PackResultList;
+		typedef std::map<AtlasElement*, PackResult> PackResultList;
 
 		/** Listen to AtlasPacker events */
 		class Listener
@@ -73,6 +74,10 @@ namespace vtx
 
 		/** Register an element to the atlas for packing */
 		void addElement(AtlasElement* element);
+
+		/** Check if a certain element is packed by this packer */
+		bool containsElement(AtlasElement* element);
+
 		/** Pack all registered elements to the atlas */
 		const PackResultList& packAtlas();
 		/** Render all registered elements to their assigned atlas */
@@ -97,6 +102,7 @@ namespace vtx
 
 		TextureFactory* mTextureFactory;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

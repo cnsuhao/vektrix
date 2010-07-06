@@ -45,4 +45,4 @@ namespace vtx
 	}
 }
 
-#endif // __vtxswfTextParser_H__
+#endif

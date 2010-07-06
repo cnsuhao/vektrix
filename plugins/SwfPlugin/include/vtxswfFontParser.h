@@ -50,4 +50,4 @@ namespace vtx
 	}
 }
 
-#endif // __vtxswfFontParser_H__
+#endif

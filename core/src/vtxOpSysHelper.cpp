@@ -26,21 +26,29 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxRenderStrategy.h"
+#include "vtxOpSysHelper.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	RenderStrategy::RenderStrategy(MovieFactory* factory, File* file) 
-		: mFactory(factory), 
-		mFile(file)
+	String OpSysHelper::getSystemTime()
 	{
+		time_t rawtime;
+		struct tm* timeinfo;
 
-	}
-	//-----------------------------------------------------------------------
-	RenderStrategy::~RenderStrategy()
-	{
+		time(&rawtime);
+		timeinfo = localtime(&rawtime);
 
+		std::stringstream result;
+		result << std::setfill('0') << 
+			std::setw(2) <<
+			timeinfo->tm_hour << ":" << 
+			std::setw(2) <<
+			timeinfo->tm_min << ":" << 
+			std::setw(2) <<
+			timeinfo->tm_sec;
+
+		return result.str();
 	}
 	//-----------------------------------------------------------------------
 }

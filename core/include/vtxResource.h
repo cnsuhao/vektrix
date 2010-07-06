@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Base class for all resources that can be contained within a File definition */
 	class vtxExport Resource
 	{
@@ -57,6 +58,7 @@ namespace vtx
 		/** Set the parent File for this resource */
 		void _setFile(File* file);
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

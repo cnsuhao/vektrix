@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** The base class for all scripting objects */
 	class vtxExport ScriptObject : public EventListener
 	{
@@ -61,6 +62,7 @@ namespace vtx
 		virtual void _setNativeObject(Instance* inst);
 
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

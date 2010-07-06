@@ -35,6 +35,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Base class for everything visual that can be displayed inside a Movie */
 	class vtxExport DisplayObject : public Instance
 	{
@@ -90,6 +91,11 @@ namespace vtx
 		/** Get the current height of this object */
 		float getHeight() const;
 
+		/** Set the visibility of this object */
+		void setVisible(const bool& visible);
+		/** Get the visibility of this object */
+		bool getVisible() const;
+
 		/** Notify this object about its parent DisplayObjectContainer */
 		void setParentContainer(DisplayObjectContainer* parent);
 
@@ -122,6 +128,7 @@ namespace vtx
 		Transform mTransform;
 		DisplayObjectContainer* mParentContainer;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

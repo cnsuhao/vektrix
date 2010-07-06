@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "vtxPrerequisites.h"
 #include "vtxDefaultFileContainer.h"
 #include "vtxFactoryManager.h"
+#include "vtxFile.h"
 #include "vtxFileParser.h"
 #include "vtxSingleton.h"
 
@@ -40,6 +41,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** The manager that keeps track of File definitions, FileParser instances and FileContainer resources */
 	class vtxExport FileManager : public Singleton<FileManager>
 	{
@@ -57,8 +59,11 @@ namespace vtx
 
 		void update();
 
+		/** Check if the given filename could be loaded */
+		bool doesFileExist(const String& filename);
+
 		/** Request to load a File by filename */
-		File* getFile(const String& filename, const bool& threadedParsing = false);
+		File* getFile(const String& filename, const bool& threadedParsing = false, File::Listener* listener = NULL);
 
 		/** Open a new FileStream */
 		FileStream* getFileStream(const String& filename);
@@ -68,7 +73,7 @@ namespace vtx
 
 		/** Get a FileParserFactory by its associated file extension */
 		FileParserFactory* getParserFactory(const String extension);
-		
+
 		/** Remove a FileParserFactory from the manager */
 		void removeParserFactory(FileParserFactory* factory);
 
@@ -94,11 +99,7 @@ namespace vtx
 		ContainerManager mContainerFactories;
 		ParserManager mParserFactories;
 
-#ifdef VTX_THREADING_ENABLED
-
-		typedef std::pair<VTX_THREAD_TYPE*, FileParsingJob*> ThreadJob;
-		typedef std::vector<ThreadJob> ThreadJobList;
-		ThreadJobList mThreads;
+#ifdef VTX_THREADED_LOADING_ENABLED
 
 		/// mutex that protects mReadyFiles
 		VTX_MUTEX(mMutex);
@@ -111,14 +112,15 @@ namespace vtx
 		typedef std::vector<FinishedFile> FinishedFileList;
 		FinishedFileList mFinishedFiles;
 
+#endif // VTX_THREADED_LOADING_ENABLED
+
 		void _finishedParsing(File* file);
 		void _failedParsing(File* file);
-
-#endif // VTX_THREADING_ENABLED
 
 		FileManager();
 		virtual ~FileManager();
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

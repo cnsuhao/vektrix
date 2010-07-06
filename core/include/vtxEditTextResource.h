@@ -35,6 +35,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A Resource which contains all necessary data for creating an EditText instance */
 	class vtxExport EditTextResource : public Resource
 	{
@@ -59,6 +60,7 @@ namespace vtx
 		BoundingBox mBoundingBox;
 		WString mInitialText;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

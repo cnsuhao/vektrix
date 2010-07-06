@@ -31,6 +31,8 @@ THE SOFTWARE.
 
 #include "vtxPrerequisites.h"
 #include "vtxSingleton.h"
+#include "vtxThreadingDefines.h"
+#include "vtxThreadingHeaders.h"
 
 #define VTX_EXCEPT vtx::LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->line(__LINE__); LogManager::getSingletonPtr()->exception
 #define VTX_WARN vtx::LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->warning
@@ -38,6 +40,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** The manager for logging events, warnings and errors */
 	class vtxExport LogManager : public Singleton<LogManager>
 	{
@@ -60,7 +63,9 @@ namespace vtx
 		std::ofstream mLogFile;
 		String mFilename;
 		uint mLineNr;
+		VTX_MUTEX(mLogMutex);
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

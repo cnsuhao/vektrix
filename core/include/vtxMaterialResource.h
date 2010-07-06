@@ -36,6 +36,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A Resource which contains graphical material data to be used by visual objects */
 	class vtxExport MaterialResource : public Resource
 	{
@@ -86,6 +87,7 @@ namespace vtx
 		Matrix mTransformMatrix;
 		GradientMap mGradientMap;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

@@ -41,7 +41,6 @@ THE SOFTWARE.
 #include "vtxMovieClip.h"
 #include "vtxMovieDebugger.h"
 #include "vtxMovieClipResource.h"
-#include "vtxRenderStrategy.h"
 #include "vtxResource.h"
 #include "vtxRoot.h"
 #include "vtxScriptObject.h"
@@ -69,14 +68,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	Movie::~Movie()
 	{
-		if(mFile)
-		{
-			mFile->removeListener(this);
-		}
 
-		delete mDebugger;
-		delete mScriptEngine;
-		delete mMainMovieClip;
 	}
 	//-----------------------------------------------------------------------
 	const String& Movie::getName()
@@ -86,6 +78,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	File* Movie::getFile()
 	{
+		VTX_DEBUG_ASSERT(mFile, "call to Movie::getFile() but mFile was NULL");
 		return mFile;
 	}
 	//-----------------------------------------------------------------------
@@ -213,32 +206,6 @@ namespace vtx
 		return mMainMovieClip->gotoTime(time);
 	}
 	//-----------------------------------------------------------------------
-	Instance* Movie::getInstance(const String& id)
-	{
-		Instance* inst = mRenderStrategy->shareInstance(id, this);
-		//VTX_LOG("SHARED instance with id %s (%s)", id.c_str(), inst->getType().c_str());
-		return inst;
-	}
-	//-----------------------------------------------------------------------
-	Instance* Movie::getInstanceByType(const String& type)
-	{
-		Instance* inst = mRenderStrategy->shareInstanceByType(type, this);
-		return inst;
-	}
-	//-----------------------------------------------------------------------
-	void Movie::releaseInstance(Instance* instance)
-	{
-		if(instance)
-		{
-			// TODO: do this more beautifully and somewhere else ??
-			//ScriptObject* so = instance->getScriptObject();
-			//so->setNativeObject(NULL);
-			//instance->setScriptObject(NULL);
-			mRenderStrategy->storeInstance(instance);
-			//VTX_LOG("STORED instance with id %s (%s)", instance->getID().c_str(), instance->getType().c_str());
-		}
-	}
-	//-----------------------------------------------------------------------
 	ScriptEngine* Movie::getScriptEngine() const
 	{
 		return mScriptEngine;
@@ -265,11 +232,6 @@ namespace vtx
 	MovieClip* Movie::getMainMovieClip() const
 	{
 		return mMainMovieClip;
-	}
-	//-----------------------------------------------------------------------
-	RenderStrategy* Movie::getRenderStrategy() const
-	{
-		return mRenderStrategy;
 	}
 	//-----------------------------------------------------------------------
 	bool Movie::addListener(Movie::Listener* listener)
@@ -320,7 +282,6 @@ namespace vtx
 		}
 
 		mFile = file;
-		mRenderStrategy = mCreator->getRenderStrategy(mFile);
 
 		mMainMovieClip = new MovieClip();
 		mMainMovieClip->_setParent(this);
@@ -348,12 +309,23 @@ namespace vtx
 			}
 		}
 
+		std::vector<Listener*> remove_listeners;
+
 		ListenerMap::iterator it = mListeners.begin();
 		ListenerMap::iterator end = mListeners.end();
 		while(it != end)
 		{
-			it->second->loadingCompleted(this);
+			if(it->second->loadingCompleted(this))
+			{
+				// remove this listener
+				remove_listeners.push_back(it->second);
+			}
 			++it;
+		}
+
+		for(uint i=0; i<remove_listeners.size(); ++i)
+		{
+			removeListener(remove_listeners.at(i));
 		}
 	}
 	//-----------------------------------------------------------------------
@@ -373,6 +345,19 @@ namespace vtx
 		{
 			Root::getSingletonPtr()->destroyMovie(this);
 		}
+	}
+	//-----------------------------------------------------------------------
+	void Movie::destroy()
+	{
+		// TODO: pure virtual call fix/hack, what to do here ?
+		if(mFile)
+		{
+			mFile->removeListener(this);
+		}
+
+		delete mDebugger;
+		delete mScriptEngine;
+		delete mMainMovieClip;
 	}
 	//-----------------------------------------------------------------------
 }

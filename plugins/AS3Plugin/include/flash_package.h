@@ -32,18 +32,26 @@ THE SOFTWARE.
 #include "vtxas3.h"
 #include "cspPrerequesites.h"
 
+using namespace avmplus;
 #include "flash.h"
 
 // flash.events
 #include "vtxas3EventDispatcher.h"
+
+// flash.system
+#include "vtxas3LoaderContext.h"
 
 // flash.display
 #include "vtxas3DisplayObject.h"
 #include "vtxas3InteractiveObject.h"
 #include "vtxas3SimpleButton.h"
 #include "vtxas3DisplayObjectContainer.h"
+#include "vtxas3Loader.h"
 #include "vtxas3Sprite.h"
 #include "vtxas3MovieClip.h"
+
+// flash.net
+#include "vtxas3URLRequest.h"
 
 // flash.text
 #include "vtxas3StaticText.h"

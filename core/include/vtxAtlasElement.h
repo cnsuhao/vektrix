@@ -33,18 +33,17 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** An element which can be packed into a 2D atlas by using the AtlasPacker */
 	class vtxExport AtlasElement
 	{
 	public:
-		/** Get a unique identifier associated with this element */
-		virtual const String getPackID() = 0;
-
 		/** Get the width that this element shall occupy at the atlas (must be a power of 2) */
 		virtual const uint getPackableWidth() = 0;
 		/** Get the height that this element shall occupy at the atlas (must be a power of 2) */
 		virtual const uint getPackableHeight() = 0;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

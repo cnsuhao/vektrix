@@ -51,6 +51,9 @@ namespace vtx
 			bool executeCode(const char* code, const uint& len);
 			ScriptObject* getRootScriptObject();
 
+			ScriptObject* createScriptObject(const String& type);
+			void destroyScriptObject(ScriptObject* script_object);
+
 		protected:
 			csp::VmCore* mVmCore;
 			csp::ScriptObject* mRoot;

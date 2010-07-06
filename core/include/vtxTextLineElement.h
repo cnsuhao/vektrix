@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Represents a single line element, such as a word or an image */
 	class TextLineElement
 	{
@@ -91,6 +92,7 @@ namespace vtx
 		float height;
 		FontResource* font;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

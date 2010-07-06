@@ -29,10 +29,12 @@ THE SOFTWARE.
 #ifndef __vtxThreadingDefinesBoost_H__
 #define __vtxThreadingDefinesBoost_H__
 
+#if VTX_THREADING_LIB == VTX_THREADING_BOOST
+
 // synchronization
 #define VTX_MUTEX(name) mutable boost::recursive_mutex name
 #define VTX_LOCK_MUTEX(mutex_name) boost::recursive_mutex::scoped_lock vtxMutexLock(mutex_name)
-#define VTX_LOCK_MUTEX_NAMED(lock_name, mutex_name) boost::recursive_mutex::scoped_lock lock_name(mutex_name)
+#define VTX_LOCK_MUTEX_NAMED(mutex_name, lock_name) boost::recursive_mutex::scoped_lock lock_name(mutex_name)
 
 #define VTX_TRY_MUTEX_LOCK(mutex_name) mutex_name.try_lock()
 #define VTX_MANUAL_MUTEX_LOCK(mutex_name) mutex_name.lock()
@@ -41,8 +43,13 @@ THE SOFTWARE.
 #define VTX_AUTO_MUTEX mutable boost::recursive_mutex VTX_MUTEX_ID
 #define VTX_LOCK_AUTO_MUTEX boost::recursive_mutex::scoped_lock vtxMutexLock(VTX_MUTEX_ID)
 
-#define VTX_CRITICAL_SECTION(lock_name, mutex_name) {boost::recursive_mutex::scoped_lock lock_name(mutex_name)
+#define VTX_CRITICAL_SECTION(mutex_name) {boost::recursive_mutex::scoped_lock critical_lock(mutex_name);
 #define VTX_CRITICAL_SECTION_END }
+
+#define VTX_THREAD_SYNCHRONIZER(sync) boost::condition sync
+#define VTX_THREAD_WAIT(sync, mutex, lock) sync.wait(lock);
+#define VTX_THREAD_NOTIFY_ONE(sync) sync.notify_one(); 
+#define VTX_THREAD_NOTIFY_ALL(sync) sync.notify_all(); 
 
 // thread creation & destruction
 #define VTX_CREATE_THREAD(name, job) boost::thread* name = new boost::thread(job)
@@ -53,6 +60,8 @@ THE SOFTWARE.
 
 // threading utilities
 #define VTX_SLEEP_THREAD(ms) boost::this_thread::sleep(boost::posix_time::millisec(ms))
-#define VTX_THREAD_SYNCHRONISER(sync) boost::condition sync
+#define VTX_NUM_THREAD_PROCESSORS boost::thread::hardware_concurrency()
+
+#endif // VTX_THREADING_LIB == VTX_THREADING_BOOST
 
 #endif

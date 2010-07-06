@@ -33,27 +33,28 @@ THE SOFTWARE.
 
 namespace vtx
 {
-	#if VTX_OS == VTX_WIN32
-		#define DYNLIB_HANDLE hInstance
-		#define DYNLIB_LOAD(a) LoadLibrary(a)
-		#define DYNLIB_GETSYM(a, b) GetProcAddress(a, b)
-		#define DYNLIB_UNLOAD(a) !FreeLibrary(a)
-		struct HINSTANCE__;
-		typedef struct HINSTANCE__* hInstance;
+	//-----------------------------------------------------------------------
+#if VTX_OS == VTX_WIN32
+#	define DYNLIB_HANDLE hInstance
+#	define DYNLIB_LOAD(a) LoadLibrary(a)
+#	define DYNLIB_GETSYM(a, b) GetProcAddress(a, b)
+#	define DYNLIB_UNLOAD(a) !FreeLibrary(a)
+	struct HINSTANCE__;
+	typedef struct HINSTANCE__* hInstance;
 
-	#elif VTX_OS == VTX_LINUX
-		#define DYNLIB_HANDLE void*
-		#define DYNLIB_LOAD(a) dlopen(a, RTLD_LAZY | RTLD_GLOBAL)
-		#define DYNLIB_GETSYM(a, b) dlsym(a, b)
-		#define DYNLIB_UNLOAD(a) dlclose(a)
+#elif VTX_OS == VTX_LINUX
+#	define DYNLIB_HANDLE void*
+#	define DYNLIB_LOAD(a) dlopen(a, RTLD_LAZY | RTLD_GLOBAL)
+#	define DYNLIB_GETSYM(a, b) dlsym(a, b)
+#	define DYNLIB_UNLOAD(a) dlclose(a)
 
-	#elif VTX_OS == VTX_APPLE
-		#define DYNLIB_HANDLE CFBundleRef
-		#define DYNLIB_LOAD(a) mac_loadExeBundle(a)
-		#define DYNLIB_GETSYM(a, b) mac_getBundleSym(a, b)
-		#define DYNLIB_UNLOAD(a) mac_unloadExeBundle(a)
-	#endif
-
+#elif VTX_OS == VTX_APPLE
+#	define DYNLIB_HANDLE CFBundleRef
+#	define DYNLIB_LOAD(a) mac_loadExeBundle(a)
+#	define DYNLIB_GETSYM(a, b) mac_getBundleSym(a, b)
+#	define DYNLIB_UNLOAD(a) mac_unloadExeBundle(a)
+#endif
+	//-----------------------------------------------------------------------
 	/** A class for loading external program libraries */
 	class DynLib
 	{
@@ -77,6 +78,7 @@ namespace vtx
 		String mName;
 		DYNLIB_HANDLE mInstance;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

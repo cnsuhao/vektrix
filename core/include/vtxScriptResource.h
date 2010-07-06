@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A Resource which contains binary or textual script data which can be executed at runtime */
 	class vtxExport ScriptResource : public Resource
 	{
@@ -53,6 +54,7 @@ namespace vtx
 		uint mLength;
 		const char* mCodeBuffer;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

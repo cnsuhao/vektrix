@@ -364,14 +364,6 @@
 					RelativePath="..\include\vtxFileParser.h"
 					>
 				</File>
-				<File
-					RelativePath="..\src\vtxResourceGroup.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxResourceGroup.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="Default Impl"
@@ -439,14 +431,6 @@
 			</File>
 			<File
 				RelativePath="..\include\vtxPlugin.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\vtxRenderStrategy.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxRenderStrategy.h"
 				>
 			</File>
 			<File
@@ -538,6 +522,10 @@
 								Name="VCCLCompilerTool"
 							/>
 						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\src\vtxOpSysHelper.cpp"
+						>
 					</File>
 					<File
 						RelativePath="..\include\vtxOpSysHelper.h"
@@ -770,6 +758,10 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxCreateObjectEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\vtxFrameEvent.cpp"
 					>
 				</File>
 				<File
@@ -1210,7 +1202,27 @@
 			Name="Threading"
 			>
 			<File
+				RelativePath="..\include\vtxInterLockedType.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxSemaphore.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxSemaphore.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\vtxThreadJob.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vtxThreadJobQueue.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxThreadJobQueue.h"
 				>
 			</File>
 			<Filter
@@ -1255,15 +1267,15 @@
 			</Filter>
 		</Filter>
 		<File
-			RelativePath="..\include\vektrix.h"
-			>
-		</File>
-		<File
 			RelativePath="..\include\vtxConfig.h"
 			>
 		</File>
 		<File
 			RelativePath="..\include\vtxPrerequisites.h"
+			>
+		</File>
+		<File
+			RelativePath="..\include\vtxThreadingConfig.h"
 			>
 		</File>
 	</Files>

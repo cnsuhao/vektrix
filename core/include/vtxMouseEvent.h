@@ -39,6 +39,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport MouseEvent : public Event
 	{
 	public:
@@ -64,6 +65,7 @@ namespace vtx
 		float stageX;
 		float stageY;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

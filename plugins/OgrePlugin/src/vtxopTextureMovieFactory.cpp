@@ -41,7 +41,7 @@ namespace vtx
 			return name;
 		}
 		//-----------------------------------------------------------------------
-		vtx::Movie* TextureMovieFactory::createObject(String name)
+		Movie* TextureMovieFactory::createObject(String name)
 		{
 			return new TextureMovie(name, this);
 		}
@@ -50,11 +50,6 @@ namespace vtx
 		{
 			delete dynamic_cast<TextureMovie*>(instance);
 			instance = NULL;
-		}
-		//-----------------------------------------------------------------------
-		vtx::RenderStrategy* TextureMovieFactory::_createRenderStrategy(File* file)
-		{
-			return NULL;
 		}
 		//-----------------------------------------------------------------------
 		MovieDebugger* TextureMovieFactory::_newDebugger(Movie* movie)
