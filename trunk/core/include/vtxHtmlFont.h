@@ -35,6 +35,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport HtmlFont : public HtmlElement
 	{
 	public:
@@ -45,6 +46,7 @@ namespace vtx
 		String color;
 		String size;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

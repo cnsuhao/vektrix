@@ -40,9 +40,9 @@ THE SOFTWARE.
 
 //-----------------------------------------------------------------------
 #ifdef VTX_STATIC_LIB
-	void vektrix_OgrePlugin_startPlugin()
+void vektrix_OgrePlugin_startPlugin()
 #else
-	extern "C" void vtxopExport startPlugin() throw()
+extern "C" void vtxopExport startPlugin() throw()
 #endif
 {
 	vtx::Root::getSingletonPtr()->registerPlugin(new vtx::ogre::OgrePlugin());

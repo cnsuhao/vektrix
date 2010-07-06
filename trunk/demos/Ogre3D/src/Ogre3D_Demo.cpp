@@ -27,7 +27,53 @@ vtx::ogre::MovableMovie* movie = NULL;
 Ogre::Camera* camera = NULL;
 Ogre::SceneNode* movie_node = NULL;
 Ogre::RenderWindow* mWindow = NULL;
+OIS::Mouse*	mouse = NULL;
 
+//-----------------------------------------------------------------------
+class MovieListener : public vtx::Movie::Listener
+{
+public:
+	bool loadingCompleted(vtx::Movie* movie)
+	{
+		movie_node->attachObject(static_cast<vtx::ogre::MovableMovie*>(movie));
+		movie->enableDebugger(true);
+
+		int width = movie->getFile()->getHeader().width;
+		int height = movie->getFile()->getHeader().height;
+
+		if(!mWindow->isFullScreen())
+		{
+			mWindow->resize(width * 2, height * 2);
+		}
+
+		const OIS::MouseState& ms = mouse->getMouseState();
+		ms.width = mWindow->getWidth();
+		ms.height = mWindow->getHeight();
+
+		float movie_ratio = (float)width/height;
+		float window_ratio = camera->getAspectRatio();
+		if(movie_ratio > window_ratio)
+		{
+			// zoom to width
+			movie_node->setPosition(-width/2.0f, height/2.0f, 
+				-(float)width*0.5f/window_ratio/tanf(camera->getFOVy().valueRadians()*0.5f));
+		}
+		else
+		{
+			// zoom to height
+			movie_node->setPosition(-width/2.0f, height/2.0f, 
+				-(float)height*0.5f/tanf(camera->getFOVy().valueRadians()*0.5f));
+		}
+
+		return false;
+	}
+
+	bool loadingFailed(vtx::Movie* movie)
+	{
+		std::cout << "loading of the movie failed !!!" << std::endl;
+		return true;
+	}
+} movie_listener;
 //-----------------------------------------------------------------------
 class SimpleFrameListener : public Ogre::FrameListener 
 {
@@ -87,6 +133,7 @@ public:
 			}
 		}
 
+		//VTX_LOG("upd");
 		vtx::Root::getSingletonPtr()->update(evt.timeSinceLastFrame);
 
 		if(mKeyboard->isKeyDown(OIS::KC_ESCAPE))
@@ -169,6 +216,7 @@ class SimpleMouseListener : public OIS::MouseListener
 public: 
 	bool mouseMoved(const OIS::MouseEvent& e)
 	{
+		//VTX_LOG("Mouse moved...");
 		if(movie)
 		{
 			movie->setMouseRel(e.state.X.abs/(float)mWindow->getWidth(), e.state.Y.abs/(float)mWindow->getHeight());
@@ -198,61 +246,10 @@ public:
 	}
 };
 //-----------------------------------------------------------------------
-class MovieListener : public vtx::Movie::Listener
-{
-public:
-	MovieListener(OIS::Mouse* mouse) 
-		: mMouse(mouse)
-	{
-
-	}
-
-	void loadingCompleted(vtx::Movie* movie)
-	{
-		movie->enableDebugger(true);
-
-		int width = movie->getFile()->getHeader().width;
-		int height = movie->getFile()->getHeader().height;
-
-		if(!mWindow->isFullScreen())
-		{
-			mWindow->resize(width * 2, height * 2);
-		}
-
-		const OIS::MouseState& ms = mMouse->getMouseState();
-		ms.width = mWindow->getWidth();
-		ms.height = mWindow->getHeight();
-
-		float movie_ratio = (float)width/height;
-		float window_ratio = camera->getAspectRatio();
-		if(movie_ratio > window_ratio)
-		{
-			// zoom to width
-			movie_node->setPosition(-width/2.0f, height/2.0f, 
-				-(float)width*0.5f/window_ratio/tanf(camera->getFOVy().valueRadians()*0.5f));
-		}
-		else
-		{
-			// zoom to height
-			movie_node->setPosition(-width/2.0f, height/2.0f, 
-				-(float)height*0.5f/tanf(camera->getFOVy().valueRadians()*0.5f));
-		}
-	}
-
-	bool loadingFailed(vtx::Movie* movie)
-	{
-		std::cout << "loading of the movie failed !!!" << std::endl;
-		return true;
-	}
-
-private:
-	OIS::Mouse* mMouse;
-};
-//-----------------------------------------------------------------------
 int main(int argc, char **argv)
 {
 	VTX_MEM_DEBUG_ENABLE();
-	//VTX_MEM_DEBUG_BREAK(3184);
+	//VTX_MEM_DEBUG_BREAK(3649);
 
 	// start vektrix
 	vtx::Root* vektrix_root = new vtx::Root();
@@ -342,7 +339,7 @@ int main(int argc, char **argv)
 	// setup the manager, keyboard and mouse to handle input
 	OIS::InputManager* inputManager = OIS::InputManager::createInputSystem(pl);
 	OIS::Keyboard* keyboard = static_cast<OIS::Keyboard*>(inputManager->createInputObject(OIS::OISKeyboard, true));
-	OIS::Mouse*	mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
+	mouse = static_cast<OIS::Mouse*>(inputManager->createInputObject(OIS::OISMouse, true));
 
 	// tell OIS about the window's dimensions
 	const OIS::MouseState &ms = mouse->getMouseState();
@@ -380,15 +377,18 @@ int main(int argc, char **argv)
 	//char opt = getch();
 	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", movies.at(atoi(&opt)), "OgreMovableMovie");
 
-	MovieListener listener(mouse);
-
-	movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie", &listener);
-	movie->play();
+	//MovieListener listener(mouse);
 
 	movie_node = sceneMgr->getRootSceneNode()->createChildSceneNode();
-	movie_node->attachObject(movie);
+	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie", &listener);
+	//movie->play();
 
-	movie_node->setPosition(0, 0, -500);
+	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie", &movie_listener);
+	movie->play();
+
+	//movie_node->attachObject(movie);
+
+	//movie_node->setPosition(0, 0, -500);
 
 	// start the ogre rendering
 	ogre_root->startRendering();

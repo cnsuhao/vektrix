@@ -29,14 +29,11 @@ THE SOFTWARE.
 #ifndef __vtxThreadingDefines_H__
 #define __vtxThreadingDefines_H__
 
+#include "vtxThreadingConfig.h"
+
 #define VTX_MUTEX_ID mutex
 
-#if VTX_THREADING_LIB == VTX_THREADING_NONE
-#	include "vtxThreadingDefinesNone.h"
-#elif VTX_THREADING_LIB == VTX_THREADING_BOOST
-#	include "vtxThreadingDefinesBoost.h"
-#else
-#	include "vtxThreadingDefinesNone.h"
-#endif
+#include "vtxThreadingDefinesBoost.h"
+#include "vtxThreadingDefinesNone.h"
 
 #endif

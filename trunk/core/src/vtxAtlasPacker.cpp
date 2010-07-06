@@ -69,6 +69,22 @@ namespace vtx
 		mElements.push_back(element);
 	}
 	//-----------------------------------------------------------------------
+	bool AtlasPacker::containsElement(AtlasElement* element)
+	{
+		AtlasElementList::iterator it = mElements.begin();
+		AtlasElementList::iterator end = mElements.end();
+		while(it != end)
+		{
+			if(*it == element)
+			{
+				return true;
+			}
+			++it;
+		}
+
+		return false;
+	}
+	//-----------------------------------------------------------------------
 	const AtlasPacker::PackResultList& AtlasPacker::packAtlas()
 	{
 		clearAtlas();
@@ -92,7 +108,7 @@ namespace vtx
 				AtlasNode* node = (*tex_it)->packElement(*elem_it);
 				if(node)
 				{
-					mResult.insert(PackResultList::value_type((*elem_it)->getPackID(), PackResult(*tex_it, node)));
+					mResult.insert(std::make_pair(*elem_it, PackResult(*tex_it, node)));
 					// element was successfully packed, 
 					// advance to the next element
 					++elem_it;

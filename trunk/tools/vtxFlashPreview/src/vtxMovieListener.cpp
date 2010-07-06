@@ -26,31 +26,29 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxRenderStrategy_H__
-#define __vtxRenderStrategy_H__
+#include "vtxMovieListener.h"
 
-#include "vtxPrerequisites.h"
-
-namespace vtx
-{
-	/** Defines a strategy for rendering Movie instances and their related objects (@see Instance) */
-	class vtxExport RenderStrategy
+namespace vtx { namespace tools { namespace FlashPreview {
+	//-----------------------------------------------------------------------
+	MovieListener::MovieListener(FlashPreview* app)
 	{
-	public:
-		RenderStrategy(MovieFactory* factory, File* file);
-		virtual ~RenderStrategy();
+		mApplication = app;
+	}
+	//-----------------------------------------------------------------------
+	bool MovieListener::loadingCompleted(Movie* movie)
+	{
+		int width = movie->getFile()->getHeader().width;
+		int height = movie->getFile()->getHeader().height;
 
-		/** Hand back an Instance which is no longer being used */
-		virtual void storeInstance(Instance* inst) = 0;
-		/** Request an Instance with a given ID for use in a certain Movie */
-		virtual Instance* shareInstance(const String& id, Movie* movie) = 0;
+		mApplication->resizeWindow(width, height);
 
-		virtual Instance* shareInstanceByType(const String& type, Movie* movie) = 0;
-
-	protected:
-		File* mFile;
-		MovieFactory* mFactory;
-	};
-}
-
-#endif
+		return false;
+	}
+	//-----------------------------------------------------------------------
+	bool MovieListener::loadingFailed(Movie* movie)
+	{
+		std::cout << "loading of the movie failed !!!" << std::endl;
+		return true;
+	}
+	//-----------------------------------------------------------------------
+}}}

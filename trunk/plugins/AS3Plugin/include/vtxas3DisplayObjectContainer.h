@@ -29,12 +29,13 @@ THE SOFTWARE.
 #ifndef __vtxas3DisplayObjectContainer_H__
 #define __vtxas3DisplayObjectContainer_H__
 
-#include "cspPrerequesites.h"
+#include "vtxas3.h"
 
 namespace vtx
 {
 	namespace as3
 	{
+		//-----------------------------------------------------------------------
 		class DisplayObjectContainerClass : public avmplus::ClassClosure
 		{
 		public:
@@ -43,7 +44,7 @@ namespace vtx
 
 			DECLARE_SLOTS_DisplayObjectContainerClass;
 		};
-
+		//-----------------------------------------------------------------------
 		class DisplayObjectContainer : public InteractiveObject
 		{
 		public:
@@ -59,6 +60,7 @@ namespace vtx
 
 			virtual void _setNativeObject(Instance* inst);
 		};
+		//-----------------------------------------------------------------------
 	}
 }
 

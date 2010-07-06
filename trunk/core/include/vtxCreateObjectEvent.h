@@ -36,11 +36,12 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** An event which creates a new DisplayObject and places it at a certain layer of a DisplayObjectContainer */
 	class vtxExport CreateObjectEvent : public FrameEvent
 	{
 	public:
-		CreateObjectEvent(DisplayObjectContainer* object_container, 
+		CreateObjectEvent(DisplayObjectContainer* object_container, File* source_file, 
 			const String& id, const uint& layer, const Matrix& matrix, const CXForm& cxform, const String& name = "");
 
 		/** @copybrief FrameEvent::clone */
@@ -55,7 +56,10 @@ namespace vtx
 		CXForm mCXForm;
 		String mName;
 		DisplayObject* mObject;
+		/// the File that defines this FrameEvent
+		File* mSourceFile;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

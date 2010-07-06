@@ -26,103 +26,96 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxResourceGroup.h"
-#include "vtxFile.h"
-#include "vtxFontResource.h"
+#include "vtxThreadJobQueue.h"
 #include "vtxLogManager.h"
-#include "vtxResource.h"
+#include "vtxThreadJob.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	ResourceGroup::ResourceGroup(File* file) 
-		: mParent(file)
+	ThreadJobQueue::ThreadJobQueue() 
+		: mRunning(true), 
+		mSemaphore(VTX_NUM_THREAD_PROCESSORS)
 	{
-
+		setNumberOfThreads(VTX_NUM_THREAD_PROCESSORS);
 	}
 	//-----------------------------------------------------------------------
-	ResourceGroup::~ResourceGroup()
+	ThreadJobQueue::~ThreadJobQueue()
 	{
-
+		mRunning.setValue(false);
+		mSemaphore.release(VTX_NUM_THREAD_PROCESSORS);
+		destroyThreads();
 	}
 	//-----------------------------------------------------------------------
-	bool ResourceGroup::addResource(vtx::Resource* res)
+	void ThreadJobQueue::setNumberOfThreads(const uint& num_threads)
 	{
-		ResourceMap::iterator it = mResources.find(res->getID());
-
-		if(it != mResources.end())
+		VTX_LOCK_MUTEX(mMutex);
+		if(num_threads < mThreadPool.size())
 		{
-			VTX_WARN("\"%s\": Tried to add Resource with id \"%s\" twice!", 
-				mParent->getFilename().c_str(), res->getID().c_str());
-			return false;
+			destroyThreads();
+
+			for(uint i=0; i<num_threads; ++i)
+			{
+				VTX_CREATE_THREAD(thread, boost::bind(&ThreadJobQueue::threadFunc, this));
+				mThreadPool.push_back(thread);
+			}
 		}
-
-		mResources[res->getID()] = res;
-		mResourcesByType[res->getType()].push_back(res);
-
-		FontResource* font = dynamic_cast<FontResource*>(res);
-		if(font)
+		else
 		{
-			mFonts[font->getName()] = font;
+			const uint& existing_threads = mThreadPool.size();
+			for(uint i=0; i<num_threads - existing_threads; ++i)
+			{
+				VTX_CREATE_THREAD(thread, boost::bind(&ThreadJobQueue::threadFunc, this));
+				mThreadPool.push_back(thread);
+			}
 		}
-
-		return true;
-
-		//if(!external)
-		//{
-		//	res->_setFile(this);
-		//}
 	}
 	//-----------------------------------------------------------------------
-	Resource* ResourceGroup::getResource(const String& id)
+	void ThreadJobQueue::queueJob(ThreadJob* job)
 	{
-		ResourceMap::iterator it = mResources.find(id);
-
-		if(it != mResources.end())
+		VTX_LOCK_MUTEX(mMutex);
+		mQueue.push(job);
+		mSemaphore.release();
+	}
+	//-----------------------------------------------------------------------
+	void ThreadJobQueue::threadFunc(/*void* args*/)
+	{
+		while(mRunning.getValue())
 		{
-			return it->second;
-		}
+			mSemaphore.acquire();
+			//VTX_LOG("Job acquired");
 
-		return NULL;
-	}
-	//-----------------------------------------------------------------------
-	const ResourceList& ResourceGroup::getResourcesByType(const String& type) const
-	{
-		ResourceTypeMap::const_iterator it = mResourcesByType.find(type);
-		if(it != mResourcesByType.end())
-		{
-			return it->second;
-		}
+			ThreadJob* job = NULL;
 
-		static ResourceList empty;
-		return empty;
+			VTX_CRITICAL_SECTION(mMutex);
+			if(mQueue.size())
+			{
+				job = mQueue.back();
+				mQueue.pop();
+			}
+			VTX_CRITICAL_SECTION_END;
+
+			if(job)
+			{
+				job->start();
+				delete job;
+			}
+			//VTX_LOG("Job finished");
+		}
 	}
 	//-----------------------------------------------------------------------
-	const ResourceMap& ResourceGroup::getResources() const
+	void ThreadJobQueue::destroyThreads()
 	{
-		return mResources;
-	}
-	//-----------------------------------------------------------------------
-	void ResourceGroup::destroyResources()
-	{
-		ResourceMap::iterator it = mResources.begin();
-		ResourceMap::iterator end = mResources.end();
+		VTX_LOG("Waiting for %d threads to finish...", mThreadPool.size());
+
+		ThreadPool::iterator it = mThreadPool.begin();
+		ThreadPool::iterator end = mThreadPool.end();
 		while(it != end)
 		{
-			delete it->second;
+			(*it)->join();
+			delete *it;
 			++it;
 		}
-	}
-	//-----------------------------------------------------------------------
-	FontResource* ResourceGroup::getFontByName(const String& font_name)
-	{
-		FontMap::iterator it = mFonts.find(font_name);
-		if(it != mFonts.end())
-		{
-			return it->second;
-		}
-
-		return NULL;
 	}
 	//-----------------------------------------------------------------------
 }

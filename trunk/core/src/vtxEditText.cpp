@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "vtxEditText.h"
 #include "vtxEditTextResource.h"
 #include "vtxFile.h"
+#include "vtxFileManager.h"
 #include "vtxFontResource.h"
 #include "vtxGlyphResource.h"
 #include "vtxHtmlFont.h"
@@ -40,6 +41,8 @@ THE SOFTWARE.
 #include "vtxLogManager.h"
 #include "vtxMouseEvent.h"
 #include "vtxMovie.h"
+#include "vtxMovieClip.h"
+#include "vtxMovieClipResource.h"
 #include "vtxScriptObject.h"
 #include "vtxShape.h"
 #include "vtxShapeResource.h"
@@ -239,12 +242,6 @@ namespace vtx
 
 			mouseEvent(mouse_evt);
 		}
-
-		// TODO: do this in InteractiveObject
-		if(mScriptObject)
-		{
-			mScriptObject->eventFired(evt);
-		}
 	}
 	//-----------------------------------------------------------------------
 	void EditText::_buildGraphicsFromDOM()
@@ -289,8 +286,15 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void EditText::_addImage(HtmlImage* image)
 	{
-		ShapeResource* shape_res = dynamic_cast<ShapeResource*>(mParentMovie->getFile()->getResource(image->src));
-		if(!shape_res) return;
+		//if(!FileManager::getSingletonPtr()->doesFileExist(image->src))
+		//{
+		//	VTX_WARN("EditText requested image with filename: \"%s\" but the image is not available", 
+		//		image->src.c_str());
+		//	return;
+		//}
+
+		// request the image file to be loaded
+		File* file = FileManager::getSingletonPtr()->getFile(image->src, true, this);
 
 		TextLineElement img;
 		img.type = TextLineElement::ET_Image;
@@ -298,7 +302,8 @@ namespace vtx
 		img.image_shape = image->src;
 		img.parentHTML = image;
 
-		// dimensions explicitely given through HTML
+		/* // TODO: do this once the image is loaded
+		// dimensions explicitly given through HTML
 		if(image->width != 0.0f || image->height != 0.0f)
 		{
 			// only height given
@@ -329,7 +334,7 @@ namespace vtx
 		{
 			img.width = shape_res->getBoundingBox().getWidth();
 			img.height = shape_res->getBoundingBox().getHeight();
-		}
+		}*/
 
 		// add the image element
 		_addLineElement(img);
@@ -663,8 +668,24 @@ namespace vtx
 
 				case TextLineElement::ET_Image:
 					{
-						Shape* shape = dynamic_cast<Shape*>(mParentMovie->getInstance(elem.image_shape));
-						if(!shape) break;
+						// TODO: directly get file from filemanager and check for "loaded" state
+						LoadedFiles::iterator it = mLoadedFiles.find(elem.image_shape);
+						// file has finished loading and is ready to be used
+						if(it != mLoadedFiles.end())
+						{
+							MovieClip* mc = static_cast<MovieClip*>(mParentMovie->getInstance(it->second->getMainMovieClip()));
+							//mc->initFromResource(file->getMainMovieClip());
+							addChild(mc);
+							//mc->setMatrix(Matrix(.1f, 0, 0, 0, .1f, 0));
+							mc->setMatrix(Matrix(.5f, 0, /*mCurrentStrip.x + */elem.x, 0, .5f, mCurrentStrip.y - elem.height/* * 0.9f*/));
+							mc->_update(0.0f);
+						}
+						break;
+
+						Instance* inst = NULL;
+						if(!inst) break;
+						if(inst->getType() != Shape::TYPE) break;
+						Shape* shape = static_cast<Shape*>(inst);
 
 						addChild(shape);
 						float sx = elem.width / shape->getBoundingBox().getWidth();
@@ -690,7 +711,8 @@ namespace vtx
 	void EditText::_addSelectionShape(const float& sx, const float& sy, 
 		const float& x, const float& y)
 	{
-		Shape* shape = dynamic_cast<Shape*>(mParentMovie->getInstance("BlackBox"));
+		Resource* black_box = mParentMovie->getFile()->getResource("BlackBox");
+		Shape* shape = dynamic_cast<Shape*>(mParentMovie->getInstance(black_box));
 		if(shape)
 		{
 			addChild(shape);
@@ -705,7 +727,10 @@ namespace vtx
 	void EditText::_createSelectionShapes()
 	{
 		// TODO: fix bug when selectionBegin is an empty space
-		if(mSelectionBegin.lineIndex < 0 || mSelectionEnd.lineIndex < 0)
+		if(
+			mSelectionBegin.lineIndex < 0 || 
+			mSelectionEnd.lineIndex < 0 || 
+			mSelectionBegin.lineIndex > (int)mLines.size()-1)
 		{
 			return;
 		}
@@ -918,6 +943,19 @@ namespace vtx
 
 		// no selection found
 		return HtmlSelection();
+	}
+	//-----------------------------------------------------------------------
+	void EditText::loadingCompleted(File* file)
+	{
+		VTX_LOG("EdiText: image finished loading/parsing -> %s", file->getFilename().c_str());
+		mLoadedFiles[file->getFilename()] = file;
+		mNeedDomUpdate = true;
+		//_buildGraphicsFromDOM();
+	}
+	//-----------------------------------------------------------------------
+	void EditText::loadingFailed(File* file)
+	{
+		VTX_WARN("EdiText: image failed to load (%s)", file->getFilename().c_str());
 	}
 	//-----------------------------------------------------------------------
 }

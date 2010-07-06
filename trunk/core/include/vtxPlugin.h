@@ -31,6 +31,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A plugin which can be registered to the vektrix Root */
 	class vtxExport Plugin
 	{
@@ -38,6 +39,7 @@ namespace vtx
 		Plugin() {}
 		virtual ~Plugin() {}
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

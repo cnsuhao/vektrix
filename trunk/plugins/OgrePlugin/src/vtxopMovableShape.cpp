@@ -27,12 +27,13 @@ THE SOFTWARE.
 */
 
 #include "vtxopMovableShape.h"
-#include "vtxAtlasNode.h"
-#include "vtxResource.h"
-#include "vtxShapeResource.h"
-
 #include "vtxopMovableMovie.h"
 #include "vtxopTexture.h"
+
+#include "vtxAtlasNode.h"
+#include "vtxLogManager.h"
+#include "vtxResource.h"
+#include "vtxShapeResource.h"
 
 #include "OgrePass.h"
 #include "OgreTechnique.h"
@@ -85,10 +86,14 @@ namespace vtx
 			if(mPacker)
 			{
 				AtlasPacker::PackResultList list = mPacker->getResultList();
-				AtlasPacker::PackResultList::iterator it = list.find(resource->getID());
+				AtlasPacker::PackResultList::iterator it = list.find(static_cast<ShapeResource*>(resource));
 				if(it != list.end())
 				{
 					setAtlasQuad(it->second);
+				}
+				else
+				{
+					VTX_EXCEPT("blah");
 				}
 			}
 		}
@@ -147,7 +152,7 @@ namespace vtx
 		void OgreMovableShape::packed(const AtlasPacker::PackResultList& pack_result)
 		{
 			// TODO: move inheritance from AtlasElement to ogre plugin, out of the core
-			AtlasPacker::PackResultList::const_iterator it = pack_result.find(mShapeResource->getPackID());
+			AtlasPacker::PackResultList::const_iterator it = pack_result.find(mShapeResource);
 			if(it != pack_result.end())
 			{
 				setAtlasQuad(it->second);

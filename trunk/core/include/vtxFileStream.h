@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** An interface representing a data stream */
 	class vtxExport FileStream
 	{
@@ -61,6 +62,7 @@ namespace vtx
 		uint mSize;
 		String mFilename;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

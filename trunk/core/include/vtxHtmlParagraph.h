@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport HtmlParagraph : public HtmlElement
 	{
 	public:
@@ -43,6 +44,7 @@ namespace vtx
 		Alignment align;
 		String css_class;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

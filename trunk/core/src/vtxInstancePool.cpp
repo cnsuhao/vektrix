@@ -47,6 +47,8 @@ namespace vtx
 		PoolMap::iterator end = mPoolMap.end();
 		while(it != end)
 		{
+			VTX_LOG("Destroying %d instance(s) with type %s from instance pool", it->second->size(), it->first.c_str());
+
 			while(it->second->size())
 			{
 				++numDeletes;

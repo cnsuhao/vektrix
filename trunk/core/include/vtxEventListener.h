@@ -33,11 +33,13 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport EventListener
 	{
 	public:
 		virtual void eventFired(const Event& evt) = 0;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

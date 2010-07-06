@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Represents the state of a Button */
 	class vtxExport ButtonState : public EventContainer
 	{
@@ -44,6 +45,7 @@ namespace vtx
 		/** Create an identical clone of this state */
 		ButtonState* clone(DisplayObjectContainer* container);
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

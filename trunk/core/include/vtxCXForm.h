@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Represents a mul/add Color transformation */
 	class vtxExport CXForm
 	{
@@ -46,6 +47,7 @@ namespace vtx
 		Color mul;
 		Color add;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

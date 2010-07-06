@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Represents a two-dimensional vector */
 	class vtxExport Vector2
 	{
@@ -82,6 +83,7 @@ namespace vtx
 
 		static const Vector2 ZERO;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

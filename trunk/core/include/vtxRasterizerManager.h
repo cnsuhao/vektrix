@@ -36,6 +36,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** The manager that keeps track of Rasterizer instances */
 	class vtxExport RasterizerManager : public Singleton<RasterizerManager>
 	{
@@ -55,6 +56,7 @@ namespace vtx
 	protected:
 		RasterizerMap mRasterizers;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

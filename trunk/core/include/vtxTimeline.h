@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Represents a timeline which consists of a number of keyframes */
 	class vtxExport Timeline
 	{
@@ -74,6 +75,7 @@ namespace vtx
 		KeyframeList mKeyframes;
 		MovieClip* mParentMovieClip;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

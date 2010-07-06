@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Base class for everything visual that can itself contain other visual objects */
 	class vtxExport DisplayObjectContainer : public InteractiveObject
 	{
@@ -89,6 +90,7 @@ namespace vtx
 		/** Notify the children of this container about Matrix changes */
 		void childrenNeedMatrixUpdate();
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

@@ -33,21 +33,13 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class ThreadJob
 	{
 	public:
-		void operator()()
-		{
-			start();
-		}
-
-		void run()
-		{
-			start();
-		}
-
 		virtual void start() = 0;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

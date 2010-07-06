@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A Resource which contains all necessary data for creating a Button instance */
 	class vtxExport ButtonResource : public Resource
 	{
@@ -62,6 +63,7 @@ namespace vtx
 		ButtonState* mStates[4];
 
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

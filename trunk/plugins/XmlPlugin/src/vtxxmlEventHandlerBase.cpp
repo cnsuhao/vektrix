@@ -65,7 +65,7 @@ namespace vtx
 				CXForm cxform = StringHelper::toCXForm((*mAttributes)["cxform"]);
 				String name = (*mAttributes)["name"];
 
-				mContainer->addEvent(new CreateObjectEvent(NULL, id, layer, matrix, cxform, name));
+				mContainer->addEvent(new CreateObjectEvent(NULL, mCurrentFile, id, layer, matrix, cxform, name));
 			}
 			else if(type == "move")
 			{

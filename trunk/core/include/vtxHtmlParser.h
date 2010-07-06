@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport HtmlParser : public XmlParser
 	{
 	public:
@@ -63,6 +64,7 @@ namespace vtx
 		void image(StringMap& atts);
 		void paragraph(StringMap& atts);
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

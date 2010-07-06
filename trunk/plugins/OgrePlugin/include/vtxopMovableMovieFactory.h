@@ -29,15 +29,18 @@ THE SOFTWARE.
 #ifndef __vtxopMovableMovieFactory_H__
 #define __vtxopMovableMovieFactory_H__
 
+#define NO_MEM_DBG
+
 #include "vtxop.h"
 
+#include "vtxMovie.h"
 #include "vtxMovieFactory.h"
 
 namespace vtx
 {
 	namespace ogre
 	{
-		class MovableMovieFactory : public MovieFactory
+		class MovableMovieFactory : public MovieFactory, public Movie::Listener
 		{
 		public:
 			MovableMovieFactory();
@@ -47,9 +50,16 @@ namespace vtx
 			Movie* createObject(String name);
 			void destroyObject(Movie* instance);
 
+			AtlasPacker* getPacker() const;
+			InstancePool* getInstancePool() const;
+
 		protected:
-			vtx::RenderStrategy* _createRenderStrategy(File* file);
+			AtlasPacker* mPacker;
+			InstancePool* mPool;
+
 			MovieDebugger* _newDebugger(Movie* movie);
+
+			bool loadingCompleted(Movie* movie);
 		};
 	}
 }

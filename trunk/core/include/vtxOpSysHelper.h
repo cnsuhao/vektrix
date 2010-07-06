@@ -33,12 +33,16 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport OpSysHelper
 	{
 	public:
 		static bool copyToClipboard(WString str);
 		static WString getWStringFromClipboard();
+
+		static String getSystemTime();
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

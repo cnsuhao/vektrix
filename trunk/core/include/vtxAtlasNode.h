@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A node of the space partitioning tree that is beeing created during the packing of an atlas */
 	class vtxExport AtlasNode
 	{
@@ -76,6 +77,7 @@ namespace vtx
 		AtlasNode* mChild_2;
 		AtlasElement* mElement;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

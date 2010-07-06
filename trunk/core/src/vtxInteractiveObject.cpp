@@ -80,6 +80,11 @@ namespace vtx
 				}
 			} // MOUSE_DOWN
 		}
+
+		if(mScriptObject)
+		{
+			mScriptObject->eventFired(evt);
+		}
 	}
 	//-----------------------------------------------------------------------
 }

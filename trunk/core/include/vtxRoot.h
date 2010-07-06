@@ -37,10 +37,12 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** The root class of the vektrix library */
 	class vtxExport Root : public Singleton<Root>, public FactoryManager<MovieFactory>
 	{
 	public:
+		typedef std::map<String, DynLib*> DynLibMap;
 		typedef std::map<String, Movie*> MovieMap;
 		typedef std::vector<Plugin*> PluginList;
 
@@ -65,6 +67,8 @@ namespace vtx
 		/** Destroy an instance of a movie by pointer */
 		bool destroyMovie(Movie* instance);
 
+		ThreadJobQueue* getMainJobQueue() const;
+
 		/** Method to update all underlying subsystems and movie instances of vektrix */
 		void update(float delta_time);
 
@@ -73,7 +77,9 @@ namespace vtx
 		MovieMap mMovies;
 		PluginList mPlugins;
 		FileManager* mFileManager;
+		ThreadJobQueue* mMainJobQueue;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

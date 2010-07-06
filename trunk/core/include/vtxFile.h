@@ -34,17 +34,12 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Represents a template for creating Movie instances and contains all necessary resources */
 	class vtxExport File
 	{
 	public:
 		friend class FileManager;
-
-		enum ResourceGroupType
-		{
-			RGT_Internal = 0, 
-			RGT_External
-		};
 
 		/** The header of a File, which contains basic information such as width, height, fps, etc */
 		class FileHeader
@@ -77,7 +72,7 @@ namespace vtx
 		{
 		public:
 			/** A Resource has been added to this File */
-			virtual void resourceAdded(Resource* resource, const File::ResourceGroupType& group){}
+			virtual void resourceAdded(Resource* resource){}
 			/** A Resource has been removed from this File */
 			virtual void resourceRemoved(Resource* resource) {}
 			/** The file has been successfully loaded */
@@ -86,6 +81,17 @@ namespace vtx
 			virtual void loadingFailed(File* file) {}
 		};
 		typedef std::map<Listener*, Listener*> ListenerMap;
+
+		typedef std::map<String, FontResource*> FontMap;
+
+		/** Represents the current loading state of a File instance */
+		enum FileLoadingState
+		{
+			FLS_LOADING = 0, /// the file has been queued for loading
+			FLS_FINISHED, /// the file has finished to load but hasn't informed its listeners yet
+			FLS_READY, /// the file has finished to load and has informed its listeners already
+			FLS_ERROR /// an error occurred during the loading process
+		};
 
 		File(const String& filename);
 		virtual ~File();
@@ -108,8 +114,11 @@ namespace vtx
 		/** Get the MovieClipResource which defines the main MovieClip for related Movie instances */
 		MovieClipResource* getMainMovieClip();
 
+		void setMainResource(Resource* resource);
+		Resource* getMainResource();
+
 		/** Add a Resource instance to this File */
-		void addResource(Resource* res, const ResourceGroupType& group = RGT_Internal);
+		void addResource(Resource* res);
 
 		/** Retrieve a Resource instance from this File by its unique ID */
 		Resource* getResource(const String& id);
@@ -129,21 +138,21 @@ namespace vtx
 	protected:
 		const String mFilename;
 		FileHeader mHeader;
+		FileLoadingState mLoadingState;
 
-		ResourceGroup* mResourceGroups[2];
+		ResourceMap mResources;
+		ResourceTypeMap mResourcesByType;
+		FontMap mFonts;
 		ListenerMap mListeners;
 
 		String mScriptEngineFactory;
 		MovieClipResource* mMainMovieClip;
+		Resource* mMainResource;
 
 		void _loadingCompleted();
 		void _loadingFailed();
-
-		void _addResourceToGroup(
-			ResourceMap& res_map, 
-			ResourceTypeMap& res_type_map, 
-			Resource* res);
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

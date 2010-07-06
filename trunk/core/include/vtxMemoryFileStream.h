@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport MemoryFileStream : public FileStream
 	{
 	public:
@@ -63,6 +64,7 @@ namespace vtx
 		/// pointer to the last byte of the buffer
 		uchar* mLast;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

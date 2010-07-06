@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 
 	Root* vtx_root = new Root();
 
-	//LogManager::getSingletonPtr()->logToCout(true);
+	LogManager::getSingletonPtr()->logToCout(true);
 
 	// vektrix plugins
 	VTX_LOAD_PLUGIN(vektrix_AS3Plugin);
@@ -57,9 +57,9 @@ int main(int argc, char** argv)
 
 	std::cout << "..." << std::endl;
 
-	file1->addListener(&listener);
-	file2->addListener(&listener);
-	file3->addListener(&listener);
+	if(file1) file1->addListener(&listener);
+	if(file2) file2->addListener(&listener);
+	if(file3) file3->addListener(&listener);
 
 	while(!kbhit())
 	{

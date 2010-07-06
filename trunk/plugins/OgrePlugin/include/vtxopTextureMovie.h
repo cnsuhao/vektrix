@@ -37,10 +37,14 @@ namespace vtx
 {
 	namespace ogre
 	{
-		class TextureMovie : public vtx::Movie
+		class TextureMovie : public Movie
 		{
 		public:
 			TextureMovie(const String& name, MovieFactory* creator);
+
+			Instance* getInstance(Resource* resource);
+			Instance* getInstanceByType(const String& type);
+			void releaseInstance(Instance* instance);
 
 		protected:
 			Texture* mMovieTexture;

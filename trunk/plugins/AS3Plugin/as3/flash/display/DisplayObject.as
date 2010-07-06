@@ -54,5 +54,8 @@ package flash.display
 		
 		public native function get height():Number;
 		public native function set height(value:Number):void;
+		
+		public native function get visible():Boolean;
+		public native function set visible(value:Boolean):void;
 	}
 }

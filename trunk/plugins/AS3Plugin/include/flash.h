@@ -56,6 +56,10 @@ namespace vtx { namespace as3 {
     class EventHandlerClass; //vektrix::EventHandler$
     class InteractiveObject; //flash.display::InteractiveObject
     class InteractiveObjectClass; //flash.display::InteractiveObject$
+    class Loader; //flash.display::Loader
+    class LoaderClass; //flash.display::Loader$
+    class LoaderContext; //flash.system::LoaderContext
+    class LoaderContextClass; //flash.system::LoaderContext$
     class MovieClip; //flash.display::MovieClip
     class MovieClipClass; //flash.display::MovieClip$
     class SimpleButton; //flash.display::SimpleButton
@@ -66,6 +70,8 @@ namespace vtx { namespace as3 {
     class StaticTextClass; //flash.text::StaticText$
     class TextField; //flash.text::TextField
     class TextFieldClass; //flash.text::TextField$
+    class URLRequest; //flash.net::URLRequest
+    class URLRequestClass; //flash.net::URLRequest$
 } }
 
 namespace avmplus { namespace NativeID {
@@ -81,53 +87,59 @@ AVMTHUNK_DECLARE_NATIVE_INITIALIZER(flash)
 const uint32_t abcclass_flash_display_IBitmapDrawable = 0;
 const uint32_t abcclass_flash_events_Event = 1;
 const uint32_t abcclass_flash_events_IEventDispatcher = 2;
-const uint32_t abcclass_flash_text_TextFieldType = 3;
-const uint32_t abcclass_vektrix_EventHandler = 4;
-const uint32_t abcclass_flash_events_FocusEvent = 5;
-const uint32_t abcclass_flash_events_MouseEvent = 6;
-const uint32_t abcclass_flash_events_EventDispatcher = 7;
-const uint32_t abcclass_flash_display_DisplayObject = 8;
-const uint32_t abcclass_flash_media_Camera = 9;
-const uint32_t abcclass_flash_net_LocalConnection = 10;
-const uint32_t abcclass_flash_net_NetConnection = 11;
-const uint32_t abcclass_flash_net_NetStream = 12;
-const uint32_t abcclass_flash_net_SharedObject = 13;
-const uint32_t abcclass_flash_net_Socket = 14;
-const uint32_t abcclass_flash_display_InteractiveObject = 15;
-const uint32_t abcclass_flash_media_Video = 16;
-const uint32_t abcclass_flash_text_StaticText = 17;
-const uint32_t abcclass_flash_display_DisplayObjectContainer = 18;
-const uint32_t abcclass_flash_display_SimpleButton = 19;
-const uint32_t abcclass_flash_text_TextField = 20;
-const uint32_t abcclass_flash_display_Sprite = 21;
-const uint32_t abcclass_flash_display_MovieClip = 22;
+const uint32_t abcclass_flash_net_URLRequest = 3;
+const uint32_t abcclass_flash_system_LoaderContext = 4;
+const uint32_t abcclass_flash_text_TextFieldType = 5;
+const uint32_t abcclass_vektrix_EventHandler = 6;
+const uint32_t abcclass_flash_events_FocusEvent = 7;
+const uint32_t abcclass_flash_events_MouseEvent = 8;
+const uint32_t abcclass_flash_events_EventDispatcher = 9;
+const uint32_t abcclass_flash_display_DisplayObject = 10;
+const uint32_t abcclass_flash_media_Camera = 11;
+const uint32_t abcclass_flash_net_LocalConnection = 12;
+const uint32_t abcclass_flash_net_NetConnection = 13;
+const uint32_t abcclass_flash_net_NetStream = 14;
+const uint32_t abcclass_flash_net_SharedObject = 15;
+const uint32_t abcclass_flash_net_Socket = 16;
+const uint32_t abcclass_flash_display_InteractiveObject = 17;
+const uint32_t abcclass_flash_media_Video = 18;
+const uint32_t abcclass_flash_text_StaticText = 19;
+const uint32_t abcclass_flash_display_DisplayObjectContainer = 20;
+const uint32_t abcclass_flash_display_SimpleButton = 21;
+const uint32_t abcclass_flash_text_TextField = 22;
+const uint32_t abcclass_flash_display_Loader = 23;
+const uint32_t abcclass_flash_display_Sprite = 24;
+const uint32_t abcclass_flash_display_MovieClip = 25;
 
 /* methods */
-const uint32_t vektrix_EventHandler_add = 34;
-const uint32_t vektrix_EventHandler_handle = 35;
-const uint32_t flash_events_EventDispatcher_addEventListener = 48;
-const uint32_t flash_events_EventDispatcher_dispatchEvent = 49;
-const uint32_t flash_events_EventDispatcher_removeEventListener = 51;
-const uint32_t flash_display_DisplayObject_x_get = 55;
-const uint32_t flash_display_DisplayObject_x_set = 56;
-const uint32_t flash_display_DisplayObject_y_get = 57;
-const uint32_t flash_display_DisplayObject_y_set = 58;
-const uint32_t flash_display_DisplayObject_rotation_get = 59;
-const uint32_t flash_display_DisplayObject_rotation_set = 60;
-const uint32_t flash_display_DisplayObject_scaleX_get = 61;
-const uint32_t flash_display_DisplayObject_scaleX_set = 62;
-const uint32_t flash_display_DisplayObject_scaleY_get = 63;
-const uint32_t flash_display_DisplayObject_scaleY_set = 64;
-const uint32_t flash_display_DisplayObject_width_get = 65;
-const uint32_t flash_display_DisplayObject_width_set = 66;
-const uint32_t flash_display_DisplayObject_height_get = 67;
-const uint32_t flash_display_DisplayObject_height_set = 68;
-const uint32_t flash_text_StaticText_text_get = 142;
-const uint32_t flash_display_DisplayObjectContainer_addChild = 146;
-const uint32_t flash_text_TextField_htmlText_get = 153;
-const uint32_t flash_text_TextField_htmlText_set = 154;
-const uint32_t flash_text_TextField_getLineIndexAtPoint = 159;
-const uint32_t flash_text_TextField_setSelection = 160;
+const uint32_t vektrix_EventHandler_add = 40;
+const uint32_t vektrix_EventHandler_handle = 41;
+const uint32_t flash_events_EventDispatcher_addEventListener = 54;
+const uint32_t flash_events_EventDispatcher_dispatchEvent = 55;
+const uint32_t flash_events_EventDispatcher_removeEventListener = 57;
+const uint32_t flash_display_DisplayObject_x_get = 61;
+const uint32_t flash_display_DisplayObject_x_set = 62;
+const uint32_t flash_display_DisplayObject_y_get = 63;
+const uint32_t flash_display_DisplayObject_y_set = 64;
+const uint32_t flash_display_DisplayObject_rotation_get = 65;
+const uint32_t flash_display_DisplayObject_rotation_set = 66;
+const uint32_t flash_display_DisplayObject_scaleX_get = 67;
+const uint32_t flash_display_DisplayObject_scaleX_set = 68;
+const uint32_t flash_display_DisplayObject_scaleY_get = 69;
+const uint32_t flash_display_DisplayObject_scaleY_set = 70;
+const uint32_t flash_display_DisplayObject_width_get = 71;
+const uint32_t flash_display_DisplayObject_width_set = 72;
+const uint32_t flash_display_DisplayObject_height_get = 73;
+const uint32_t flash_display_DisplayObject_height_set = 74;
+const uint32_t flash_display_DisplayObject_visible_get = 75;
+const uint32_t flash_display_DisplayObject_visible_set = 76;
+const uint32_t flash_text_StaticText_text_get = 150;
+const uint32_t flash_display_DisplayObjectContainer_addChild = 154;
+const uint32_t flash_text_TextField_htmlText_get = 161;
+const uint32_t flash_text_TextField_htmlText_set = 162;
+const uint32_t flash_text_TextField_getLineIndexAtPoint = 167;
+const uint32_t flash_text_TextField_setSelection = 168;
+const uint32_t flash_display_Loader_load = 172;
 
 extern AvmBox vektrix_EventHandler_add_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox vektrix_EventHandler_handle_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
@@ -148,12 +160,15 @@ extern double flash_display_DisplayObject_width_get_thunk(AvmMethodEnv env, uint
 extern AvmBox flash_display_DisplayObject_width_set_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern double flash_display_DisplayObject_height_get_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_display_DisplayObject_height_set_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+extern AvmBox flash_display_DisplayObject_visible_get_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+extern AvmBox flash_display_DisplayObject_visible_set_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_text_StaticText_text_get_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_display_DisplayObjectContainer_addChild_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_text_TextField_htmlText_get_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_text_TextField_htmlText_set_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_text_TextField_getLineIndexAtPoint_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 extern AvmBox flash_text_TextField_setSelection_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+extern AvmBox flash_display_Loader_load_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 
 #ifdef VMCFG_INDIRECT_NATIVE_THUNKS
 
@@ -175,8 +190,17 @@ extern AvmBox flash_v2a_osobib_optbfalse_opti0_optbfalse_thunk(AvmMethodEnv env,
 extern AvmBox flash_v2a_oo_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 #define vektrix_EventHandler_handle_thunk  flash_v2a_oo_thunk
 
+extern AvmBox flash_v2a_ob_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+#define flash_display_DisplayObject_visible_set_thunk  flash_v2a_ob_thunk
+
 extern AvmBox flash_b2a_oo_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 #define flash_events_EventDispatcher_dispatchEvent_thunk  flash_b2a_oo_thunk
+
+extern AvmBox flash_v2a_ooo_optakAvmThunkNull_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+#define flash_display_Loader_load_thunk  flash_v2a_ooo_optakAvmThunkNull_thunk
+
+extern AvmBox flash_b2a_o_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+#define flash_display_DisplayObject_visible_get_thunk  flash_b2a_o_thunk
 
 extern AvmBox flash_i2a_odd_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
 #define flash_text_TextField_getLineIndexAtPoint_thunk  flash_i2a_odd_thunk
@@ -403,6 +427,73 @@ REALLY_INLINE void _vtx_as3_EventSlots::set_flash_events_Event_mEventDispatcher(
         avmplus::NativeID::_vtx_as3_EventSlots m_slots_Event
 //-----------------------------------------------------------
 
+// flash.net::URLRequest$
+//-----------------------------------------------------------
+class _vtx_as3_URLRequestClassSlots
+{
+    friend class SlotOffsetsAndAsserts;
+public:
+private:
+};
+#define DECLARE_SLOTS_URLRequestClass \
+    private: \
+        friend class avmplus::NativeID::SlotOffsetsAndAsserts; \
+        typedef avmplus::NativeID::_vtx_as3_URLRequestClassSlots EmptySlotsStruct_URLRequestClass
+//-----------------------------------------------------------
+
+// flash.net::URLRequest
+//-----------------------------------------------------------
+class _vtx_as3_URLRequestSlots
+{
+    friend class SlotOffsetsAndAsserts;
+public:
+    REALLY_INLINE AvmString get_private_mURL() const { return m_private_mURL; }
+    void set_private_mURL(::vtx::as3::URLRequest* obj, AvmString newVal);
+private:
+    AvmString m_private_mURL;
+};
+REALLY_INLINE void _vtx_as3_URLRequestSlots::set_private_mURL(::vtx::as3::URLRequest* obj, AvmString newVal)
+{
+    WBRC(((ScriptObject*)obj)->gc(), obj, &m_private_mURL, newVal);
+}
+#define DECLARE_SLOTS_URLRequest \
+    private: \
+        friend class avmplus::NativeID::SlotOffsetsAndAsserts; \
+    protected: \
+        REALLY_INLINE AvmString get_private_mURL() const { return m_slots_URLRequest.get_private_mURL(); } \
+        REALLY_INLINE void set_private_mURL(AvmString newVal) { m_slots_URLRequest.set_private_mURL(this, newVal); } \
+    private: \
+        avmplus::NativeID::_vtx_as3_URLRequestSlots m_slots_URLRequest
+//-----------------------------------------------------------
+
+// flash.system::LoaderContext$
+//-----------------------------------------------------------
+class _vtx_as3_LoaderContextClassSlots
+{
+    friend class SlotOffsetsAndAsserts;
+public:
+private:
+};
+#define DECLARE_SLOTS_LoaderContextClass \
+    private: \
+        friend class avmplus::NativeID::SlotOffsetsAndAsserts; \
+        typedef avmplus::NativeID::_vtx_as3_LoaderContextClassSlots EmptySlotsStruct_LoaderContextClass
+//-----------------------------------------------------------
+
+// flash.system::LoaderContext
+//-----------------------------------------------------------
+class _vtx_as3_LoaderContextSlots
+{
+    friend class SlotOffsetsAndAsserts;
+public:
+private:
+};
+#define DECLARE_SLOTS_LoaderContext \
+    private: \
+        friend class avmplus::NativeID::SlotOffsetsAndAsserts; \
+        typedef avmplus::NativeID::_vtx_as3_LoaderContextSlots EmptySlotsStruct_LoaderContext
+//-----------------------------------------------------------
+
 // vektrix::EventHandler$
 //-----------------------------------------------------------
 class _vtx_as3_EventHandlerClassSlots
@@ -625,6 +716,34 @@ private:
     private: \
         friend class avmplus::NativeID::SlotOffsetsAndAsserts; \
         typedef avmplus::NativeID::_vtx_as3_TextFieldSlots EmptySlotsStruct_TextField
+//-----------------------------------------------------------
+
+// flash.display::Loader$
+//-----------------------------------------------------------
+class _vtx_as3_LoaderClassSlots
+{
+    friend class SlotOffsetsAndAsserts;
+public:
+private:
+};
+#define DECLARE_SLOTS_LoaderClass \
+    private: \
+        friend class avmplus::NativeID::SlotOffsetsAndAsserts; \
+        typedef avmplus::NativeID::_vtx_as3_LoaderClassSlots EmptySlotsStruct_LoaderClass
+//-----------------------------------------------------------
+
+// flash.display::Loader
+//-----------------------------------------------------------
+class _vtx_as3_LoaderSlots
+{
+    friend class SlotOffsetsAndAsserts;
+public:
+private:
+};
+#define DECLARE_SLOTS_Loader \
+    private: \
+        friend class avmplus::NativeID::SlotOffsetsAndAsserts; \
+        typedef avmplus::NativeID::_vtx_as3_LoaderSlots EmptySlotsStruct_Loader
 //-----------------------------------------------------------
 
 // flash.display::Sprite$

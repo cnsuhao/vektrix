@@ -34,21 +34,18 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** The Factory that is used for creating Movie objects */
 	class vtxExport MovieFactory : public Factory<Movie, String>
 	{
 	public:
 		friend class Movie;
 		friend class Root;
-		// <"MovieDefinitionName", RenderStrategyPtr>
-		typedef std::map<String, RenderStrategy*> RenderStrategyMap;
+
 		typedef std::map<String, InstanceFactory*> FactoryMap;
 
 		MovieFactory();
 		virtual ~MovieFactory();
-
-		/** Get a RenderStrategy associated with this factory */
-		RenderStrategy* getRenderStrategy(File* file);
 
 		/** Get the TextureFactory that is used for creating Texture instances */
 		TextureFactory* getTextureFactory();
@@ -56,23 +53,19 @@ namespace vtx
 		InstanceFactory* getFactory(const String& type);
 
 	protected:
-		// map of all RenderStrategies, with the respective filename as key
-		RenderStrategyMap mRenderStrategy;
-
 		// map of the used factories <InstanceType, FactoryPtr>
 		FactoryMap mFactories;
 
 		// factories
 		TextureFactory* mTextureFactory;
 
-		/** Abstract method for creating the RenderStrategy associated with this Factory */
-		virtual RenderStrategy* _createRenderStrategy(File* file) = 0;
 		/** Abstract method for creating a MovieDebugger for the given Movie */
 		virtual MovieDebugger* _newDebugger(Movie* movie) = 0;
 
 		/** Initialize this Factory */
 		void _initialize();
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

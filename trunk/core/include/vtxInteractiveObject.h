@@ -34,7 +34,8 @@ THE SOFTWARE.
 
 namespace vtx
 {
-	/** Base class for everything visual that can provide interactive behaviour */
+	//-----------------------------------------------------------------------
+	/** Base class for everything visual that can provide interactive behavior */
 	class vtxExport InteractiveObject : public DisplayObject
 	{
 	public:
@@ -47,6 +48,7 @@ namespace vtx
 	protected:
 		bool mHasFocus;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

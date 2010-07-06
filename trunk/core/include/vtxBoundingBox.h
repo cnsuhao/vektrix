@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** An axis-aligned bounding box */
 	class vtxExport BoundingBox
 	{
@@ -109,6 +110,7 @@ namespace vtx
 		Extent mExtent;
 		Vector2 mMax, mMin;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

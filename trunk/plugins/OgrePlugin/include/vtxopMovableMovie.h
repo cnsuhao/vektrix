@@ -39,7 +39,7 @@ namespace vtx
 {
 	namespace ogre
 	{
-		class MovableMovie : public vtx::Movie, public Ogre::MovableObject
+		class MovableMovie : public Movie, public Ogre::MovableObject
 		{
 		public:
 			typedef std::map<Ogre::Renderable*, Ogre::Renderable*> RenderableMap;
@@ -49,9 +49,9 @@ namespace vtx
 
 			AtlasPacker* getPacker() const;
 
-			vtx::Instance* getInstance(const String& id);
-			vtx::Instance* getInstanceByType(const String& type);
-			void releaseInstance(vtx::Instance* instance);
+			Instance* getInstance(Resource* resource);
+			Instance* getInstanceByType(const String& type);
+			void releaseInstance(Instance* instance);
 
 			// Ogre functions
 			const Ogre::String& getMovableType() const;
@@ -62,6 +62,7 @@ namespace vtx
 
 		protected:
 			Ogre::AxisAlignedBox mAAB;
+			MovableMovieFactory* mFactory;
 			//ShapeList mShapes;
 			RenderableMap mRenderables;
 		};

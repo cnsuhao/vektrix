@@ -31,8 +31,7 @@ THE SOFTWARE.
 
 #include "vtxop.h"
 
-#include "vtxFile.h"
-#include "vtxRenderStrategy.h"
+#ifdef false
 
 namespace vtx
 {
@@ -48,7 +47,7 @@ namespace vtx
 			Instance* shareInstance(const String& id, Movie* movie);
 			Instance* shareInstanceByType(const String& type, Movie* movie);
 
-			void resourceAdded(Resource* resource, const File::ResourceGroupType& group);
+			void resourceAdded(Resource* resource);
 
 			AtlasPacker* getPacker() const;
 
@@ -58,5 +57,6 @@ namespace vtx
 		};
 	}
 }
+#endif
 
 #endif

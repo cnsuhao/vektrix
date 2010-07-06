@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A Resource which contains all necessary data for creating an animated MovieClip instance */
 	class vtxExport MovieClipResource : public Resource
 	{
@@ -52,6 +53,7 @@ namespace vtx
 	protected:
 		Timeline* mTimeline;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

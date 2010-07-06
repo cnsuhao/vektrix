@@ -35,6 +35,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport FocusEvent : public Event
 	{
 	public:
@@ -52,6 +53,7 @@ namespace vtx
 		KeyCode keyCode;
 		InteractiveObject* relatedObject;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

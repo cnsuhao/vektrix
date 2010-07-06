@@ -192,11 +192,6 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	const String ShapeResource::getPackID()
-	{
-		return getID();
-	}
-	//-----------------------------------------------------------------------
 	const uint ShapeResource::getPackableWidth()
 	{
 		return getMaximumWidth_PoT();

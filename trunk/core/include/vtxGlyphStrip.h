@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class GlyphStrip
 	{
 	public:
@@ -70,6 +71,7 @@ namespace vtx
 		GlyphList glyphs;
 	};
 	typedef std::vector<GlyphStrip> GlyphStripList;
+	//-----------------------------------------------------------------------
 }
 
 #endif

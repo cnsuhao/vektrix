@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport HtmlOperations
 	{
 	public:
@@ -76,6 +77,7 @@ namespace vtx
 		void _recursiveErase(HtmlElement* current_element);
 		void _recursiveGenerate(HtmlElement* current_element);
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

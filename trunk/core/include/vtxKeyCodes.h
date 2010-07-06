@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	enum KeyCode
 	{
 		KC_UNASSIGNED  = 0x00,
@@ -181,6 +182,7 @@ namespace vtx
 		KC_MAIL        = 0xEC,    // Mail
 		KC_MEDIASELECT = 0xED     // Media Select
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

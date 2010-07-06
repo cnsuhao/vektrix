@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class FileParsingJob : public ThreadJob
 	{
 	public:
@@ -46,6 +47,7 @@ namespace vtx
 		FileParser* mParser;
 		File* mFile;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

@@ -51,6 +51,9 @@ THE SOFTWARE.
 #	define vtxas3Export
 #endif
 
+#define AS3_ClassSlots(name) DECLARE_SLOTS_##name##Class
+#define AS3_InstSlots(name) DECLARE_SLOTS_##name
+
 namespace vtx
 {
 	namespace as3
@@ -58,7 +61,10 @@ namespace vtx
 		// class pre-declarations
 		class AS3ScriptEngine;
 		class AS3ScriptEngineFactory;
+
+		class LoaderContext;
 		class MovieClip;
+		class URLRequest;
 	}
 }
 

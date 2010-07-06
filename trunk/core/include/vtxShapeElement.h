@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Represents a single element of a vector based shape outline */
 	class ShapeElement
 	{
@@ -74,6 +75,7 @@ namespace vtx
 		Vector2 ctrl;
 	};
 	typedef std::vector<ShapeElement> ShapeElementList;
+	//-----------------------------------------------------------------------
 }
 
 #endif

@@ -66,4 +66,4 @@ namespace vtx
 	}
 }
 
-#endif // __vtxswfShapeParser_H__
+#endif

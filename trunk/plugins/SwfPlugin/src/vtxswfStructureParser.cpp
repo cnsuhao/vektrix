@@ -37,6 +37,7 @@ THE SOFTWARE.
 #include "vtxMatrix.h"
 #include "vtxMoveObjectEvent.h"
 #include "vtxMovieClipResource.h"
+#include "vtxRemoveObjectEvent.h"
 #include "vtxStringHelper.h"
 #include "vtxTimeline.h"
 
@@ -101,7 +102,7 @@ namespace vtx
 					cx.mul_red/256.0f, cx.mul_green/256.0f, cx.mul_blue/256.0f, cx.mul_alpha/256.0f, 
 					cx.add_red/256.0f, cx.add_green/256.0f, cx.add_blue/256.0f, cx.add_alpha/256.0f);
 
-				btn_state->addEvent(new CreateObjectEvent(NULL, id, layer, matrix, cxform));
+				btn_state->addEvent(new CreateObjectEvent(NULL, mParser->getCurrentFile(), id, layer, matrix, cxform));
 
 				if(state & 1) button->setState(btn_state, ButtonResource::SID_UP);
 				if(state & 2) button->setState(btn_state, ButtonResource::SID_OVER);
@@ -193,8 +194,14 @@ namespace vtx
 			{
 				// place
 				String id = StringHelper::toString(character);
-				mCurrentKeyframe->addEvent(new CreateObjectEvent(NULL, id, depth, matrix, cxform, name));
+				mCurrentKeyframe->addEvent(new CreateObjectEvent(NULL, mParser->getCurrentFile(), id, depth, matrix, cxform, name));
 			}
+		}
+		//-----------------------------------------------------------------------
+		void StructureParser::handleRemoveObject2()
+		{
+			UI16 depth = mParser->readU16();
+			mCurrentKeyframe->addEvent(new RemoveObjectEvent(NULL, depth));
 		}
 		//-----------------------------------------------------------------------
 		void StructureParser::handleShowFrame()

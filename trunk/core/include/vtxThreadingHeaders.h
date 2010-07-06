@@ -29,8 +29,8 @@ THE SOFTWARE.
 #ifndef __vtxThreadingHeaders_H__
 #define __vtxThreadingHeaders_H__
 
-#if VTX_THREADING_LIB == VTX_THREADING_BOOST
-#	include "vtxThreadingHeadersBoost.h"
-#endif
+#include "vtxThreadingConfig.h"
+
+#include "vtxThreadingHeadersBoost.h"
 
 #endif

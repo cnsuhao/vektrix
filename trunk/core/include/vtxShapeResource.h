@@ -36,6 +36,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A Resource which contains all necessary data for creating a Shape instance */
 	class vtxExport ShapeResource : public Resource, public AtlasElement
 	{
@@ -88,8 +89,6 @@ namespace vtx
 		void _injectScale(const Vector2& scale);
 
 		// AtlasElement
-		/** @copybrief AtlasElement::getPackID */
-		const String getPackID();
 		/** @copybrief AtlasElement::getPackableWidth */
 		const uint getPackableWidth();
 		/** @copybrief AtlasElement::getPackableHeight */
@@ -100,6 +99,7 @@ namespace vtx
 		Vector2 mMaximumScale;
 		SubshapeList mSubshapes;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

@@ -43,22 +43,18 @@ extern "C" void vtxfreeimgExport startPlugin() throw()
 }
 //-----------------------------------------------------------------------
 
-namespace vtx
-{
-	namespace freeimg
+namespace vtx { namespace freeimg {
+	//-----------------------------------------------------------------------
+	FreeImagePlugin::FreeImagePlugin()
 	{
-		//-----------------------------------------------------------------------
-		FreeImagePlugin::FreeImagePlugin()
-		{
-			mParserFactory = new ImageParserFactory();
-			FileManager::getSingletonPtr()->addParserFactory(mParserFactory);
-		}
-		//-----------------------------------------------------------------------
-		FreeImagePlugin::~FreeImagePlugin()
-		{
-			FileManager::getSingletonPtr()->removeParserFactory(mParserFactory);
-			delete mParserFactory;
-		}
-		//-----------------------------------------------------------------------
+		mParserFactory = new ImageParserFactory();
+		FileManager::getSingletonPtr()->addParserFactory(mParserFactory);
 	}
-}
+	//-----------------------------------------------------------------------
+	FreeImagePlugin::~FreeImagePlugin()
+	{
+		FileManager::getSingletonPtr()->removeParserFactory(mParserFactory);
+		delete mParserFactory;
+	}
+	//-----------------------------------------------------------------------
+}}

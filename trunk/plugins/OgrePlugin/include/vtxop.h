@@ -54,7 +54,6 @@ namespace vtx
 		// MovableMovie
 		class MovableMovie;
 		class MovableMovieFactory;
-		class MovableRenderStrategy;
 
 		// Instances
 		class OgreMovableEditText;

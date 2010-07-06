@@ -36,6 +36,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** A Resource which contains all necessary data for creating a StaticText instance */
 	class vtxExport StaticTextResource : public Resource
 	{
@@ -60,6 +61,7 @@ namespace vtx
 		BoundingBox mBoundingBox;
 		GlyphStripList mGlyphStrips;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

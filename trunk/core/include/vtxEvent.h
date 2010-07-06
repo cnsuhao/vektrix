@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport Event
 	{
 	public:
@@ -51,6 +52,7 @@ namespace vtx
 	protected:
 		String mType;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

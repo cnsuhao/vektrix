@@ -33,6 +33,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	template <typename T>
 	class Singleton
 	{
@@ -57,6 +58,7 @@ namespace vtx
 	protected:
 		static T* sInstance;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

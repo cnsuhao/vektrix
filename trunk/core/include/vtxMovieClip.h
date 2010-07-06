@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** Represents an object container which also provides a Timeline for modifying the contained objects */
 	class vtxExport MovieClip : public DisplayObjectContainer
 	{
@@ -67,6 +68,7 @@ namespace vtx
 		BoundingBox mBB;
 		Timeline* mTimeline;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

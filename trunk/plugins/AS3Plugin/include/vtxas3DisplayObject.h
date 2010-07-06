@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxas3DisplayObject_H__
 #define __vtxas3DisplayObject_H__
 
-#include "cspPrerequesites.h"
+#include "vtxas3.h"
 
 namespace vtx
 {
@@ -73,6 +73,9 @@ namespace vtx
 
 			double get_height();
 			void set_height(double val);
+
+			void set_visible(bool val);
+			bool get_visible();
 
 			DECLARE_SLOTS_DisplayObject;
 

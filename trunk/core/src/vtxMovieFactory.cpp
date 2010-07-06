@@ -30,7 +30,6 @@ THE SOFTWARE.
 
 #include "vtxFile.h"
 #include "vtxInstanceManager.h"
-#include "vtxRenderStrategy.h"
 
 namespace vtx
 {
@@ -38,32 +37,12 @@ namespace vtx
 	MovieFactory::MovieFactory() 
 		: mTextureFactory(NULL)
 	{
+
 	}
 	//-----------------------------------------------------------------------
 	MovieFactory::~MovieFactory()
 	{
-		RenderStrategyMap::iterator it = mRenderStrategy.begin();
-		RenderStrategyMap::iterator end = mRenderStrategy.end();
-		while(it != end)
-		{
-			delete it->second;
-			++it;
-		}
-	}
-	//-----------------------------------------------------------------------
-	RenderStrategy* MovieFactory::getRenderStrategy(File* file)
-	{
-		RenderStrategyMap::iterator it = mRenderStrategy.find(file->getFilename());
 
-		if(it != mRenderStrategy.end())
-		{
-			return it->second;
-		}
-
-		RenderStrategy* renderStrategy = _createRenderStrategy(file);
-		mRenderStrategy.insert(RenderStrategyMap::value_type(file->getFilename(), renderStrategy));
-
-		return renderStrategy;
 	}
 	//-----------------------------------------------------------------------
 	TextureFactory* MovieFactory::getTextureFactory()

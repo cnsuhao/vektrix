@@ -35,6 +35,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport KeyboardEvent : public Event
 	{
 	public:
@@ -50,6 +51,7 @@ namespace vtx
 		KeyCode keyCode;
 		uint charCode;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

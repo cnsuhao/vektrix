@@ -36,6 +36,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** This class combines transformation, color and bounding attributes */
 	class vtxExport Transform
 	{
@@ -69,6 +70,16 @@ namespace vtx
 		void setScaleY(const float& scale);
 		/** Get the y-scale of this object */
 		const float& getScaleY() const;
+
+		/** Set the width for this object */
+		void setWidth(const float& width);
+		/** Get the width of this object */
+		const float getWidth() const;
+
+		/** Set the height for this object */
+		void setHeight(const float& width);
+		/** Get the height of this object */
+		const float getHeight() const;
 
 		/** Set the layer for this object */
 		void setLayer(const uint& layer);
@@ -138,6 +149,7 @@ namespace vtx
 		/** Decompose the local matrix back to the seperate x, y, angle, etc attributes */
 		void decomposeMatrix();
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

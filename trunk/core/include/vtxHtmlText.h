@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class vtxExport HtmlText : public HtmlElement
 	{
 	public:
@@ -42,6 +43,7 @@ namespace vtx
 
 		WString text;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

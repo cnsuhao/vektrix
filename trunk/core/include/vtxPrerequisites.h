@@ -31,12 +31,14 @@ THE SOFTWARE.
 
 #include <stdarg.h>
 #include <assert.h>
+#include <time.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 
 #include <algorithm>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <list>
 #include <map>
@@ -88,8 +90,10 @@ THE SOFTWARE.
 # define R_OK 4
 #endif
 
+/** the root namespace of the vektrix library */
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	class AtlasNode;
 	class AtlasElement;
 	class AtlasPacker;
@@ -150,9 +154,7 @@ namespace vtx
 	class Rasterizer;
 	class Rect;
 	class RectF;
-	class RenderStrategy;
 	class Resource;
-	class ResourceGroup;
 	class Root;
 	class ScriptEngine;
 	class ScriptEngineFactory;
@@ -171,6 +173,8 @@ namespace vtx
 	class TextLineElement;
 	class Texture;
 	class TextureFactory;
+	class ThreadJob;
+	class ThreadJobQueue;
 	class Timeline;
 	class Vector2;
 
@@ -189,15 +193,14 @@ namespace vtx
 	typedef std::map<String, String> StringMap;
 	typedef std::pair<String, String> StringPair;
 	typedef std::vector<StringPair> StringPairList;
-	typedef std::map<String, DynLib*> DynLibMap;
 
 	typedef std::vector<Resource*> ResourceList;
 	typedef std::map<String, Resource*> ResourceMap;
 	typedef std::map<String, ResourceList> ResourceTypeMap;
-	typedef std::map<String, FontResource*> FontMap;
 
 	// plugin functions
 	typedef void (*START_PLUGIN_FUNCTION)();
+	//-----------------------------------------------------------------------
 }
 
 #endif

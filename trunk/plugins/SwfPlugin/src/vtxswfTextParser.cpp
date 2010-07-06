@@ -101,8 +101,15 @@ namespace vtx
 				if(flags & 2)
 				{
 					text_record.y = parser->readS16();
-					glyph_strip.y = text_record.y / 20.0f;
-					glyph_strip.newline = true;
+					float new_y = text_record.y / 20.0f;
+
+					// needs a line break ?
+					if(new_y > glyph_strip.y + glyph_strip.size)
+					{
+						glyph_strip.newline = true;
+					}
+
+					glyph_strip.y = new_y;
 				}
 				// has font -> text height
 				if(flags & 8)

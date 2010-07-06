@@ -37,7 +37,6 @@ THE SOFTWARE.
 #include "vtxMaterialResource.h"
 #include "vtxMovieClipResource.h"
 #include "vtxResource.h"
-#include "vtxResourceGroup.h"
 #include "vtxShapeResource.h"
 #include "vtxSubshapeResource.h"
 
@@ -46,12 +45,11 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	File::File(const String& filename) 
 		: mFilename(filename), 
+		mLoadingState(FLS_LOADING), 
 		mScriptEngineFactory(""), 
-		mMainMovieClip(NULL)
+		mMainMovieClip(NULL), 
+		mMainResource(NULL)
 	{
-		mResourceGroups[RGT_Internal] = new ResourceGroup(this);
-		mResourceGroups[RGT_External] = new ResourceGroup(this);
-
 		ShapeResource* black_box = new ShapeResource("BlackBox");
 
 		MaterialResource* material = new MaterialResource("BlackBox_Material", MaterialResource::MT_COLOR);
@@ -99,10 +97,14 @@ namespace vtx
 	File::~File()
 	{
 		// only destroy internal resources
-		mResourceGroups[RGT_Internal]->destroyResources();
+		ResourceMap::iterator it = mResources.begin();
+		ResourceMap::iterator end = mResources.end();
+		while(it != end)
+		{
+			delete it->second;
+			++it;
+		}
 
-		delete mResourceGroups[RGT_External];
-		delete mResourceGroups[RGT_Internal];
 		delete mMainMovieClip;
 	}
 	//-----------------------------------------------------------------------
@@ -141,90 +143,93 @@ namespace vtx
 		return mMainMovieClip;
 	}
 	//-----------------------------------------------------------------------
-	void File::addResource(Resource* res, const ResourceGroupType& group)
+	void File::setMainResource(Resource* resource)
 	{
-		if(group == RGT_Internal)
+		mMainResource = resource;
+	}
+	//-----------------------------------------------------------------------
+	Resource* File::getMainResource()
+	{
+		return mMainResource;
+	}
+	//-----------------------------------------------------------------------
+	void File::addResource(Resource* res)
+	{
+		ResourceMap::iterator it = mResources.find(res->getID());
+
+		if(it != mResources.end())
 		{
-			res->_setFile(this);
+			VTX_EXCEPT("\"%s\": Tried to add Resource with id \"%s\" twice!", 
+				mFilename.c_str(), res->getID().c_str());
+			return;
 		}
 
-		if(!mResourceGroups[group]->addResource(res))
+		res->_setFile(this);
+
+		mResources[res->getID()] = res;
+		mResourcesByType[res->getType()].push_back(res);
+
+		if(res->getType() == "Font")
 		{
-			return;
+			FontResource* font = static_cast<FontResource*>(res);
+			mFonts[font->getName()] = font;
 		}
 
 		ListenerMap::iterator listener_it = mListeners.begin();
 		ListenerMap::iterator listener_end = mListeners.end();
 		while(listener_it != listener_end)
 		{
-			listener_it->second->resourceAdded(res, group);
+			listener_it->second->resourceAdded(res);
 			++listener_it;
 		}
 
-		VTX_LOG("\"%s\": Added %sresource with id \"%s\" of type \"%s\"", 
-			mFilename.c_str(), ((group==RGT_External)?"external ":"internal "), 
+#ifdef _DEBUG
+		VTX_LOG("\"%s\": Added resource with id \"%s\" of type \"%s\"", 
+			mFilename.c_str(), 
 			res->getID().c_str(), res->getType().c_str());
+#endif
 	}
 	//-----------------------------------------------------------------------
 	Resource* File::getResource(const String& id)
 	{
-		Resource* res = mResourceGroups[RGT_Internal]->getResource(id);
+		ResourceMap::iterator it = mResources.find(id);
 
-		if(res)
+		if(it != mResources.end())
 		{
-			return res;
+			return it->second;
 		}
 
-		res = mResourceGroups[RGT_External]->getResource(id);
-
-		if(res)
-		{
-			return res;
-		}
-
-		File* res_file = FileManager::getSingletonPtr()->getFile(id);
-		if(res_file)
-		{
-			const ResourceMap& extern_res = res_file->getResources();
-			ResourceMap::const_iterator it = extern_res.begin();
-			ResourceMap::const_iterator end = extern_res.end();
-			while(it != end)
-			{
-				addResource(it->second, RGT_External);
-				++it;
-			}
-
-			res = mResourceGroups[RGT_External]->getResource(id);
-			if(res)
-			{
-				return res;
-			}
-		}
-
-		VTX_WARN("\"%s\": Unable to find the requested resource with name \"%s\"!", mFilename.c_str(), id.c_str());
+		VTX_WARN("\"%s\": Unable to find the requested resource with id \"%s\"!", mFilename.c_str(), id.c_str());
 
 		return NULL;
 	}
 	//-----------------------------------------------------------------------
 	const ResourceList& File::getResourcesByType(const String& type) const
 	{
-		const ResourceList& resources = mResourceGroups[RGT_Internal]->getResourcesByType(type);
-		if(resources.size())
+		ResourceTypeMap::const_iterator it = mResourcesByType.find(type);
+		if(it != mResourcesByType.end())
 		{
-			return resources;
+			return it->second;
 		}
 
-		return mResourceGroups[RGT_External]->getResourcesByType(type);
+		static ResourceList empty;
+		return empty;
 	}
 	//-----------------------------------------------------------------------
 	const ResourceMap& File::getResources() const
 	{
-		return mResourceGroups[RGT_Internal]->getResources();
+		return mResources;
 	}
 	//-----------------------------------------------------------------------
 	FontResource* File::getFontByName(const String& font_name)
 	{
-		return mResourceGroups[RGT_Internal]->getFontByName(font_name);
+		FontMap::iterator it = mFonts.find(font_name);
+		if(it != mFonts.end())
+		{
+			return it->second;
+		}
+
+		return NULL;
 	}
 	//-----------------------------------------------------------------------
 	bool File::addListener(Listener* listener)

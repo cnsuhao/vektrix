@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** FileStream implementation for direct reading from the platform's file system */
 	class DefaultFileStream : public FileStream
 	{
@@ -57,6 +58,7 @@ namespace vtx
 	protected:
 		std::ifstream mStream;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif

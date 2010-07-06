@@ -29,12 +29,13 @@ THE SOFTWARE.
 #ifndef __vtxas3InteractiveObject_H__
 #define __vtxas3InteractiveObject_H__
 
-#include "cspPrerequesites.h"
+#include "vtxas3.h"
 
 namespace vtx
 {
 	namespace as3
 	{
+		//-----------------------------------------------------------------------
 		class InteractiveObjectClass : public avmplus::ClassClosure
 		{
 		public:
@@ -43,7 +44,7 @@ namespace vtx
 
 			DECLARE_SLOTS_InteractiveObjectClass;
 		};
-
+		//-----------------------------------------------------------------------
 		class InteractiveObject : public DisplayObject
 		{
 		public:
@@ -51,6 +52,7 @@ namespace vtx
 
 			DECLARE_SLOTS_InteractiveObject;
 		};
+		//-----------------------------------------------------------------------
 	}
 }
 

@@ -34,6 +34,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
 	/** An event which removes a existing DisplayObject from a certain layer of a DisplayObjectContainer */
 	class vtxExport RemoveObjectEvent : public FrameEvent
 	{
@@ -48,6 +49,7 @@ namespace vtx
 	protected:
 		uint mLayer;
 	};
+	//-----------------------------------------------------------------------
 }
 
 #endif
