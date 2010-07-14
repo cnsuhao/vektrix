@@ -51,18 +51,13 @@ namespace vtx
 
 		if(mShapeResource)
 		{
-			mBB = mShapeResource->getBoundingBox();
+			setBoundingBox(mShapeResource->getBoundingBox());
 		}
 	}
 	//-----------------------------------------------------------------------
 	const String& Shape::getType() const
 	{
 		return TYPE;
-	}
-	//-----------------------------------------------------------------------
-	const BoundingBox& Shape::getBoundingBox() const
-	{
-		return mBB;
 	}
 	//-----------------------------------------------------------------------
 	bool Shape::isPointInside(const Vector2& coord)

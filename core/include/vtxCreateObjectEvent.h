@@ -46,6 +46,7 @@ namespace vtx
 
 		/** @copybrief FrameEvent::clone */
 		FrameEvent* clone(DisplayObjectContainer* container);
+
 		/** @copybrief FrameEvent::execute */
 		void execute();
 
@@ -56,7 +57,7 @@ namespace vtx
 		CXForm mCXForm;
 		String mName;
 		DisplayObject* mObject;
-		/// the File that defines this FrameEvent
+		/// the File that defines this CreateObjectEvent
 		File* mSourceFile;
 	};
 	//-----------------------------------------------------------------------

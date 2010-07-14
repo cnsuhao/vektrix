@@ -61,8 +61,10 @@ namespace vtx
 
 		/** Start a new debug line strip */
 		virtual void startDebugLine() = 0;
+
 		/** Add a point to the current debug line strip */
 		virtual void debugLine(const Vector2& point) = 0;
+
 		/** Finish the current debug line strip */
 		virtual void endDebugLine() = 0;
 	};

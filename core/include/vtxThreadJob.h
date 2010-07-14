@@ -34,9 +34,11 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A task that shall be executed on a separate thread */
 	class ThreadJob
 	{
 	public:
+		/** The method that implements the Job's functionality */
 		virtual void start() = 0;
 	};
 	//-----------------------------------------------------------------------

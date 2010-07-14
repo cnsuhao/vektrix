@@ -57,6 +57,16 @@ namespace vtx
 		return mParentMovie;
 	}
 	//-----------------------------------------------------------------------
+	void Instance::setName(const String& name)
+	{
+		mName = name;
+	}
+	//-----------------------------------------------------------------------
+	const String& Instance::getName() const
+	{
+		return mName;
+	}
+	//-----------------------------------------------------------------------
 	void Instance::setScriptObject(ScriptObject* obj)
 	{
 		// remove native object from original script object

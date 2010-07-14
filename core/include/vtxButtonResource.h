@@ -61,7 +61,6 @@ namespace vtx
 	protected:
 		// 3 visual states + 1 special "state" for collision checking
 		ButtonState* mStates[4];
-
 	};
 	//-----------------------------------------------------------------------
 }

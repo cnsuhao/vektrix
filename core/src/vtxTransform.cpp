@@ -117,7 +117,10 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Transform::setWidth(const float& width)
 	{
-
+		if(width > 0.0f)
+		{
+			setScaleX(width / mBounding.getWidth());
+		}
 	}
 	//-----------------------------------------------------------------------
 	const float Transform::getWidth() const
@@ -125,9 +128,12 @@ namespace vtx
 		return mBounding.getWidth() * mScale.x;
 	}
 	//-----------------------------------------------------------------------
-	void Transform::setHeight(const float& width)
+	void Transform::setHeight(const float& height)
 	{
-
+		if(height > 0.0f)
+		{
+			setScaleY(height / mBounding.getHeight());
+		}
 	}
 	//-----------------------------------------------------------------------
 	const float Transform::getHeight() const
@@ -189,6 +195,11 @@ namespace vtx
 	void Transform::needMatrixUpdate()
 	{
 		mNeedMatrixUpdate = true;
+	}
+	//-----------------------------------------------------------------------
+	const bool& Transform::doesNeedMatrixUpdate() const
+	{
+		return mNeedMatrixUpdate;
 	}
 	//-----------------------------------------------------------------------
 	void Transform::update()

@@ -36,13 +36,16 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A semaphore class for synchronizing threads */
 	class Semaphore
 	{
 	public:
 		Semaphore(const uint& initial_count = 0);
 		virtual ~Semaphore();
 
+		/** Release the given amount of units */
 		void release(const uint& count = 1);
+		/** Acquire the given amount of units */
 		void acquire(const uint& count = 1);
 
 	protected:

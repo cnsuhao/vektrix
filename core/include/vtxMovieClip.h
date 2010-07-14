@@ -44,8 +44,10 @@ namespace vtx
 		MovieClip();
 		virtual ~MovieClip();
 
+		/** Implementation of Instance::initFromResource */
 		virtual void initFromResource(Resource* resource);
 
+		/** Implementation of Instance::getType */
 		const String& getType() const;
 
 		/** @copybrief Timeline::play */
@@ -57,15 +59,13 @@ namespace vtx
 		/** @copybrief Timeline::gotoTime */
 		bool gotoTime(const float& time);
 
+		/** @copybrief Timline::getCurrentFrame */
 		uint getCurrentFrame() const;
 
 		/** @copybrief DisplayObjectContainer::_update */
 		void _update(const float& delta_time);
-		/** @copybrief DisplayObject::getBoundingBox */
-		const BoundingBox& getBoundingBox() const;
 
 	protected:
-		BoundingBox mBB;
 		Timeline* mTimeline;
 	};
 	//-----------------------------------------------------------------------

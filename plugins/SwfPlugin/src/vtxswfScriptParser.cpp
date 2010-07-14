@@ -29,8 +29,9 @@ THE SOFTWARE.
 #include "vtxswfScriptParser.h"
 #include "vtxswfParser.h"
 
-#include "vtxLogManager.h"
 #include "vtxScriptResource.h"
+#include "vtxStringHelper.h"
+#include "vtxSymbolClassResource.h"
 
 namespace vtx
 {
@@ -69,7 +70,32 @@ namespace vtx
 				}
 				else
 				{
-					VTX_LOG("ST_SymbolClass: %s", name.c_str());
+					SymbolClassResource* symbol_res = NULL;
+					Resource* res = parser->getCurrentFile()->getResource("__SymbolClassResource__");
+					if(!res)
+					{
+						symbol_res = new SymbolClassResource();
+						parser->getCurrentFile()->addResource(symbol_res);
+					}
+					else
+					{
+						symbol_res = static_cast<SymbolClassResource*>(res);
+					}
+
+					uint seperator = name.find_last_of('.');
+					String class_name, package;
+
+					if(seperator != String::npos)
+					{
+						class_name = name.substr(seperator+1, name.length()-seperator-1);
+						package = name.substr(0, seperator);
+					}
+					else
+					{
+						class_name = name;
+					}
+
+					symbol_res->addSymbol(StringHelper::toString(id), class_name, package);
 				}
 			}
 		}

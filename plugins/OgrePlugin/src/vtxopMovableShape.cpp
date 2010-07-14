@@ -120,29 +120,31 @@ namespace vtx
 			RectF tex_coords = quad.node->getRect().contractedCopy(1).relativeTo(
 				quad.texture->getSize(), quad.texture->getSize());
 
+			const BoundingBox& bb = getBoundingBox();
+
 			_lock();
 
 			// TOP-LEFT
 			_addVertex(
-				Vector2(mBB.getMinX(), -mBB.getMinY()), 
+				Vector2(bb.getMinX(), -bb.getMinY()), 
 				Vector2(tex_coords.left, tex_coords.top), 
 				mMULcolor, mADDcolor);
 
 			// BOTTOM-LEFT
 			_addVertex(
-				Vector2(mBB.getMinX(), -mBB.getMaxY()), 
+				Vector2(bb.getMinX(), -bb.getMaxY()), 
 				Vector2(tex_coords.left, tex_coords.bottom), 
 				mMULcolor, mADDcolor);
 
 			// BOTTOM-RIGHT
 			_addVertex(
-				Vector2(mBB.getMaxX(), -mBB.getMaxY()), 
+				Vector2(bb.getMaxX(), -bb.getMaxY()), 
 				Vector2(tex_coords.right, tex_coords.bottom), 
 				mMULcolor, mADDcolor);
 
 			// TOP-RIGHT
 			_addVertex(
-				Vector2(mBB.getMaxX(), -mBB.getMinY()), 
+				Vector2(bb.getMaxX(), -bb.getMinY()), 
 				Vector2(tex_coords.right, tex_coords.top), 
 				mMULcolor, mADDcolor);
 

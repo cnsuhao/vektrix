@@ -50,18 +50,13 @@ namespace vtx
 
 		if(mStaticTextResource)
 		{
-			mBoundingBox = mStaticTextResource->getBoundingBox();
+			setBoundingBox(mStaticTextResource->getBoundingBox());
 		}
 	}
 	//-----------------------------------------------------------------------
 	const String& StaticText::getType() const
 	{
 		return TYPE;
-	}
-	//-----------------------------------------------------------------------
-	const BoundingBox& StaticText::getBoundingBox() const
-	{
-		return mBoundingBox;
 	}
 	//-----------------------------------------------------------------------
 	bool StaticText::isPointInside(const Vector2& coord)

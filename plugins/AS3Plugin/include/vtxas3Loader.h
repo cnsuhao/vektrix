@@ -60,6 +60,8 @@ namespace vtx
 			AS3_InstSlots(Loader);
 
 		protected:
+			vtx::MovieClip* mMovieClip;
+
 			void _setNativeObject(Instance* inst);
 
 			void loadingCompleted(File* file);

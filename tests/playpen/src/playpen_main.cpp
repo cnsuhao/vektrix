@@ -14,7 +14,6 @@
 #include "vtxfreeimgPlugin.h"
 #include "vtxopPlugin.h"
 #include "vtxswfPlugin.h"
-#include "vtxxmlPlugin.h"
 
 using namespace vtx;
 
@@ -43,7 +42,6 @@ int main(int argc, char** argv)
 	VTX_LOAD_PLUGIN(vektrix_FreeImgPlugin);
 	VTX_LOAD_PLUGIN(vektrix_OgrePlugin);
 	VTX_LOAD_PLUGIN(vektrix_SwfPlugin);
-	VTX_LOAD_PLUGIN(vektrix_XmlPlugin);
 
 	FileManager* file_mgr = FileManager::getSingletonPtr();
 

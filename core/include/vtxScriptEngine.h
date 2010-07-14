@@ -48,12 +48,13 @@ namespace vtx
 		/** Get the root ScriptObject that will be associated with the main MovieClip of a Movie */
 		virtual ScriptObject* getRootScriptObject() = 0;
 
-		/** Create a ScriptObject for the given type */
-		virtual ScriptObject* createScriptObject(const String& type) = 0;
+		/** Create a ScriptObject for the given Resource type */
+		virtual ScriptObject* createScriptObject(Resource* res) = 0;
 
 		/** Destroy the given ScriptObject */
 		virtual void destroyScriptObject(ScriptObject* script_object) = 0;
 
+		/** Get the Movie that uses this ScriptEngine */
 		Movie* getParentMovie() const;
 
 	protected:

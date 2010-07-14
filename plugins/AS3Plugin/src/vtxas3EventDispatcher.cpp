@@ -62,14 +62,18 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void EventDispatcher::addEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useCapture, int priority, bool useWeakReference)
 		{
-			String tp = mCore->csp2stl(type);
+			MMGC_GCENTER(core()->GetGC());
+			csp::InternalCore* cr = (csp::InternalCore*)core();
+			String tp = cr->csp2stl(type);
 			mHandlers[tp].push_back(function);
 			function->IncrementRef();
 		}
 		//-----------------------------------------------------------------------
 		bool EventDispatcher::dispatchEvent(as3::Event* event)
 		{
-			String type = mCore->csp2stl(event->getType());
+			MMGC_GCENTER(core()->GetGC());
+			csp::InternalCore* cr = (csp::InternalCore*)core();
+			String type = cr->csp2stl(event->getType());
 
 			FunctionMap::const_iterator funcs = mHandlers.find(type);
 			if(funcs != mHandlers.end())
@@ -92,8 +96,19 @@ namespace vtx
 			return false;
 		}
 		//-----------------------------------------------------------------------
+		bool EventDispatcher::hasEventListener(avmplus::Stringp type)
+		{
+			MMGC_GCENTER(core()->GetGC());
+
+			csp::InternalCore* cr = (csp::InternalCore*)core();
+			String stl_type = cr->csp2stl(type);
+
+			return (mHandlers.find(stl_type) != mHandlers.end());
+		}
+		//-----------------------------------------------------------------------
 		void EventDispatcher::removeEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useWeakReference)
 		{
+			MMGC_GCENTER(core()->GetGC());
 			String stl_type = mCore->csp2stl(type);
 
 			FunctionMap::iterator funcs = mHandlers.find(stl_type);

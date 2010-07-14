@@ -36,6 +36,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A specialized HTML DOM tree element that represents a font tag */
 	class vtxExport HtmlFont : public HtmlElement
 	{
 	public:

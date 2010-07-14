@@ -46,6 +46,7 @@ namespace vtx
 
 		/** @copybrief FrameEvent::clone */
 		FrameEvent* clone(DisplayObjectContainer* container);
+
 		/** @copybrief FrameEvent::execute */
 		void execute();
 

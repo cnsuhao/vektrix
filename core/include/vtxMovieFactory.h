@@ -50,6 +50,7 @@ namespace vtx
 		/** Get the TextureFactory that is used for creating Texture instances */
 		TextureFactory* getTextureFactory();
 
+		/** Get the InstanceFactory for the given Instance type */
 		InstanceFactory* getFactory(const String& type);
 
 	protected:

@@ -58,6 +58,7 @@ namespace vtx
 		public:
 			/** All packing information has been cleared */
 			virtual void cleared(){}
+
 			/** The atlas has been packed */
 			virtual void packed(const PackResultList& pack_result) = 0;
 		};
@@ -80,17 +81,22 @@ namespace vtx
 
 		/** Pack all registered elements to the atlas */
 		const PackResultList& packAtlas();
+
 		/** Render all registered elements to their assigned atlas */
 		void renderAtlas();
+
 		/** Invalidiate previous packing results & trees */
 		void clearAtlas();
+
 		/** Delete all atlas textures that have been used by the previous packing operation */
 		void destroyAtlas();
 
 		/** Get a list containing packing information for all packed elements */
 		const PackResultList& getResultList();
 
+		/** Add a Listener to this packer */
 		bool addListener(Listener* listener);
+		/** Remove a Listener from this packer */
 		bool removeListener(Listener* listener);
 
 	protected:

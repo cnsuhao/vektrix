@@ -35,15 +35,20 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A XML-based HTML parser */
 	class vtxExport HtmlParser : public XmlParser
 	{
 	public:
 		HtmlParser();
 		virtual ~HtmlParser();
 
+		/** Parse the given HTML input String */
 		bool parse(const String& input);
 
+		/** Get the root node of the parsed HTML DOM tree */
 		HtmlElement* getRoot() const;
+
+		/** Get a unformatted text representation of the HTML text */
 		const String& getPlainText() const;
 
 	protected:

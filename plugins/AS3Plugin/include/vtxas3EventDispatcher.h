@@ -59,9 +59,12 @@ namespace vtx
 			EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 			virtual ~EventDispatcher(){}
 
+			// AS3 functions
 			void addEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useCapture, int priority, bool useWeakReference);
 			bool dispatchEvent(as3::Event* event);
+			bool hasEventListener(avmplus::Stringp type);
 			void removeEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useWeakReference);
+			virtual bool willTrigger(avmplus::Stringp type) { return false; }
 
 			virtual void eventFired(const vtx::Event& evt);
 

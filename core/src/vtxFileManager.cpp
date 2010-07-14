@@ -67,6 +67,7 @@ namespace vtx
 
 		if(VTX_TRY_MUTEX_LOCK(mMutex))
 		{
+#endif
 			while(mFinishedFiles.size())
 			{
 				const FinishedFile& finished_file = mFinishedFiles.back();
@@ -89,10 +90,10 @@ namespace vtx
 				mFinishedFiles.pop_back();
 			}
 
+#ifdef VTX_THREADED_LOADING_ENABLED
 			VTX_MANUAL_MUTEX_UNLOCK(mMutex);
 		}
-
-#endif // VTX_THREADED_LOADING_ENABLED
+#endif
 	}
 	//-----------------------------------------------------------------------
 	bool FileManager::doesFileExist(const String& filename)
@@ -353,14 +354,10 @@ namespace vtx
 		{
 			mParsingFiles.erase(it);
 		}
+#endif
 
 		mFinishedFiles.push_back(FinishedFile(true, file));
-
 		mReadyFiles.insert(FileMap::value_type(file->getFilename(), file));
-#else
-		mReadyFiles.insert(FileMap::value_type(file->getFilename(), file));
-		file->_loadingCompleted();
-#endif
 	}
 	//-----------------------------------------------------------------------
 	void FileManager::_failedParsing(File* file)
@@ -373,11 +370,9 @@ namespace vtx
 		{
 			mParsingFiles.erase(it);
 		}
+#endif
 
 		mFinishedFiles.push_back(FinishedFile(false, file));
-#else
-		file->_loadingFailed();
-#endif
 	}
 	//-----------------------------------------------------------------------
 }

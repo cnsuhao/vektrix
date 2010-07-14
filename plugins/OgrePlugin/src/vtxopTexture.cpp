@@ -93,6 +93,7 @@ namespace vtx
 			pass->setVertexColourTracking(Ogre::TVC_AMBIENT);
 
 			texture_unit->setTextureName(mTexture->getName());
+			//texture_unit->setTextureFiltering(Ogre::TFO_NONE);
 
 			pass->setCullingMode(Ogre::CULL_NONE);
 		}

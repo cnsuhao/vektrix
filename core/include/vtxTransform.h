@@ -44,6 +44,7 @@ namespace vtx
 		Transform();
 		virtual ~Transform();
 
+		/** Set the DisplayObjectContainer that will be used for world-transformation calculations */
 		void setParentContainer(DisplayObjectContainer* parent);
 
 		/** Set the x-coordinate for this object */
@@ -77,7 +78,7 @@ namespace vtx
 		const float getWidth() const;
 
 		/** Set the height for this object */
-		void setHeight(const float& width);
+		void setHeight(const float& height);
 		/** Get the height of this object */
 		const float getHeight() const;
 
@@ -103,8 +104,11 @@ namespace vtx
 
 		/** Inform the object that the color transformation needs to be updated */
 		void needColorUpdate();
+
 		/** Inform the object that the matrix needs to be updated */
 		void needMatrixUpdate();
+
+		const bool& doesNeedMatrixUpdate() const;
 
 		/** Perform color / matrix updates if necessary */
 		void update();

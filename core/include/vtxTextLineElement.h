@@ -74,7 +74,7 @@ namespace vtx
 
 		ElementType type;
 
-		/// get the parent HtmlElement of the DOM tree, from which this LineElement was generated
+		/// The parent HtmlElement of the DOM tree, from which this LineElement has been generated
 		HtmlElement* parentHTML;
 
 		// IMAGE

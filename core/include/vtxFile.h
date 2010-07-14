@@ -73,10 +73,13 @@ namespace vtx
 		public:
 			/** A Resource has been added to this File */
 			virtual void resourceAdded(Resource* resource){}
+
 			/** A Resource has been removed from this File */
 			virtual void resourceRemoved(Resource* resource) {}
+
 			/** The file has been successfully loaded */
 			virtual void loadingCompleted(File* file) {}
+
 			/** The file has failed to load properly */
 			virtual void loadingFailed(File* file) {}
 		};
@@ -114,16 +117,13 @@ namespace vtx
 		/** Get the MovieClipResource which defines the main MovieClip for related Movie instances */
 		MovieClipResource* getMainMovieClip();
 
-		void setMainResource(Resource* resource);
-		Resource* getMainResource();
-
 		/** Add a Resource instance to this File */
 		void addResource(Resource* res);
 
 		/** Retrieve a Resource instance from this File by its unique ID */
 		Resource* getResource(const String& id);
 
-		/** Query all resouces from this File that match the given type */
+		/** Query all resources from this File that match the given type */
 		const ResourceList& getResourcesByType(const String& type) const;
 
 		/** Get all resources of this File */
@@ -132,7 +132,9 @@ namespace vtx
 		/** Get a particular FontResource by its font name */
 		FontResource* getFontByName(const String& font_name);
 
+		/** Add a Listener to this File */
 		bool addListener(Listener* listener);
+		/** Remove a Listener from this File */
 		bool removeListener(Listener* listener);
 
 	protected:
@@ -149,7 +151,10 @@ namespace vtx
 		MovieClipResource* mMainMovieClip;
 		Resource* mMainResource;
 
+		/** Inform all registered listeners that the loading of this File has finished */
 		void _loadingCompleted();
+
+		/** Inform all registered listeners that the loading of this File has failed */
 		void _loadingFailed();
 	};
 	//-----------------------------------------------------------------------

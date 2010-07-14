@@ -49,6 +49,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void ThreadJobQueue::setNumberOfThreads(const uint& num_threads)
 	{
+#if defined VTX_THREADING_LIB && VTX_THREADING_LIB != VTX_THREADING_NONE
+
 		VTX_LOCK_MUTEX(mMutex);
 		if(num_threads < mThreadPool.size())
 		{
@@ -69,21 +71,22 @@ namespace vtx
 				mThreadPool.push_back(thread);
 			}
 		}
+
+#endif
 	}
 	//-----------------------------------------------------------------------
 	void ThreadJobQueue::queueJob(ThreadJob* job)
 	{
 		VTX_LOCK_MUTEX(mMutex);
-		mQueue.push(job);
+		mQueue.push_front(job);
 		mSemaphore.release();
 	}
 	//-----------------------------------------------------------------------
-	void ThreadJobQueue::threadFunc(/*void* args*/)
+	void ThreadJobQueue::threadFunc()
 	{
 		while(mRunning.getValue())
 		{
 			mSemaphore.acquire();
-			//VTX_LOG("Job acquired");
 
 			ThreadJob* job = NULL;
 
@@ -91,7 +94,7 @@ namespace vtx
 			if(mQueue.size())
 			{
 				job = mQueue.back();
-				mQueue.pop();
+				mQueue.pop_back();
 			}
 			VTX_CRITICAL_SECTION_END;
 
@@ -100,12 +103,13 @@ namespace vtx
 				job->start();
 				delete job;
 			}
-			//VTX_LOG("Job finished");
 		}
 	}
 	//-----------------------------------------------------------------------
 	void ThreadJobQueue::destroyThreads()
 	{
+#if defined VTX_THREADING_LIB && VTX_THREADING_LIB != VTX_THREADING_NONE
+
 		VTX_LOG("Waiting for %d threads to finish...", mThreadPool.size());
 
 		ThreadPool::iterator it = mThreadPool.begin();
@@ -116,6 +120,8 @@ namespace vtx
 			delete *it;
 			++it;
 		}
+
+#endif
 	}
 	//-----------------------------------------------------------------------
 }

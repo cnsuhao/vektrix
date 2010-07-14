@@ -41,36 +41,18 @@ namespace vtx
 	public:
 		static const String TYPE;
 
-		enum MouseState
-		{
-			MS_OUT_UP = 0, 
-			MS_OUT_DOWN, 
-			MS_IN_UP, 
-			MS_IN_DOWN
-		};
-
 		Button();
 		virtual ~Button();
 
+		/** Implementation of DisplayObject::initFromResource */
 		virtual void initFromResource(Resource* resource);
 
 		const String& getType() const;
-
-		/** @copybrief DisplayObjectContainer::_update */
-		virtual void _update(const float& delta_time = 0.0f);
-		/** @copybrief DisplayObject::getBoundingBox */
-		const BoundingBox& getBoundingBox() const;
 
 		// inherited from EventListener
 		void eventFired(const Event& evt);
 
 	protected:
-		bool mMouseDown;
-		bool mMouseOver;
-		BoundingBox mBB;
-
-		MouseState mMouseState;
-
 		ButtonState* mUp;
 		ButtonState* mOver;
 		ButtonState* mDown;

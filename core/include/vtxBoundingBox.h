@@ -74,7 +74,9 @@ namespace vtx
 			mMax = max;
 		}
 
+		/** Reset this BoundingBox */
 		void reset();
+
 		/** Extend the boundaries of this box by the ones of another */
 		void extend(const BoundingBox& bb);
 
@@ -103,6 +105,7 @@ namespace vtx
 
 		/** Get the center of the box */
 		Vector2 getCenter() const;
+
 		/** Get the halved dimensions of the box */
 		Vector2 getHalf() const;
 

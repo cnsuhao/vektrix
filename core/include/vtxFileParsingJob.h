@@ -35,12 +35,14 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A ThreadJob for the threaded loading and parsing of files  */
 	class FileParsingJob : public ThreadJob
 	{
 	public:
 		FileParsingJob(FileParser* parser, File* file);
 		virtual ~FileParsingJob();
 
+		/** Implementation of ThreadJob::start */
 		void start();
 
 	protected:

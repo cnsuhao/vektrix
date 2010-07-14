@@ -43,6 +43,7 @@ namespace vtx
 		Instance();
 		virtual ~Instance();
 
+		/** Initialize this Instance with the given Resource */
 		virtual void initFromResource(Resource* resource) = 0;
 
 		/** Get the unique type of this instance */
@@ -54,6 +55,9 @@ namespace vtx
 		/** Get the current parent Movie of this instance */
 		Movie* getParent() const;
 
+		void setName(const String& name);
+		const String& getName() const;
+
 		/** Set the ScriptObject that is associated with this instance */
 		virtual void setScriptObject(ScriptObject* obj);
 
@@ -61,6 +65,7 @@ namespace vtx
 		virtual ScriptObject* getScriptObject() const;
 
 	protected:
+		String mName;
 		Movie* mParentMovie;
 		ScriptObject* mScriptObject;
 	};

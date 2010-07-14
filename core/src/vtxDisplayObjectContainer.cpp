@@ -30,12 +30,14 @@ THE SOFTWARE.
 
 #include "vtxFocusEvent.h"
 #include "vtxLogManager.h"
+#include "vtxMouseEvent.h"
 #include "vtxMovie.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	DisplayObjectContainer::DisplayObjectContainer()
+	DisplayObjectContainer::DisplayObjectContainer() 
+		: mNeedBoundingBoxUpdate(false)
 	{
 
 	}
@@ -60,6 +62,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	bool DisplayObjectContainer::addChildAt(DisplayObject* object, uint layer)
 	{
+		mNeedBoundingBoxUpdate = true;
 		//mLayers.insert(Layers::value_type(0, NULL));
 
 		LayerMap::iterator it = mLayers.find(layer);
@@ -104,6 +107,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	bool DisplayObjectContainer::removeChildAt(uint layer)
 	{
+		mNeedBoundingBoxUpdate = true;
+
 		LayerMap::iterator it = mLayers.find(layer);
 
 		if(it != mLayers.end())
@@ -122,6 +127,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void DisplayObjectContainer::clearLayers()
 	{
+		mNeedBoundingBoxUpdate = true;
+
 		LayerMap::iterator it = mLayers.begin();
 		LayerMap::iterator end = mLayers.end();
 
@@ -167,44 +174,40 @@ namespace vtx
 		return false;
 	}
 	//-----------------------------------------------------------------------
-	void DisplayObjectContainer::setX(const float& x)
-	{
-		InteractiveObject::setX(x);
-		childrenNeedMatrixUpdate();
-	}
-	//-----------------------------------------------------------------------
-	void DisplayObjectContainer::setY(const float& y)
-	{
-		InteractiveObject::setY(y);
-		childrenNeedMatrixUpdate();
-	}
-	//-----------------------------------------------------------------------
-	void DisplayObjectContainer::setAngle(const float& angle)
-	{
-		InteractiveObject::setAngle(angle);
-		childrenNeedMatrixUpdate();
-	}
-	//-----------------------------------------------------------------------
-	void DisplayObjectContainer::setScaleX(const float& scale)
-	{
-		InteractiveObject::setScaleX(scale);
-		childrenNeedMatrixUpdate();
-	}
-	//-----------------------------------------------------------------------
-	void DisplayObjectContainer::setScaleY(const float& scale)
-	{
-		InteractiveObject::setScaleY(scale);
-		childrenNeedMatrixUpdate();
-	}
-	//-----------------------------------------------------------------------
-	void DisplayObjectContainer::setMatrix(const Matrix& m)
-	{
-		InteractiveObject::setMatrix(m);
-		childrenNeedMatrixUpdate();
-	}
-	//-----------------------------------------------------------------------
 	void DisplayObjectContainer::_update(const float& delta_time)
 	{
+		if(mNeedBoundingBoxUpdate)
+		{
+			BoundingBox new_bb;
+
+			LayerMap::iterator it = mLayers.begin();
+			LayerMap::iterator end = mLayers.end();
+
+			while(it != end)
+			{
+				BoundingBox bb = it->second->getBoundingBox();
+				bb.transformAffine(it->second->getMatrix());
+				new_bb.extend(bb);
+				++it;
+			}
+
+			mTransform.setBounding(new_bb);
+
+			mNeedBoundingBoxUpdate = false;
+		}
+
+		if(mTransform.doesNeedMatrixUpdate())
+		{
+			LayerMap::iterator it = mLayers.begin();
+			LayerMap::iterator end = mLayers.end();
+
+			while(it != end)
+			{
+				it->second->needMatrixUpdate();
+				++it;
+			}
+		}
+
 		InteractiveObject::_update(delta_time);
 
 		LayerMap::iterator it = mLayers.begin();
@@ -221,7 +224,6 @@ namespace vtx
 	{
 		InteractiveObject::eventFired(evt);
 
-		// TODO: not all events should be relayed to children ?
 		if(evt.getCategory() != FocusEvent::CATEGORY)
 		{
 			LayerMap::iterator it = mLayers.begin();
@@ -229,37 +231,22 @@ namespace vtx
 
 			while(it != end)
 			{
-				it->second->eventFired(evt);
+				DisplayObject* child = it->second;
+				if(evt.getCategory() == MouseEvent::CATEGORY)
+				{
+					bool mouseInside = child->isPointInside(getParent()->getMouseAbs());
+					if(mouseInside)
+					{
+						child->eventFired(evt);
+					}
+					else if(evt.getType() == MouseEvent::MOUSE_DOWN && child->hasFocus())
+					{
+						child->eventFired(FocusEvent(FocusEvent::FOCUS_OUT));
+					}
+				}
+
 				++it;
 			}
-		}
-	}
-	//-----------------------------------------------------------------------
-	void DisplayObjectContainer::updateWorldBoundingBox()
-	{
-		// TODO: only update bounding box when transformation occured
-		mTransform.getWorldBounding().reset();
-
-		LayerMap::iterator it = mLayers.begin();
-		LayerMap::iterator end = mLayers.end();
-
-		while(it != end)
-		{
-			// TODO: only update bounding box when transformation occured
-			mTransform.getWorldBounding().extend(it->second->getWorldBoundingBox());
-			++it;
-		}
-	}
-	//-----------------------------------------------------------------------
-	void DisplayObjectContainer::childrenNeedMatrixUpdate()
-	{
-		LayerMap::iterator it = mLayers.begin();
-		LayerMap::iterator end = mLayers.end();
-
-		while(it != end)
-		{
-			it->second->needMatrixUpdate();
-			++it;
 		}
 	}
 	//-----------------------------------------------------------------------

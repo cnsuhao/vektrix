@@ -30,7 +30,6 @@ THE SOFTWARE.
 #define __vtxFlashPreview_H__
 
 #include "vtxPrerequisites.h"
-#define NO_MEM_DBG
 #include "OgrePrerequisites.h"
 
 namespace OIS

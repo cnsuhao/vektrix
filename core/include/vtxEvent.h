@@ -34,6 +34,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A generic event base-class */
 	class vtxExport Event
 	{
 	public:
@@ -43,7 +44,10 @@ namespace vtx
 		static const String GENERIC_CATEGORY;
 		static const String ENTER_FRAME;
 
+		/** Get the type of this Event */
 		const String& getType() const;
+
+		/** Get the category to which this event belongs to */
 		virtual const String& getCategory() const
 		{
 			return GENERIC_CATEGORY;

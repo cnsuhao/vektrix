@@ -35,6 +35,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A specialized HTML DOM tree element that represents an image tag */
 	class vtxExport HtmlImage : public HtmlElement
 	{
 	public:

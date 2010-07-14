@@ -67,6 +67,7 @@ namespace vtx
 		/** Destroy an instance of a movie by pointer */
 		bool destroyMovie(Movie* instance);
 
+		/** Get the main ThreadJobQueue of vektrix */
 		ThreadJobQueue* getMainJobQueue() const;
 
 		/** Method to update all underlying subsystems and movie instances of vektrix */

@@ -44,7 +44,7 @@ THE SOFTWARE.
 #pragma warning(pop)
 
 // reactivate memory debugging
-#if VTX_OS == VTX_WIN32 && defined _DEBUG && !defined NO_MEM_DBG
+#if VTX_OS == VTX_WIN32 && defined _DEBUG && !defined VTX_DISABLE_MEMORY_DEBUGGING
 #	define new VTX_NEW
 #endif
 

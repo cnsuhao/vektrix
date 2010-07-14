@@ -40,6 +40,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** An event that is triggered by mouse input devices */
 	class vtxExport MouseEvent : public Event
 	{
 	public:

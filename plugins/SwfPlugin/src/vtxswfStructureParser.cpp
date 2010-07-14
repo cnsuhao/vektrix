@@ -254,5 +254,19 @@ namespace vtx
 			}
 		}
 		//-----------------------------------------------------------------------
+		void StructureParser::handleDefineScalingGrid()
+		{
+			UI16 id = mParser->readU16();
+			RECT grid = mParser->readRect();
+
+			Resource* res = mParser->getCurrentFile()->getResource(StringHelper::toString(id));
+			DisplayResource* display_res = static_cast<DisplayResource*>(res);
+			RectF scale9grid(
+				grid.xmin/20.0f, grid.ymin/20.0f, 
+				grid.xmax/20.0f, grid.ymax/20.0f);
+
+			display_res->setScalingGrid(scale9grid);
+		}
+		//-----------------------------------------------------------------------
 	}
 }

@@ -39,14 +39,27 @@ namespace vtx
 	class vtxExport InteractiveObject : public DisplayObject
 	{
 	public:
+		enum MouseState
+		{
+			MS_OUT_UP = 0, 
+			MS_OUT_DOWN, 
+			MS_IN_UP, 
+			MS_IN_DOWN
+		};
+
 		InteractiveObject();
 		virtual ~InteractiveObject();
+
+		virtual bool hasFocus() const { return mHasFocus; }
+
+		virtual void _update(const float& delta_time = 0.0f);
 
 		// inherited from EventListener
 		virtual void eventFired(const Event& evt);
 
 	protected:
 		bool mHasFocus;
+		MouseState mMouseState;
 	};
 	//-----------------------------------------------------------------------
 }

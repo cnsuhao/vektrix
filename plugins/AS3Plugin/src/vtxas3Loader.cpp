@@ -59,8 +59,8 @@ namespace vtx
 			earlyInit(this, true);
 
 			Movie* movie = static_cast<Movie*>(mCore->getUserData());
-			Instance* inst = movie->getInstanceByType(vtx::MovieClip::TYPE);
-			inst->setScriptObject(this);
+			mMovieClip = static_cast<vtx::MovieClip*>(movie->getInstanceByType(vtx::MovieClip::TYPE));
+			mMovieClip->setScriptObject(this);
 		}
 		//-----------------------------------------------------------------------
 		Loader::~Loader()
@@ -77,7 +77,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void Loader::eventFired(const vtx::Event& evt)
 		{
-
+			DisplayObjectContainer::eventFired(evt);
 		}
 		//-----------------------------------------------------------------------
 		void Loader::_setNativeObject(Instance* inst)
@@ -87,12 +87,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void Loader::loadingCompleted(File* file)
 		{
-			std::cout << "FINISHED URLREQUEST" << std::endl;
-
-			Movie* movie = static_cast<Movie*>(mCore->getUserData());
-			vtx::MovieClip* mc = static_cast<vtx::MovieClip*>(movie->getInstance(file->getMainMovieClip()));
-			mDisplayObjectContainer->addChild(mc);
-			mc->play();
+			mMovieClip->initFromResource(file->getMainMovieClip());
 		}
 		//-----------------------------------------------------------------------
 		void Loader::loadingFailed(File* file)

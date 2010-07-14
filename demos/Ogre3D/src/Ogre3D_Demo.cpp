@@ -15,7 +15,6 @@
 #include "vtxfreeimgPlugin.h"
 #include "vtxopPlugin.h"
 #include "vtxswfPlugin.h"
-#include "vtxxmlPlugin.h"
 
 #include "Ogre.h"
 #include "OgreFrameListener.h"
@@ -35,7 +34,7 @@ class MovieListener : public vtx::Movie::Listener
 public:
 	bool loadingCompleted(vtx::Movie* movie)
 	{
-		movie_node->attachObject(static_cast<vtx::ogre::MovableMovie*>(movie));
+		//movie_node->attachObject(static_cast<vtx::ogre::MovableMovie*>(movie));
 		movie->enableDebugger(true);
 
 		int width = movie->getFile()->getHeader().width;
@@ -280,9 +279,9 @@ int main(int argc, char **argv)
 	VTX_LOAD_PLUGIN(vektrix_FreeImgPlugin);
 	VTX_LOAD_PLUGIN(vektrix_OgrePlugin);
 	VTX_LOAD_PLUGIN(vektrix_SwfPlugin);
-	VTX_LOAD_PLUGIN(vektrix_XmlPlugin);
 
 	vtx::FileManager::getSingletonPtr()->addFileContainer("../demos/media");
+	vtx::FileManager::getSingletonPtr()->addFileContainer("");
 	vtx::FileManager::getSingletonPtr()->addFileContainer("", "WebFileContainer");
 
 	//if(!ogre_root->restoreConfig())
@@ -383,10 +382,10 @@ int main(int argc, char **argv)
 	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie", &listener);
 	//movie->play();
 
-	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie", &movie_listener);
+	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "C:/Users/stone/Desktop/vtx_flash_test/vtx_flash_test.swf", "OgreMovableMovie", &movie_listener);
 	movie->play();
 
-	//movie_node->attachObject(movie);
+	movie_node->attachObject(movie);
 
 	//movie_node->setPosition(0, 0, -500);
 

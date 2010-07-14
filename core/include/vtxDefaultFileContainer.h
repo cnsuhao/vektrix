@@ -44,6 +44,7 @@ namespace vtx
 
 		/** @copybrief FileContainer::openFile */
 		FileStream* openFile(const String& filename);
+
 		/** @copybrief FileContainer::hasFile */
 		bool hasFile(const String& filename);
 

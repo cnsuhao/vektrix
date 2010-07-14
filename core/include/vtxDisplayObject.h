@@ -43,6 +43,9 @@ namespace vtx
 		DisplayObject();
 		virtual ~DisplayObject();
 
+		// TODO: a temporary hack to dispatch FOCUS_OUT events
+		virtual bool hasFocus() const { return false; }
+
 		/** @copybrief Transform::setX */
 		virtual void setX(const float& x);
 		/** @copybrief Transform::getX */
@@ -96,13 +99,17 @@ namespace vtx
 		/** Get the visibility of this object */
 		bool getVisible() const;
 
+		/** Set the local bounding box of this object */
+		void setBoundingBox(const BoundingBox& bb);
+		/** Get the local bounding box of this object */
+		const BoundingBox& getBoundingBox() const;
+
+
 		/** Notify this object about its parent DisplayObjectContainer */
 		void setParentContainer(DisplayObjectContainer* parent);
-
+		/** Get the parent DisplayObjectContainer of this object */
 		DisplayObjectContainer* getParentContainer() const;
 
-		/** Get the local bounding box of this object */
-		virtual const BoundingBox& getBoundingBox() const = 0;
 		/** Check if a global point is located inside the boundaries of this object */
 		virtual bool isPointInside(const Vector2& coord) = 0;
 

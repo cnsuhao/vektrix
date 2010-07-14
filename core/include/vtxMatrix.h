@@ -71,13 +71,13 @@ namespace vtx
 		/** Transform the matrix using another affine matrix */
 		Vector2 transformAffine(const Vector2& v) const;
 
-		/**  */
+		/** Get the transpose of this Matrix */
 		Matrix transpose() const;
 
-		/**  */
+		/** Get the inverse of a transformation Matrix */
 		Matrix inverseTransformation() const;
 
-		/**  */
+		/** Transform the given Vector2 with the inverse transformation of this Matrix */
 		Vector2 transformInverse(const Vector2& v) const;
 	};
 	//-----------------------------------------------------------------------

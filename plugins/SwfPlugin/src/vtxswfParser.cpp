@@ -319,6 +319,10 @@ namespace vtx
 				mStructureParser->handleEnd();
 				break;
 
+			case TT_DefineScalingGrid:
+				mStructureParser->handleDefineScalingGrid();
+				break;
+
 			case TT_SetBackgroundColor:
 				{
 					COLOR color = readColor();

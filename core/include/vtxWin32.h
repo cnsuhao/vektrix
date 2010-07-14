@@ -51,7 +51,7 @@ THE SOFTWARE.
 #		endif
 #	endif
 #
-#	if defined _DEBUG && !defined NO_MEM_DBG
+#	if defined _DEBUG && !defined VTX_DISABLE_MEMORY_DEBUGGING
 #		define _CRTDBG_MAP_ALLOC
 #		include <stdlib.h>
 #		include <crtdbg.h>

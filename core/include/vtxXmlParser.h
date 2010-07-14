@@ -39,25 +39,33 @@ typedef struct XML_ParserStruct* XML_Parser;
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** An event-based XML parser */
 	class vtxExport XmlParser
 	{
 	public:
 		XmlParser();
 		virtual ~XmlParser();
 
+		/** Parse the given XML input string */
 		bool parse(const String& input);
 
 	private:
 		// expat
 		XML_Parser mXmlParser;
 
+		/** Static callback function for expat */
 		static void XMLCALL expat_startElement(void *userData, const char *name, const char **atts);
+		/** Static callback function for expat */
 		static void XMLCALL expat_endElement(void *userData, const char *name);
+		/** Static callback function for expat */
 		static void XMLCALL expat_elementData(void *userData, const char* text, int len);
 
 	protected:
+		/** A XML tag has been parsed */
 		virtual void startElement(String name, StringMap atts) = 0;
+		/** A XML tag has been closed */
 		virtual void endElement(String name) = 0;
+		/** Text data has been parsed */
 		virtual void elementData(String text) = 0;
 	};
 	//-----------------------------------------------------------------------

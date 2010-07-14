@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "vtxButton.h"
 #include "vtxFile.h"
 #include "vtxFileManager.h"
+#include "vtxFocusEvent.h"
 #include "vtxInstanceManager.h"
 #include "vtxKeyboardEvent.h"
 #include "vtxKeyCodes.h"
@@ -206,6 +207,19 @@ namespace vtx
 		return mMainMovieClip->gotoTime(time);
 	}
 	//-----------------------------------------------------------------------
+	Instance* Movie::createInstance(Resource* resource)
+	{
+		Instance* instance = getInstance(resource);
+
+		if(mScriptEngine)
+		{
+			ScriptObject* script_object = mScriptEngine->createScriptObject(resource);
+			instance->setScriptObject(script_object);
+		}
+
+		return instance;
+	}
+	//-----------------------------------------------------------------------
 	ScriptEngine* Movie::getScriptEngine() const
 	{
 		return mScriptEngine;
@@ -349,7 +363,6 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Movie::destroy()
 	{
-		// TODO: pure virtual call fix/hack, what to do here ?
 		if(mFile)
 		{
 			mFile->removeListener(this);

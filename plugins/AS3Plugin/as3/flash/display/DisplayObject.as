@@ -28,34 +28,109 @@ THE SOFTWARE.
 
 package flash.display
 {
+	import flash.accessibility.*;
 	import flash.display.IBitmapDrawable;
 	import flash.events.EventDispatcher;
+	import flash.geom.*;
 	
 	[native(cls="::vtx::as3::DisplayObjectClass", instance="::vtx::as3::DisplayObject", methods="auto")]
 	public class DisplayObject extends EventDispatcher implements IBitmapDrawable
 	{
-		public native function get x():Number;
-		public native function set x(value:Number):void;
+		/* getters & setters */
+		public function get accessibilityProperties():AccessibilityProperties { return null; }
+		public function set accessibilityProperties(value:AccessibilityProperties):void {}
+
+		public function get alpha():Number { return null; }
+		public function set alpha(value:Number):void {}
+
+		public function get blendMode():String { return ""; }
+		public function set blendMode(value:String):void {}
 		
-		public native function get y():Number;
-		public native function set y(value:Number):void;
+		public function get cacheAsBitmap():Boolean { return false; }
+		public function set cacheAsBitmap(value:Boolean):void {}
 		
-		public native function get rotation():Number;
-		public native function set rotation(value:Number):void;
+		public function get filters():Array { return null; }
+		public function set filters(value:Array):void {}
+
+		public native function get height():Number
+		/*{ return 0; }*/
+		public native function set height(value:Number):void
+		/*{}*/
+
+		public function get loaderInfo():LoaderInfo { return null; }
 		
-		public native function get scaleX():Number;
-		public native function set scaleX(value:Number):void;
+		public function get mask():DisplayObject { return null; }
+		public function set mask(value:DisplayObject):void {}
 		
-		public native function get scaleY():Number;
-		public native function set scaleY(value:Number):void;
+		public function get mouseX():Number { return null; }
+		public function get mouseY():Number { return null; }
 		
-		public native function get width():Number;
-		public native function set width(value:Number):void;
+		public function get name():String { return ""; }
+		public function set name(value:String):void {}
 		
-		public native function get height():Number;
-		public native function set height(value:Number):void;
+		public function get opaqueBackground():Object { return null; }
+		public function set opaqueBackground(value:Object):void {}
 		
-		public native function get visible():Boolean;
-		public native function set visible(value:Boolean):void;
+		public function get parent():DisplayObjectContainer
+		{
+			trace("DisplayObject::parent()");
+			return null;
+		}
+		
+		public function get root():DisplayObject { return null; }
+
+		public native function get rotation():Number
+		/*{ return 0; }*/
+		public native function set rotation(value:Number):void
+		/*{}*/
+		
+		public function get scale9Grid():Rectangle { return null; }
+		public function set scale9Grid(value:Rectangle):void {}
+
+		public native function get scaleX():Number
+		/*{ return 0; };*/
+		public native function set scaleX(value:Number):void
+		/*{ trace("DisplayObject::scaleX =", value); }*/
+		
+		public native function get scaleY():Number
+		/*{ return 0; };*/
+		public native function set scaleY(value:Number):void
+		/*{ trace("DisplayObject::scaleY =", value); };*/
+		
+		public function get scrollRect():Rectangle { return null; }
+		public function set scrollRect(value:Rectangle):void {}
+		
+		public function get stage():Stage { return null; }
+		
+		public function get transform():Transform { return null; }
+		public function set transform(value:Transform):void {}
+
+		public native function get visible():Boolean
+		/*{ return false; }*/
+		public native function set visible(value:Boolean):void
+		/*{}*/
+
+		public native function get width():Number
+		/*{ return 0; }*/
+		public native function set width(value:Number):void
+		/*{}*/
+				
+		public native function get x():Number
+		/*{ return 0; }*/
+		public native function set x(value:Number):void
+		/*{}*/
+		
+		public native function get y():Number
+		/*{ return 0; }*/
+		public native function set y(value:Number):void
+		/*{}*/
+
+		/* methods */
+		public function getBounds(targetCoordinateSpace:DisplayObject):Rectangle { return null; }
+		public function getRect(targetCoordinateSpace:DisplayObject):Rectangle { return null; }
+		public function globalToLocal(point:Point):Point { return null; }
+		public function hitTestObject(obj:DisplayObject):Boolean { return false; }
+		public function hitTestPoint(x:Number, y:Number, shapeFlag:Boolean = false):Boolean { return false; }
+		public function localToGlobal(point:Point):Point { return null; }
 	}
 }

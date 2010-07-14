@@ -38,21 +38,24 @@ package flash.events
 
 		}
 		
-		public native function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void;
-		public native function dispatchEvent(event:Event):Boolean;
-
+		public native function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
+		/*{ trace("addEventListener"); };*/
 		
-		public function hasEventListener(type:String):Boolean
-		{
+		public native function dispatchEvent(event:Event):Boolean
+		/*{}*/
+		
+		public native function hasEventListener(type:String):Boolean
+		/*{
 			trace(type);
 			return false;
-		}
+		}*/
 		
-		public native function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void;
+		public native function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void
+		/*{}*/
 		
-		public function willTrigger(type:String):Boolean
-		{
+		public native function willTrigger(type:String):Boolean
+		/*{
 			return false;
-		}
+		}*/
 	}
 }

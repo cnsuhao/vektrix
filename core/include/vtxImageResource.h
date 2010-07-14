@@ -50,8 +50,10 @@ namespace vtx
 
 		/** Get the width of the image */
 		const uint& getWidth() const;
+
 		/** Get the height of the image */
 		const uint& getHeight() const;
+
 		/** Get the pixel data of the image */
 		const char* getPixelData() const;
 

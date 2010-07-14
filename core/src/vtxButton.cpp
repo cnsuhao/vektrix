@@ -43,10 +43,7 @@ namespace vtx
 	const String Button::TYPE = "Button";
 	//-----------------------------------------------------------------------
 	Button::Button() 
-		: mMouseDown(false), 
-		mMouseOver(true), 
-		mMouseState(MS_OUT_UP), 
-		mUp(NULL), 
+		: mUp(NULL), 
 		mOver(NULL), 
 		mDown(NULL)
 	{
@@ -88,39 +85,6 @@ namespace vtx
 		return TYPE;
 	}
 	//-----------------------------------------------------------------------
-	void Button::_update(const float& delta_time)
-	{
-		DisplayObjectContainer::_update(delta_time);
-		DisplayObjectContainer::updateWorldBoundingBox();
-
-		// TODO: DEBUGGING only, implement more beautifully
-		if(isPointInside(getParent()->getMouseAbs()))
-		{
-			if(!mMouseOver && mOver)
-			{
-				VTX_LOG("Mouse In");
-				clearLayers();
-				mOver->execute();
-				mMouseOver = true;
-			}
-		}
-		else
-		{
-			if(mMouseOver && mUp)
-			{
-				VTX_LOG("Mouse Out");
-				clearLayers();
-				mUp->execute();
-				mMouseOver = false;
-			}
-		}
-	}
-	//-----------------------------------------------------------------------
-	const BoundingBox& Button::getBoundingBox() const
-	{
-		return mBB;
-	}
-	//-----------------------------------------------------------------------
 	void Button::eventFired(const Event& evt)
 	{
 		DisplayObjectContainer::eventFired(evt);
@@ -129,7 +93,7 @@ namespace vtx
 		{
 			const MouseEvent& mouse_evt = dynamic_cast<const MouseEvent&>(evt);
 
-			if(isPointInside(Vector2(mouse_evt.stageX, mouse_evt.stageY)))
+			//if(isPointInside(Vector2(mouse_evt.stageX, mouse_evt.stageY)))
 			{
 				if(evt.getType() == MouseEvent::MOUSE_DOWN)
 				{
@@ -141,11 +105,17 @@ namespace vtx
 					clearLayers();
 					mOver->execute();
 				}
+			}
 
-				if(mScriptObject)
-				{
-					mScriptObject->eventFired(evt);
-				}
+			if(evt.getType() == MouseEvent::MOUSE_OVER)
+			{
+				clearLayers();
+				mOver->execute();
+			}
+			else if(evt.getType() == MouseEvent::MOUSE_OUT)
+			{
+				clearLayers();
+				mUp->execute();
 			}
 		}
 	}

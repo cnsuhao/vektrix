@@ -34,9 +34,11 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** An interface for dispatching events */
 	class vtxExport EventListener
 	{
 	public:
+		/** Dispatch an Event to this EventListener */
 		virtual void eventFired(const Event& evt) = 0;
 	};
 	//-----------------------------------------------------------------------

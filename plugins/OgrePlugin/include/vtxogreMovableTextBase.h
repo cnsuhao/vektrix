@@ -45,7 +45,7 @@ namespace vtx
 			virtual ~MovableTextBase();
 
 		protected:
-			// TODO: remove file dependency somehow (by using FontResource* instead of a string in GlyphStrips ???)
+			// TODO: remove vtx::File dependency somehow (by using FontResource* instead of a string in GlyphStrips ???)
 			void _updateVertexBuffer(const GlyphStripList& glyph_strips, const AtlasPacker::PackResultList& atlas_list, File* file);
 		};
 	}

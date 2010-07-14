@@ -58,7 +58,10 @@ namespace vtx
 		new InstanceManager();
 
 		mFileManager = new FileManager();
+
+#if VTX_THREADING_LIB != VTX_THREADING_NONE
 		mMainJobQueue = new ThreadJobQueue();
+#endif
 	}
 	//-----------------------------------------------------------------------
 	Root::~Root()
@@ -86,7 +89,10 @@ namespace vtx
 			++plugin_it;
 		}
 
+#if VTX_THREADING_LIB != VTX_THREADING_NONE
 		delete mMainJobQueue;
+#endif
+
 		delete mFileManager;
 
 		delete InstanceManager::getSingletonPtr();
@@ -151,8 +157,6 @@ namespace vtx
 	{
 		if(mMovies.find(name) == mMovies.end())
 		{
-			File* file = FileManager::getSingletonPtr()->getFile(filename, true);
-
 			MovieFactory* factory = getFactory(factoryname);
 
 			if(!factory)
@@ -164,16 +168,12 @@ namespace vtx
 			Movie* movie = factory->createObject(name);
 			//movie->goto_frame(1);
 
-			file->addListener(movie);
+			FileManager::getSingletonPtr()->getFile(filename, true, movie);
 
 			if(listener)
 			{
 				movie->addListener(listener);
 			}
-
-#ifndef VTX_THREADED_LOADING_ENABLED
-			movie->loadingCompleted(file);
-#endif
 
 			mMovies.insert(MovieMap::value_type(name, movie));
 			return movie;

@@ -36,6 +36,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** An interface for classes that need to render a HTML DOM tree */
 	class vtxExport HtmlRenderable
 	{
 	public:

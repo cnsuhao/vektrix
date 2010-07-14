@@ -63,9 +63,9 @@ namespace vtx
 	void CreateObjectEvent::execute()
 	{
 		Resource* resource = mSourceFile->getResource(mID);
-		Instance* instance = mObjectContainer->getParent()->getInstance(resource);
+		Instance* instance = mObjectContainer->getParent()->createInstance(resource);
 
-		if(!instance/* //TODO: || !instance->isDisplayable()*/)
+		if(!instance/* // TODO: || !instance->isDisplayable()*/)
 		{
 			VTX_EXCEPT("%s: CreateObjectEvent requested an object (id: \"%s\") that is not a DisplayObject.", 
 				mObjectContainer->getParent()->getFile()->getFilename().c_str(), mID.c_str());
@@ -78,6 +78,8 @@ namespace vtx
 
 		if(mName.length())
 		{
+			mObject->setName(mName);
+
 			ScriptObject* parent_obj = mObjectContainer->getScriptObject();
 			if(parent_obj)
 			{

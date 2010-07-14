@@ -72,10 +72,13 @@ namespace vtx
 
 		/** Add a single GlyphResource to this font */
 		void addGlyph(GlyphResource* glyph);
+
 		/** Get a GlyphResource by its index */
 		GlyphResource* getGlyphByIndex(const uint& index) const;
+
 		/** Get a GlyphResource by its unicode */
 		GlyphResource* getGlyphByCode(const ushort& char_code) const;
+
 		/** Get a list of all glyphs contained within this font */
 		const GlyphList& getGlyphList() const;
 
@@ -87,7 +90,7 @@ namespace vtx
 		GlyphList mGlyphs;
 		GlyphMap mCharGlyphMap;
 
-		// TODO: refractor this, this should happen automatically when adding glyphs
+		// TODO: refactor this, this should happen automatically when adding glyphs
 		void _notifyGlyphCode(const ushort& code, GlyphResource* glyph);
 	};
 	//-----------------------------------------------------------------------

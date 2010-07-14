@@ -34,6 +34,7 @@ package flash.text
 	public final class StaticText extends DisplayObject
 	{
 		/* setters & getters */
-		public native function get text():String;
+		public native function get text():String
+		/*{ return ""; }*/
 	}
 }

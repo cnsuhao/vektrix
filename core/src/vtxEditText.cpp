@@ -65,7 +65,7 @@ namespace vtx
 		mGlyphCount(0), 
 		mSelecting(false)
 	{
-		mBoundingBox = BoundingBox(0, 0, 100, 100);
+		setBoundingBox(BoundingBox(0, 0, 100, 100));
 	}
 	//-----------------------------------------------------------------------
 	EditText::~EditText()
@@ -79,7 +79,7 @@ namespace vtx
 
 		if(text_res)
 		{
-			mBoundingBox = text_res->getBoundingBox();
+			setBoundingBox(text_res->getBoundingBox());
 		}
 	}
 	//-----------------------------------------------------------------------
@@ -206,11 +206,6 @@ namespace vtx
 	const uint& EditText::getSelectionEndIndex() const
 	{
 		return mSelectionEndIndex;
-	}
-	//-----------------------------------------------------------------------
-	const BoundingBox& EditText::getBoundingBox() const
-	{
-		return mBoundingBox;
 	}
 	//-----------------------------------------------------------------------
 	bool EditText::isPointInside(const Vector2& coord)

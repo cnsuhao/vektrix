@@ -53,15 +53,15 @@ namespace vtx
 
 		if(bytes < 1024) // 1 kByte
 		{
-			result = toString(bytes) + " byte";
+			result = toString(bytes) + " byte(s)";
 		}
 		else if(bytes < 1048576) // 1 MByte
 		{
-			result = toString((float)bytes/1024.0f) + " kByte";
+			result = toString((float)bytes/1024.0f) + " kByte(s)";
 		}
 		else if(bytes < 1073741824) // 1 GByte
 		{
-			result = toString((float)bytes/1048576.0f) + " MByte";
+			result = toString((float)bytes/1048576.0f) + " MByte(s)";
 		}
 		else
 		{
@@ -203,13 +203,13 @@ namespace vtx
 		return list;
 	}
 	//-----------------------------------------------------------------------
-	String StringHelper::getFileExtension(const String& str)
+	String StringHelper::getFileExtension(const String& path)
 	{
-		uint dotPos = (uint)str.find_last_of('.');
+		uint dotPos = (uint)path.find_last_of('.');
 
 		if(dotPos != String::npos)
 		{
-			return str.substr(dotPos, str.length()-dotPos);
+			return path.substr(dotPos, path.length()-dotPos);
 		}
 
 		return "";

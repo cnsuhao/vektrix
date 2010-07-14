@@ -40,6 +40,7 @@ namespace vtx
 	public:
 		/** Get the width that this element shall occupy at the atlas (must be a power of 2) */
 		virtual const uint getPackableWidth() = 0;
+
 		/** Get the height that this element shall occupy at the atlas (must be a power of 2) */
 		virtual const uint getPackableHeight() = 0;
 	};

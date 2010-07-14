@@ -617,131 +617,159 @@
 		<Filter
 			Name="Resources"
 			>
-			<File
-				RelativePath="..\src\vtxResource.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\include\vtxResource.h"
-				>
-			</File>
 			<Filter
-				Name="Shape"
+				Name="Interfaces"
 				>
 				<File
-					RelativePath="..\src\vtxShapeResource.cpp"
+					RelativePath="..\src\vtxDisplayResource.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\include\vtxShapeResource.h"
+					RelativePath="..\include\vtxDisplayResource.h"
 					>
 				</File>
 				<File
-					RelativePath="..\src\vtxSubshapeResource.cpp"
+					RelativePath="..\src\vtxResource.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\include\vtxSubshapeResource.h"
+					RelativePath="..\include\vtxResource.h"
 					>
 				</File>
 			</Filter>
 			<Filter
-				Name="Image"
+				Name="Resource Types"
 				>
-				<File
-					RelativePath="..\src\vtxImageResource.cpp"
+				<Filter
+					Name="Text"
 					>
-				</File>
-				<File
-					RelativePath="..\include\vtxImageResource.h"
+					<File
+						RelativePath="..\src\vtxEditTextResource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxEditTextResource.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxStaticTextResource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxStaticTextResource.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Script"
 					>
-				</File>
+					<File
+						RelativePath="..\src\vtxScriptResource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxScriptResource.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Shape"
+					>
+					<File
+						RelativePath="..\src\vtxShapeResource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxShapeResource.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxSubshapeResource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxSubshapeResource.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="MovieClip"
+					>
+					<File
+						RelativePath="..\src\vtxMovieClipResource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxMovieClipResource.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Button"
+					>
+					<File
+						RelativePath="..\src\vtxButtonResource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxButtonResource.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Font"
+					>
+					<File
+						RelativePath="..\src\vtxFontResource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxFontResource.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxGlyphResource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxGlyphResource.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Image"
+					>
+					<File
+						RelativePath="..\src\vtxImageResource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxImageResource.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Material"
+					>
+					<File
+						RelativePath="..\src\vtxMaterialResource.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxMaterialResource.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
-				Name="Material"
+				Name="Flash Specific"
 				>
 				<File
-					RelativePath="..\src\vtxMaterialResource.cpp"
+					RelativePath="..\src\vtxSymbolClassResource.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\include\vtxMaterialResource.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Button"
-				>
-				<File
-					RelativePath="..\src\vtxButtonResource.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxButtonResource.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="MovieClip"
-				>
-				<File
-					RelativePath="..\src\vtxMovieClipResource.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxMovieClipResource.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Script"
-				>
-				<File
-					RelativePath="..\src\vtxScriptResource.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxScriptResource.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Font"
-				>
-				<File
-					RelativePath="..\src\vtxFontResource.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxFontResource.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxGlyphResource.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxGlyphResource.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Text"
-				>
-				<File
-					RelativePath="..\src\vtxEditTextResource.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxEditTextResource.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxStaticTextResource.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxStaticTextResource.h"
+					RelativePath="..\include\vtxSymbolClassResource.h"
 					>
 				</File>
 			</Filter>
