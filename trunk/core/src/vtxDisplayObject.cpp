@@ -125,10 +125,6 @@ namespace vtx
 	void DisplayObject::setWidth(const float& width)
 	{
 		mTransform.setWidth(width);
-		// TODO: implement boundingbox function for this purpose
-		BoundingBox bbox = getBoundingBox();
-		bbox.setExtents(bbox.getMin(), Vector2(width, bbox.getMaxY()));
-		mTransform.setBounding(bbox);
 	}
 	//-----------------------------------------------------------------------
 	float DisplayObject::getWidth() const
@@ -139,16 +135,11 @@ namespace vtx
 	void DisplayObject::setHeight(const float& height)
 	{
 		mTransform.setHeight(height);
-		// TODO: implement boundingbox function for this purpose
-		BoundingBox bbox = getBoundingBox();
-		bbox.setExtents(bbox.getMin(), Vector2(bbox.getMaxX(), height));
-		mTransform.setBounding(bbox);
 	}
 	//-----------------------------------------------------------------------
 	float DisplayObject::getHeight() const
 	{
 		return mTransform.getHeight();
-		//return getBoundingBox().getHeight() * getMatrix().getScale().y;
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObject::setVisible(const bool& visible)
@@ -160,6 +151,16 @@ namespace vtx
 	{
 		// TODO: implement this
 		return true;
+	}
+	//-----------------------------------------------------------------------
+	void DisplayObject::setBoundingBox(const BoundingBox& bb)
+	{
+		mTransform.setBounding(bb);
+	}
+	//-----------------------------------------------------------------------
+	const BoundingBox& DisplayObject::getBoundingBox() const
+	{
+		return mTransform.getBounding();
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObject::setParentContainer(DisplayObjectContainer* parent)

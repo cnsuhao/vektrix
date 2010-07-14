@@ -49,6 +49,8 @@ namespace vtx
 			void handleShowFrame();
 			void handleEnd();
 
+			void handleDefineScalingGrid();
+
 		protected:
 			SwfParser* mParser;
 

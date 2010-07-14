@@ -36,6 +36,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** An event that is triggered by keyboard input devices */
 	class vtxExport KeyboardEvent : public Event
 	{
 	public:

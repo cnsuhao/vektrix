@@ -32,8 +32,10 @@ THE SOFTWARE.
 #include "vtxLogManager.h"
 #include "vtxMovie.h"
 #include "vtxMovieClip.h"
+#include "vtxResource.h"
 #include "vtxScriptObject.h"
 #include "vtxStringHelper.h"
+#include "vtxSymbolClassResource.h"
 
 #include "cspNativePackage.h"
 #include "cspScriptObject.h"
@@ -101,9 +103,23 @@ namespace vtx
 			return mRootObject;
 		}
 		//-----------------------------------------------------------------------
-		ScriptObject* AS3ScriptEngine::createScriptObject(const String& type)
+		ScriptObject* AS3ScriptEngine::createScriptObject(Resource* res)
 		{
-			if(type == vtx::MovieClip::TYPE)
+			MMGC_GCENTER(mVmCore->mIntCore->GetGC());
+
+			SymbolClassResource* symb_res = 
+				static_cast<SymbolClassResource*>(mParent->getFile()->getResource("__SymbolClassResource__"));
+
+			if(symb_res)
+			{
+				if(symb_res->hasSymbol(res->getID()))
+				{
+					const StringPair class_def = symb_res->getSymbol(res->getID());
+					return (ScriptObject*)mVmCore->createObject(class_def.second, class_def.first)->scriptObj();
+				}
+			}
+
+			if(res->getType() == vtx::MovieClip::TYPE)
 			{
 				return static_cast<MovieClip*>(mVmCore->createObject("MovieClip", "flash.display")->scriptObj());
 			}

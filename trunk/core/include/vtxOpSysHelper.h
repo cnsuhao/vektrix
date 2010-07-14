@@ -34,12 +34,17 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A helper class for interacting with the operating system */
 	class vtxExport OpSysHelper
 	{
 	public:
+		/** Copy the given UTF String to the operating system clipboard */
 		static bool copyToClipboard(WString str);
+
+		/** Get an UTF String from the operating system clipboard */
 		static WString getWStringFromClipboard();
 
+		/** Get the current system time as String */
 		static String getSystemTime();
 	};
 	//-----------------------------------------------------------------------

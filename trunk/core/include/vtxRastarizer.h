@@ -43,6 +43,7 @@ namespace vtx
 
 		/** Get the unique name of this rasterizer */
 		virtual const String& getName() const = 0;
+
 		/** Render a given element to a Texture */
 		virtual void renderElementToTexture(Texture* texture, AtlasElement* element, AtlasNode* node) = 0;
 	};

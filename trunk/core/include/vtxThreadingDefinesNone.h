@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxThreadingDefinesNone_H__
 #define __vtxThreadingDefinesNone_H__
 
-#if !defined VTX_THREADING_LIB || VTX_THREADING_LIB == VTX_THREADING_NONE
+#if VTX_THREADING_LIB == VTX_THREADING_NONE
 
 // synchronization
 #define VTX_MUTEX(name)
@@ -62,6 +62,6 @@ THE SOFTWARE.
 #define VTX_SLEEP_THREAD(ms)
 #define VTX_NUM_THREAD_PROCESSORS 0
 
-#endif // !defined VTX_THREADING_LIB || VTX_THREADING_LIB == VTX_THREADING_NONE
+#endif
 
 #endif

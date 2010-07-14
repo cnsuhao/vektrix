@@ -107,6 +107,8 @@ namespace vtx
 		/** Release a previously requested Instance */
 		virtual void releaseInstance(Instance* instance) = 0;
 
+		Instance* createInstance(Resource* resource);
+
 		/** Get the ScriptEngine that is associated with this movie */
 		ScriptEngine* getScriptEngine() const;
 
@@ -119,7 +121,9 @@ namespace vtx
 		/** Get the main MovieClip of this movie */
 		MovieClip* getMainMovieClip() const;
 
+		/** Add a Listener to this Movie */
 		bool addListener(Listener* listener);
+		/** Remove a Listener from this Movie */
 		bool removeListener(Listener* listener);
 
 		/** Attach custom user data to this movie */
@@ -140,11 +144,15 @@ namespace vtx
 		MovieClip* mMainMovieClip;
 		ScriptEngine* mScriptEngine;
 
+		/** Set the currently focused InteractiveObject of this Movie */
 		void _setFocusedObject(InteractiveObject* focused_object);
 
+		/** Implementation of File::Listener::loadingCompleted */
 		void loadingCompleted(File* file);
+		/** Implementation of File::Listener::loadingFailed */
 		void loadingFailed(File* file);
 
+		/** Free the resources of this Movie */
 		void destroy();
 	};
 	//-----------------------------------------------------------------------

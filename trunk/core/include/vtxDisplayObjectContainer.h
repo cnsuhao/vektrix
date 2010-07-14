@@ -57,24 +57,8 @@ namespace vtx
 
 		const LayerMap& getLayers() const;
 
-		/** Implementation for DisplayObject::isPointInside */
+		/** Implementation of DisplayObject::isPointInside */
 		bool isPointInside(const Vector2& coord);
-
-		/** @copybrief DisplayObject::setX */
-		virtual void setX(const float& x);
-		/** @copybrief DisplayObject::setY */
-		virtual void setY(const float& y);
-
-		/** @copybrief DisplayObject::setAngle */
-		virtual void setAngle(const float& angle);
-
-		/** @copybrief DisplayObject::setScaleX */
-		virtual void setScaleX(const float& scale);
-		/** @copybrief DisplayObject::setScaleY */
-		virtual void setScaleY(const float& scale);
-
-		/** @copybrief DisplayObject::setMatrix */
-		virtual void setMatrix(const Matrix& m);
 
 		/** @copybrief DisplayObject::_update */
 		virtual void _update(const float& delta_time = 0.0f);
@@ -83,12 +67,8 @@ namespace vtx
 		virtual void eventFired(const Event& evt);
 
 	protected:
+		bool mNeedBoundingBoxUpdate;
 		LayerMap mLayers;
-
-		/** Update the world BoundingBox of this container */
-		void updateWorldBoundingBox();
-		/** Notify the children of this container about Matrix changes */
-		void childrenNeedMatrixUpdate();
 	};
 	//-----------------------------------------------------------------------
 }

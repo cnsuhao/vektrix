@@ -107,14 +107,17 @@ namespace vtx
 		/// the files that are currently parsing
 		FileMap mParsingFiles;
 
+#endif
+
 		/// the files that have just finished parsing
 		typedef std::pair<bool, File*> FinishedFile;
 		typedef std::vector<FinishedFile> FinishedFileList;
 		FinishedFileList mFinishedFiles;
 
-#endif // VTX_THREADED_LOADING_ENABLED
-
+		/** Inform the FileManager that a FileParsingJob has finished */
 		void _finishedParsing(File* file);
+
+		/** Inform the FileManager that a FileParsingJob has failed */
 		void _failedParsing(File* file);
 
 		FileManager();

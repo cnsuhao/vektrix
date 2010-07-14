@@ -34,6 +34,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** Represents a text selection for a HTML DOM tree */
 	class HtmlSelection
 	{
 	public:
@@ -70,7 +71,8 @@ namespace vtx
 		int subSel;
 		HtmlElement* element;
 	};
-
+	//-----------------------------------------------------------------------
+	/** An element of a HTML DOM tree */
 	class vtxExport HtmlElement
 	{
 	public:
@@ -97,15 +99,22 @@ namespace vtx
 		HtmlElement(const Type& type, HtmlElement* parent);
 		virtual ~HtmlElement();
 
+		/** Add a child HtmlElement */
 		void addChild(HtmlElement* child);
+
+		/** Remove a child HtmlElement by its index */
 		void removeChild(const uint& index);
+
+		/** Remove a child HtmlElement */
 		void removeChild(HtmlElement* element);
 
+		/** Get the element type of this HtmlElement */
 		inline const Type& getType() const
 		{
 			return type;
 		}
 
+		/** Get the parent HtmlElement of this element */
 		inline HtmlElement* getParent() const
 		{
 			return parent;

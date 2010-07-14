@@ -40,6 +40,7 @@ namespace vtx
 	public:
 		/** Check if the given file exists */
 		static bool doesFileExist(String name);
+
 		/** Check if the given directory exists */
 		static bool doesDirectoryExist(String name);
 	};

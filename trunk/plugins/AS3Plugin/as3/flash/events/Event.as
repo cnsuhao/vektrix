@@ -111,7 +111,7 @@ package flash.events
 		
 		public function get currentTarget():Object
 		{
-			return {};
+			return new Object();
 		}
 		
 		public function get eventPhase():uint
@@ -121,7 +121,7 @@ package flash.events
 		
 		public function get target():Object
 		{
-			return {};
+			return new Object();
 		}
 		
 		public function get type():String
@@ -132,7 +132,7 @@ package flash.events
 		
 		public function clone():Event
 		{
-			return new Event( "" );
+			return new Event("");
 		}
 		
 		public function formatToString(className:String, ... arguments):String

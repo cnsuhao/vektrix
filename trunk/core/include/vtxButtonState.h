@@ -42,7 +42,7 @@ namespace vtx
 		ButtonState();
 		virtual ~ButtonState();
 
-		/** Create an identical clone of this state */
+		/** Create a clone of this ButtonState */
 		ButtonState* clone(DisplayObjectContainer* container);
 	};
 	//-----------------------------------------------------------------------

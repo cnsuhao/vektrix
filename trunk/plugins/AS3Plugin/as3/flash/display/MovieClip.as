@@ -31,9 +31,28 @@ package flash.display
 	[native(cls="::vtx::as3::MovieClipClass", instance="::vtx::as3::MovieClip", methods="auto")]
 	public dynamic class MovieClip extends Sprite
 	{
-		public function addFrameScript(index:int, script:Object)
-		{
-			//print("MovieClip addFrameScript");
-		}
+		/* getters & setters */
+		public function get currentFrame():int { return 0; }
+		public function get currentLabel():String { return ""; }
+		public function get currentLabels():Array { return null; }
+		public function get currentScene():Scene { return null; }
+		public function get enabled():Boolean { return false; }
+		public function set enabled(value:Boolean):void {}
+		public function get framesLoaded():int { return 0; }
+		public function get scenes():Array { return null; }
+		public function get totalFrames():int { return 0; }
+		public function get trackAsMenu():Boolean { return false; }
+		public function set trackAsMenu(value:Boolean):void {}
+
+		/* methods */
+		public function addFrameScript(index:int, script:Object) {}
+		public function gotoAndPlay(frame:Object, scene:String = null):void {}
+		public function gotoAndStop(frame:Object, scene:String = null):void {}
+		public function nextFrame():void {}
+		public function nextScene():void {}
+		public function play():void {}
+		public function prevFrame():void {}
+		public function prevScene():void {}
+		public function stop():void {}
 	}
 }

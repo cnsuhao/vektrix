@@ -36,6 +36,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** An event that is related to an InteractiveObject which loses or gains the focus */
 	class vtxExport FocusEvent : public Event
 	{
 	public:

@@ -42,11 +42,11 @@ namespace vtx
 		Texture(uint size);
 		virtual ~Texture();
 
-		// TODO: refractor packing, this shouldn't be located here
+		// TODO: refactor packing, this shouldn't be located here
 
 		/** Pack an AtlasElement into this texture */
 		AtlasNode* packElement(AtlasElement* element);
-		/** Invalidiate previous packing results */
+		/** Invalidate previous packing results */
 		void clear();
 		/** Draw all contained elements to this texture */
 		void renderAllShapes();

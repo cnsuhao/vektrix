@@ -35,6 +35,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A strip of connected text glyphs */
 	class GlyphStrip
 	{
 	public:

@@ -69,8 +69,10 @@ namespace vtx
 
 		/** Get the name of the program library */
 		const String& getName() const;
+
 		/** Get a symbol (method, attribute, ...) by name */
 		void* getSymbol(const String& name) const throw();
+
 		/** Get an eventual error formatted as String */
 		String getError();
 

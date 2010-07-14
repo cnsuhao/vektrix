@@ -46,6 +46,7 @@ namespace vtx
 		ScriptObject();
 		virtual ~ScriptObject();
 
+		/** Get the native Instance that is associated with this script object */
 		virtual Instance* getNativeObject();
 
 		/** Get a child script object contained within this one */

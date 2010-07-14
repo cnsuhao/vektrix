@@ -42,19 +42,25 @@ namespace vtx
 
 		/** Jump to a given read/write position */
 		virtual void seek(uint pos) = 0;
+
 		/** Get the current read/write position */
 		virtual uint tell() = 0;
+
 		/** Read a specified amount of bytes */
 		virtual uint read(void* buf, uint count) = 0;
+
 		/** Read a single line */
 		virtual String& getLine() = 0;
+
 		/** Check if the end of the stream has been reached */
 		virtual bool eof() const = 0;
+
 		/** Close the stream and and release resources */
 		virtual void close() = 0;
 
 		/** Get the size in bytes of the whole stream */
 		uint size() const { return mSize; }
+
 		/** Get the file name from which the stream has been created */
 		const String& getFilename() { return mFilename; }
 

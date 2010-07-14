@@ -30,13 +30,13 @@ THE SOFTWARE.
 #define __vtxMovieClipResource_H__
 
 #include "vtxPrerequisites.h"
-#include "vtxResource.h"
+#include "vtxDisplayResource.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
 	/** A Resource which contains all necessary data for creating an animated MovieClip instance */
-	class vtxExport MovieClipResource : public Resource
+	class vtxExport MovieClipResource : public DisplayResource
 	{
 	public:
 		MovieClipResource(const String& id);

@@ -117,17 +117,11 @@ namespace vtx
 	void MovieClip::_update(const float& delta_time)
 	{
 		DisplayObjectContainer::_update(delta_time);
-		DisplayObjectContainer::updateWorldBoundingBox();
 
 		if(mTimeline)
 		{
 			mTimeline->addTime(delta_time);
 		}
-	}
-	//-----------------------------------------------------------------------
-	const BoundingBox& MovieClip::getBoundingBox() const
-	{
-		return mBB;
 	}
 	//-----------------------------------------------------------------------
 }

@@ -35,6 +35,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A FileStream implementation that operates on a block of memory */
 	class vtxExport MemoryFileStream : public FileStream
 	{
 	public:
@@ -43,14 +44,19 @@ namespace vtx
 
 		/** @copybrief FileStream::seek */
 		void seek(uint pos);
+
 		/** @copybrief FileStream::tell */
 		uint tell();
+
 		/** @copybrief FileStream::read */
 		uint read(void* buf, uint count);
+
 		/** @copybrief FileStream::getLine */
 		String& getLine();
+
 		/** @copybrief FileStream::eof */
 		bool eof() const;
+
 		/** @copybrief FileStream::close */
 		void close();
 

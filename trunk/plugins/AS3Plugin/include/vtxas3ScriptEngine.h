@@ -51,7 +51,7 @@ namespace vtx
 			bool executeCode(const char* code, const uint& len);
 			ScriptObject* getRootScriptObject();
 
-			ScriptObject* createScriptObject(const String& type);
+			ScriptObject* createScriptObject(Resource* res);
 			void destroyScriptObject(ScriptObject* script_object);
 
 		protected:

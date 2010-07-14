@@ -65,6 +65,7 @@ namespace vtx
 		/** Jump to a given point in time of the timeline */
 		bool gotoTime(float time);
 
+		/** Get the frame index of the currently displayed KeyFrame */
 		const uint& getCurrentFrame() const;
 
 	protected:

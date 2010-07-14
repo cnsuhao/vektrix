@@ -45,8 +45,10 @@ namespace vtx
 
 		/** Add an event to this container */
 		void addEvent(FrameEvent* event);
+
 		/** Get the number of events currently stored inside this container */
 		const uint getEventCount() const;
+
 		/** Remove all events from this container */
 		void clear();
 

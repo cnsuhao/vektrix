@@ -35,6 +35,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** An interface for classes that need to manipulate a HTML DOM tree */
 	class vtxExport HtmlOperations
 	{
 	public:
@@ -48,15 +49,23 @@ namespace vtx
 			ES_AFTER_ERASE
 		};
 
+		/** Move the text selection cursor backward */
 		HtmlSelection selectBackward(HtmlSelection sel);
+
+		/** Move the text selection cursor forward */
 		HtmlSelection selectForward(HtmlSelection sel);
 
+		/** Erase backward from the text selection cursor */
 		HtmlSelection eraseBackward(HtmlSelection sel);
+
+		/** Erase forward from the text selection cursor */
 		HtmlSelection eraseForward(HtmlSelection sel);
 
+		/** Erase a selection range from a HTML DOM tree */
 		HtmlSelection eraseSelection(HtmlElement* root, 
 			const HtmlSelection& begin, const HtmlSelection& end);
 
+		/** Get the full HTML code of the given HTML DOM tree */
 		const WString& getHtmlText(HtmlElement* root);
 
 	protected:

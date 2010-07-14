@@ -34,7 +34,7 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	MovieClipResource::MovieClipResource(const String& id) 
-		: Resource(id), 
+		: DisplayResource(id), 
 		mTimeline(NULL)
 	{
 

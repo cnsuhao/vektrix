@@ -46,6 +46,7 @@ namespace vtx
 
 		/** Store an Instance object to the pool */
 		void push(Instance* inst);
+
 		/** Take away an Instance object from the pool */
 		Instance* pop(const String& type);
 

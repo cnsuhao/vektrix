@@ -34,6 +34,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** An interface for KeyFrame events */
 	class vtxExport FrameEvent
 	{
 	public:
@@ -42,6 +43,7 @@ namespace vtx
 
 		/** Create an identical clone of this event */
 		virtual FrameEvent* clone(DisplayObjectContainer* container) = 0;
+
 		/** Execute this event */
 		virtual void execute() = 0;
 

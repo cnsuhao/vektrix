@@ -42,13 +42,12 @@ THE SOFTWARE.
 #include "vtxfreeimgPlugin.h"
 #include "vtxopPlugin.h"
 #include "vtxswfPlugin.h"
-#include "vtxxmlPlugin.h"
 
+#undef new
 #include "vtxopMovableMovie.h"
 
 #include "OgreRenderWindow.h"
 #include "OgreRoot.h"
-
 
 #include <conio.h>
 #include <direct.h>
@@ -71,6 +70,8 @@ namespace vtx { namespace tools { namespace FlashPreview {
 			getch();
 			return 1;
 		}
+
+		VTX_MEM_DEBUG_ENABLE();
 
 		mFilename = argv[1];
 
@@ -192,7 +193,6 @@ namespace vtx { namespace tools { namespace FlashPreview {
 		VTX_LOAD_PLUGIN(vektrix_FreeImgPlugin);
 		VTX_LOAD_PLUGIN(vektrix_OgrePlugin);
 		VTX_LOAD_PLUGIN(vektrix_SwfPlugin);
-		VTX_LOAD_PLUGIN(vektrix_XmlPlugin);
 
 		String cwd = "";
 		uint slash = mFilename.find_last_of('\\');
@@ -306,21 +306,13 @@ namespace vtx { namespace tools { namespace FlashPreview {
 		const OIS::MouseState &ms = mMouse->getMouseState();
 		ms.width = mWindow->getWidth();
 		ms.height = mWindow->getHeight();
-
-		/*
-		// key events
-		SimpleKeyListener* keyListener = new SimpleKeyListener();
-		keyboard->setEventCallback(keyListener);
-
-		// mouse events
-		SimpleMouseListener* mouseListener = new SimpleMouseListener();
-		mouse->setEventCallback(mouseListener);
-		*/
 	}
 	//-----------------------------------------------------------------------
 	void FlashPreview::stopOIS()
 	{
-
+		mInputManager->destroyInputObject(mMouse);
+		mInputManager->destroyInputObject(mKeyboard);
+		OIS::InputManager::destroyInputSystem(mInputManager);
 	}
 	//-----------------------------------------------------------------------
 }}}

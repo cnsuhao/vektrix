@@ -27,8 +27,9 @@ THE SOFTWARE.
 */
 
 #include "vtxScriptObject.h"
-
 #include "vtxDisplayObject.h"
+
+#include "vtxLogManager.h"
 
 namespace vtx
 {
@@ -58,6 +59,7 @@ namespace vtx
 		}
 
 		vtx::ScriptObject* vtx_obj = _createChildObject(name);
+		VTX_LOG("Creating child script object: %s", name.c_str());
 
 		if(vtx_obj)
 		{

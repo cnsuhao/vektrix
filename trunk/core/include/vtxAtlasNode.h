@@ -52,8 +52,10 @@ namespace vtx
 
 		/** Tells the element(s) associated with this node to render their contents to the atlas */
 		void renderElement(Rasterizer* rasterizer);
+
 		/** Set the element, that shall be associated with this node */
 		void setElement(AtlasElement* element);
+
 		/** Get the rectangle that this node occupies */
 		const Rect& getRect() const;
 
@@ -62,6 +64,7 @@ namespace vtx
 
 		/** Check if the given element fits into one of the leafs of this node */
 		FitMode fits(AtlasElement* element);
+
 		/** Check if the given element fits into one of the leafs of this node, without needing to create new sub-nodes */
 		FitMode fitsExactly(AtlasElement* element);
 

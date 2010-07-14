@@ -84,9 +84,7 @@ namespace vtx
 		/** Get the currently selected text's end index */
 		const uint& getSelectionEndIndex() const;
 
-		/** @copybrief DisplayObject::getBoundingBox */
-		const BoundingBox& getBoundingBox() const;
-		/** Implementation for DisplayObject::isPointInside */
+		/** Implementation of DisplayObject::isPointInside */
 		bool isPointInside(const Vector2& coord);
 
 		// inherited from EventListener
@@ -102,8 +100,6 @@ namespace vtx
 		uint mSelectionEndIndex;
 		HtmlSelection mSelectionBegin;
 		HtmlSelection mSelectionEnd;
-
-		BoundingBox mBoundingBox;
 
 		// DOM management
 		bool mNeedDomUpdate;

@@ -44,20 +44,19 @@ namespace vtx
 		StaticText();
 		virtual ~StaticText();
 
+		/** Implementation of Instance::initFromResource */
 		virtual void initFromResource(Resource* resource);
 
+		/** Implementation of Instance::getType */
 		const String& getType() const;
 
-		/** @copybrief DisplayObject::getBoundingBox */
-		const BoundingBox& getBoundingBox() const;
-		/** Implementation for DisplayObject::isPointInside */
+		/** Implementation of DisplayObject::isPointInside */
 		bool isPointInside(const Vector2& coord);
 
 		// inherited from EventListener
 		void eventFired(const Event& evt);
 
 	protected:
-		BoundingBox mBoundingBox;
 		StaticTextResource* mStaticTextResource;
 	};
 	//-----------------------------------------------------------------------

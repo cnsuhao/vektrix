@@ -143,16 +143,6 @@ namespace vtx
 		return mMainMovieClip;
 	}
 	//-----------------------------------------------------------------------
-	void File::setMainResource(Resource* resource)
-	{
-		mMainResource = resource;
-	}
-	//-----------------------------------------------------------------------
-	Resource* File::getMainResource()
-	{
-		return mMainResource;
-	}
-	//-----------------------------------------------------------------------
 	void File::addResource(Resource* res)
 	{
 		ResourceMap::iterator it = mResources.find(res->getID());
@@ -198,8 +188,6 @@ namespace vtx
 		{
 			return it->second;
 		}
-
-		VTX_WARN("\"%s\": Unable to find the requested resource with id \"%s\"!", mFilename.c_str(), id.c_str());
 
 		return NULL;
 	}

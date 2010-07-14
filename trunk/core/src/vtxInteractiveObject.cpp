@@ -39,7 +39,8 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	InteractiveObject::InteractiveObject() 
-		: mHasFocus(false)
+		: mHasFocus(false), 
+		mMouseState(MS_OUT_UP)
 	{
 
 	}
@@ -47,6 +48,42 @@ namespace vtx
 	InteractiveObject::~InteractiveObject()
 	{
 
+	}
+	//-----------------------------------------------------------------------
+	void InteractiveObject::_update(const float& delta_time)
+	{
+		DisplayObject::_update(delta_time);
+
+		if(isPointInside(getParent()->getMouseAbs()))
+		{
+			if(mMouseState == MS_OUT_UP)
+			{
+				MouseEvent evt(MouseEvent::MOUSE_OVER);
+				eventFired(evt);
+
+				if(mScriptObject)
+				{
+					mScriptObject->eventFired(evt);
+				}
+
+				mMouseState = MS_IN_UP;
+			}
+		}
+		else
+		{
+			if(mMouseState == MS_IN_UP)
+			{
+				MouseEvent evt(MouseEvent::MOUSE_OUT);
+				eventFired(evt);
+
+				if(mScriptObject)
+				{
+					mScriptObject->eventFired(evt);
+				}
+
+				mMouseState = MS_OUT_UP;
+			}
+		}
 	}
 	//-----------------------------------------------------------------------
 	void InteractiveObject::eventFired(const Event& evt)
@@ -57,33 +94,43 @@ namespace vtx
 
 			if(evt.getType() == MouseEvent::MOUSE_DOWN)
 			{
-				if(isPointInside(Vector2(mouse_evt.stageX, mouse_evt.stageY)))
+				if(!mHasFocus)
 				{
-					if(!mHasFocus)
+					mHasFocus = true;
+					mParentMovie->_setFocusedObject(this);
+
+					if(mScriptObject)
 					{
 						FocusEvent focus_evt(FocusEvent::FOCUS_IN);
-						focus_evt.relatedObject = this;
-
-						eventFired(focus_evt);
-						mHasFocus = true;
-
-						mParentMovie->_setFocusedObject(this);
+						mScriptObject->eventFired(focus_evt);
 					}
 				}
-				else if(mHasFocus)
+
+				if(mScriptObject)
 				{
-					FocusEvent focus_evt(FocusEvent::FOCUS_OUT);
-					focus_evt.relatedObject = this;
-
-					eventFired(focus_evt);
-					mHasFocus = false;
+					mScriptObject->eventFired(evt);
 				}
-			} // MOUSE_DOWN
-		}
 
-		if(mScriptObject)
+			} // MOUSE_DOWN
+			else if(evt.getType() == MouseEvent::MOUSE_UP || evt.getType() == MouseEvent::MOUSE_MOVE)
+			{
+				if(mScriptObject)
+				{
+					mScriptObject->eventFired(evt);
+				}
+			}
+		} // MouseEvents
+		else if(evt.getCategory() == FocusEvent::CATEGORY)
 		{
-			mScriptObject->eventFired(evt);
+			if(evt.getType() == FocusEvent::FOCUS_OUT)
+			{
+				mHasFocus = false;
+
+				if(mScriptObject)
+				{
+					mScriptObject->eventFired(evt);
+				}
+			}
 		}
 	}
 	//-----------------------------------------------------------------------

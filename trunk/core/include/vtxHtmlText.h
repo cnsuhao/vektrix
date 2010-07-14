@@ -35,6 +35,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A specialized HTML DOM tree element that represents a text node */
 	class vtxExport HtmlText : public HtmlElement
 	{
 	public:

@@ -34,6 +34,7 @@ package flash.display
 	[native(cls="::vtx::as3::LoaderClass", instance="::vtx::as3::Loader", methods="auto")]
 	public class Loader extends DisplayObjectContainer
 	{
-		public native function load(request:URLRequest, context:LoaderContext = null):void;
+		public native function load(request:URLRequest, context:LoaderContext = null):void
+		/*{}*/
 	}
 }

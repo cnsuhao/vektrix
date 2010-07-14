@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxopMovableMovieFactory_H__
 #define __vtxopMovableMovieFactory_H__
 
-#define NO_MEM_DBG
+#define VTX_DISABLE_MEMORY_DEBUGGING
 
 #include "vtxop.h"
 

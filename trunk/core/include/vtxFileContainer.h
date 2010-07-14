@@ -44,6 +44,7 @@ namespace vtx
 
 		/** Get a FileStream from a file which is located inside this container */
 		virtual FileStream* openFile(const String& filename) = 0;
+
 		/** Check if the specified file exists inside this container */
 		virtual bool hasFile(const String& filename) = 0;
 	};

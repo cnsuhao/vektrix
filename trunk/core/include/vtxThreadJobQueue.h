@@ -36,16 +36,19 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A class for queuing and processing thread jobs */
 	class vtxExport ThreadJobQueue
 	{
 	public:
-		typedef std::queue<ThreadJob*> JobQueue;
+		typedef std::deque<ThreadJob*> JobQueue;
 		typedef std::vector<VTX_THREAD_TYPE*> ThreadPool;
 
 		ThreadJobQueue();
 		virtual ~ThreadJobQueue();
 
+		/** Set the number of threads that will be used to process the ThreadJob queue */
 		void setNumberOfThreads(const uint& num_threads);
+		/** Add the given job to the job queue */
 		void queueJob(ThreadJob* job);
 
 	protected:
@@ -55,7 +58,9 @@ namespace vtx
 		JobQueue mQueue;
 		ThreadPool mThreadPool;
 
-		void threadFunc(/*void* args*/);
+		/** The method that will be called by the processing threads */
+		void threadFunc();
+		/** Join and destroy all active threads */
 		void destroyThreads();
 	};
 	//-----------------------------------------------------------------------

@@ -34,6 +34,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** A template for globally accessible singleton classes */
 	template <typename T>
 	class Singleton
 	{
@@ -50,6 +51,7 @@ namespace vtx
 			sInstance = 0;
 		}
 
+		/** Get the unique instance of this class */
 		static T* getSingletonPtr()
 		{
 			return sInstance;

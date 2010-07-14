@@ -30,6 +30,6 @@ THE SOFTWARE.
 #define __vtxConfig_H__
 
 // disable memory debugging for debug builds
-//#define NO_MEM_DBG
+//#define VTX_DISABLE_MEMORY_DEBUGGING
 
 #endif

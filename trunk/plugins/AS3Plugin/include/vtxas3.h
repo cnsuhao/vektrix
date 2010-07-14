@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxas3_H__
 #define __vtxas3_H__
 
-#define NO_MEM_DBG
+#define VTX_DISABLE_MEMORY_DEBUGGING
 #include "vtxPrerequisites.h"
 
 #if VTX_OS == VTX_WIN32
