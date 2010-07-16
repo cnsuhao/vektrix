@@ -90,7 +90,7 @@ namespace vtx
 	{
 		if(evt.getCategory() == MouseEvent::CATEGORY)
 		{
-			const MouseEvent& mouse_evt = dynamic_cast<const MouseEvent&>(evt);
+			const MouseEvent& mouse_evt = static_cast<const MouseEvent&>(evt);
 
 			if(evt.getType() == MouseEvent::MOUSE_DOWN)
 			{

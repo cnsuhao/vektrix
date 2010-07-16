@@ -86,7 +86,7 @@ namespace vtx
 			if(mPacker)
 			{
 				AtlasPacker::PackResultList list = mPacker->getResultList();
-				AtlasPacker::PackResultList::iterator it = list.find(static_cast<ShapeResource*>(resource));
+				AtlasPacker::PackResultList::iterator it = list.find((uint)resource);
 				if(it != list.end())
 				{
 					setAtlasQuad(it->second);
@@ -116,7 +116,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void OgreMovableShape::setAtlasQuad(const AtlasPacker::PackResult& quad)
 		{
-			mMaterial = dynamic_cast<OgreTexture*>(quad.texture)->getMaterial();
+			mMaterial = static_cast<OgreTexture*>(quad.texture)->getMaterial();
 			RectF tex_coords = quad.node->getRect().contractedCopy(1).relativeTo(
 				quad.texture->getSize(), quad.texture->getSize());
 
@@ -153,8 +153,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void OgreMovableShape::packed(const AtlasPacker::PackResultList& pack_result)
 		{
-			// TODO: move inheritance from AtlasElement to ogre plugin, out of the core
-			AtlasPacker::PackResultList::const_iterator it = pack_result.find(mShapeResource);
+			AtlasPacker::PackResultList::const_iterator it = pack_result.find((uint)mShapeResource);
 			if(it != pack_result.end())
 			{
 				setAtlasQuad(it->second);

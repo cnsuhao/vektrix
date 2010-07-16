@@ -32,56 +32,38 @@ THE SOFTWARE.
 #include "vtxMovieClip.h"
 #include "vtxStringHelper.h"
 
-#include "cspScriptObject.h"
+#include "cspVmCore.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	MovieClip::MovieClip(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
+		: Sprite(vtable, prototype)
 	{
-		//-----------------------------------------------------------------------
-		MovieClipClass::MovieClipClass(avmplus::VTable* cvtable) 
-			: ClassClosure(cvtable)
-		{
-			AvmAssert(traits()->getSizeOfInstance() == sizeof(MovieClipClass));
-			createVanillaPrototype();
-		}
-		//-----------------------------------------------------------------------
-		avmplus::ScriptObject* MovieClipClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-		{
-			return new (core()->GetGC(), ivtable->getExtraSize()) MovieClip(ivtable, prototype);
-		}
-		//-----------------------------------------------------------------------
-		MovieClip::MovieClip(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: Sprite(vtable, prototype)
-		{
 
-		}
-		//-----------------------------------------------------------------------
-		MovieClip::~MovieClip()
-		{
+	}
+	//-----------------------------------------------------------------------
+	MovieClip::~MovieClip()
+	{
 
-		}
-		//-----------------------------------------------------------------------
-		void MovieClip::eventFired(const vtx::Event& evt)
+	}
+	//-----------------------------------------------------------------------
+	void MovieClip::eventFired(const vtx::Event& evt)
+	{
+		if(evt.getCategory() == vtx::Event::GENERIC_CATEGORY)
 		{
-			if(evt.getCategory() == vtx::Event::GENERIC_CATEGORY)
+			if(evt.getType() == vtx::Event::ENTER_FRAME)
 			{
-				if(evt.getType() == vtx::Event::ENTER_FRAME)
-				{
-					if(mScriptObject)
-					{
-						const uint& frame = mMovieClip->getCurrentFrame();
-						mScriptObject->callFunction("frame" + StringHelper::toString(frame+1));
-					}
-				}
+				const uint& frame = mMovieClip->getCurrentFrame();
+				csp::VmCore::callObjectFunction(this, "frame" + StringHelper::toString(frame+1));
+				//callFunction("frame" + StringHelper::toString(frame+1));
 			}
 		}
-		//-----------------------------------------------------------------------
-		void MovieClip::_setNativeObject(Instance* inst)
-		{
-			Sprite::_setNativeObject(inst);
-			mMovieClip = dynamic_cast<vtx::MovieClip*>(inst);
-		}
-		//-----------------------------------------------------------------------
 	}
-}
+	//-----------------------------------------------------------------------
+	void MovieClip::setNativeObject(Instance* inst)
+	{
+		Sprite::setNativeObject(inst);
+		mMovieClip = static_cast<vtx::MovieClip*>(inst);
+	}
+	//-----------------------------------------------------------------------
+}}

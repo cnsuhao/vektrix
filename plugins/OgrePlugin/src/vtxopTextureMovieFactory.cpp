@@ -48,7 +48,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void TextureMovieFactory::destroyObject(Movie* instance)
 		{
-			delete dynamic_cast<TextureMovie*>(instance);
+			delete static_cast<TextureMovie*>(instance);
 			instance = NULL;
 		}
 		//-----------------------------------------------------------------------

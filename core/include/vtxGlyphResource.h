@@ -30,7 +30,6 @@ THE SOFTWARE.
 #define __vtxGlyphResource_H__
 
 #include "vtxPrerequisites.h"
-#include "vtxAtlasElement.h"
 #include "vtxBoundingBox.h"
 #include "vtxShapeElement.h"
 
@@ -38,7 +37,7 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	/** A Resource which contains information about a single glyph contained within a FontResource */
-	class vtxExport GlyphResource : public AtlasElement
+	class vtxExport GlyphResource
 	{
 	public:
 		GlyphResource(FontResource* parent);
@@ -69,11 +68,8 @@ namespace vtx
 		/** Get the BoundingBox of this glyph */
 		const BoundingBox& getBoundingBox() const;
 
-		// AtlasElement
-		/** @copybrief AtlasElement::getPackableWidth */
-		const uint getPackableWidth();
-		/** @copybrief AtlasElement::getPackableHeight */
-		const uint getPackableHeight();
+		/** Get the FontResource that this glyph belongs to */
+		FontResource* getParentFont() const;
 
 	protected:
 		uint mIndex;

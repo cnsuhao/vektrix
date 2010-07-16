@@ -29,10 +29,12 @@ THE SOFTWARE.
 #ifndef __vtxswfParserTypes_H__
 #define __vtxswfParserTypes_H__
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	/** The namespace for all internal data types of the SWF file format */
+	namespace types
 	{
+		//-----------------------------------------------------------------------
 		// unsigned types
 		typedef unsigned char	UI8;
 		typedef unsigned short	UI16;
@@ -246,6 +248,9 @@ namespace vtx
 		};
 		//-----------------------------------------------------------------------
 	}
-}
+	//-----------------------------------------------------------------------
+}}
+
+using namespace vtx::swf::types;
 
 #endif

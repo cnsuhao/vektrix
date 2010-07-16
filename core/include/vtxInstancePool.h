@@ -54,7 +54,7 @@ namespace vtx
 		PoolMap mPoolMap;
 
 		/** Get the sub-pool for Instance objects with the given type */
-		Pool* _getPool(const String& type);
+		Pool* _getPool(const String& type, const bool& auto_create = false);
 	};
 	//-----------------------------------------------------------------------
 }

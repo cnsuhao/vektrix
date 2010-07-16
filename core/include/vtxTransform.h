@@ -108,6 +108,7 @@ namespace vtx
 		/** Inform the object that the matrix needs to be updated */
 		void needMatrixUpdate();
 
+		/** Check if this Transform needs a matrix update */
 		const bool& doesNeedMatrixUpdate() const;
 
 		/** Perform color / matrix updates if necessary */

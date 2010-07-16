@@ -34,31 +34,27 @@ THE SOFTWARE.
 
 //-----------------------------------------------------------------------
 #ifdef VTX_STATIC_LIB
-	void vektrix_SwfPlugin_startPlugin()
+void vektrix_SwfPlugin_startPlugin()
 #else
-	extern "C" void vtxswfExport startPlugin() throw()
+extern "C" void vtxswfExport startPlugin() throw()
 #endif
 {
 	vtx::Root::getSingletonPtr()->registerPlugin(new vtx::swf::SwfPlugin());
 }
 //-----------------------------------------------------------------------
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	SwfPlugin::SwfPlugin()
 	{
-		//-----------------------------------------------------------------------
-		SwfPlugin::SwfPlugin()
-		{
-			mParserFactory = new SwfParserFactory();
-			FileManager::getSingletonPtr()->addParserFactory(mParserFactory);
-		}
-		//-----------------------------------------------------------------------
-		SwfPlugin::~SwfPlugin()
-		{
-			FileManager::getSingletonPtr()->removeParserFactory(mParserFactory);
-			delete mParserFactory;
-		}
-		//-----------------------------------------------------------------------
+		mParserFactory = new SwfParserFactory();
+		FileManager::getSingletonPtr()->addParserFactory(mParserFactory);
 	}
-}
+	//-----------------------------------------------------------------------
+	SwfPlugin::~SwfPlugin()
+	{
+		FileManager::getSingletonPtr()->removeParserFactory(mParserFactory);
+		delete mParserFactory;
+	}
+	//-----------------------------------------------------------------------
+}}

@@ -27,10 +27,7 @@ THE SOFTWARE.
 */
 
 #include "vtxGlyphResource.h"
-
 #include "vtxFontResource.h"
-#include "vtxMathHelper.h"
-#include "vtxStringHelper.h"
 
 namespace vtx
 {
@@ -100,14 +97,9 @@ namespace vtx
 		return mBoundingBox;
 	}
 	//-----------------------------------------------------------------------
-	const uint GlyphResource::getPackableWidth()
+	FontResource* GlyphResource::getParentFont() const
 	{
-		return MathHelper::findClosestPowerOfTwo(mBoundingBox.getWidth()) * 2;
-	}
-	//-----------------------------------------------------------------------
-	const uint GlyphResource::getPackableHeight()
-	{
-		return MathHelper::findClosestPowerOfTwo(mBoundingBox.getHeight()) * 2;
+		return mParent;
 	}
 	//-----------------------------------------------------------------------
 }

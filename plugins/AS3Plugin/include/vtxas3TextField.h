@@ -29,45 +29,34 @@ THE SOFTWARE.
 #ifndef __vtxas3TextField_H__
 #define __vtxas3TextField_H__
 
-#include "cspPrerequesites.h"
+#include "cspPrerequisites.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class TextField : public InteractiveObject
 	{
-		//-----------------------------------------------------------------------
-		class TextFieldClass : public avmplus::ClassClosure
-		{
-		public:
-			TextFieldClass(avmplus::VTable* cvtable);
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
+	public:
+		TextField(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		virtual ~TextField();
 
-			DECLARE_SLOTS_TextFieldClass;
-		};
-		//-----------------------------------------------------------------------
-		class TextField : public InteractiveObject
-		{
-		public:
-			TextField(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-			virtual ~TextField();
+		/* getters / setters */
+		avmplus::Stringp get_htmlText();
+		void set_htmlText(avmplus::Stringp htmlText);
 
-			/* getters / setters */
-			avmplus::Stringp get_htmlText();
-			void set_htmlText(avmplus::Stringp htmlText);
+		/* methods */
+		int getLineIndexAtPoint(double x, double y);
+		void setSelection(int beginIndex, int endIndex);
 
-			/* methods */
-			int getLineIndexAtPoint(double x, double y);
-			void setSelection(int beginIndex, int endIndex);
+		CSP_INST_SLOTS(StaticText);
 
-			DECLARE_SLOTS_StaticText;
+	protected:
+		vtx::EditText* mEditText;
 
-		protected:
-			vtx::EditText* mEditText;
-
-			void _setNativeObject(Instance* inst);
-		};
-		//-----------------------------------------------------------------------
-	}
-}
+		void setNativeObject(Instance* inst);
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(TextField);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

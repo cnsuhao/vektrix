@@ -121,7 +121,7 @@ namespace vtx
 		void addResource(Resource* res);
 
 		/** Retrieve a Resource instance from this File by its unique ID */
-		Resource* getResource(const String& id);
+		Resource* getResource(const String& id, const String& requested_type = "");
 
 		/** Query all resources from this File that match the given type */
 		const ResourceList& getResourcesByType(const String& type) const;

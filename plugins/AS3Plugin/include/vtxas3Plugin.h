@@ -38,20 +38,18 @@ THE SOFTWARE.
 	extern "C" void vtxas3Export startPlugin() throw();
 #endif
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class AS3Plugin : public Plugin
 	{
-		class AS3Plugin : public Plugin
-		{
-		public:
-			AS3Plugin();
-			virtual ~AS3Plugin();
+	public:
+		AS3Plugin();
+		virtual ~AS3Plugin();
 
-		protected:
-			AS3ScriptEngineFactory* mAS3ScriptEngine;
-		};
-	}
-}
+	protected:
+		AS3ScriptEngineFactory* mAS3ScriptEngine;
+	};
+	//-----------------------------------------------------------------------
+}}
 
 #endif

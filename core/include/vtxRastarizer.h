@@ -30,6 +30,7 @@ THE SOFTWARE.
 #define __vtxRastarizer_H__
 
 #include "vtxPrerequisites.h"
+#include "vtxShapeElement.h"
 
 namespace vtx
 {
@@ -41,11 +42,26 @@ namespace vtx
 		Rasterizer();
 		virtual ~Rasterizer();
 
+		/** Start the painting of an element */
+		virtual void startPaint(
+			const Rect& rect, 
+			const Vector2& offset, const Vector2& scale, 
+			Texture* texture) = 0;
+
+		/** Set a simple RGBA Color fillstyle for the current outline */
+		virtual void setColorFill(const Color& color) = 0;
+
+		/** Set a fillstyle based on the given MaterialResource */
+		virtual void setMaterialFill(MaterialResource* material) = 0;
+
+		/** Draw a shape from the given shape elements */
+		virtual void drawShapeElements(const ShapeElementList& elements) = 0;
+
+		/** Finish the painting of the current element */
+		virtual void finishPaint() = 0;
+
 		/** Get the unique name of this rasterizer */
 		virtual const String& getName() const = 0;
-
-		/** Render a given element to a Texture */
-		virtual void renderElementToTexture(Texture* texture, AtlasElement* element, AtlasNode* node) = 0;
 	};
 	//-----------------------------------------------------------------------
 }

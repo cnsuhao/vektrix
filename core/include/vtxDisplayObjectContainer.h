@@ -40,18 +40,27 @@ namespace vtx
 	{
 	public:
 		typedef std::map<uint, DisplayObject*> LayerMap;
+		typedef std::map<String, DisplayObject*> NameMap;
 
 		DisplayObjectContainer();
 		virtual ~DisplayObjectContainer();
 
+		bool isDisplayObjectContainer() const;
+
 		/** Add a child object at the topmost available layer */
 		void addChild(DisplayObject* object);
+
 		/** Add a child object at the given layer */
 		bool addChildAt(DisplayObject* object, uint layer);
+
 		/** Get the child object located at the given layer */
 		DisplayObject* getChildAt(uint layer);
+
+		DisplayObject* getChildByName(const String& name);
+
 		/** Remove a child object from the given layer */
 		bool removeChildAt(uint layer);
+
 		/** Remove all objects from all layers */
 		void clearLayers();
 
@@ -69,6 +78,7 @@ namespace vtx
 	protected:
 		bool mNeedBoundingBoxUpdate;
 		LayerMap mLayers;
+		NameMap mNameMap;
 	};
 	//-----------------------------------------------------------------------
 }

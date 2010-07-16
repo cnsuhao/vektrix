@@ -47,6 +47,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough=""
 				WarningLevel="3"
@@ -128,6 +129,7 @@
 				AdditionalIncludeDirectories="..\include;..\..\dependencies\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VEKTRIX_EXPORTS;COMPILED_FROM_DSP"
 				RuntimeLibrary="2"
+				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough=""
 				WarningLevel="3"
@@ -211,6 +213,7 @@
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough=""
 				WarningLevel="3"
@@ -280,6 +283,7 @@
 				AdditionalIncludeDirectories="..\include;..\..\dependencies\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VTX_STATIC_LIB;COMPILED_FROM_DSP"
 				RuntimeLibrary="2"
+				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough=""
 				WarningLevel="3"
@@ -777,6 +781,14 @@
 		<Filter
 			Name="Timeline"
 			>
+			<File
+				RelativePath="..\src\vtxTimeline.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\vtxTimeline.h"
+				>
+			</File>
 			<Filter
 				Name="FrameEvents"
 				>
@@ -814,7 +826,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="General"
+				Name="EventContainers"
 				>
 				<File
 					RelativePath="..\src\vtxButtonState.cpp"
@@ -838,14 +850,6 @@
 				</File>
 				<File
 					RelativePath="..\include\vtxKeyframe.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\vtxTimeline.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\include\vtxTimeline.h"
 					>
 				</File>
 			</Filter>

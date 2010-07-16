@@ -47,6 +47,11 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
+	bool DisplayObject::isDisplayObject() const
+	{
+		return true;
+	}
+	//-----------------------------------------------------------------------
 	void DisplayObject::setX(const float& x)
 	{
 		mTransform.setX(x);

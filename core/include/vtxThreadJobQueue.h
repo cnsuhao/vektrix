@@ -48,6 +48,7 @@ namespace vtx
 
 		/** Set the number of threads that will be used to process the ThreadJob queue */
 		void setNumberOfThreads(const uint& num_threads);
+
 		/** Add the given job to the job queue */
 		void queueJob(ThreadJob* job);
 

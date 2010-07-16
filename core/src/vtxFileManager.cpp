@@ -130,7 +130,7 @@ namespace vtx
 
 		if(file_it != mReadyFiles.end())
 		{
-			VTX_LOG("Reloading file '%s' from memory.", filename.c_str());
+			//VTX_DEBUG("Reloading file '%s' from memory.", filename.c_str());
 
 			if(listener)
 			{
@@ -148,7 +148,7 @@ namespace vtx
 
 		if(file_it != mParsingFiles.end())
 		{
-			VTX_LOG("Requested file '%s' is currently being parsed.", filename.c_str());
+			//VTX_LOG("Requested file '%s' is currently being parsed.", filename.c_str());
 
 			if(listener)
 			{

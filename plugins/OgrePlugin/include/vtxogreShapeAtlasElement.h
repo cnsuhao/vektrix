@@ -26,37 +26,29 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxopMovableStrategy_H__
-#define __vtxopMovableStrategy_H__
+#ifndef __vtxogreShapeAtlasElement_H__
+#define __vtxogreShapeAtlasElement_H__
 
 #include "vtxop.h"
+#include "vtxAtlasElement.h"
 
-#ifdef false
-
-namespace vtx
-{
-	namespace ogre
+namespace vtx { namespace ogre {
+	//-----------------------------------------------------------------------
+	class vtxopExport ShapeAtlasElement : public AtlasElement
 	{
-		class MovableRenderStrategy : public RenderStrategy, public File::Listener
-		{
-		public:
-			MovableRenderStrategy(vtx::MovieFactory* factory, vtx::File* file);
-			virtual ~MovableRenderStrategy();
+	public:
+		ShapeAtlasElement(ShapeResource* shape);
 
-			void storeInstance(Instance* inst);
-			Instance* shareInstance(const String& id, Movie* movie);
-			Instance* shareInstanceByType(const String& type, Movie* movie);
+		const uint getPackID() const;
+		const uint getPackableWidth();
+		const uint getPackableHeight();
 
-			void resourceAdded(Resource* resource);
+		void paintToNode(AtlasNode* node, Rasterizer* rasterizer);
 
-			AtlasPacker* getPacker() const;
-
-		protected:
-			AtlasPacker* mPacker;
-			InstancePool* mPool;
-		};
-	}
-}
-#endif
+	protected:
+		ShapeResource* mShape;
+	};
+	//-----------------------------------------------------------------------
+}}
 
 #endif

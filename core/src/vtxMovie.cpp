@@ -220,6 +220,12 @@ namespace vtx
 		return instance;
 	}
 	//-----------------------------------------------------------------------
+	void Movie::destroyInstance(Instance* instance)
+	{
+		instance->setScriptObject(NULL);
+		releaseInstance(instance);
+	}
+	//-----------------------------------------------------------------------
 	ScriptEngine* Movie::getScriptEngine() const
 	{
 		return mScriptEngine;
@@ -310,7 +316,7 @@ namespace vtx
 			mScriptEngine = scriptEngineFactory->createObject(this);
 		}
 
-		ScriptResource* script = dynamic_cast<ScriptResource*>(mFile->getResource("Script"));
+		ScriptResource* script = static_cast<ScriptResource*>(mFile->getResource("Script", "Script"));
 		if(mScriptEngine && script)
 		{
 			if(mScriptEngine->executeCode(script->getBuffer(), script->getLength()))

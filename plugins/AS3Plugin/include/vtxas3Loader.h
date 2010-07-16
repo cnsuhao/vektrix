@@ -29,46 +29,35 @@ THE SOFTWARE.
 #ifndef __vtxas3Loader_H__
 #define __vtxas3Loader_H__
 
-#include "cspPrerequesites.h"
+#include "cspPrerequisites.h"
 
 #include "vtxFile.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class Loader : public DisplayObjectContainer, public File::Listener
 	{
-		//-----------------------------------------------------------------------
-		class LoaderClass : public avmplus::ClassClosure
-		{
-		public:
-			LoaderClass(avmplus::VTable* cvtable);
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
+	public:
+		Loader(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		virtual ~Loader();
 
-			AS3_ClassSlots(Loader);
-		};
-		//-----------------------------------------------------------------------
-		class Loader : public DisplayObjectContainer, public File::Listener
-		{
-		public:
-			Loader(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-			virtual ~Loader();
+		void load(URLRequest* request, LoaderContext* context);
 
-			void load(URLRequest* request, LoaderContext* context);
+		void eventFired(const vtx::Event& evt);
 
-			void eventFired(const vtx::Event& evt);
+		CSP_INST_SLOTS(Loader);
 
-			AS3_InstSlots(Loader);
+	protected:
+		vtx::MovieClip* mMovieClip;
 
-		protected:
-			vtx::MovieClip* mMovieClip;
+		void _setNativeObject(Instance* inst);
 
-			void _setNativeObject(Instance* inst);
-
-			void loadingCompleted(File* file);
-			void loadingFailed(File* file);
-		};
-		//-----------------------------------------------------------------------
-	}
-}
+		void loadingCompleted(File* file);
+		void loadingFailed(File* file);
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(Loader);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

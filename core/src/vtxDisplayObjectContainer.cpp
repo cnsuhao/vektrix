@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "vtxLogManager.h"
 #include "vtxMouseEvent.h"
 #include "vtxMovie.h"
+#include "vtxScriptObject.h"
 
 namespace vtx
 {
@@ -45,6 +46,11 @@ namespace vtx
 	DisplayObjectContainer::~DisplayObjectContainer()
 	{
 		clearLayers();
+	}
+	//-----------------------------------------------------------------------
+	bool DisplayObjectContainer::isDisplayObjectContainer() const
+	{
+		return true;
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObjectContainer::addChild(DisplayObject* object)
@@ -72,6 +78,22 @@ namespace vtx
 			// target layer is not free
 			VTX_EXCEPT("Movie \"%s\": Target Layer %u is not free.", "TODO", layer);
 			return false;
+		}
+
+		const String& name = object->getName();
+
+		if(name.length())
+		{
+			NameMap::iterator it = mNameMap.find(name);
+			if(it == mNameMap.end())
+			{
+				mNameMap.insert(std::make_pair(name, object));
+				mScriptObject->setChildObject(name, object->getScriptObject());
+			}
+			else
+			{
+				VTX_EXCEPT("DisplayObject with name: %s already placed at DisplayObjectContainer");
+			}
 		}
 
 		//uint old_layer = object->getLayer();
@@ -105,6 +127,18 @@ namespace vtx
 		return NULL;
 	}
 	//-----------------------------------------------------------------------
+	DisplayObject* DisplayObjectContainer::getChildByName(const String& name)
+	{
+		NameMap::iterator it = mNameMap.find(name);
+
+		if(it != mNameMap.end())
+		{
+			return it->second;
+		}
+
+		return NULL;
+	}
+	//-----------------------------------------------------------------------
 	bool DisplayObjectContainer::removeChildAt(uint layer)
 	{
 		mNeedBoundingBoxUpdate = true;
@@ -119,6 +153,19 @@ namespace vtx
 			}
 
 			mLayers.erase(it);
+
+			if(it->second->getName().length())
+			{
+				NameMap::iterator it = mNameMap.find(it->second->getName());
+				if(it != mNameMap.end())
+				{
+					mNameMap.erase(it);
+				}
+				else
+				{
+					VTX_EXCEPT("DisplayObject with name: %s placed at DisplayObjectContainer without name");
+				}
+			}
 			return true;
 		}
 
@@ -136,9 +183,9 @@ namespace vtx
 		{
 			if(it->second && mParentMovie)
 			{
-				DisplayObjectContainer* child = dynamic_cast<DisplayObjectContainer*>(it->second);
-				if(child)
+				if(it->second->isDisplayObjectContainer())
 				{
+					DisplayObjectContainer* child = static_cast<DisplayObjectContainer*>(it->second);
 					child->clearLayers();
 				}
 

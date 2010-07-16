@@ -72,26 +72,15 @@ namespace vtx
 		}
 
 		mObject = static_cast<DisplayObject*>(instance);
-		mObject->setMatrix(mMatrix);
-		mObject->setCXForm(mCXForm);
-		mObjectContainer->addChildAt(mObject, mLayer);
 
 		if(mName.length())
 		{
 			mObject->setName(mName);
-
-			ScriptObject* parent_obj = mObjectContainer->getScriptObject();
-			if(parent_obj)
-			{
-				ScriptObject* script_obj = parent_obj->getChildScriptObject(mName);
-
-				// TODO: remove NULL check, should be safe here
-				if(script_obj)
-				{
-					mObject->setScriptObject(script_obj);
-				}
-			}
 		}
+
+		mObject->setMatrix(mMatrix);
+		mObject->setCXForm(mCXForm);
+		mObjectContainer->addChildAt(mObject, mLayer);
 	}
 	//-----------------------------------------------------------------------
 }

@@ -86,7 +86,7 @@ namespace vtx
 			pass->setSpecular(clr);
 			pass->setDiffuse(clr);
 
-			MovableMovie* movie = dynamic_cast<MovableMovie*>(mParent);
+			MovableMovie* movie = static_cast<MovableMovie*>(mParent);
 			if(movie)
 			{
 				mNode = movie->getParentSceneNode();

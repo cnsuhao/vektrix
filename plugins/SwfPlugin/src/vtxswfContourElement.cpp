@@ -28,39 +28,35 @@ THE SOFTWARE.
 #include "vtxswfContourElement.h"
 #include "vtxswfContourPoint.h"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	ContourElement::ContourElement() 
+		: type(0), 
+		isStartElement(false)
 	{
-		//-----------------------------------------------------------------------
-		ContourElement::ContourElement() 
-			: type(0), 
-			isStartElement(false)
-		{
 
-		}
-		//-----------------------------------------------------------------------
-		ContourElement::~ContourElement()
-		{
-
-		}
-		//-----------------------------------------------------------------------
-		bool ContourElement::connectsTo(const ContourElement& element)
-		{
-			return ((*this).p1 == element.p0);
-		}
-		//-----------------------------------------------------------------------
-		bool ContourElement::connectsReverseTo(const ContourElement& element)
-		{
-			return ((*this).p1 == element.p1);
-		}
-		//-----------------------------------------------------------------------
-		void ContourElement::reverse()
-		{
-			ContourPoint temp = p0;
-			p0 = p1;
-			p1 = temp;
-		}
-		//-----------------------------------------------------------------------
 	}
-}
+	//-----------------------------------------------------------------------
+	ContourElement::~ContourElement()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	bool ContourElement::connectsTo(const ContourElement& element)
+	{
+		return ((*this).p1 == element.p0);
+	}
+	//-----------------------------------------------------------------------
+	bool ContourElement::connectsReverseTo(const ContourElement& element)
+	{
+		return ((*this).p1 == element.p1);
+	}
+	//-----------------------------------------------------------------------
+	void ContourElement::reverse()
+	{
+		ContourPoint temp = p0;
+		p0 = p1;
+		p1 = temp;
+	}
+	//-----------------------------------------------------------------------
+}}

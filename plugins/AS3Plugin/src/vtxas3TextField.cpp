@@ -31,103 +31,84 @@ THE SOFTWARE.
 #include "vtxEditText.h"
 #include "vtxMovie.h"
 
-#include "cspInternalCore.h"
 #include "cspVmCore.h"
-#include "cspScriptObject.h"
 
-namespace vtx
-{
-	namespace as3
+#include "vtxLogManager.h"
+
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	TextField::TextField(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
+		: InteractiveObject(vtable, prototype)
 	{
-		//-----------------------------------------------------------------------
-		TextFieldClass::TextFieldClass(avmplus::VTable* cvtable) 
-			: ClassClosure(cvtable)
-		{
-			AvmAssert(traits()->getSizeOfInstance() == sizeof(TextFieldClass));
-			createVanillaPrototype();
-		}
-		//-----------------------------------------------------------------------
-		avmplus::ScriptObject* TextFieldClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-		{
-			return new (core()->GetGC(), ivtable->getExtraSize()) TextField(ivtable, prototype);
-		}
-		//-----------------------------------------------------------------------
-		TextField::TextField(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: InteractiveObject(vtable, prototype)
-		{
-			earlyInit(this, true);
+		Movie* movie = static_cast<Movie*>(CSP_CORE->getUserData());
+		Instance* inst = movie->getInstanceByType(EditText::TYPE);
+		inst->setScriptObject(this);
+	}
+	//-----------------------------------------------------------------------
+	TextField::~TextField()
+	{
 
-			Movie* movie = static_cast<Movie*>(mCore->getUserData());
-			Instance* inst = movie->getInstanceByType(EditText::TYPE);
-			inst->setScriptObject(this);
-		}
-		//-----------------------------------------------------------------------
-		TextField::~TextField()
+	}
+	//-----------------------------------------------------------------------
+	avmplus::Stringp TextField::get_htmlText()
+	{
+		if(mEditText)
 		{
-			DecrementRef();
-			delete mScriptObject;
+			return CSP_CORE->utfStringToAS3(mEditText->getHtmlText());
 		}
-		//-----------------------------------------------------------------------
-		avmplus::Stringp TextField::get_htmlText()
-		{
-			if(mEditText && mCore)
-			{
-				return mCore->stl2cspUTF8(mEditText->getHtmlText());
-			}
 
-			return mCore->stl2csp("");
-		}
-		//-----------------------------------------------------------------------
-		void TextField::set_htmlText(avmplus::Stringp htmlText)
+		return CSP_CORE->stringToAS3("");
+	}
+	//-----------------------------------------------------------------------
+	void TextField::set_htmlText(avmplus::Stringp htmlText)
+	{
+		if(mEditText)
 		{
-			if(mEditText && mCore)
-			{
-				mEditText->setHtmlText(mCore->csp2stlUTF8(htmlText));
-			}
+			mEditText->setHtmlText(CSP_CORE->utfStringFromAS3(htmlText));
 		}
-		//-----------------------------------------------------------------------
-		int TextField::getLineIndexAtPoint(double x, double y)
+	}
+	//-----------------------------------------------------------------------
+	int TextField::getLineIndexAtPoint(double x, double y)
+	{
+		if(mEditText)
 		{
-			if(mEditText)
-			{
-				return mEditText->getLineAtPoint(Vector2((float)x, (float)y)).index;
-			}
+			return mEditText->getLineAtPoint(Vector2((float)x, (float)y)).index;
+		}
 
-			return -1;
-		}
-		//-----------------------------------------------------------------------
-		void TextField::setSelection(int beginIndex, int endIndex)
+		return -1;
+	}
+	//-----------------------------------------------------------------------
+	void TextField::setSelection(int beginIndex, int endIndex)
+	{
+		if(mEditText)
 		{
-			if(mEditText)
-			{
-				mEditText->setSelection(beginIndex, endIndex);
-			}
+			mEditText->setSelection(beginIndex, endIndex);
 		}
-		//-----------------------------------------------------------------------
-		void TextField::_setNativeObject(Instance* inst)
+	}
+	//-----------------------------------------------------------------------
+	void TextField::setNativeObject(Instance* inst)
+	{
+		Instance* instance = getNativeObject();
+		if(instance)
 		{
-			Instance* instance = getNativeObject();
-			if(instance)
+			Movie* movie = static_cast<Movie*>(CSP_CORE->getUserData());
+			vtx::DisplayObject* displ = static_cast<vtx::DisplayObject*>(instance);
+			if(displ)
 			{
-				Movie* movie = static_cast<Movie*>(mCore->getUserData());
-				vtx::DisplayObject* displ = dynamic_cast<vtx::DisplayObject*>(instance);
-				if(displ)
+				vtx::DisplayObjectContainer* cont = displ->getParentContainer();
+				if(cont)
 				{
-					vtx::DisplayObjectContainer* cont = displ->getParentContainer();
-					if(cont)
-					{
-						cont->removeChildAt(displ->getLayer());
-					}
-					else
-					{
-						movie->releaseInstance(instance);
-					}
+					cont->removeChildAt(displ->getLayer());
+				}
+				else
+				{
+					movie->releaseInstance(instance);
 				}
 			}
-
-			InteractiveObject::_setNativeObject(inst);
-			mEditText = dynamic_cast<vtx::EditText*>(inst);
 		}
-		//-----------------------------------------------------------------------
+
+		InteractiveObject::setNativeObject(inst);
+		mEditText = static_cast<vtx::EditText*>(inst);
 	}
-}
+	//-----------------------------------------------------------------------
+}}

@@ -29,7 +29,9 @@ THE SOFTWARE.
 #include "vtxopMovableMovieFactory.h"
 #include "vtxopMovableMovie.h"
 #include "vtxopMovableMovieDebugger.h"
-#include "vtxopMovableStrategy.h"
+
+#include "vtxogreGlyphAtlasElement.h"
+#include "vtxogreShapeAtlasElement.h"
 
 #include "vtxAtlasPacker.h"
 #include "vtxFileManager.h"
@@ -82,7 +84,7 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void MovableMovieFactory::destroyObject(Movie* instance)
 		{
-			delete dynamic_cast<MovableMovie*>(instance);
+			delete static_cast<MovableMovie*>(instance);
 			instance = NULL;
 		}
 		//-----------------------------------------------------------------------
@@ -116,7 +118,7 @@ namespace vtx
 				ShapeResource* shape = static_cast<ShapeResource*>(*shape_it);
 				if(shape)
 				{
-					mPacker->addElement(shape);
+					mPacker->addElement(new ShapeAtlasElement(shape));
 				}
 
 				++shape_it;
@@ -138,7 +140,7 @@ namespace vtx
 
 					while(glyph_it != glyph_end)
 					{
-						mPacker->addElement(*glyph_it);
+						mPacker->addElement(new GlyphAtlasElement(*glyph_it));
 						++glyph_it;
 					}
 				}

@@ -31,37 +31,28 @@ THE SOFTWARE.
 
 #include "vtxas3.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class DisplayObjectContainer : public InteractiveObject
 	{
-		//-----------------------------------------------------------------------
-		class DisplayObjectContainerClass : public avmplus::ClassClosure
-		{
-		public:
-			DisplayObjectContainerClass(avmplus::VTable* cvtable);
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
+	public:
+		DisplayObjectContainer(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		virtual ~DisplayObjectContainer();
 
-			DECLARE_SLOTS_DisplayObjectContainerClass;
-		};
-		//-----------------------------------------------------------------------
-		class DisplayObjectContainer : public InteractiveObject
-		{
-		public:
-			DisplayObjectContainer(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-			virtual ~DisplayObjectContainer();
+		DisplayObject* addChild(DisplayObject* child);
 
-			DisplayObject* addChild(DisplayObject* child);
+		DisplayObject* getChildByName(avmplus::Stringp name);
 
-			DECLARE_SLOTS_DisplayObjectContainer;
+		CSP_INST_SLOTS(DisplayObjectContainer);
 
-		protected:
-			vtx::DisplayObjectContainer* mDisplayObjectContainer;
+	protected:
+		vtx::DisplayObjectContainer* mDisplayObjectContainer;
 
-			virtual void _setNativeObject(Instance* inst);
-		};
-		//-----------------------------------------------------------------------
-	}
-}
+		virtual void setNativeObject(Instance* inst);
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(DisplayObjectContainer);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

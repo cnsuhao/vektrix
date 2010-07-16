@@ -41,26 +41,20 @@ namespace vtx
 		friend class Instance;
 
 	public:
-		typedef std::map<String, vtx::ScriptObject*> ChildMap;
-
 		ScriptObject();
 		virtual ~ScriptObject();
 
 		/** Get the native Instance that is associated with this script object */
 		virtual Instance* getNativeObject();
 
-		/** Get a child script object contained within this one */
-		ScriptObject* getChildScriptObject(const String& name);
+		/** Add a child script object which is contained within this one */
+		virtual void setChildObject(const String& name, ScriptObject* script_object) = 0;
 
 	protected:
-		ChildMap mChildren;
 		Instance* mNativeObject;
 
-		/** Initialize a certain child script object */
-		virtual ScriptObject* _createChildObject(const String& name) = 0;
-
 		/** Set the C++ object that is associated with this script object */
-		virtual void _setNativeObject(Instance* inst);
+		virtual void setNativeObject(Instance* inst);
 
 	};
 	//-----------------------------------------------------------------------

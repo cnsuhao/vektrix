@@ -26,36 +26,52 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
+#include "vtxogreGlyphAtlasElement.h"
 
-namespace vtx { namespace as3 {
+#include "vtxAtlasNode.h"
+#include "vtxColor.h"
+#include "vtxGlyphResource.h"
+#include "vtxMathHelper.h"
+#include "vtxRastarizer.h"
+#include "vtxRect.h"
+
+namespace vtx { namespace ogre {
 	//-----------------------------------------------------------------------
-	EventHandlerClass::EventHandlerClass(avmplus::VTable* cvtable) 
-		: ClassClosure(cvtable)
-	{
-		AvmAssert(traits()->getSizeOfInstance() == sizeof(EventHandlerClass));
-		createVanillaPrototype();
-	}
-	//-----------------------------------------------------------------------
-	avmplus::ScriptObject* EventHandlerClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-	{
-		return new (core()->GetGC(), ivtable->getExtraSize()) EventHandler(ivtable, prototype);
-	}
-	//-----------------------------------------------------------------------
-	int EventHandlerClass::add(int a, int b)
-	{
-		return a + b;
-	}
-	//-----------------------------------------------------------------------
-	void EventHandlerClass::handle(avmplus::ScriptObject* evt)
-	{
-		std::cout << "native C++ EventHandler called" << std::endl;
-	}
-	//-----------------------------------------------------------------------
-	EventHandler::EventHandler(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: avmplus::ScriptObject(vtable, prototype)
+	GlyphAtlasElement::GlyphAtlasElement(GlyphResource* glyph) 
+		: mGlyph(glyph)
 	{
 
+	}
+	//-----------------------------------------------------------------------
+	const uint GlyphAtlasElement::getPackID() const
+	{
+		return (uint)mGlyph;
+	}
+	//-----------------------------------------------------------------------
+	const uint GlyphAtlasElement::getPackableWidth()
+	{
+		const BoundingBox& bb = mGlyph->getBoundingBox();
+		return MathHelper::findClosestPowerOfTwo(bb.getWidth()) * 2;
+	}
+	//-----------------------------------------------------------------------
+	const uint GlyphAtlasElement::getPackableHeight()
+	{
+		const BoundingBox& bb = mGlyph->getBoundingBox();
+		return MathHelper::findClosestPowerOfTwo(bb.getHeight()) * 2;
+	}
+	//-----------------------------------------------------------------------
+	void GlyphAtlasElement::paintToNode(AtlasNode* node, Rasterizer* rasterizer)
+	{
+		Rect rect = node->getRect();
+		rect.contract(1);
+
+		Vector2 offset(-mGlyph->getBoundingBox().getMinX(), -mGlyph->getBoundingBox().getMinY());
+		Vector2 scale(rect.w()/mGlyph->getBoundingBox().getWidth(), rect.h()/mGlyph->getBoundingBox().getHeight());
+
+		rasterizer->startPaint(rect, offset, scale, node->getTexture());
+		rasterizer->setColorFill(Color());
+		rasterizer->drawShapeElements(mGlyph->getElementList());
+		rasterizer->finishPaint();
 	}
 	//-----------------------------------------------------------------------
 }}

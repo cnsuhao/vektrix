@@ -46,6 +46,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				WarnAsError="true"
@@ -125,6 +126,7 @@
 				AdditionalIncludeDirectories="..\include;..\..\..\core\include;..\..\..\dependencies\include;..\..\..\dependencies\include\OGRE"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VEKTRIX_OGREPLUGIN_EXPORTS"
 				RuntimeLibrary="2"
+				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				WarnAsError="true"
@@ -207,6 +209,7 @@
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				WarnAsError="true"
@@ -273,6 +276,7 @@
 				AdditionalIncludeDirectories="..\include;..\..\..\core\include;..\..\..\dependencies\include;..\..\..\dependencies\include\OGRE"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VTX_STATIC_LIB"
 				RuntimeLibrary="2"
+				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				WarnAsError="true"
@@ -381,14 +385,22 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Strategy"
+					Name="Packing"
 					>
 					<File
-						RelativePath="..\src\vtxopMovableStrategy.cpp"
+						RelativePath="..\src\vtxogreGlyphAtlasElement.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\include\vtxopMovableStrategy.h"
+						RelativePath="..\include\vtxogreGlyphAtlasElement.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\vtxogreShapeAtlasElement.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\include\vtxogreShapeAtlasElement.h"
 						>
 					</File>
 				</Filter>

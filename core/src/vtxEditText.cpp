@@ -75,10 +75,10 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void EditText::initFromResource(Resource* resource)
 	{
-		EditTextResource* text_res = dynamic_cast<EditTextResource*>(resource);
-
-		if(text_res)
+		if(resource->getType() == "EditText")
 		{
+			EditTextResource* text_res = static_cast<EditTextResource*>(resource);
+
 			setBoundingBox(text_res->getBoundingBox());
 		}
 	}
@@ -706,10 +706,11 @@ namespace vtx
 	void EditText::_addSelectionShape(const float& sx, const float& sy, 
 		const float& x, const float& y)
 	{
-		Resource* black_box = mParentMovie->getFile()->getResource("BlackBox");
-		Shape* shape = dynamic_cast<Shape*>(mParentMovie->getInstance(black_box));
-		if(shape)
+		Resource* black_box = mParentMovie->getFile()->getResource("BlackBox", "Shape");
+		if(black_box)
 		{
+			Shape* shape = static_cast<Shape*>(mParentMovie->getInstance(black_box));
+
 			addChild(shape);
 			mSelectionShapes.push_back(shape);
 
@@ -902,9 +903,9 @@ namespace vtx
 							{
 								sel.element = img->prevVisualNode;
 
-								HtmlText* prevText = dynamic_cast<HtmlText*>(img->prevVisualNode);
-								if(prevText)
+								if(img->prevVisualNode && img->prevVisualNode->getType() == HtmlElement::Text)
 								{
+									HtmlText* prevText = static_cast<HtmlText*>(img->prevVisualNode);
 									sel.subSel = prevText->text.length();
 								}
 							}
@@ -913,8 +914,7 @@ namespace vtx
 							{
 								sel.element = img->nextVisualNode;
 
-								HtmlText* nextText = dynamic_cast<HtmlText*>(img->nextVisualNode);
-								if(nextText)
+								if(img->nextVisualNode && img->nextVisualNode->getType() == HtmlElement::Text)
 								{
 									sel.subSel = 0;
 								}
@@ -942,10 +942,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void EditText::loadingCompleted(File* file)
 	{
-		VTX_LOG("EdiText: image finished loading/parsing -> %s", file->getFilename().c_str());
 		mLoadedFiles[file->getFilename()] = file;
 		mNeedDomUpdate = true;
-		//_buildGraphicsFromDOM();
 	}
 	//-----------------------------------------------------------------------
 	void EditText::loadingFailed(File* file)

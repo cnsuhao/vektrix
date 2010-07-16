@@ -26,36 +26,63 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
+#include "vtxogreShapeAtlasElement.h"
 
-namespace vtx { namespace as3 {
+#include "vtxAtlasNode.h"
+#include "vtxRastarizer.h"
+#include "vtxRect.h"
+#include "vtxShapeResource.h"
+#include "vtxSubshapeResource.h"
+
+namespace vtx { namespace ogre {
 	//-----------------------------------------------------------------------
-	EventHandlerClass::EventHandlerClass(avmplus::VTable* cvtable) 
-		: ClassClosure(cvtable)
-	{
-		AvmAssert(traits()->getSizeOfInstance() == sizeof(EventHandlerClass));
-		createVanillaPrototype();
-	}
-	//-----------------------------------------------------------------------
-	avmplus::ScriptObject* EventHandlerClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-	{
-		return new (core()->GetGC(), ivtable->getExtraSize()) EventHandler(ivtable, prototype);
-	}
-	//-----------------------------------------------------------------------
-	int EventHandlerClass::add(int a, int b)
-	{
-		return a + b;
-	}
-	//-----------------------------------------------------------------------
-	void EventHandlerClass::handle(avmplus::ScriptObject* evt)
-	{
-		std::cout << "native C++ EventHandler called" << std::endl;
-	}
-	//-----------------------------------------------------------------------
-	EventHandler::EventHandler(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: avmplus::ScriptObject(vtable, prototype)
+	ShapeAtlasElement::ShapeAtlasElement(ShapeResource* shape) 
+		: mShape(shape)
 	{
 
+	}
+	//-----------------------------------------------------------------------
+	const uint ShapeAtlasElement::getPackID() const
+	{
+		return (uint)mShape;
+	}
+	//-----------------------------------------------------------------------
+	const uint ShapeAtlasElement::getPackableWidth()
+	{
+		return mShape->getMaximumWidth_PoT();
+	}
+	//-----------------------------------------------------------------------
+	const uint ShapeAtlasElement::getPackableHeight()
+	{
+		return mShape->getMaximumHeight_PoT();
+	}
+	//-----------------------------------------------------------------------
+	void ShapeAtlasElement::paintToNode(AtlasNode* node, Rasterizer* rasterizer)
+	{
+		Rect rect = node->getRect();
+		rect.contract(1);
+
+		Vector2 offset(-mShape->getBoundingBox().getMinX(), -mShape->getBoundingBox().getMinY());
+		Vector2 scale(rect.w()/mShape->getWidth(), rect.h()/mShape->getHeight());
+
+		rasterizer->startPaint(rect, offset, scale, node->getTexture());
+
+		const ShapeResource::SubshapeList& subshapes = mShape->getSubshapeList();
+		ShapeResource::SubshapeList::const_iterator subshape_it = subshapes.begin();
+		ShapeResource::SubshapeList::const_iterator subshape_end = subshapes.end();
+
+		while(subshape_it != subshape_end)
+		{
+			SubshapeResource* subshape = (*subshape_it);
+			MaterialResource* material = subshape->getMaterial();
+
+			rasterizer->setMaterialFill(material);
+			rasterizer->drawShapeElements(subshape->getElementList());
+
+			++subshape_it;
+		}
+
+		rasterizer->finishPaint();
 	}
 	//-----------------------------------------------------------------------
 }}

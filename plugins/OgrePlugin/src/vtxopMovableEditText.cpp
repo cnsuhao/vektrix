@@ -74,8 +74,11 @@ namespace vtx
 		{
 			EditText::initFromResource(resource);
 
-			EditTextResource* res = dynamic_cast<EditTextResource*>(resource);
-			setHtmlText(res->getInitialText());
+			if(resource->getType() == "EditText")
+			{
+				EditTextResource* res = static_cast<EditTextResource*>(resource);
+				setHtmlText(res->getInitialText());
+			}
 		}
 		//-----------------------------------------------------------------------
 		void OgreMovableEditText::_update(const float& delta_time)

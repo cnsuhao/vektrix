@@ -50,7 +50,7 @@ namespace vtx
 			Texture* texture;
 			AtlasNode* node;
 		};
-		typedef std::map<AtlasElement*, PackResult> PackResultList;
+		typedef std::map<uint, PackResult> PackResultList;
 
 		/** Listen to AtlasPacker events */
 		class Listener
@@ -77,7 +77,7 @@ namespace vtx
 		void addElement(AtlasElement* element);
 
 		/** Check if a certain element is packed by this packer */
-		bool containsElement(AtlasElement* element);
+		bool containsElement(const uint& pack_id);
 
 		/** Pack all registered elements to the atlas */
 		const PackResultList& packAtlas();

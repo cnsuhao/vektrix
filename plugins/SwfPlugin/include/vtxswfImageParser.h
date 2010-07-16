@@ -32,25 +32,23 @@ THE SOFTWARE.
 #include "vtxswf.h"
 #include "vtxswfParserTypes.h"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	class ImageParser
 	{
-		class ImageParser
-		{
-		public:
-			ImageParser();
-			virtual ~ImageParser();
+	public:
+		ImageParser();
+		virtual ~ImageParser();
 
-			void handleDefineBitsLossless(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
-			void handleJPEGTables(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
-			void handleDefineBitsJPEG(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+		void handleDefineBitsLossless(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+		void handleJPEGTables(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+		void handleDefineBitsJPEG(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
 
-		protected:
-			// jpeg tables
-			char* mJPEGTables;
-		};
-	}
-}
+	protected:
+		// jpeg tables
+		char* mJPEGTables;
+	};
+	//-----------------------------------------------------------------------
+}}
 
 #endif

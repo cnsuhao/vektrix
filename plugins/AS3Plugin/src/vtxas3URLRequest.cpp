@@ -28,28 +28,12 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	URLRequest::URLRequest(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
+		: avmplus::ScriptObject(vtable, prototype)
 	{
-		//-----------------------------------------------------------------------
-		URLRequestClass::URLRequestClass(avmplus::VTable* cvtable) 
-			: ClassClosure(cvtable)
-		{
-			AvmAssert(traits()->getSizeOfInstance() == sizeof(URLRequestClass));
-			createVanillaPrototype();
-		}
-		//-----------------------------------------------------------------------
-		avmplus::ScriptObject* URLRequestClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-		{
-			return new (core()->GetGC(), ivtable->getExtraSize()) URLRequest(ivtable, prototype);
-		}
-		//-----------------------------------------------------------------------
-		URLRequest::URLRequest(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: avmplus::ScriptObject(vtable, prototype)
-		{
 
-		}
-		//-----------------------------------------------------------------------
 	}
-}
+	//-----------------------------------------------------------------------
+}}

@@ -28,170 +28,138 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
+#include "vtxas3ScriptObjectBase.h"
+
 #include "vtxFocusEvent.h"
+#include "vtxInstance.h"
+#include "vtxLogManager.h"
 #include "vtxMouseEvent.h"
 
-#include "cspInternalCore.h"
-#include "cspScriptObject.h"
 #include "cspVmCore.h"
 
-#include "vtxInstance.h"
-
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	EventDispatcher::EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
+		: ScriptObjectBase(vtable, prototype)
 	{
-		//-----------------------------------------------------------------------
-		EventDispatcherClass::EventDispatcherClass(avmplus::VTable* cvtable) 
-			: ClassClosure(cvtable)
+		if(!RefCount())
 		{
-			AvmAssert(traits()->getSizeOfInstance() == sizeof(EventDispatcherClass));
-			createVanillaPrototype();
+			IncrementRef();
 		}
-		//-----------------------------------------------------------------------
-		avmplus::ScriptObject* EventDispatcherClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-		{
-			return new (core()->GetGC(), ivtable->getExtraSize()) EventDispatcher(ivtable, prototype);
-		}
-		//-----------------------------------------------------------------------
-		EventDispatcher::EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: avmplus::ScriptObject(vtable, prototype)
-		{
-
-		}
-		//-----------------------------------------------------------------------
-		void EventDispatcher::addEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useCapture, int priority, bool useWeakReference)
-		{
-			MMGC_GCENTER(core()->GetGC());
-			csp::InternalCore* cr = (csp::InternalCore*)core();
-			String tp = cr->csp2stl(type);
-			mHandlers[tp].push_back(function);
-			function->IncrementRef();
-		}
-		//-----------------------------------------------------------------------
-		bool EventDispatcher::dispatchEvent(as3::Event* event)
-		{
-			MMGC_GCENTER(core()->GetGC());
-			csp::InternalCore* cr = (csp::InternalCore*)core();
-			String type = cr->csp2stl(event->getType());
-
-			FunctionMap::const_iterator funcs = mHandlers.find(type);
-			if(funcs != mHandlers.end())
-			{
-				const FunctionList& functions = funcs->second;
-
-				FunctionList::const_iterator it = functions.begin();
-				FunctionList::const_iterator end = functions.end();
-				while(it != end)
-				{
-					// call the function
-					Atom args[2] = { (*it)->atom(), event->atom() };
-					(*it)->call(1, args);
-					++it;
-				}
-
-				return true;
-			}
-
-			return false;
-		}
-		//-----------------------------------------------------------------------
-		bool EventDispatcher::hasEventListener(avmplus::Stringp type)
-		{
-			MMGC_GCENTER(core()->GetGC());
-
-			csp::InternalCore* cr = (csp::InternalCore*)core();
-			String stl_type = cr->csp2stl(type);
-
-			return (mHandlers.find(stl_type) != mHandlers.end());
-		}
-		//-----------------------------------------------------------------------
-		void EventDispatcher::removeEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useWeakReference)
-		{
-			MMGC_GCENTER(core()->GetGC());
-			String stl_type = mCore->csp2stl(type);
-
-			FunctionMap::iterator funcs = mHandlers.find(stl_type);
-			if(funcs != mHandlers.end())
-			{
-				FunctionList& functions = funcs->second;
-
-				FunctionList::iterator it = functions.begin();
-				FunctionList::iterator end = functions.end();
-				while(it != end)
-				{
-					if(*it == function)
-					{
-						(*it)->DecrementRef();
-						functions.erase(it);
-						return;
-					}
-					++it;
-				}
-			}
-
-		}
-		//-----------------------------------------------------------------------
-		void EventDispatcher::eventFired(const vtx::Event& evt)
-		{
-			if(!mCore || !mScriptObject)
-			{
-				return;
-			}
-
-			MMGC_GCENTER(mCore->mIntCore->GetGC());
-
-			if(evt.getCategory() == MouseEvent::CATEGORY)
-			{
-				const MouseEvent& mouse_evt = dynamic_cast<const MouseEvent&>(evt);
-
-				csp::ArgumentList args;
-				args.push_back(mCore->newString(evt.getType().c_str()));
-				args.push_back(mCore->newBoolean(false));
-				args.push_back(mCore->newBoolean(true));
-
-				csp::ScriptObject* evt = mCore->createObject("MouseEvent", "flash.events", args);
-				args.clear();
-				args.push_back(evt->atom());
-
-				dispatchEvent((as3::Event*)evt->scriptObj());
-				//mScriptObject->callFunction("dispatchEvent", args);
-
-				delete evt;
-			}
-			else if(evt.getCategory() == FocusEvent::CATEGORY)
-			{
-				const FocusEvent& focus_evt = dynamic_cast<const FocusEvent&>(evt);
-
-				csp::ArgumentList args;
-				args.push_back(mCore->newString(evt.getType().c_str()));
-				args.push_back(mCore->newBoolean(false));
-				args.push_back(mCore->newBoolean(true));
-
-				csp::ScriptObject* evt = mCore->createObject("FocusEvent", "flash.events", args);
-				args.clear();
-				args.push_back(evt->atom());
-
-				dispatchEvent((as3::Event*)evt->scriptObj());
-				//mScriptObject->callFunction("dispatchEvent", args);
-
-				delete evt;
-			}
-		}
-		//-----------------------------------------------------------------------
-		vtx::ScriptObject* EventDispatcher::_createChildObject(const String& name)
-		{
-			if(mScriptObject)
-			{
-				csp::ScriptObject* slot_obj = mScriptObject->createSlotObject(name);
-				if(slot_obj)
-				{
-					return dynamic_cast<vtx::ScriptObject*>(slot_obj->scriptObj());
-				}
-			}
-
-			return NULL;
-		}
-		//-----------------------------------------------------------------------
 	}
-}
+	//-----------------------------------------------------------------------
+	void EventDispatcher::addEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useCapture, int priority, bool useWeakReference)
+	{
+		MMGC_GCENTER(core()->GetGC());
+		String tp = CSP_CORE->stringFromAS3(type);
+		mHandlers[tp].push_back(function);
+		function->IncrementRef();
+	}
+	//-----------------------------------------------------------------------
+	bool EventDispatcher::dispatchEvent(as3::Event* event)
+	{
+		MMGC_GCENTER(core()->GetGC());
+		String type = CSP_CORE->stringFromAS3(event->getType());
+
+		FunctionMap::const_iterator funcs = mHandlers.find(type);
+		if(funcs != mHandlers.end())
+		{
+			const FunctionList& functions = funcs->second;
+
+			FunctionList::const_iterator it = functions.begin();
+			FunctionList::const_iterator end = functions.end();
+			while(it != end)
+			{
+				// call the function
+				Atom args[2] = { (*it)->atom(), event->atom() };
+				(*it)->call(1, args);
+				++it;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+	//-----------------------------------------------------------------------
+	bool EventDispatcher::hasEventListener(avmplus::Stringp type)
+	{
+		MMGC_GCENTER(core()->GetGC());
+		String stl_type = CSP_CORE->stringFromAS3(type);
+
+		return (mHandlers.find(stl_type) != mHandlers.end());
+	}
+	//-----------------------------------------------------------------------
+	void EventDispatcher::removeEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useWeakReference)
+	{
+		MMGC_GCENTER(core()->GetGC());
+		String stl_type = CSP_CORE->stringFromAS3(type);
+
+		FunctionMap::iterator funcs = mHandlers.find(stl_type);
+		if(funcs != mHandlers.end())
+		{
+			FunctionList& functions = funcs->second;
+
+			FunctionList::iterator it = functions.begin();
+			FunctionList::iterator end = functions.end();
+			while(it != end)
+			{
+				if(*it == function)
+				{
+					(*it)->DecrementRef();
+					functions.erase(it);
+					return;
+				}
+				++it;
+			}
+		}
+
+	}
+	//-----------------------------------------------------------------------
+	void EventDispatcher::eventFired(const vtx::Event& evt)
+	{
+		MMGC_GCENTER(core()->GetGC());
+
+		if(evt.getCategory() == MouseEvent::CATEGORY)
+		{
+			const MouseEvent& mouse_evt = static_cast<const MouseEvent&>(evt);
+
+			csp::ArgumentList args;
+			args.push_back(CSP_CORE->newString(evt.getType().c_str()));
+			args.push_back(CSP_CORE->newBoolean(false));
+			args.push_back(CSP_CORE->newBoolean(true));
+
+			avmplus::ScriptObject* evt = CSP_CORE->createObject("MouseEvent", "flash.events", args);
+
+			dispatchEvent((as3::Event*)evt);
+
+			delete evt;
+		}
+		else if(evt.getCategory() == FocusEvent::CATEGORY)
+		{
+			const FocusEvent& focus_evt = static_cast<const FocusEvent&>(evt);
+
+			csp::ArgumentList args;
+			args.push_back(CSP_CORE->newString(evt.getType().c_str()));
+			args.push_back(CSP_CORE->newBoolean(false));
+			args.push_back(CSP_CORE->newBoolean(true));
+
+			avmplus::ScriptObject* evt = CSP_CORE->createObject("FocusEvent", "flash.events", args);
+
+			dispatchEvent((as3::Event*)evt);
+
+			delete evt;
+		}
+	}
+	//-----------------------------------------------------------------------
+	void EventDispatcher::setChildObject(const String& name, vtx::ScriptObject* script_object)
+	{
+		if(!script_object)
+		{
+			VTX_EXCEPT("EventDispatcher::setChildObject(NULL)");
+		}
+
+		csp::VmCore::setSlotObject(this, name, static_cast<ScriptObjectBase*>(script_object));
+	}
+	//-----------------------------------------------------------------------
+}}

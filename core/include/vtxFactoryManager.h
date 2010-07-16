@@ -34,13 +34,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-#define FactoryManagerImpl(name, type) \
-	class name : public FactoryManager<type##Factory> \
-	{ \
-	public: \
-	name() : FactoryManager<type##Factory>(#type){} \
-	};
-	//-----------------------------------------------------------------------
+	/** A template for managing Factory instances */
 	template<typename T>
 	class FactoryManager
 	{
@@ -116,6 +110,13 @@ namespace vtx
 	protected:
 		String mBaseType;
 		FactoryMap mFactories;
+	};
+	//-----------------------------------------------------------------------
+#define FactoryManagerImpl(name, type) \
+	class name : public FactoryManager<type##Factory> \
+	{ \
+	public: \
+		name() : FactoryManager<type##Factory>(#type){} \
 	};
 	//-----------------------------------------------------------------------
 }

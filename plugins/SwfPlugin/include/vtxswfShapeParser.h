@@ -35,35 +35,33 @@ THE SOFTWARE.
 #include "vtxswfSubLine.h"
 #include "vtxswfSubShape.h"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	class ShapeParser
 	{
-		class ShapeParser
-		{
-		public:
-			void handleDefineShape(const TagTypes& tag_type, SwfParser* parser);
+	public:
+		void handleDefineShape(const TagTypes& tag_type, SwfParser* parser);
 
-		protected:
-			SHAPE mFlashShape;
-			FillstyleMap mFillstyles; // only the USED! fillstyles
-			LinestyleMap mLinestyles; // only the USED! linestyles
-			ContourChunkMap mChunkLists;
-			SubShapeList mSubShapeList; // the sub-shapes
-			SubLineList mSubLineList; // the sub-lines
+	protected:
+		SHAPE mFlashShape;
+		FillstyleMap mFillstyles; // only the USED! fillstyles
+		LinestyleMap mLinestyles; // only the USED! linestyles
+		ContourChunkMap mChunkLists;
+		SubShapeList mSubShapeList; // the sub-shapes
+		SubLineList mSubLineList; // the sub-lines
 
-			// reading
-			void getFlashStyles();
-			void getFlashChunks();
-			// processing
-			void generateSubshapes();
-			void generateGlyphs();
-			void generateSublines();
-			// writing
-			void writeFillstyles(const UI16& shape_id, File* file);
-			void writeSubshapes(ShapeResource* shape_resource);
-		};
-	}
-}
+		// reading
+		void getFlashStyles();
+		void getFlashChunks();
+		// processing
+		void generateSubshapes();
+		void generateGlyphs();
+		void generateSublines();
+		// writing
+		void writeFillstyles(const UI16& shape_id, File* file);
+		void writeSubshapes(ShapeResource* shape_resource);
+	};
+	//-----------------------------------------------------------------------
+}}
 
 #endif

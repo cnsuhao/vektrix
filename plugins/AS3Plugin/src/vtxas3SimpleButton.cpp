@@ -30,45 +30,23 @@ THE SOFTWARE.
 
 #include "vtxButton.h"
 
-#include "vtxLogManager.h"
-
-#include "cspInternalCore.h"
-//#include "cspVmCore.h"
-#include "cspScriptObject.h"
-
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	SimpleButton::SimpleButton(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
+		: InteractiveObject(vtable, prototype)
 	{
-		//-----------------------------------------------------------------------
-		SimpleButtonClass::SimpleButtonClass(avmplus::VTable* cvtable) 
-			: ClassClosure(cvtable)
-		{
-			AvmAssert(traits()->getSizeOfInstance() == sizeof(SimpleButtonClass));
-			createVanillaPrototype();
-		}
-		//-----------------------------------------------------------------------
-		avmplus::ScriptObject* SimpleButtonClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-		{
-			return new (core()->GetGC(), ivtable->getExtraSize()) SimpleButton(ivtable, prototype);
-		}
-		//-----------------------------------------------------------------------
-		SimpleButton::SimpleButton(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: InteractiveObject(vtable, prototype)
-		{
 
-		}
-		//-----------------------------------------------------------------------
-		SimpleButton::~SimpleButton()
-		{
-			delete mScriptObject;
-		}
-		//-----------------------------------------------------------------------
-		void SimpleButton::_setNativeObject(Instance* inst)
-		{
-			InteractiveObject::_setNativeObject(inst);
-			mButton = dynamic_cast<vtx::Button*>(inst);
-		}
-		//-----------------------------------------------------------------------
 	}
-}
+	//-----------------------------------------------------------------------
+	SimpleButton::~SimpleButton()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	void SimpleButton::setNativeObject(Instance* inst)
+	{
+		InteractiveObject::setNativeObject(inst);
+		mButton = static_cast<vtx::Button*>(inst);
+	}
+	//-----------------------------------------------------------------------
+}}

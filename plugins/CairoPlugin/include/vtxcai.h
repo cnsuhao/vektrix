@@ -49,6 +49,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** The namespace for all classes of the Cairo plugin */
 	namespace cai
 	{
 		class CairoRasterizer;

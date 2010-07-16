@@ -43,6 +43,10 @@ namespace vtx
 		Instance();
 		virtual ~Instance();
 
+		// TODO: temporary hacks ??
+		virtual bool isDisplayObject() const;
+		virtual bool isDisplayObjectContainer() const;
+
 		/** Initialize this Instance with the given Resource */
 		virtual void initFromResource(Resource* resource) = 0;
 

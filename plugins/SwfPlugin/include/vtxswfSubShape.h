@@ -33,23 +33,21 @@ THE SOFTWARE.
 
 #include "vtxswfContourElement.h"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	class SubShape
 	{
-		class SubShape
-		{
-		public:
+	public:
 
-			// fillstyle identifier (reference id)
-			unsigned int fillstyle;
+		// fillstyle identifier (reference id)
+		unsigned int fillstyle;
 
-			// list of contour elements
-			ContourElementList elements;
-		};
-
-		typedef std::vector<SubShape> SubShapeList;
-	}
-}
+		// list of contour elements
+		ContourElementList elements;
+	};
+	//-----------------------------------------------------------------------
+	typedef std::vector<SubShape> SubShapeList;
+	//-----------------------------------------------------------------------
+}}
 
 #endif

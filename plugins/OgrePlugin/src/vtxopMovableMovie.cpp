@@ -30,6 +30,9 @@ THE SOFTWARE.
 #include "vtxopMovableMovieFactory.h"
 #include "vtxopMovableEditText.h"
 #include "vtxopMovableShape.h"
+#include "vtxopMovableStaticText.h"
+
+#include "vtxogreShapeAtlasElement.h"
 
 #include "vtxFileManager.h"
 #include "vtxInstance.h"
@@ -84,9 +87,9 @@ namespace vtx
 			if(resource->getType() == Shape::TYPE)
 			{
 				ShapeResource* shape = static_cast<ShapeResource*>(resource);
-				if(!mFactory->getPacker()->containsElement(shape))
+				if(!mFactory->getPacker()->containsElement((uint)shape))
 				{
-					mFactory->getPacker()->addElement(shape);
+					mFactory->getPacker()->addElement(new ShapeAtlasElement(shape));
 					mFactory->getPacker()->packAtlas();
 					mFactory->getPacker()->renderAtlas();
 				}
@@ -140,7 +143,15 @@ namespace vtx
 					resource->getType().c_str(), resource->getID().c_str());
 			}
 
-			Ogre::Renderable* renderable = dynamic_cast<Ogre::Renderable*>(instance);
+			Ogre::Renderable* renderable = NULL;
+
+			if(instance->getType() == Shape::TYPE)
+				renderable = static_cast<OgreMovableShape*>(instance);
+			else if(instance->getType() == EditText::TYPE)
+				renderable = static_cast<OgreMovableEditText*>(instance);
+			else if(instance->getType() == StaticText::TYPE)
+				renderable = static_cast<OgreMovableStaticText*>(instance);
+
 			if(renderable)
 			{
 				RenderableMap::iterator it = mRenderables.find(renderable);
@@ -201,7 +212,15 @@ namespace vtx
 					type.c_str());
 			}
 
-			Ogre::Renderable* renderable = dynamic_cast<Ogre::Renderable*>(instance);
+			Ogre::Renderable* renderable = NULL;
+
+			if(instance->getType() == Shape::TYPE)
+				renderable = static_cast<OgreMovableShape*>(instance);
+			else if(instance->getType() == EditText::TYPE)
+				renderable = static_cast<OgreMovableEditText*>(instance);
+			else if(instance->getType() == StaticText::TYPE)
+				renderable = static_cast<OgreMovableStaticText*>(instance);
+
 			if(renderable)
 			{
 				RenderableMap::iterator it = mRenderables.find(renderable);
@@ -216,7 +235,15 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void MovableMovie::releaseInstance(Instance* instance)
 		{
-			Ogre::Renderable* renderable = dynamic_cast<Ogre::Renderable*>(instance);
+			Ogre::Renderable* renderable = NULL;
+
+			if(instance->getType() == Shape::TYPE)
+				renderable = static_cast<OgreMovableShape*>(instance);
+			else if(instance->getType() == EditText::TYPE)
+				renderable = static_cast<OgreMovableEditText*>(instance);
+			else if(instance->getType() == StaticText::TYPE)
+				renderable = static_cast<OgreMovableStaticText*>(instance);
+
 			if(renderable)
 			{
 				RenderableMap::iterator it = mRenderables.find(renderable);

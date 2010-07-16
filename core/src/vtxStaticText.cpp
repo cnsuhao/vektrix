@@ -46,10 +46,10 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void StaticText::initFromResource(Resource* resource)
 	{
-		mStaticTextResource = dynamic_cast<StaticTextResource*>(resource);
-
-		if(mStaticTextResource)
+		if(resource->getType() == "StaticText")
 		{
+			mStaticTextResource = static_cast<StaticTextResource*>(resource);
+
 			setBoundingBox(mStaticTextResource->getBoundingBox());
 		}
 	}

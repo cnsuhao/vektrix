@@ -52,10 +52,10 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void MovieClip::initFromResource(Resource* resource)
 	{
-		MovieClipResource* movieclip_res = dynamic_cast<MovieClipResource*>(resource);
-
-		if(movieclip_res)
+		if(resource->getType() == "MovieClip")
 		{
+			MovieClipResource* movieclip_res = static_cast<MovieClipResource*>(resource);
+
 			delete mTimeline;
 
 			mTimeline = movieclip_res->getTimeline()->clone(this);

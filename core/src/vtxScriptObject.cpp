@@ -27,9 +27,6 @@ THE SOFTWARE.
 */
 
 #include "vtxScriptObject.h"
-#include "vtxDisplayObject.h"
-
-#include "vtxLogManager.h"
 
 namespace vtx
 {
@@ -50,26 +47,7 @@ namespace vtx
 		return mNativeObject;
 	}
 	//-----------------------------------------------------------------------
-	ScriptObject* ScriptObject::getChildScriptObject(const String& name)
-	{
-		ChildMap::iterator it = mChildren.find(name);
-		if(it != mChildren.end())
-		{
-			return it->second;
-		}
-
-		vtx::ScriptObject* vtx_obj = _createChildObject(name);
-		VTX_LOG("Creating child script object: %s", name.c_str());
-
-		if(vtx_obj)
-		{
-			mChildren.insert(std::make_pair(name, vtx_obj));
-		}
-
-		return vtx_obj;
-	}
-	//-----------------------------------------------------------------------
-	void ScriptObject::_setNativeObject(Instance* inst)
+	void ScriptObject::setNativeObject(Instance* inst)
 	{
 		mNativeObject = inst;
 	}

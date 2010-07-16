@@ -27,32 +27,28 @@ THE SOFTWARE.
 */
 #include "vtxswfContourPoint.h"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	ContourPoint::ContourPoint() 
+		: x(0), 
+		y(0)
 	{
-		//-----------------------------------------------------------------------
-		ContourPoint::ContourPoint() 
-			: x(0), 
-			y(0)
-		{
 
-		}
-		//-----------------------------------------------------------------------
-		ContourPoint::~ContourPoint()
-		{
-
-		}
-		//-----------------------------------------------------------------------
-		bool ContourPoint::operator!=(const ContourPoint& a)
-		{
-			return (*this).x != a.x || (*this).y != a.y;
-		}
-		//-----------------------------------------------------------------------
-		bool ContourPoint::operator==(const ContourPoint& a)
-		{
-			return (*this).x == a.x && (*this).y == a.y;
-		}
-		//-----------------------------------------------------------------------
 	}
-}
+	//-----------------------------------------------------------------------
+	ContourPoint::~ContourPoint()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	bool ContourPoint::operator!=(const ContourPoint& a)
+	{
+		return (*this).x != a.x || (*this).y != a.y;
+	}
+	//-----------------------------------------------------------------------
+	bool ContourPoint::operator==(const ContourPoint& a)
+	{
+		return (*this).x == a.x && (*this).y == a.y;
+	}
+	//-----------------------------------------------------------------------
+}}

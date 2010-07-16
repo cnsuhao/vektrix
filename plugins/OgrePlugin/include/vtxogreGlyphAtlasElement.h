@@ -26,36 +26,29 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
+#ifndef __vtxogreGlyphAtlasElement_H__
+#define __vtxogreGlyphAtlasElement_H__
 
-namespace vtx { namespace as3 {
-	//-----------------------------------------------------------------------
-	EventHandlerClass::EventHandlerClass(avmplus::VTable* cvtable) 
-		: ClassClosure(cvtable)
-	{
-		AvmAssert(traits()->getSizeOfInstance() == sizeof(EventHandlerClass));
-		createVanillaPrototype();
-	}
-	//-----------------------------------------------------------------------
-	avmplus::ScriptObject* EventHandlerClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-	{
-		return new (core()->GetGC(), ivtable->getExtraSize()) EventHandler(ivtable, prototype);
-	}
-	//-----------------------------------------------------------------------
-	int EventHandlerClass::add(int a, int b)
-	{
-		return a + b;
-	}
-	//-----------------------------------------------------------------------
-	void EventHandlerClass::handle(avmplus::ScriptObject* evt)
-	{
-		std::cout << "native C++ EventHandler called" << std::endl;
-	}
-	//-----------------------------------------------------------------------
-	EventHandler::EventHandler(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: avmplus::ScriptObject(vtable, prototype)
-	{
+#include "vtxop.h"
+#include "vtxAtlasElement.h"
 
-	}
+namespace vtx { namespace ogre {
+	//-----------------------------------------------------------------------
+	class vtxopExport GlyphAtlasElement : public AtlasElement
+	{
+	public:
+		GlyphAtlasElement(GlyphResource* glyph);
+
+		const uint getPackID() const;
+		const uint getPackableWidth();
+		const uint getPackableHeight();
+
+		void paintToNode(AtlasNode* node, Rasterizer* rasterizer);
+
+	protected:
+		GlyphResource* mGlyph;
+	};
 	//-----------------------------------------------------------------------
 }}
+
+#endif

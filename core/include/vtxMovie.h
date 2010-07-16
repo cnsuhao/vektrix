@@ -108,6 +108,7 @@ namespace vtx
 		virtual void releaseInstance(Instance* instance) = 0;
 
 		Instance* createInstance(Resource* resource);
+		void destroyInstance(Instance* instance);
 
 		/** Get the ScriptEngine that is associated with this movie */
 		ScriptEngine* getScriptEngine() const;

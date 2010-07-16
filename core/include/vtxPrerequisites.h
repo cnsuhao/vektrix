@@ -90,7 +90,7 @@ THE SOFTWARE.
 # define R_OK 4
 #endif
 
-/** the root namespace of the vektrix library */
+/** The root namespace of the vektrix library */
 namespace vtx
 {
 	//-----------------------------------------------------------------------

@@ -27,7 +27,6 @@ THE SOFTWARE.
 */
 
 #include "vtxInstance.h"
-
 #include "vtxMovie.h"
 #include "vtxResource.h"
 #include "vtxScriptObject.h"
@@ -45,6 +44,16 @@ namespace vtx
 	Instance::~Instance()
 	{
 
+	}
+	//-----------------------------------------------------------------------
+	bool Instance::isDisplayObject() const
+	{
+		return false;
+	}
+	//-----------------------------------------------------------------------
+	bool Instance::isDisplayObjectContainer() const
+	{
+		return false;
 	}
 	//-----------------------------------------------------------------------
 	void Instance::_setParent(Movie* parent)
@@ -77,14 +86,14 @@ namespace vtx
 			{
 				inst->setScriptObject(NULL);
 			}
-			obj->_setNativeObject(NULL);
+			obj->setNativeObject(NULL);
 		}
 
 		mScriptObject = obj;
 
 		if(mScriptObject)
 		{
-			mScriptObject->_setNativeObject(this);
+			mScriptObject->setNativeObject(this);
 		}
 	}
 	//-----------------------------------------------------------------------

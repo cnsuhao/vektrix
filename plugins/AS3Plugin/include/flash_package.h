@@ -30,7 +30,7 @@ THE SOFTWARE.
 #define __flash_package_H__
 
 #include "vtxas3.h"
-#include "cspPrerequesites.h"
+#include "cspPrerequisites.h"
 
 using namespace avmplus;
 #include "flash.h"
