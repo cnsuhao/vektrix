@@ -38,6 +38,12 @@ THE SOFTWARE.
 #define VTX_WARN vtx::LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->warning
 #define VTX_LOG vtx::LogManager::getSingletonPtr()->log
 
+#ifdef _DEBUG
+#	define VTX_DEBUG vtx::LogManager::getSingletonPtr()->log
+#else
+#	define VTX_DEBUG
+#endif
+
 namespace vtx
 {
 	//-----------------------------------------------------------------------

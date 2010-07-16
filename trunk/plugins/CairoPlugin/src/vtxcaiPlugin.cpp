@@ -34,31 +34,26 @@ THE SOFTWARE.
 
 //-----------------------------------------------------------------------
 #ifdef VTX_STATIC_LIB
-	void vektrix_CairoPlugin_startPlugin()
+void vektrix_CairoPlugin_startPlugin()
 #else
-	extern "C" void vtxcaiExport startPlugin() throw()
+extern "C" void vtxcaiExport startPlugin() throw()
 #endif
 {
 	vtx::Root::getSingletonPtr()->registerPlugin(new vtx::cai::CairoPlugin());
 }
 //-----------------------------------------------------------------------
-
-namespace vtx
-{
-	namespace cai
+namespace vtx { namespace cai {
+	//-----------------------------------------------------------------------
+	CairoPlugin::CairoPlugin() 
+		: mRasterizer(new CairoRasterizer)
 	{
-		//-----------------------------------------------------------------------
-		CairoPlugin::CairoPlugin() 
-			: mRasterizer(new CairoRasterizer)
-		{
-			RasterizerManager::getSingletonPtr()->addRasterizer(mRasterizer);
-		}
-		//-----------------------------------------------------------------------
-		CairoPlugin::~CairoPlugin()
-		{
-			RasterizerManager::getSingletonPtr()->removeRasterizer(mRasterizer);
-			delete mRasterizer;
-		}
-		//-----------------------------------------------------------------------
+		RasterizerManager::getSingletonPtr()->addRasterizer(mRasterizer);
 	}
-}
+	//-----------------------------------------------------------------------
+	CairoPlugin::~CairoPlugin()
+	{
+		RasterizerManager::getSingletonPtr()->removeRasterizer(mRasterizer);
+		delete mRasterizer;
+	}
+	//-----------------------------------------------------------------------
+}}

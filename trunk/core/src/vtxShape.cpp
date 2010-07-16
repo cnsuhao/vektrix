@@ -47,10 +47,10 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Shape::initFromResource(Resource* resource)
 	{
-		mShapeResource = dynamic_cast<ShapeResource*>(resource);
-
-		if(mShapeResource)
+		if(resource->getType() == "Shape")
 		{
+			mShapeResource = static_cast<ShapeResource*>(resource);
+
 			setBoundingBox(mShapeResource->getBoundingBox());
 		}
 	}

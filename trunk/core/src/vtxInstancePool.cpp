@@ -65,14 +65,14 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void InstancePool::push(Instance* inst)
 	{
-		_getPool(inst->getType())->push(inst);
+		_getPool(inst->getType(), true)->push(inst);
 	}
 	//-----------------------------------------------------------------------
 	Instance* InstancePool::pop(const String& type)
 	{
 		Pool* pool = _getPool(type);
 
-		if(pool->size())
+		if(pool && pool->size())
 		{
 			Instance* inst = pool->top();
 			pool->pop();
@@ -82,7 +82,7 @@ namespace vtx
 		return NULL;
 	}
 	//-----------------------------------------------------------------------
-	InstancePool::Pool* InstancePool::_getPool(const String& type)
+	InstancePool::Pool* InstancePool::_getPool(const String& type, const bool& auto_create)
 	{
 		Pool* pool = NULL;
 
@@ -91,7 +91,7 @@ namespace vtx
 		{
 			pool = it->second;
 		}
-		else
+		else if(auto_create)
 		{
 			pool = new Pool;
 			mPoolMap.insert(std::make_pair(type, pool));

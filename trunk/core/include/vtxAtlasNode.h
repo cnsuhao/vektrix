@@ -59,6 +59,9 @@ namespace vtx
 		/** Get the rectangle that this node occupies */
 		const Rect& getRect() const;
 
+		/** Get the Texture that is partitioned by this node */
+		Texture* getTexture() const;
+
 		/** Get the size in pixel of the rectangle that this node occupies */
 		uint getPackedSize();
 

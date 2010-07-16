@@ -39,86 +39,83 @@ THE SOFTWARE.
 //#define DEBUG_FLASH_SHAPES
 //#define DEBUG_OUTPUT_PATH "C:/vektrix_debug/"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	class SwfParser : public FileParser
 	{
-		class SwfParser : public FileParser
-		{
-		public:
-			SwfParser();
-			virtual ~SwfParser();
+	public:
+		SwfParser();
+		virtual ~SwfParser();
 
-			const StringList& getExtensions() const;
-			void parse(FileStream* stream, File* file);
+		const StringList& getExtensions() const;
+		void parse(FileStream* stream, File* file);
 
-			File* getCurrentFile() const { return mCurrentFile; }
-			const uint& getFileLength() const { return mFileLength; }
-			const uint& getReadPosition() const { return mReadPos; }
-			File::FileHeader& getHeader() { return mHeader; }
+		File* getCurrentFile() const { return mCurrentFile; }
+		const uint& getFileLength() const { return mFileLength; }
+		const uint& getReadPosition() const { return mReadPos; }
+		File::FileHeader& getHeader() { return mHeader; }
 
-		protected:
-			bool mCompressed;
-			uint mReadPos;
-			char* mBuffer;
+	protected:
+		bool mCompressed;
+		uint mReadPos;
+		char* mBuffer;
 
-			int mBitPos;
-			int mBitBuf;
+		int mBitPos;
+		int mBitBuf;
 
-			UI32 mFileLength;
-			File::FileHeader mHeader;
+		UI32 mFileLength;
+		File::FileHeader mHeader;
 
-			File* mCurrentFile;
-			FileStream* mCurrentStream;
+		File* mCurrentFile;
+		FileStream* mCurrentStream;
 
-			// tag parsers
-			FontParser* mFontParser;
-			ImageParser* mImageParser;
-			ScriptParser* mScriptParser;
-			ShapeParser* mShapeParser;
-			StructureParser* mStructureParser;
-			TextParser* mTextParser;
+		// tag parsers
+		FontParser* mFontParser;
+		ImageParser* mImageParser;
+		ScriptParser* mScriptParser;
+		ShapeParser* mShapeParser;
+		StructureParser* mStructureParser;
+		TextParser* mTextParser;
 
-			void resetData();
-			bool parseHeader();
-			void readTag();
+		void resetData();
+		bool parseHeader();
+		void readTag();
 
-			void debug_contour_element(const ContourElement& element, FILE* file);
-			void debug_shape_element(const ShapeElement& element, FILE* file);
+		void debug_contour_element(const ContourElement& element, FILE* file);
+		void debug_shape_element(const ShapeElement& element, FILE* file);
 
-		public:
-			// read basic types
-			UI8 readU8();
-			UI16 readU16();
-			UI32 readU32();
-			UI32 readUBits(UI32 n);
-			SI16 readS16();
-			int readSBits(UI32 n);
-			void readByteBlock(char* buf, UI32 n);
+	public:
+		// read basic types
+		UI8 readU8();
+		UI16 readU16();
+		UI32 readU32();
+		UI32 readUBits(UI32 n);
+		SI16 readS16();
+		int readSBits(UI32 n);
+		void readByteBlock(char* buf, UI32 n);
 
-			void resetReadBits();
+		void resetReadBits();
 
-			RECT readRect();
-			COLOR readColor(const bool& alpha = false);
-			MATRIX readMatrix();
-			CXFORM readCxForm(const bool& alpha = false);
-			String readString(const bool& zero_terminated = true);
-			KERNINGRECORD readKerningRecord(const UI8& wide_codes);
+		RECT readRect();
+		COLOR readColor(const bool& alpha = false);
+		MATRIX readMatrix();
+		CXFORM readCxForm(const bool& alpha = false);
+		String readString(const bool& zero_terminated = true);
+		KERNINGRECORD readKerningRecord(const UI8& wide_codes);
 
-			// read shapes and fill-/line-styles
-			void readShape(const TagTypes& type, SHAPE& result);
-			void readShapeWithStyle(const TagTypes& type, SHAPE& result);
-			void readFillstyleArray(const TagTypes& type, FillstyleList& result);
-			void readLinestyleArray(const TagTypes& type, LinestyleList& result);
+		// read shapes and fill-/line-styles
+		void readShape(const TagTypes& type, SHAPE& result);
+		void readShapeWithStyle(const TagTypes& type, SHAPE& result);
+		void readFillstyleArray(const TagTypes& type, FillstyleList& result);
+		void readLinestyleArray(const TagTypes& type, LinestyleList& result);
 
-		protected:
-			void fillReadBits();
-		};
-		//-----------------------------------------------------------------------
-		/** The FileParserFactory for creating FileParser objects */
-		FactoryImpl_P0(SwfParser, FileParser);
-		//-----------------------------------------------------------------------
-	}
-}
+	protected:
+		void fillReadBits();
+	};
+	//-----------------------------------------------------------------------
+	/** The FileParserFactory for creating FileParser objects */
+	FactoryImpl_P0(SwfParser, FileParser);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

@@ -180,13 +180,23 @@ namespace vtx
 #endif
 	}
 	//-----------------------------------------------------------------------
-	Resource* File::getResource(const String& id)
+	Resource* File::getResource(const String& id, const String& requested_type)
 	{
 		ResourceMap::iterator it = mResources.find(id);
 
 		if(it != mResources.end())
 		{
-			return it->second;
+			if(requested_type.length())
+			{
+				if(it->second->getType() == requested_type)
+				{
+					return it->second;
+				}
+			}
+			else
+			{
+				return it->second;
+			}
 		}
 
 		return NULL;
@@ -225,7 +235,6 @@ namespace vtx
 		ListenerMap::iterator it = mListeners.find(listener);
 		if(it == mListeners.end())
 		{
-			VTX_LOG("\"%s\": Added File::Listener", mFilename.c_str());
 			mListeners.insert(std::make_pair(listener, listener));
 			return true;
 		}
@@ -238,7 +247,6 @@ namespace vtx
 		ListenerMap::iterator it = mListeners.find(listener);
 		if(it != mListeners.end())
 		{
-			VTX_LOG("\"%s\": Removed File::Listener", mFilename.c_str());
 			mListeners.erase(it);
 			return true;
 		}

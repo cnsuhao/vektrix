@@ -192,14 +192,4 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	const uint ShapeResource::getPackableWidth()
-	{
-		return getMaximumWidth_PoT();
-	}
-	//-----------------------------------------------------------------------
-	const uint ShapeResource::getPackableHeight()
-	{
-		return getMaximumHeight_PoT();
-	}
-	//-----------------------------------------------------------------------
 }

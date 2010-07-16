@@ -43,6 +43,8 @@ namespace vtx
 		DisplayObject();
 		virtual ~DisplayObject();
 
+		virtual bool isDisplayObject() const;
+
 		// TODO: a temporary hack to dispatch FOCUS_OUT events
 		virtual bool hasFocus() const { return false; }
 

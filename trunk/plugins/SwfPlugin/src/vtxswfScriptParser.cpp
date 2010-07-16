@@ -33,72 +33,68 @@ THE SOFTWARE.
 #include "vtxStringHelper.h"
 #include "vtxSymbolClassResource.h"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	void ScriptParser::handleDoABC(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
 	{
-		//-----------------------------------------------------------------------
-		void ScriptParser::handleDoABC(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
-		{
-			const uint& read_pos = parser->getReadPosition();
-			uint start_pos = read_pos;
+		const uint& read_pos = parser->getReadPosition();
+		uint start_pos = read_pos;
 
-			UI32 flags = parser->readU32();
+		UI32 flags = parser->readU32();
+		String name = parser->readString();
+
+		uint abc_len = tag_length - (read_pos - start_pos);
+
+		char* abc_buf = new char[abc_len];
+		parser->readByteBlock(abc_buf, abc_len);
+
+		parser->getCurrentFile()->addResource(new ScriptResource("Script", abc_buf, abc_len));
+	}
+	//-----------------------------------------------------------------------
+	void ScriptParser::handleSymbolClass(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
+	{
+		UI16 num_symbols = parser->readU16();
+
+		for(UI16 i=0; i<num_symbols; ++i)
+		{
+			UI16 id = parser->readU16();
+
 			String name = parser->readString();
 
-			uint abc_len = tag_length - (read_pos - start_pos);
-
-			char* abc_buf = new char[abc_len];
-			parser->readByteBlock(abc_buf, abc_len);
-
-			parser->getCurrentFile()->addResource(new ScriptResource("Script", abc_buf, abc_len));
-		}
-		//-----------------------------------------------------------------------
-		void ScriptParser::handleSymbolClass(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
-		{
-			UI16 num_symbols = parser->readU16();
-
-			for(UI16 i=0; i<num_symbols; ++i)
+			if(id == 0)
 			{
-				UI16 id = parser->readU16();
-
-				String name = parser->readString();
-
-				if(id == 0)
+				parser->getHeader().script_root_class = name;
+			}
+			else
+			{
+				SymbolClassResource* symbol_res = NULL;
+				Resource* res = parser->getCurrentFile()->getResource("__SymbolClassResource__");
+				if(!res)
 				{
-					parser->getHeader().script_root_class = name;
+					symbol_res = new SymbolClassResource();
+					parser->getCurrentFile()->addResource(symbol_res);
 				}
 				else
 				{
-					SymbolClassResource* symbol_res = NULL;
-					Resource* res = parser->getCurrentFile()->getResource("__SymbolClassResource__");
-					if(!res)
-					{
-						symbol_res = new SymbolClassResource();
-						parser->getCurrentFile()->addResource(symbol_res);
-					}
-					else
-					{
-						symbol_res = static_cast<SymbolClassResource*>(res);
-					}
-
-					uint seperator = name.find_last_of('.');
-					String class_name, package;
-
-					if(seperator != String::npos)
-					{
-						class_name = name.substr(seperator+1, name.length()-seperator-1);
-						package = name.substr(0, seperator);
-					}
-					else
-					{
-						class_name = name;
-					}
-
-					symbol_res->addSymbol(StringHelper::toString(id), class_name, package);
+					symbol_res = static_cast<SymbolClassResource*>(res);
 				}
+
+				uint seperator = name.find_last_of('.');
+				String class_name, package;
+
+				if(seperator != String::npos)
+				{
+					class_name = name.substr(seperator+1, name.length()-seperator-1);
+					package = name.substr(0, seperator);
+				}
+				else
+				{
+					class_name = name;
+				}
+
+				symbol_res->addSymbol(StringHelper::toString(id), class_name, package);
 			}
 		}
-		//-----------------------------------------------------------------------
 	}
-}
+	//-----------------------------------------------------------------------
+}}

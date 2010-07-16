@@ -32,40 +32,38 @@ THE SOFTWARE.
 #include "vtxswf.h"
 #include "vtxswfParserTypes.h"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	class StructureParser
 	{
-		class StructureParser
-		{
-		public:
-			StructureParser(SwfParser* parser);
-			virtual ~StructureParser();
+	public:
+		StructureParser(SwfParser* parser);
+		virtual ~StructureParser();
 
-			void handleDefineButton2();
-			void handleDefineSprite();
-			void handlePlaceObject2();
-			void handleRemoveObject2();
-			void handleShowFrame();
-			void handleEnd();
+		void handleDefineButton2();
+		void handleDefineSprite();
+		void handlePlaceObject2();
+		void handleRemoveObject2();
+		void handleShowFrame();
+		void handleEnd();
 
-			void handleDefineScalingGrid();
+		void handleDefineScalingGrid();
 
-		protected:
-			SwfParser* mParser;
+	protected:
+		SwfParser* mParser;
 
-			// movieclips
-			uint mMovieClipFrameIndex;
-			MovieClipResource* mCurrentMovieClip;
-			Timeline* mMovieClipTimeline;
+		// movieclips
+		uint mMovieClipFrameIndex;
+		MovieClipResource* mCurrentMovieClip;
+		Timeline* mMovieClipTimeline;
 
-			// main movieclip
-			uint mMainFrameIndex;
-			MovieClipResource* mMainMovieClip;
-			Timeline* mMainTimeline;
-			Keyframe* mCurrentKeyframe;
-		};
-	}
-}
+		// main movieclip
+		uint mMainFrameIndex;
+		MovieClipResource* mMainMovieClip;
+		Timeline* mMainTimeline;
+		Keyframe* mCurrentKeyframe;
+	};
+	//-----------------------------------------------------------------------
+}}
 
 #endif

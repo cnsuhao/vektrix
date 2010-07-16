@@ -32,17 +32,15 @@ THE SOFTWARE.
 #include "vtxswf.h"
 #include "vtxswfParserTypes.h"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	class TextParser
 	{
-		class TextParser
-		{
-		public:
-			void handleDefineText(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
-			void handleDefineEditText(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
-		};
-	}
-}
+	public:
+		void handleDefineText(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+		void handleDefineEditText(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+	};
+	//-----------------------------------------------------------------------
+}}
 
 #endif

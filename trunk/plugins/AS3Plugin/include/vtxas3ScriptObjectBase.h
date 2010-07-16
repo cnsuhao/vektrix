@@ -26,36 +26,24 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
+#ifndef __vtxas3ScriptObjectBase_H__
+#define __vtxas3ScriptObjectBase_H__
+
+#include "cspPrerequisites.h"
+
+#include "vtxScriptObject.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
-	EventHandlerClass::EventHandlerClass(avmplus::VTable* cvtable) 
-		: ClassClosure(cvtable)
+	/** An interface for all classes that shall be shared between ActionScript 3 and vektrix */
+	class ScriptObjectBase : public avmplus::ScriptObject, public vtx::ScriptObject
 	{
-		AvmAssert(traits()->getSizeOfInstance() == sizeof(EventHandlerClass));
-		createVanillaPrototype();
-	}
-	//-----------------------------------------------------------------------
-	avmplus::ScriptObject* EventHandlerClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-	{
-		return new (core()->GetGC(), ivtable->getExtraSize()) EventHandler(ivtable, prototype);
-	}
-	//-----------------------------------------------------------------------
-	int EventHandlerClass::add(int a, int b)
-	{
-		return a + b;
-	}
-	//-----------------------------------------------------------------------
-	void EventHandlerClass::handle(avmplus::ScriptObject* evt)
-	{
-		std::cout << "native C++ EventHandler called" << std::endl;
-	}
-	//-----------------------------------------------------------------------
-	EventHandler::EventHandler(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: avmplus::ScriptObject(vtable, prototype)
-	{
-
-	}
+	public:
+		ScriptObjectBase(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
+			: avmplus::ScriptObject(vtable, prototype) {}
+		virtual ~ScriptObjectBase(){}
+	};
 	//-----------------------------------------------------------------------
 }}
+
+#endif

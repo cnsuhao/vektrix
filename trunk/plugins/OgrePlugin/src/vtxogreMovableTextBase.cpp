@@ -70,7 +70,7 @@ namespace vtx
 			while(it != end)
 			{
 				const GlyphStrip& glyph_strip = *it;
-				FontResource* font = dynamic_cast<FontResource*>(file->getResource(glyph_strip.fontid));
+				FontResource* font = static_cast<FontResource*>(file->getResource(glyph_strip.fontid));
 
 				// jump to a new line
 				if(glyph_strip.newline)
@@ -93,14 +93,14 @@ namespace vtx
 						GlyphResource* glyph_res = font->getGlyphByIndex(glyph.index);
 						if(glyph_res)
 						{
-							AtlasPacker::PackResultList::const_iterator atlas_it = atlas_list.find(glyph_res);
+							AtlasPacker::PackResultList::const_iterator atlas_it = atlas_list.find((uint)glyph_res);
 							if(atlas_it != atlas_list.end())
 							{
 								const AtlasPacker::PackResult& atlas_quad = atlas_it->second;
 
 								if(!texture)
 								{
-									texture = dynamic_cast<OgreTexture*>(atlas_quad.texture);
+									texture = static_cast<OgreTexture*>(atlas_quad.texture);
 								}
 
 								const float size = glyph_strip.size * 0.05f;

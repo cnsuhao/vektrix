@@ -29,37 +29,21 @@ THE SOFTWARE.
 #ifndef __vtxas3LoaderContext_H__
 #define __vtxas3LoaderContext_H__
 
-#include "cspPrerequesites.h"
-#include "cspClientObject.h"
+#include "cspPrerequisites.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class LoaderContext : public avmplus::ScriptObject
 	{
-		//-----------------------------------------------------------------------
-		class LoaderContextClass : public avmplus::ClassClosure
-		{
-		public:
-			LoaderContextClass(avmplus::VTable* cvtable);
-			virtual ~LoaderContextClass(){}
+	public:
+		LoaderContext(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		virtual ~LoaderContext(){}
 
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
-
-			AS3_ClassSlots(LoaderContext);
-			//DECLARE_SLOTS_URLRequestClass;
-		};
-		//-----------------------------------------------------------------------
-		class LoaderContext : public avmplus::ScriptObject, public csp::ClientObject
-		{
-		public:
-			LoaderContext(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-			virtual ~LoaderContext(){}
-
-			AS3_InstSlots(LoaderContext);
-			//DECLARE_SLOTS_LoaderContext;
-		};
-		//-----------------------------------------------------------------------
-	}
-}
+		CSP_INST_SLOTS(LoaderContext);
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(LoaderContext);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

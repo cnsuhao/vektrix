@@ -31,35 +31,24 @@ THE SOFTWARE.
 
 #include "vtxas3.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class SimpleButton : public InteractiveObject
 	{
-		//-----------------------------------------------------------------------
-		class SimpleButtonClass : public avmplus::ClassClosure
-		{
-		public:
-			SimpleButtonClass(avmplus::VTable* cvtable);
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
+	public:
+		SimpleButton(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		virtual ~SimpleButton();
 
-			DECLARE_SLOTS_SimpleButtonClass;
-		};
-		//-----------------------------------------------------------------------
-		class SimpleButton : public InteractiveObject
-		{
-		public:
-			SimpleButton(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-			virtual ~SimpleButton();
+		CSP_INST_SLOTS(SimpleButton);
 
-			DECLARE_SLOTS_SimpleButton;
+	protected:
+		vtx::Button* mButton;
 
-		protected:
-			vtx::Button* mButton;
-
-			void _setNativeObject(Instance* inst);
-		};
-		//-----------------------------------------------------------------------
-	}
-}
+		void setNativeObject(Instance* inst);
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(SimpleButton);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

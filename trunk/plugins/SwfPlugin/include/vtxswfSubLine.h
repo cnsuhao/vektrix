@@ -33,24 +33,22 @@ THE SOFTWARE.
 
 #include "vtxswfContourPoint.h"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	class SubLine
 	{
-		class SubLine
-		{
-			// linestyle identifier (reference id)
-			unsigned int linestyle;
-		
-			// number of contours to parse
-			unsigned int num_contours;
-		
-			// list of contour elements
-			std::vector<ContourPoint> contours;
-		};
+		// linestyle identifier (reference id)
+		unsigned int linestyle;
 
-		typedef std::vector<SubLine> SubLineList;
-	}
-}
+		// number of contours to parse
+		unsigned int num_contours;
+
+		// list of contour elements
+		std::vector<ContourPoint> contours;
+	};
+	//-----------------------------------------------------------------------
+	typedef std::vector<SubLine> SubLineList;
+	//-----------------------------------------------------------------------
+}}
 
 #endif

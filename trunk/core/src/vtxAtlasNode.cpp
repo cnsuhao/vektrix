@@ -58,7 +58,7 @@ namespace vtx
 	{
 		if(mElement)
 		{
-			rasterizer->renderElementToTexture(mParent, mElement, this);
+			mElement->paintToNode(this, rasterizer);
 		}
 
 		if(mChild_1)
@@ -80,6 +80,11 @@ namespace vtx
 	const Rect& AtlasNode::getRect() const
 	{
 		return mRect;
+	}
+	//-----------------------------------------------------------------------
+	Texture* AtlasNode::getTexture() const
+	{
+		return mParent;
 	}
 	//-----------------------------------------------------------------------
 	uint AtlasNode::getPackedSize()

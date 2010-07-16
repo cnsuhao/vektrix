@@ -31,25 +31,23 @@ THE SOFTWARE.
 
 #include "vtxswf.h"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	class ContourPoint
 	{
-		class ContourPoint
-		{
-		public:
-			ContourPoint();
-			virtual ~ContourPoint();
+	public:
+		ContourPoint();
+		virtual ~ContourPoint();
 
-			// current location
-			long x, y;
+		// current location
+		long x, y;
 
-			bool operator!=(const ContourPoint& a);
-			bool operator==(const ContourPoint& a);
-		};
+		bool operator!=(const ContourPoint& a);
+		bool operator==(const ContourPoint& a);
+	};
 
-		typedef std::vector<ContourPoint> ContourPointList;
-	}
-}
+	typedef std::vector<ContourPoint> ContourPointList;
+	//-----------------------------------------------------------------------
+}}
 
 #endif

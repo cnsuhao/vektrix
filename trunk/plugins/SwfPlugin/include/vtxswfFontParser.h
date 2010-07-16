@@ -32,22 +32,20 @@ THE SOFTWARE.
 #include "vtxswf.h"
 #include "vtxswfParserTypes.h"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	class FontParser
 	{
-		class FontParser
-		{
-		public:
-			void handleDefineFont(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+	public:
+		void handleDefineFont(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
 
-		protected:
-			// -> FLASH
-			SHAPE mFlashGlyph;
+	protected:
+		// -> FLASH
+		SHAPE mFlashGlyph;
 
-			void writeGlyphContours(GlyphResource* glyph_resource);
-		};
-	}
-}
+		void writeGlyphContours(GlyphResource* glyph_resource);
+	};
+	//-----------------------------------------------------------------------
+}}
 
 #endif

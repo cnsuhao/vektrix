@@ -33,67 +33,47 @@ THE SOFTWARE.
 #include "vtxMovieClip.h"
 #include "vtxMovieClipResource.h"
 
-#include "cspScriptObject.h"
 #include "cspVmCore.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	Loader::Loader(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
+		: DisplayObjectContainer(vtable, prototype)
 	{
-		//-----------------------------------------------------------------------
-		LoaderClass::LoaderClass(avmplus::VTable* cvtable) 
-			: ClassClosure(cvtable)
-		{
-			AvmAssert(traits()->getSizeOfInstance() == sizeof(LoaderClass));
-			createVanillaPrototype();
-		}
-		//-----------------------------------------------------------------------
-		avmplus::ScriptObject* LoaderClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-		{
-			return new (core()->GetGC(), ivtable->getExtraSize()) Loader(ivtable, prototype);
-		}
-		//-----------------------------------------------------------------------
-		Loader::Loader(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: DisplayObjectContainer(vtable, prototype)
-		{
-			earlyInit(this, true);
-
-			Movie* movie = static_cast<Movie*>(mCore->getUserData());
-			mMovieClip = static_cast<vtx::MovieClip*>(movie->getInstanceByType(vtx::MovieClip::TYPE));
-			mMovieClip->setScriptObject(this);
-		}
-		//-----------------------------------------------------------------------
-		Loader::~Loader()
-		{
-			DecrementRef();
-			delete mScriptObject;
-		}
-		//-----------------------------------------------------------------------
-		void Loader::load(URLRequest* request, LoaderContext* context)
-		{
-			String url = mCore->csp2stl(request->getURL());
-			FileManager::getSingletonPtr()->getFile(url, true, this);
-		}
-		//-----------------------------------------------------------------------
-		void Loader::eventFired(const vtx::Event& evt)
-		{
-			DisplayObjectContainer::eventFired(evt);
-		}
-		//-----------------------------------------------------------------------
-		void Loader::_setNativeObject(Instance* inst)
-		{
-			DisplayObjectContainer::_setNativeObject(inst);
-		}
-		//-----------------------------------------------------------------------
-		void Loader::loadingCompleted(File* file)
-		{
-			mMovieClip->initFromResource(file->getMainMovieClip());
-		}
-		//-----------------------------------------------------------------------
-		void Loader::loadingFailed(File* file)
-		{
-
-		}
-		//-----------------------------------------------------------------------
+		Movie* movie = static_cast<Movie*>(CSP_CORE->getUserData());
+		mMovieClip = static_cast<vtx::MovieClip*>(movie->getInstanceByType(vtx::MovieClip::TYPE));
+		mMovieClip->setScriptObject(this);
 	}
-}
+	//-----------------------------------------------------------------------
+	Loader::~Loader()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	void Loader::load(URLRequest* request, LoaderContext* context)
+	{
+		String url = CSP_CORE->stringFromAS3(request->getURL());
+		FileManager::getSingletonPtr()->getFile(url, true, this);
+	}
+	//-----------------------------------------------------------------------
+	void Loader::eventFired(const vtx::Event& evt)
+	{
+		DisplayObjectContainer::eventFired(evt);
+	}
+	//-----------------------------------------------------------------------
+	void Loader::_setNativeObject(Instance* inst)
+	{
+		DisplayObjectContainer::setNativeObject(inst);
+	}
+	//-----------------------------------------------------------------------
+	void Loader::loadingCompleted(File* file)
+	{
+		mMovieClip->initFromResource(file->getMainMovieClip());
+	}
+	//-----------------------------------------------------------------------
+	void Loader::loadingFailed(File* file)
+	{
+
+	}
+	//-----------------------------------------------------------------------
+}}

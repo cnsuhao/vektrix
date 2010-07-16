@@ -55,6 +55,14 @@ namespace vtx
 			mTextureFactory->destroyObject(*it);
 			++it;
 		}
+
+		AtlasElementList::iterator elem_it = mElements.begin();
+		AtlasElementList::iterator elem_end = mElements.end();
+		while(elem_it != elem_end)
+		{
+			delete *elem_it;
+			++elem_it;
+		}
 	}
 	//-----------------------------------------------------------------------
 	bool AtlasPacker::sortElement(AtlasElement* elem1, AtlasElement* elem2)
@@ -69,16 +77,17 @@ namespace vtx
 		mElements.push_back(element);
 	}
 	//-----------------------------------------------------------------------
-	bool AtlasPacker::containsElement(AtlasElement* element)
+	bool AtlasPacker::containsElement(const uint& pack_id)
 	{
 		AtlasElementList::iterator it = mElements.begin();
 		AtlasElementList::iterator end = mElements.end();
 		while(it != end)
 		{
-			if(*it == element)
+			if((*it)->getPackID() == pack_id)
 			{
 				return true;
 			}
+
 			++it;
 		}
 
@@ -108,7 +117,7 @@ namespace vtx
 				AtlasNode* node = (*tex_it)->packElement(*elem_it);
 				if(node)
 				{
-					mResult.insert(std::make_pair(*elem_it, PackResult(*tex_it, node)));
+					mResult.insert(std::make_pair((*elem_it)->getPackID(), PackResult(*tex_it, node)));
 					// element was successfully packed, 
 					// advance to the next element
 					++elem_it;

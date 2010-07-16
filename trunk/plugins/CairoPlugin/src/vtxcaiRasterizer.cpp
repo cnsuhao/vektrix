@@ -39,337 +39,223 @@ THE SOFTWARE.
 #include "vtxStringHelper.h"
 #include "vtxTexture.h"
 
-namespace vtx
-{
-	namespace cai
+#include "vtxAtlasElement.h"
+
+namespace vtx { namespace cai {
+	//-----------------------------------------------------------------------
+	CairoRasterizer::CairoRasterizer()
 	{
-		//-----------------------------------------------------------------------
-		CairoRasterizer::CairoRasterizer()
-		{
 
-		}
-		//-----------------------------------------------------------------------
-		CairoRasterizer::~CairoRasterizer()
-		{
+	}
+	//-----------------------------------------------------------------------
+	CairoRasterizer::~CairoRasterizer()
+	{
 
-		}
-		//-----------------------------------------------------------------------
-		const String& CairoRasterizer::getName() const
+	}
+	//-----------------------------------------------------------------------
+	const String& CairoRasterizer::getName() const
+	{
+		static String name = "Cairo";
+		return name;
+	}
+	//-----------------------------------------------------------------------
+	void CairoRasterizer::startPaint(const Rect& rect, const Vector2& offset, const Vector2& scale, Texture* texture)
+	{
+		mSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, rect.w(), rect.h());
+		mCairo = cairo_create(mSurface);
+		cairo_set_fill_rule(mCairo, CAIRO_FILL_RULE_EVEN_ODD);
+		mCairoPattern = NULL;
+
+		mRect = rect;
+		mOffset = offset;
+		mScale = scale;
+		mTexture = texture;
+	}
+	//-----------------------------------------------------------------------
+	void CairoRasterizer::setColorFill(const Color& color)
+	{
+		cairo_set_source_rgba(mCairo, color.r, color.g, color.b, color.a);
+	}
+	//-----------------------------------------------------------------------
+	void CairoRasterizer::setMaterialFill(MaterialResource* material)
+	{
+		File* file = material->getFile();
+
+		switch(material->getMaterialType())
 		{
-			static String name = "Cairo";
-			return name;
-		}
-		//-----------------------------------------------------------------------
-		void CairoRasterizer::renderElementToTexture(Texture* texture, AtlasElement* element, AtlasNode* node)
-		{
-			GlyphResource* glyph = dynamic_cast<GlyphResource*>(element);
-			if(glyph)
+		case MaterialResource::MT_COLOR:
 			{
-				renderGlyph(texture, glyph, node);
-				return;
+				const Color& color = material->getColor();
+				cairo_set_source_rgba(mCairo, (double)color.r, (double)color.g, (double)color.b, (double)color.a);
 			}
+			break;
 
-			ShapeResource* shape = dynamic_cast<ShapeResource*>(element);
-			if(shape)
+		case MaterialResource::MT_IMAGE:
 			{
-				renderShape(texture, shape, node);
-				return;
+				ImageResource* img = static_cast<ImageResource*>(file->getResource(material->getImageID(), "Image"));
+				if(!img) break;
+
+				cairo_surface_t* cairo_surf = cairo_image_surface_create_for_data((uchar*)img->getPixelData(), 
+					CAIRO_FORMAT_ARGB32, img->getWidth(), img->getHeight(), 
+					4 * img->getWidth());
+
+				mCairoPattern = cairo_pattern_create_for_surface(cairo_surf);
+				cairo_pattern_set_extend(mCairoPattern, CAIRO_EXTEND_NONE);
+
+				cairo_matrix_t matrix;
+				cairo_matrix_init_scale(&matrix, 1.0f/mScale.x, 1.0f/mScale.y);
+				cairo_pattern_set_matrix(mCairoPattern, &matrix);
+				cairo_set_source(mCairo, mCairoPattern);
 			}
-		}
-		//-----------------------------------------------------------------------
-		void CairoRasterizer::renderGlyph(Texture* texture, GlyphResource* glyph, AtlasNode* node)
-		{
-			Rect rect = node->getRect();
+			break;
 
-			// pixel border to avoid texture bleeding
-			rect.contract(1);
-
-			// fire up cairo
-			mSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, rect.w(), rect.h());
-			mCairo = cairo_create(mSurface);
-			cairo_set_fill_rule(mCairo, CAIRO_FILL_RULE_EVEN_ODD);
-
-			Vector2 offset(-glyph->getBoundingBox().getMinX(), -glyph->getBoundingBox().getMinY());
-			Vector2 scale(rect.w()/glyph->getBoundingBox().getWidth(), rect.h()/glyph->getBoundingBox().getHeight());
-
-			Vector2 last_position = Vector2::ZERO;
-
-			// start drawing
-			const ShapeElementList& elements = glyph->getElementList();
-			ShapeElementList::const_iterator elem_it = elements.begin();
-			ShapeElementList::const_iterator elem_end = elements.end();
-
-			// color RED
-			cairo_set_source_rgba(mCairo, 1, 1, 1, 1);
-
-			while(elem_it != elem_end)
+		case MaterialResource::MT_LINEAR_GRADIENT:
 			{
-				const ShapeElement& element = *elem_it;
+				const MaterialResource::GradientMap& gradient = material->getGradientMap();
+				MaterialResource::GradientMap::const_iterator grd_it = gradient.begin();
+				MaterialResource::GradientMap::const_iterator grd_end = gradient.end();
 
-				if(element.type == ShapeElement::SID_MOVE_TO)
-				{
-					Vector2 pos = (element.pos + offset) * scale;
-
-					if(elem_it != elements.begin())
-					{
-						cairo_new_sub_path(mCairo);
-					}
-
-					//VTX_LOG("%4.2f %4.2f", pos.x, pos.y);
-
-					cairo_move_to(mCairo, pos.x, pos.y);
-					last_position = pos;
-				}
-				else if(element.type == ShapeElement::SID_LINE_TO)
-				{
-					Vector2 pos = (element.pos + offset) * scale;
-
-					//VTX_LOG("%4.2f %4.2f", pos.x, pos.y);
-
-					cairo_line_to(mCairo, pos.x, pos.y);
-					last_position = pos;
-				}
-				else if(element.type == ShapeElement::SID_CURVE_TO)
-				{
-					Vector2 pos = (element.pos + offset) * scale;
-					Vector2 ctrl = (element.ctrl + offset) * scale;
-
-					//VTX_LOG("%4.2f %4.2f", ctrl.x, ctrl.y);
-					//VTX_LOG("%4.2f %4.2f", pos.x, pos.y);
-
-					cairo_curve_to(mCairo, last_position.x, last_position.y, ctrl.x, ctrl.y, pos.x, pos.y);
-					last_position = pos;
-				}
-
-				++elem_it;
-			} // while(elements)
-
-			cairo_close_path(mCairo);
-			cairo_fill(mCairo);
-
-			texture->paintPixelsToRect(rect, cairo_image_surface_get_data(mSurface));
-
-			// send cairo to sleep
-			cairo_destroy(mCairo);
-			cairo_surface_destroy(mSurface);
-		}
-		//-----------------------------------------------------------------------
-		void CairoRasterizer::renderShape(Texture* texture, ShapeResource* shape, AtlasNode* node)
-		{
-			Rect rect = node->getRect();
-
-			// pixel border to avoid texture bleeding
-			rect.contract(1);
-
-			// fire up cairo
-			mSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, rect.w(), rect.h());
-			mCairo = cairo_create(mSurface);
-			cairo_set_fill_rule(mCairo, CAIRO_FILL_RULE_EVEN_ODD);
-
-			Vector2 offset(-shape->getBoundingBox().getMinX(), -shape->getBoundingBox().getMinY());
-			Vector2 scale(rect.w()/shape->getWidth(), rect.h()/shape->getHeight());
-
-			// start drawing
-			const ShapeResource::SubshapeList& subshapes = shape->getSubshapeList();
-			ShapeResource::SubshapeList::const_iterator subshape_it = subshapes.begin();
-			ShapeResource::SubshapeList::const_iterator subshape_end = subshapes.end();
-
-			while(subshape_it != subshape_end)
-			{
-				SubshapeResource* subshape = (*subshape_it);
-				MaterialResource* material = subshape->getMaterial();
-
-				cairo_pattern_t* cairo_pattern = NULL;
-
-				switch(material->getMaterialType())
-				{
-				case MaterialResource::MT_COLOR:
-					{
-						const Color& color = material->getColor();
-						cairo_set_source_rgba(mCairo, (double)color.r, (double)color.g, (double)color.b, (double)color.a);
-					}
-					break;
-
-				case MaterialResource::MT_IMAGE:
-					{
-						ImageResource* img = dynamic_cast<ImageResource*>(shape->getFile()->getResource(material->getImageID()));
-						cairo_surface_t* cairo_surf = cairo_image_surface_create_for_data((uchar*)img->getPixelData(), 
-							CAIRO_FORMAT_ARGB32, img->getWidth(), img->getHeight(), 
-							4 * img->getWidth());
-
-						cairo_pattern = cairo_pattern_create_for_surface(cairo_surf);
-						cairo_pattern_set_extend(cairo_pattern, CAIRO_EXTEND_NONE);
-
-						cairo_matrix_t matrix;
-						cairo_matrix_init_scale(&matrix, 1.0f/scale.x, 1.0f/scale.y);
-						cairo_pattern_set_matrix(cairo_pattern, &matrix);
-						cairo_set_source(mCairo, cairo_pattern);
-					}
-					break;
-
-				case MaterialResource::MT_LINEAR_GRADIENT:
-					{
-						const MaterialResource::GradientMap& gradient = material->getGradientMap();
-						MaterialResource::GradientMap::const_iterator grd_it = gradient.begin();
-						MaterialResource::GradientMap::const_iterator grd_end = gradient.end();
-
-						Matrix matrix = material->getTransformMatrix();
+				Matrix matrix = material->getTransformMatrix();
 
 #define WORK_ARROUND
 #ifdef WORK_ARROUND
-						Vector2 x1(-819.2f, 0);
-						Vector2 x2(819.2f, 0);
+				Vector2 x1(-819.2f, 0);
+				Vector2 x2(819.2f, 0);
 
-						Vector2 unit_scale = scale;
-						unit_scale.normalize();
+				Vector2 unit_scale = mScale;
+				unit_scale.normalize();
 
-						//matrix.m[0][0] = matrix.m[0][0] * unit_scale.x;
-						matrix.m[0][1] = matrix.m[0][1] * unit_scale.y;
-						//matrix.m[0][2] = matrix.m[0][2] * unit_scale.x;
+				//matrix.m[0][0] = matrix.m[0][0] * unit_scale.x;
+				matrix.m[0][1] = matrix.m[0][1] * unit_scale.y;
+				//matrix.m[0][2] = matrix.m[0][2] * unit_scale.x;
 
-						matrix.m[1][0] = matrix.m[1][0] * unit_scale.x;
-						//matrix.m[1][1] = matrix.m[1][1] * unit_scale.y;
-						//matrix.m[1][2] = matrix.m[1][2] * unit_scale.y;
+				matrix.m[1][0] = matrix.m[1][0] * unit_scale.x;
+				//matrix.m[1][1] = matrix.m[1][1] * unit_scale.y;
+				//matrix.m[1][2] = matrix.m[1][2] * unit_scale.y;
 
-						x1 = matrix.transformAffine(x1);
-						x2 = matrix.transformAffine(x2);
+				x1 = matrix.transformAffine(x1);
+				x2 = matrix.transformAffine(x2);
 
-						// TODO: fix scaling
-						x1 = (x1 + offset) * scale;
-						x2 = (x2 + offset) * scale;
+				// TODO: fix scaling
+				x1 = (x1 + mOffset) * mScale;
+				x2 = (x2 + mOffset) * mScale;
 
-						cairo_pattern = cairo_pattern_create_linear(
-							x1.x, 
-							x1.y, 
-							x2.x, 
-							x2.y);
+				mCairoPattern = cairo_pattern_create_linear(
+					x1.x, 
+					x1.y, 
+					x2.x, 
+					x2.y);
 #else
-						cairo_pattern = cairo_pattern_create_linear(
-							(-50 + offset.x) * scale.x, 
-							(-50 + offset.y) * scale.y, 
-							(+150 + offset.x) * scale.x, 
-							(-50 + offset.y) * scale.y);
+				cairo_pattern = cairo_pattern_create_linear(
+					(-50 + offset.x) * scale.x, 
+					(-50 + offset.y) * scale.y, 
+					(+150 + offset.x) * scale.x, 
+					(-50 + offset.y) * scale.y);
 
-						//Matrix scale_mat(
-						//	1.0f/256.0f, 0, 0, 
-						//	0, 1.0f/256.0f, 0);
+				//Matrix scale_mat(
+				//	1.0f/256.0f, 0, 0, 
+				//	0, 1.0f/256.0f, 0);
 
-						//float angle = 0;
-						//Matrix rot_mat(
-						//	cos(angle), sin(angle), 0, 
-						//	-sin(angle), cos(angle), 0);
+				//float angle = 0;
+				//Matrix rot_mat(
+				//	cos(angle), sin(angle), 0, 
+				//	-sin(angle), cos(angle), 0);
 
-						//Matrix trans_mat(
-						//	1, 0, -128.0f, 
-						//	0, 1, 128);
+				//Matrix trans_mat(
+				//	1, 0, -128.0f, 
+				//	0, 1, 128);
 
-						//cairo_matrix_t cr_mat;
-						//cairo_matrix_t cr_scale_mat = convertMatrix(scale_mat);
-						//cairo_matrix_t cr_rot_mat = convertMatrix(rot_mat);
-						//cairo_matrix_t cr_trans_mat = convertMatrix(trans_mat);
+				//cairo_matrix_t cr_mat;
+				//cairo_matrix_t cr_scale_mat = convertMatrix(scale_mat);
+				//cairo_matrix_t cr_rot_mat = convertMatrix(rot_mat);
+				//cairo_matrix_t cr_trans_mat = convertMatrix(trans_mat);
 
-						//cairo_matrix_multiply(&cr_mat, &cr_trans_mat, &cr_scale_mat);
-						//cairo_matrix_multiply(&cr_mat, &cr_mat, &cr_rot_mat);
+				//cairo_matrix_multiply(&cr_mat, &cr_trans_mat, &cr_scale_mat);
+				//cairo_matrix_multiply(&cr_mat, &cr_mat, &cr_rot_mat);
 
-						//cairo_pattern_set_matrix(cairo_pattern, &cr_mat);
+				//cairo_pattern_set_matrix(cairo_pattern, &cr_mat);
 #endif
 
-						while(grd_it != grd_end)
-						{
-							cairo_pattern_add_color_stop_rgba(cairo_pattern, 
-								(float)grd_it->first/255.0f, 
-								grd_it->second.r, 
-								grd_it->second.g, 
-								grd_it->second.b, 
-								grd_it->second.a);
-							++grd_it;
-						}
-
-						cairo_set_source(mCairo, cairo_pattern);
-					}
-					break;
-
-				default:
-					VTX_WARN("Unimplemented Material Type");
-					break;
+				while(grd_it != grd_end)
+				{
+					cairo_pattern_add_color_stop_rgba(mCairoPattern, 
+						(float)grd_it->first/255.0f, 
+						grd_it->second.r, 
+						grd_it->second.g, 
+						grd_it->second.b, 
+						grd_it->second.a);
+					++grd_it;
 				}
 
-				Vector2 last_position = Vector2::ZERO;
+				cairo_set_source(mCairo, mCairoPattern);
+			}
+			break;
 
-				const ShapeElementList& elements = subshape->getElementList();
-				ShapeElementList::const_iterator element_it = elements.begin();
-				ShapeElementList::const_iterator element_end = elements.end();
-				while(element_it != element_end)
-				{
-					const ShapeElement& element = *element_it;
-
-					if(element.type == ShapeElement::SID_MOVE_TO)
-					{
-						Vector2 pos = (element.pos + offset) * scale;
-
-						if(element_it != elements.begin())
-						{
-							cairo_new_sub_path(mCairo);
-						}
-
-						cairo_move_to(mCairo, pos.x, pos.y);
-						last_position = pos;
-					}
-					else if(element.type == ShapeElement::SID_LINE_TO)
-					{
-						Vector2 pos = (element.pos + offset) * scale;
-
-						cairo_line_to(mCairo, pos.x, pos.y);
-						last_position = pos;
-					}
-					else if(element.type == ShapeElement::SID_CURVE_TO)
-					{
-						Vector2 pos = (element.pos + offset) * scale;
-						Vector2 ctrl = (element.ctrl + offset) * scale;
-
-						cairo_curve_to(mCairo, last_position.x, last_position.y, ctrl.x, ctrl.y, pos.x, pos.y);
-						last_position = pos;
-					}
-
-					++element_it;
-
-				} // elements
-
-				cairo_close_path(mCairo);
-				cairo_fill(mCairo);
-
-				if(cairo_pattern)
-				{
-					cairo_pattern_destroy(cairo_pattern);
-					cairo_pattern = NULL;
-				}
-
-
-				++subshape_it;
-
-			} // subshapes
-
-			texture->paintPixelsToRect(rect, cairo_image_surface_get_data(mSurface));
-
-			// send cairo to sleep
-			cairo_destroy(mCairo);
-			cairo_surface_destroy(mSurface);
+		default:
+			VTX_WARN("Unimplemented Material Type");
+			break;
 		}
-		//-----------------------------------------------------------------------
-		cairo_matrix_t CairoRasterizer::convertMatrix(const Matrix& matrix)
-		{
-			cairo_matrix_t result;
-
-			result.xx = matrix.m[0][0];
-			result.xy = matrix.m[0][1];
-			result.x0 = matrix.m[0][2];
-
-			result.yx = matrix.m[1][0];
-			result.yy = matrix.m[1][1];
-			result.y0 = matrix.m[1][2];
-
-			return result;
-		}
-		//-----------------------------------------------------------------------
 	}
-}
+	//-----------------------------------------------------------------------
+	void CairoRasterizer::drawShapeElements(const ShapeElementList& elements)
+	{
+		Vector2 last_position = Vector2::ZERO;
+
+		ShapeElementList::const_iterator element_it = elements.begin();
+		ShapeElementList::const_iterator element_end = elements.end();
+		while(element_it != element_end)
+		{
+			const ShapeElement& element = *element_it;
+
+			if(element.type == ShapeElement::SID_MOVE_TO)
+			{
+				Vector2 pos = (element.pos + mOffset) * mScale;
+
+				if(element_it != elements.begin())
+				{
+					cairo_new_sub_path(mCairo);
+				}
+
+				cairo_move_to(mCairo, pos.x, pos.y);
+				last_position = pos;
+			}
+			else if(element.type == ShapeElement::SID_LINE_TO)
+			{
+				Vector2 pos = (element.pos + mOffset) * mScale;
+
+				cairo_line_to(mCairo, pos.x, pos.y);
+				last_position = pos;
+			}
+			else if(element.type == ShapeElement::SID_CURVE_TO)
+			{
+				Vector2 pos = (element.pos + mOffset) * mScale;
+				Vector2 ctrl = (element.ctrl + mOffset) * mScale;
+
+				cairo_curve_to(mCairo, last_position.x, last_position.y, ctrl.x, ctrl.y, pos.x, pos.y);
+				last_position = pos;
+			}
+
+			++element_it;
+
+		} // elements
+
+		cairo_close_path(mCairo);
+		cairo_fill(mCairo);
+
+		if(mCairoPattern)
+		{
+			cairo_pattern_destroy(mCairoPattern);
+			mCairoPattern = NULL;
+		}
+	}
+	//-----------------------------------------------------------------------
+	void CairoRasterizer::finishPaint()
+	{
+		mTexture->paintPixelsToRect(mRect, cairo_image_surface_get_data(mSurface));
+
+		// send cairo to sleep
+		cairo_destroy(mCairo);
+		cairo_surface_destroy(mSurface);
+	}
+	//-----------------------------------------------------------------------
+}}

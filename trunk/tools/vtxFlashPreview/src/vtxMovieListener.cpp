@@ -27,6 +27,8 @@ THE SOFTWARE.
 */
 
 #include "vtxMovieListener.h"
+#include "vtxMovie.h"
+#include "vtxMovieDebugger.h"
 
 namespace vtx { namespace tools { namespace FlashPreview {
 	//-----------------------------------------------------------------------
@@ -41,6 +43,9 @@ namespace vtx { namespace tools { namespace FlashPreview {
 		int height = movie->getFile()->getHeader().height;
 
 		mApplication->resizeWindow(width, height);
+
+		//movie->enableDebugger(true);
+		//movie->getDebugger()->debugBoundingBoxes(true);
 
 		return false;
 	}

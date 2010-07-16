@@ -34,37 +34,39 @@ THE SOFTWARE.
 #include "vtxFactory.h"
 #include "vtxScriptEngine.h"
 
-#include "cspPrerequesites.h"
+#include "cspPrerequisites.h"
 #include "cspOutputListener.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	/** The ScriptEngine that wraps the Adobe ActionScript 3 virtual machine */
+	class AS3ScriptEngine : public ScriptEngine, public csp::OutputListener
 	{
-		//-----------------------------------------------------------------------
-		class AS3ScriptEngine : public ScriptEngine, public csp::OutputListener
-		{
-		public:
-			AS3ScriptEngine(Movie* parent);
-			virtual ~AS3ScriptEngine();
+	public:
+		AS3ScriptEngine(Movie* parent);
+		virtual ~AS3ScriptEngine();
 
-			bool executeCode(const char* code, const uint& len);
-			ScriptObject* getRootScriptObject();
+		/** @copybrief ScriptEngine::executeCode */
+		bool executeCode(const char* code, const uint& len);
 
-			ScriptObject* createScriptObject(Resource* res);
-			void destroyScriptObject(ScriptObject* script_object);
+		/** @copybrief ScriptEngine::getRootScriptObject */
+		ScriptObject* getRootScriptObject();
 
-		protected:
-			csp::VmCore* mVmCore;
-			csp::ScriptObject* mRoot;
-			as3::MovieClip* mRootObject;
+		/** @copybrief ScriptEngine::createScriptObject */
+		ScriptObject* createScriptObject(Resource* res);
 
-			void output(const String& message);
-		};
-		//-----------------------------------------------------------------------
-		FactoryImpl_P1(AS3ScriptEngine, ScriptEngine, Movie*);
-		//-----------------------------------------------------------------------
-	}
-}
+		/** @copybrief ScriptEngine::destroyScriptObject */
+		void destroyScriptObject(ScriptObject* script_object);
 
+	protected:
+		csp::VmCore* mVmCore;
+		as3::MovieClip* mRootObject;
+
+		/** Receive output from the ActionScript 3 virtual machine */
+		void output(const String& message);
+	};
+	//-----------------------------------------------------------------------
+	FactoryImpl_P1(AS3ScriptEngine, ScriptEngine, Movie*);
+	//-----------------------------------------------------------------------
+}}
 #endif

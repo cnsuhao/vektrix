@@ -32,6 +32,7 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
+	/** The base class for all factory templates */
 	template<class T>
 	class BaseFactory
 	{
@@ -43,32 +44,45 @@ namespace vtx
 		virtual void destroyObject(T*) = 0;    
 	};
 	//-----------------------------------------------------------------------
+	/** A factory template for creating objects with two constructor arguments */
 	template<class T, class P1 = void, class P2 = void>
 	class Factory : public BaseFactory<T>
 	{
 	public:
 		virtual ~Factory() {};
 
-		/** Create an object with this factory using two creation parameters */
+		/** Create an object with this factory using two constructor arguments */
 		virtual T* createObject(P1, P2) = 0;    
 	};
 	//-----------------------------------------------------------------------
+	/** A factory template for creating objects with one constructor argument */
 	template<class T, class P1>
 	class Factory<T, P1> : public BaseFactory<T>
 	{
 	public:
 		virtual ~Factory() {};
 
-		/** Create an object with this factory using one creation parameter */
+		/** Create an object with this factory using one constructor argument */
 		virtual T* createObject(P1) = 0;    
 	};
+	//-----------------------------------------------------------------------
+	/** A factory template for creating objects with no constructor arguments */
+	template<class T>
+	class Factory<T> : public BaseFactory<T>
+	{
+	public:
+		virtual ~Factory() {};
 
+		/** Create an object with this factory using no constructor arguments */
+		virtual T* createObject() = 0;    
+	};
+	//-----------------------------------------------------------------------
 #define FactoryDecl_P0(base) \
 	class base##Factory : public Factory<base##>{}
-
+	//-----------------------------------------------------------------------
 #define FactoryDecl_P1(base, P1) \
 	class base##Factory : public Factory<base, P1>{}
-
+	//-----------------------------------------------------------------------
 #define FactoryImpl_P0(type, base) \
 	class type##Factory : public base##Factory \
 	{ \
@@ -87,7 +101,7 @@ namespace vtx
 			delete inst; \
 		} \
 	}
-
+	//-----------------------------------------------------------------------
 #define FactoryImpl_P1(type, base, P1) \
 	class type##Factory : public base##Factory \
 	{ \
@@ -106,7 +120,7 @@ namespace vtx
 			delete inst; \
 		} \
 	}
-
+	//-----------------------------------------------------------------------
 #define FactoryImpl_P2(type, base, P1, P2) \
 	class type##Factory : public base##Factory \
 	{ \
@@ -125,15 +139,6 @@ namespace vtx
 			delete inst; \
 		} \
 	}
-	//-----------------------------------------------------------------------
-	template<class T>
-	class Factory<T> : public BaseFactory<T>
-	{
-	public:
-		virtual ~Factory() {};
-
-		virtual T* createObject() = 0;    
-	};
 	//-----------------------------------------------------------------------
 }
 

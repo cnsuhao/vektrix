@@ -31,27 +31,18 @@ THE SOFTWARE.
 
 #include "vtxas3.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class Sprite : public DisplayObjectContainer
 	{
-		class SpriteClass : public avmplus::ClassClosure
-		{
-		public:
-			SpriteClass(avmplus::VTable* cvtable);
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
+	public:
+		Sprite(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 
-			DECLARE_SLOTS_SpriteClass;
-		};
-
-		class Sprite : public DisplayObjectContainer
-		{
-		public:
-			Sprite(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-
-			DECLARE_SLOTS_Sprite;
-		};
-	}
-}
+		CSP_INST_SLOTS(Sprite);
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(Sprite);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

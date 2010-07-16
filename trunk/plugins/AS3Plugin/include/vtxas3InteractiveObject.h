@@ -31,29 +31,18 @@ THE SOFTWARE.
 
 #include "vtxas3.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class InteractiveObject : public DisplayObject
 	{
-		//-----------------------------------------------------------------------
-		class InteractiveObjectClass : public avmplus::ClassClosure
-		{
-		public:
-			InteractiveObjectClass(avmplus::VTable* cvtable);
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
+	public:
+		InteractiveObject(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 
-			DECLARE_SLOTS_InteractiveObjectClass;
-		};
-		//-----------------------------------------------------------------------
-		class InteractiveObject : public DisplayObject
-		{
-		public:
-			InteractiveObject(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-
-			DECLARE_SLOTS_InteractiveObject;
-		};
-		//-----------------------------------------------------------------------
-	}
-}
+		CSP_INST_SLOTS(InteractiveObject);
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(InteractiveObject);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

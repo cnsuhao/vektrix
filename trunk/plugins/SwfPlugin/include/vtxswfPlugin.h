@@ -33,25 +33,23 @@ THE SOFTWARE.
 #include "vtxPlugin.h"
 
 #ifdef VTX_STATIC_LIB
-	void vektrix_SwfPlugin_startPlugin();
+void vektrix_SwfPlugin_startPlugin();
 #else
-	extern "C" void vtxswfExport startPlugin() throw();
+extern "C" void vtxswfExport startPlugin() throw();
 #endif
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	class SwfPlugin : public Plugin
 	{
-		class SwfPlugin : public Plugin
-		{
-		public:
-			SwfPlugin();
-			virtual ~SwfPlugin();
+	public:
+		SwfPlugin();
+		virtual ~SwfPlugin();
 
-		protected:
-			SwfParserFactory* mParserFactory;
-		};
-	}
-}
+	protected:
+		SwfParserFactory* mParserFactory;
+	};
+	//-----------------------------------------------------------------------
+}}
 
 #endif

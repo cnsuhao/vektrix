@@ -33,25 +33,23 @@ THE SOFTWARE.
 #include "vtxPlugin.h"
 
 #ifdef VTX_STATIC_LIB
-	void vektrix_CairoPlugin_startPlugin();
+void vektrix_CairoPlugin_startPlugin();
 #else
-	extern "C" void vtxcaiExport startPlugin() throw();
+extern "C" void vtxcaiExport startPlugin() throw();
 #endif
 
-namespace vtx
-{
-	namespace cai
+namespace vtx { namespace cai {
+	//-----------------------------------------------------------------------
+	class CairoPlugin : public Plugin
 	{
-		class CairoPlugin : public Plugin
-		{
-		public:
-			CairoPlugin();
-			virtual ~CairoPlugin();
+	public:
+		CairoPlugin();
+		virtual ~CairoPlugin();
 
-		protected:
-			CairoRasterizer* mRasterizer;
-		};
-	}
-}
+	protected:
+		CairoRasterizer* mRasterizer;
+	};
+	//-----------------------------------------------------------------------
+}}
 
 #endif

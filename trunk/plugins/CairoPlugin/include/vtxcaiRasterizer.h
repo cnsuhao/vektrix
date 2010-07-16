@@ -31,31 +31,40 @@ THE SOFTWARE.
 
 #include "vtxcai.h"
 #include "vtxRastarizer.h"
+#include "vtxRect.h"
+
 #include "cairo.h"
 
-namespace vtx
-{
-	namespace cai
+namespace vtx { namespace cai {
+	//-----------------------------------------------------------------------
+	class CairoRasterizer : public Rasterizer
 	{
-		class CairoRasterizer : public Rasterizer
-		{
-		public:
-			CairoRasterizer();
-			virtual ~CairoRasterizer();
+	public:
+		CairoRasterizer();
+		virtual ~CairoRasterizer();
 
-			const String& getName() const;
-			void renderElementToTexture(Texture* texture, AtlasElement* element, AtlasNode* node);
+		void startPaint(const Rect& rect, const Vector2& offset, const Vector2& scale, Texture* texture);
 
-			void renderGlyph(Texture* texture, GlyphResource* glyph, AtlasNode* node);
-			void renderShape(Texture* texture, ShapeResource* shape, AtlasNode* node);
+		void setColorFill(const Color& color);
+		void setMaterialFill(MaterialResource* material);
 
-			cairo_matrix_t convertMatrix(const Matrix& matrix);
+		void drawShapeElements(const ShapeElementList& elements);
 
-		protected:
-			cairo_t* mCairo;
-			cairo_surface_t* mSurface;
-		};
-	}
-}
+		void finishPaint();
+
+		const String& getName() const;
+
+	protected:
+		cairo_t* mCairo;
+		cairo_surface_t* mSurface;
+		cairo_pattern_t* mCairoPattern;
+
+		Rect mRect;
+		Texture* mTexture;
+		Vector2 mOffset;
+		Vector2 mScale;
+	};
+	//-----------------------------------------------------------------------
+}}
 
 #endif

@@ -30,7 +30,6 @@ THE SOFTWARE.
 #define __vtxShapeResource_H__
 
 #include "vtxPrerequisites.h"
-#include "vtxAtlasElement.h"
 #include "vtxBoundingBox.h"
 #include "vtxResource.h"
 
@@ -38,7 +37,7 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	/** A Resource which contains all necessary data for creating a Shape instance */
-	class vtxExport ShapeResource : public Resource, public AtlasElement
+	class vtxExport ShapeResource : public Resource
 	{
 	public:
 		typedef std::vector<SubshapeResource*> SubshapeList;
@@ -87,12 +86,6 @@ namespace vtx
 
 		/** Notify this shape about a scale value at which it was used */
 		void _injectScale(const Vector2& scale);
-
-		// AtlasElement
-		/** @copybrief AtlasElement::getPackableWidth */
-		const uint getPackableWidth();
-		/** @copybrief AtlasElement::getPackableHeight */
-		const uint getPackableHeight();
 
 	protected:
 		BoundingBox mBoundingBox;

@@ -43,6 +43,7 @@ namespace vtx
 
 		/** Get the length of the vector */
 		float length();
+
 		/** Normalize the vector */
 		void normalize();
 

@@ -29,40 +29,26 @@ THE SOFTWARE.
 #ifndef __vtxas3URLRequest_H__
 #define __vtxas3URLRequest_H__
 
-#include "cspPrerequesites.h"
-#include "cspClientObject.h"
+#include "cspPrerequisites.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class URLRequest : public avmplus::ScriptObject
 	{
-		//-----------------------------------------------------------------------
-		class URLRequestClass : public avmplus::ClassClosure
+	public:
+		URLRequest(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		virtual ~URLRequest(){}
+
+		inline avmplus::AvmString getURL()
 		{
-		public:
-			URLRequestClass(avmplus::VTable* cvtable);
-			virtual ~URLRequestClass(){}
+			return get_private_mURL();
+		}
 
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
-
-			AS3_ClassSlots(URLRequest);
-		};
-		//-----------------------------------------------------------------------
-		class URLRequest : public avmplus::ScriptObject, public csp::ClientObject
-		{
-		public:
-			URLRequest(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-			virtual ~URLRequest(){}
-
-			inline avmplus::AvmString getURL()
-			{
-				return get_private_mURL();
-			}
-
-			AS3_InstSlots(URLRequest);
-		};
-		//-----------------------------------------------------------------------
-	}
-}
+		CSP_INST_SLOTS(URLRequest);
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(URLRequest);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

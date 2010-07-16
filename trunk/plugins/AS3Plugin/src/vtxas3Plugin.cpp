@@ -44,27 +44,22 @@ THE SOFTWARE.
 	vtx::Root::getSingletonPtr()->registerPlugin(new vtx::as3::AS3Plugin());
 }
 //-----------------------------------------------------------------------
-
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	AS3Plugin::AS3Plugin() 
+		: mAS3ScriptEngine(new AS3ScriptEngineFactory)
 	{
-		//-----------------------------------------------------------------------
-		AS3Plugin::AS3Plugin() 
-			: mAS3ScriptEngine(new AS3ScriptEngineFactory)
-		{
-			csp::VmCore::createGcHeap();
+		csp::VmCore::createGcHeap();
 
-			InstanceManager::getSingletonPtr()->scriptEngines()->addFactory(mAS3ScriptEngine);
-		}
-		//-----------------------------------------------------------------------
-		AS3Plugin::~AS3Plugin()
-		{
-			InstanceManager::getSingletonPtr()->scriptEngines()->removeFactory(mAS3ScriptEngine);
-			delete mAS3ScriptEngine;
-
-			csp::VmCore::destroyGcHeap();
-		}
-		//-----------------------------------------------------------------------
+		InstanceManager::getSingletonPtr()->scriptEngines()->addFactory(mAS3ScriptEngine);
 	}
-}
+	//-----------------------------------------------------------------------
+	AS3Plugin::~AS3Plugin()
+	{
+		InstanceManager::getSingletonPtr()->scriptEngines()->removeFactory(mAS3ScriptEngine);
+		delete mAS3ScriptEngine;
+
+		csp::VmCore::destroyGcHeap();
+	}
+	//-----------------------------------------------------------------------
+}}

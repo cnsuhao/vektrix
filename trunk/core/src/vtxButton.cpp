@@ -59,10 +59,10 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Button::initFromResource(Resource* resource)
 	{
-		ButtonResource* button_res = dynamic_cast<ButtonResource*>(resource);
-
-		if(button_res)
+		if(resource->getType() == "Button")
 		{
+			ButtonResource* button_res = static_cast<ButtonResource*>(resource);
+
 			if(button_res->getState(ButtonResource::SID_UP))
 				mUp = button_res->getState(ButtonResource::SID_UP)->clone(this);
 			if(button_res->getState(ButtonResource::SID_OVER))
@@ -91,7 +91,7 @@ namespace vtx
 
 		if(evt.getCategory() == MouseEvent::CATEGORY)
 		{
-			const MouseEvent& mouse_evt = dynamic_cast<const MouseEvent&>(evt);
+			const MouseEvent& mouse_evt = static_cast<const MouseEvent&>(evt);
 
 			//if(isPointInside(Vector2(mouse_evt.stageX, mouse_evt.stageY)))
 			{

@@ -29,39 +29,28 @@ THE SOFTWARE.
 #ifndef __vtxas3StaticText_H__
 #define __vtxas3StaticText_H__
 
-#include "cspPrerequesites.h"
+#include "cspPrerequisites.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class StaticText : public DisplayObject
 	{
-		//-----------------------------------------------------------------------
-		class StaticTextClass : public avmplus::ClassClosure
-		{
-		public:
-			StaticTextClass(avmplus::VTable* cvtable);
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
+	public:
+		StaticText(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		virtual ~StaticText();
 
-			DECLARE_SLOTS_StaticTextClass;
-		};
-		//-----------------------------------------------------------------------
-		class StaticText : public DisplayObject
-		{
-		public:
-			StaticText(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-			virtual ~StaticText();
+		avmplus::Stringp get_text();
 
-			avmplus::Stringp get_text();
+		CSP_INST_SLOTS(StaticText);
 
-			DECLARE_SLOTS_StaticText;
+	protected:
+		vtx::StaticText* mStaticText;
 
-		protected:
-			vtx::StaticText* mStaticText;
-
-			void _setNativeObject(Instance* inst);
-		};
-		//-----------------------------------------------------------------------
-	}
-}
+		void setNativeObject(Instance* inst);
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(StaticText);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

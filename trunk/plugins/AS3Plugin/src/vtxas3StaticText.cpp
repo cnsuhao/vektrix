@@ -30,48 +30,30 @@ THE SOFTWARE.
 
 #include "vtxStaticText.h"
 
-#include "cspInternalCore.h"
 #include "cspVmCore.h"
-#include "cspScriptObject.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	StaticText::StaticText(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
+		: DisplayObject(vtable, prototype)
 	{
-		//-----------------------------------------------------------------------
-		StaticTextClass::StaticTextClass(avmplus::VTable* cvtable) 
-			: ClassClosure(cvtable)
-		{
-			AvmAssert(traits()->getSizeOfInstance() == sizeof(StaticTextClass));
-			createVanillaPrototype();
-		}
-		//-----------------------------------------------------------------------
-		avmplus::ScriptObject* StaticTextClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-		{
-			return new (core()->GetGC(), ivtable->getExtraSize()) StaticText(ivtable, prototype);
-		}
-		//-----------------------------------------------------------------------
-		StaticText::StaticText(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: DisplayObject(vtable, prototype)
-		{
 
-		}
-		//-----------------------------------------------------------------------
-		StaticText::~StaticText()
-		{
-
-		}
-		//-----------------------------------------------------------------------
-		avmplus::Stringp StaticText::get_text()
-		{
-			return 0;
-		}
-		//-----------------------------------------------------------------------
-		void StaticText::_setNativeObject(Instance* inst)
-		{
-			DisplayObject::_setNativeObject(inst);
-			mStaticText = dynamic_cast<vtx::StaticText*>(inst);
-		}
-		//-----------------------------------------------------------------------
 	}
-}
+	//-----------------------------------------------------------------------
+	StaticText::~StaticText()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	avmplus::Stringp StaticText::get_text()
+	{
+		return 0;
+	}
+	//-----------------------------------------------------------------------
+	void StaticText::setNativeObject(Instance* inst)
+	{
+		DisplayObject::setNativeObject(inst);
+		mStaticText = static_cast<vtx::StaticText*>(inst);
+	}
+	//-----------------------------------------------------------------------
+}}

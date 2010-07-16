@@ -31,31 +31,29 @@ THE SOFTWARE.
 
 #include "vtxswfContourPoint.h"
 
-namespace vtx
-{
-	namespace swf
+namespace vtx { namespace swf {
+	//-----------------------------------------------------------------------
+	class ContourElement
 	{
-		class ContourElement
-		{
-		public:
-			ContourElement();
-			virtual ~ContourElement();
+	public:
+		ContourElement();
+		virtual ~ContourElement();
 
-			// contour identifier { LINE | BEZIER | [MOVE] }
-			unsigned int type;
+		// contour identifier { LINE | BEZIER | [MOVE] }
+		unsigned int type;
 
-			bool isStartElement;
-			ContourPoint p0, ctrl, p1;
+		bool isStartElement;
+		ContourPoint p0, ctrl, p1;
 
-			bool connectsTo(const ContourElement& element);
-			bool connectsReverseTo(const ContourElement& element);
+		bool connectsTo(const ContourElement& element);
+		bool connectsReverseTo(const ContourElement& element);
 
-			void reverse();
-		};
+		void reverse();
+	};
 
-		typedef std::vector<ContourElement> ContourElementList;
-		typedef std::map<unsigned int, ContourElementList> ContourChunkMap;
-	}
-}
+	typedef std::vector<ContourElement> ContourElementList;
+	typedef std::map<unsigned int, ContourElementList> ContourChunkMap;
+	//-----------------------------------------------------------------------
+}}
 
 #endif

@@ -28,57 +28,54 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
+#include "cspVmCore.h"
+
 #include "vtxDisplayObjectContainer.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	DisplayObjectContainer::DisplayObjectContainer(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
+		: InteractiveObject(vtable, prototype), 
+		mDisplayObjectContainer(NULL)
 	{
-		//-----------------------------------------------------------------------
-		DisplayObjectContainerClass::DisplayObjectContainerClass(avmplus::VTable* cvtable) 
-			: ClassClosure(cvtable)
-		{
-			AvmAssert(traits()->getSizeOfInstance() == sizeof(DisplayObjectContainerClass));
-			createVanillaPrototype();
-		}
-		//-----------------------------------------------------------------------
-		avmplus::ScriptObject* DisplayObjectContainerClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-		{
-			return new (core()->GetGC(), ivtable->getExtraSize()) DisplayObjectContainer(ivtable, prototype);
-		}
-		//-----------------------------------------------------------------------
-		DisplayObjectContainer::DisplayObjectContainer(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-			: InteractiveObject(vtable, prototype), 
-			mDisplayObjectContainer(NULL)
-		{
 
-		}
-		//-----------------------------------------------------------------------
-		DisplayObjectContainer::~DisplayObjectContainer()
-		{
-
-		}
-		//-----------------------------------------------------------------------
-		DisplayObject* DisplayObjectContainer::addChild(DisplayObject* child)
-		{
-			if(mDisplayObjectContainer)
-			{
-				vtx::Instance* inst = child->getNativeObject();
-				vtx::DisplayObject* native_child = dynamic_cast<vtx::DisplayObject*>(inst);
-				if(native_child)
-				{
-					mDisplayObjectContainer->addChild(native_child);
-					return child;
-				}
-			}
-			return NULL;
-		}
-		//-----------------------------------------------------------------------
-		void DisplayObjectContainer::_setNativeObject(Instance* inst)
-		{
-			InteractiveObject::_setNativeObject(inst);
-			mDisplayObjectContainer = dynamic_cast<vtx::DisplayObjectContainer*>(inst);
-		}
-		//-----------------------------------------------------------------------
 	}
-}
+	//-----------------------------------------------------------------------
+	DisplayObjectContainer::~DisplayObjectContainer()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	DisplayObject* DisplayObjectContainer::addChild(DisplayObject* child)
+	{
+		vtx::Instance* inst = child->getNativeObject();
+		vtx::DisplayObject* native_child = static_cast<vtx::DisplayObject*>(inst);
+		if(native_child)
+		{
+			mDisplayObjectContainer->addChild(native_child);
+			return child;
+		}
+
+		return NULL;
+	}
+	//-----------------------------------------------------------------------
+	DisplayObject* DisplayObjectContainer::getChildByName(avmplus::Stringp name)
+	{
+		String stl_name = CSP_CORE->stringFromAS3(name);
+		vtx::DisplayObject* child = mDisplayObjectContainer->getChildByName(stl_name);
+
+		if(child)
+		{
+			return static_cast<DisplayObject*>(child->getScriptObject());
+		}
+
+		return NULL;
+	}
+	//-----------------------------------------------------------------------
+	void DisplayObjectContainer::setNativeObject(Instance* inst)
+	{
+		InteractiveObject::setNativeObject(inst);
+		mDisplayObjectContainer = static_cast<vtx::DisplayObjectContainer*>(inst);
+	}
+	//-----------------------------------------------------------------------
+}}

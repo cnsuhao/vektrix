@@ -48,20 +48,25 @@ namespace vtx
 
 		/** Add a Keyframe to this timeline */
 		void addKeyframe(Keyframe* frame);
+
 		/** Remove all keyframes and reset the timeline */
 		void clear();
 
 		/** Advance the playhead of the timeline by the given amount (in seconds) */
 		void addTime(float delta_time);
+
 		/** Set the frame rate at which the playhead shall advance */
 		void setFrameRate(const uint& framerate);
 
 		/** Tells the playhead of the timeline to advance automatically over time */
 		void play();
+
 		/** Tells the playhead of the timeline to stop at the current position */
 		void stop();
+
 		/** Jump to a given frame of the timeline */
 		bool gotoFrame(uint frame);
+
 		/** Jump to a given point in time of the timeline */
 		bool gotoTime(float time);
 

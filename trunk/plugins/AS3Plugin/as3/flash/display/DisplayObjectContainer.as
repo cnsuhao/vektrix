@@ -56,7 +56,9 @@ package flash.display
 		public function areInaccessibleObjectsUnderPoint(point:Point):Boolean { return false; }
 		public function contains(child:DisplayObject):Boolean { return false; }
 		public function getChildAt(index:int):DisplayObject { return null; }
-		public function getChildByName(name:String):DisplayObject { return null; }
+		
+		public native function getChildByName(name:String):DisplayObject
+		
 		public function getChildIndex(child:DisplayObject):int { return 0; }
 		public function getObjectsUnderPoint(point:Point):Array { return null; }
 		public function removeChild(child:DisplayObject):DisplayObject { return null; }

@@ -52,6 +52,7 @@ THE SOFTWARE.
 
 namespace vtx
 {
+	/** The namespace for all classes of the SWF plugin */
 	namespace swf
 	{
 		// enumerations

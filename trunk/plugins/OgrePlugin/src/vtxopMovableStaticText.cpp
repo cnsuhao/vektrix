@@ -74,23 +74,26 @@ namespace vtx
 		{
 			StaticText::initFromResource(resource);
 
-			mResource = dynamic_cast<StaticTextResource*>(resource);
-
-			uint glyph_count = 0;
-			const GlyphStripList& glyph_strips = mResource->getGlyphStrips();
-			GlyphStripList::const_iterator it = glyph_strips.begin();
-			GlyphStripList::const_iterator end = glyph_strips.end();
-			while(it != end)
+			if(resource->getType() == "StaticText")
 			{
-				glyph_count += (*it).glyphs.size();
-				++it;
-			}
+				mResource = static_cast<StaticTextResource*>(resource);
 
-			_resizeBuffers(glyph_count);
+				uint glyph_count = 0;
+				const GlyphStripList& glyph_strips = mResource->getGlyphStrips();
+				GlyphStripList::const_iterator it = glyph_strips.begin();
+				GlyphStripList::const_iterator end = glyph_strips.end();
+				while(it != end)
+				{
+					glyph_count += (*it).glyphs.size();
+					++it;
+				}
 
-			if(mPacker && mParentMovie && mResource)
-			{
-				_updateVertexBuffer(mResource->getGlyphStrips(), mPacker->getResultList(), mParentMovie->getFile());
+				_resizeBuffers(glyph_count);
+
+				if(mPacker && mParentMovie && mResource)
+				{
+					_updateVertexBuffer(mResource->getGlyphStrips(), mPacker->getResultList(), mParentMovie->getFile());
+				}
 			}
 		}
 		//-----------------------------------------------------------------------

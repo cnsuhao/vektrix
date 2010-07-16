@@ -52,14 +52,17 @@ namespace vtx
 
 		/** @copybrief Timeline::play */
 		void play();
+
 		/** @copybrief Timeline::stop */
 		void stop();
+
 		/** @copybrief Timeline::gotoFrame */
 		bool gotoFrame(uint frame);
+
 		/** @copybrief Timeline::gotoTime */
 		bool gotoTime(const float& time);
 
-		/** @copybrief Timline::getCurrentFrame */
+		/** @copybrief Timeline::getCurrentFrame */
 		uint getCurrentFrame() const;
 
 		/** @copybrief DisplayObjectContainer::_update */

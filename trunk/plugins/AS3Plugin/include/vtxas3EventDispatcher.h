@@ -29,54 +29,42 @@ THE SOFTWARE.
 #ifndef __vtxas3EventDispatcher_H__
 #define __vtxas3EventDispatcher_H__
 
-#include "cspPrerequesites.h"
-#include "cspClientObject.h"
+#include "cspPrerequisites.h"
+
+#include "vtxas3ScriptObjectBase.h"
 
 #include "vtxScriptObject.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class EventDispatcher : public ScriptObjectBase
 	{
-		//-----------------------------------------------------------------------
-		class EventDispatcherClass : public avmplus::ClassClosure
-		{
-		public:
-			EventDispatcherClass(avmplus::VTable* cvtable);
-			virtual ~EventDispatcherClass(){}
+	public:
+		typedef std::vector<avmplus::FunctionObject*> FunctionList;
+		typedef std::map<String, FunctionList> FunctionMap;
 
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
+		EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		virtual ~EventDispatcher(){}
 
-			DECLARE_SLOTS_EventDispatcherClass;
-		};
-		//-----------------------------------------------------------------------
-		class EventDispatcher : public avmplus::ScriptObject, public ScriptObject, public csp::ClientObject
-		{
-		public:
-			typedef std::vector<avmplus::FunctionObject*> FunctionList;
-			typedef std::map<String, FunctionList> FunctionMap;
+		// ActionScript 3 functions
+		void addEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useCapture, int priority, bool useWeakReference);
+		bool dispatchEvent(as3::Event* event);
+		bool hasEventListener(avmplus::Stringp type);
+		void removeEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useWeakReference);
+		virtual bool willTrigger(avmplus::Stringp type) { return false; }
 
-			EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-			virtual ~EventDispatcher(){}
+		virtual void eventFired(const vtx::Event& evt);
 
-			// AS3 functions
-			void addEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useCapture, int priority, bool useWeakReference);
-			bool dispatchEvent(as3::Event* event);
-			bool hasEventListener(avmplus::Stringp type);
-			void removeEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useWeakReference);
-			virtual bool willTrigger(avmplus::Stringp type) { return false; }
+		void setChildObject(const String& name, vtx::ScriptObject* script_object);
 
-			virtual void eventFired(const vtx::Event& evt);
+		CSP_INST_SLOTS(EventDispatcher);
 
-			virtual vtx::ScriptObject* _createChildObject(const String& name);
-
-			DECLARE_SLOTS_EventDispatcher;
-
-		protected:
-			FunctionMap mHandlers;
-		};
-		//-----------------------------------------------------------------------
-	}
-}
+	protected:
+		FunctionMap mHandlers;
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(EventDispatcher);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

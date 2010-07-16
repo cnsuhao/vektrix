@@ -29,41 +29,26 @@ THE SOFTWARE.
 #ifndef __vtxas3Event_H__
 #define __vtxas3Event_H__
 
-#include "cspPrerequesites.h"
-#include "cspClientObject.h"
+#include "cspPrerequisites.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class Event : public avmplus::ScriptObject
 	{
-		using namespace avmplus;
-		//-----------------------------------------------------------------------
-		class EventClass : public avmplus::ClassClosure
+	public:
+		Event(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		virtual ~Event(){}
+
+		inline avmplus::AvmString getType()
 		{
-		public:
-			EventClass(avmplus::VTable* cvtable);
-			virtual ~EventClass(){}
+			return get_flash_events_Event_mType();
+		}
 
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
-
-			DECLARE_SLOTS_EventClass;
-		};
-		//-----------------------------------------------------------------------
-		class Event : public avmplus::ScriptObject, public csp::ClientObject
-		{
-		public:
-			Event(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-			virtual ~Event(){}
-
-			inline avmplus::AvmString getType()
-			{
-				return get_flash_events_Event_mType();
-			}
-
-			DECLARE_SLOTS_Event;
-		};
-		//-----------------------------------------------------------------------
-	}
-}
+		CSP_INST_SLOTS(Event);
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(Event);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

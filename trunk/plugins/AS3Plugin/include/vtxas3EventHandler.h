@@ -29,32 +29,30 @@ THE SOFTWARE.
 #ifndef __vtxas3EventHandler_H__
 #define __vtxas3EventHandler_H__
 
-#include "cspPrerequesites.h"
+#include "cspPrerequisites.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class EventHandlerClass : public avmplus::ClassClosure
 	{
-		class EventHandlerClass : public avmplus::ClassClosure
-		{
-		public:
-			EventHandlerClass(avmplus::VTable* cvtable);
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
+	public:
+		EventHandlerClass(avmplus::VTable* cvtable);
+		avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
 
-			int add(int a, int b);
-			void handle(avmplus::ScriptObject* evt);
+		int add(int a, int b);
+		void handle(avmplus::ScriptObject* evt);
 
-			DECLARE_SLOTS_EventHandlerClass;
-		};
+		CSP_CLASS_SLOTS(EventHandler);
+	};
+	//-----------------------------------------------------------------------
+	class EventHandler : public avmplus::ScriptObject
+	{
+	public:
+		EventHandler(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 
-		class EventHandler : public avmplus::ScriptObject
-		{
-		public:
-			EventHandler(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-
-			DECLARE_SLOTS_EventHandler;
-		};
-	}
-}
+		CSP_INST_SLOTS(EventHandler);
+	};
+	//-----------------------------------------------------------------------
+}}
 
 #endif

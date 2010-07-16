@@ -31,61 +31,48 @@ THE SOFTWARE.
 
 #include "vtxas3.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class DisplayObject : public EventDispatcher
 	{
-		//-----------------------------------------------------------------------
-		class DisplayObjectClass : public avmplus::ClassClosure
-		{
-		public:
-			DisplayObjectClass(avmplus::VTable* cvtable);
-			virtual ~DisplayObjectClass(){}
+	public:
+		DisplayObject(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		virtual ~DisplayObject(){}
 
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
+		double get_x();
+		void set_x(double val);
 
-			DECLARE_SLOTS_DisplayObjectClass;
-		};
-		//-----------------------------------------------------------------------
-		class DisplayObject : public EventDispatcher
-		{
-		public:
-			DisplayObject(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-			virtual ~DisplayObject(){}
+		double get_y();
+		void set_y(double val);
 
-			double get_x();
-			void set_x(double val);
+		double get_rotation();
+		void set_rotation(double val);
 
-			double get_y();
-			void set_y(double val);
+		double get_scaleX();
+		void set_scaleX(double val);
 
-			double get_rotation();
-			void set_rotation(double val);
+		double get_scaleY();
+		void set_scaleY(double val);
 
-			double get_scaleX();
-			void set_scaleX(double val);
+		double get_width();
+		void set_width(double val);
 
-			double get_scaleY();
-			void set_scaleY(double val);
+		double get_height();
+		void set_height(double val);
 
-			double get_width();
-			void set_width(double val);
+		void set_visible(bool val);
+		bool get_visible();
 
-			double get_height();
-			void set_height(double val);
+		CSP_INST_SLOTS(DisplayObject);
 
-			void set_visible(bool val);
-			bool get_visible();
+	protected:
+		vtx::DisplayObject* mDisplayObject;
 
-			DECLARE_SLOTS_DisplayObject;
-
-		protected:
-			vtx::DisplayObject* mDisplayObject;
-
-			virtual void _setNativeObject(Instance* inst);
-		};
-		//-----------------------------------------------------------------------
-	}
-}
+		virtual void setNativeObject(Instance* inst);
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(DisplayObject);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

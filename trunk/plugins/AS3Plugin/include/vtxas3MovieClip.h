@@ -31,37 +31,26 @@ THE SOFTWARE.
 
 #include "vtxas3.h"
 
-namespace vtx
-{
-	namespace as3
+namespace vtx { namespace as3 {
+	//-----------------------------------------------------------------------
+	class MovieClip : public Sprite
 	{
-		//-----------------------------------------------------------------------
-		class MovieClipClass : public avmplus::ClassClosure
-		{
-		public:
-			MovieClipClass(avmplus::VTable* cvtable);
-			avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype);
+	public:
+		MovieClip(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		virtual ~MovieClip();
 
-			DECLARE_SLOTS_MovieClipClass;
-		};
-		//-----------------------------------------------------------------------
-		class MovieClip : public Sprite
-		{
-		public:
-			MovieClip(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-			virtual ~MovieClip();
+		void eventFired(const vtx::Event& evt);
 
-			void eventFired(const vtx::Event& evt);
+		CSP_INST_SLOTS(MovieClip);
 
-			DECLARE_SLOTS_MovieClip;
+	protected:
+		vtx::MovieClip* mMovieClip;
 
-		protected:
-			vtx::MovieClip* mMovieClip;
-
-			void _setNativeObject(Instance* inst);
-		};
-		//-----------------------------------------------------------------------
-	}
-}
+		void setNativeObject(Instance* inst);
+	};
+	//-----------------------------------------------------------------------
+	CSP_DEFINE_CLASS(MovieClip);
+	//-----------------------------------------------------------------------
+}}
 
 #endif

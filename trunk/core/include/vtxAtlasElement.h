@@ -38,11 +38,17 @@ namespace vtx
 	class vtxExport AtlasElement
 	{
 	public:
+		/** Get a unique identifier which is associated with this element */
+		virtual const uint getPackID() const = 0;
+
 		/** Get the width that this element shall occupy at the atlas (must be a power of 2) */
 		virtual const uint getPackableWidth() = 0;
 
 		/** Get the height that this element shall occupy at the atlas (must be a power of 2) */
 		virtual const uint getPackableHeight() = 0;
+
+		/** Paint this AtlasElement to the given AtlasNode by utilizing the specified Rasterizer */
+		virtual void paintToNode(AtlasNode* node, Rasterizer* rasterizer) = 0;
 	};
 	//-----------------------------------------------------------------------
 }
