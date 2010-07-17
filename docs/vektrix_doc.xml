@@ -1,0 +1,51 @@
+<Project>
+
+  <IncludeDirectory path="../core/include" />
+  <IncludeDirectory path="../dependencies/include" />
+  <IncludeDirectory path="../dependencies/include/OGRE" />
+  <IncludeDirectory path="$(EXPAT_HOME)/lib" />
+  <IncludeDirectory path="C:/SDKs/caspin/include" />
+  <IncludeDirectory path="C:/SDKs/caspin/tamarin/core" />
+  <IncludeDirectory path="C:/SDKs/caspin/tamarin/vmpi" />
+  <IncludeDirectory path="C:/SDKs/caspin/tamarin/shell" />
+  <IncludeDirectory path="C:/SDKs/caspin/tamarin/platform" />
+  <IncludeDirectory path="C:/SDKs/caspin/tamarin/mmgc" />
+  <IncludeDirectory path="C:/SDKs/caspin/tamarin/eval" />
+  <IncludeDirectory path="C:/SDKs/caspin/tamarin/extensions" />
+
+  <Macro name="#define UNDER_CE" />
+  <Macro name="#define WIN32" />
+  <Macro name="#define _WINDOWS" />
+  <Macro name="#define _MSC_VER 1400" />
+  <Macro name="#define VEKTRIX_EXPORTS" />
+  <Macro name="#define VEKTRIX_AS3PLUGIN_EXPORTS" />
+  <Macro name="#define VEKTRIX_SWFPLUGIN_EXPORTS" />
+  <!--<CompilerMacro name="VTX_STATIC_LIB" />-->
+
+  <CodeDirectory path="../core/include" />
+  <CodeDirectory path="../plugins/AS3Plugin/include" />
+  <CodeDirectory path="../plugins/SWFPlugin/include" />
+  <!--<CodeDirectory path="../tools/vtxFlashPreview/include" />-->
+
+  <IgnoreCodeFile name="flash.h" />
+  <IgnoreCodeFile name="vtxas3DisplayObjectContainer.h" />
+  <IgnoreCodeFile name="vtxas3MovieClip.h" />
+  <IgnoreCodeFile name="vtxas3InteractiveObject.h" />
+  <IgnoreCodeFile name="vtxas3SimpleButton.h" />
+  <IgnoreCodeFile name="vtxas3URLRequest.h" />
+  <IgnoreCodeFile name="vtxas3TextField.h" />
+  <IgnoreCodeFile name="vtxas3Sprite.h" />
+  <IgnoreCodeFile name="vtxas3LoaderContext.h" />
+  <IgnoreCodeFile name="vtxas3EventHandler.h" />
+  <IgnoreCodeFile name="vtxas3Loader.h" />
+  <IgnoreCodeFile name="vtxas3DisplayObject.h" />
+  <IgnoreCodeFile name="vtxas3Event.h" />
+  <IgnoreCodeFile name="vtxas3EventDispatcher.h" />
+  <IgnoreCodeFile name="vtxas3StaticText.h" />
+
+  <DocumentationDirectory path="./documentation/"/>
+  <OutputDirectory path="./output/"/>
+
+  <Doxyfile path="./Doxyfile"/>
+
+</Project>
