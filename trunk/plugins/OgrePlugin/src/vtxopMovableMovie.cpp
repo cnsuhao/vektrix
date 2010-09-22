@@ -45,6 +45,8 @@ THE SOFTWARE.
 #include "vtxShape.h"
 #include "vtxShapeResource.h"
 
+//#define NO_INST_POOLING
+
 namespace vtx
 {
 	namespace ogre
@@ -69,6 +71,8 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		Instance* MovableMovie::getInstance(Resource* resource)
 		{
+			if(!resource) return NULL;
+
 			if(resource->getType() == Button::TYPE)
 			{
 				Button* button = new Button();
@@ -81,6 +85,7 @@ namespace vtx
 				MovieClip* movieclip = new MovieClip();
 				movieclip->_setParent(this);
 				movieclip->initFromResource(resource);
+				//std::cout << "Created object: " << resource->getID() << std::endl;
 				return movieclip;
 			}
 
@@ -95,6 +100,7 @@ namespace vtx
 				}
 			}
 
+#ifndef NO_INST_POOLING
 			Instance* instance = mFactory->getInstancePool()->pop(resource->getType());
 
 			// instance received from instance pool
@@ -105,6 +111,9 @@ namespace vtx
 			}
 			// no instance available, create a new one
 			else
+#else
+			Instance* instance;
+#endif
 			{
 				if(!mFactory)
 				{
@@ -262,8 +271,12 @@ namespace vtx
 				return;
 			}
 
+#ifndef NO_INST_POOLING
 			mFactory->getInstancePool()->push(instance);
 			instance->_setParent(NULL);
+#else
+			delete instance;
+#endif
 
 			//vtx::Movie::releaseInstance(instance);
 		}

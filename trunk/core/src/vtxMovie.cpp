@@ -48,6 +48,7 @@ THE SOFTWARE.
 #include "vtxScriptResource.h"
 #include "vtxShape.h"
 #include "vtxShapeResource.h"
+#include "vtxStage.h"
 #include "vtxStringHelper.h"
 
 namespace vtx
@@ -62,7 +63,8 @@ namespace vtx
 		mFocusedObject(NULL), 
 		mDebugger(NULL), 
 		mMainMovieClip(NULL), 
-		mScriptEngine(NULL)
+		mScriptEngine(NULL), 
+		mStage(NULL)
 	{
 
 	}
@@ -92,7 +94,20 @@ namespace vtx
 
 		if(mMainMovieClip)
 		{
+			Event evt(Event::RENDER);
+
+			//mMainMovieClip->eventFired(evt);
+			//mStage->eventFired(evt);
+
 			mMainMovieClip->_update(delta_time);
+		}
+
+		ListenerMap::iterator it = mListeners.begin();
+		ListenerMap::iterator end = mListeners.end();
+		while(it != end)
+		{
+			it->second->update(delta_time);
+			++it;
 		}
 	}
 	//-----------------------------------------------------------------------
@@ -211,11 +226,11 @@ namespace vtx
 	{
 		Instance* instance = getInstance(resource);
 
-		if(mScriptEngine)
-		{
-			ScriptObject* script_object = mScriptEngine->createScriptObject(resource);
-			instance->setScriptObject(script_object);
-		}
+		//if(mScriptEngine)
+		//{
+		//	ScriptObject* script_object = mScriptEngine->createScriptObject(instance, resource);
+		//	instance->setScriptObject(script_object);
+		//}
 
 		return instance;
 	}
@@ -223,6 +238,7 @@ namespace vtx
 	void Movie::destroyInstance(Instance* instance)
 	{
 		instance->setScriptObject(NULL);
+		//instance->releaseScriptObject();
 		releaseInstance(instance);
 	}
 	//-----------------------------------------------------------------------
@@ -252,6 +268,11 @@ namespace vtx
 	MovieClip* Movie::getMainMovieClip() const
 	{
 		return mMainMovieClip;
+	}
+	//-----------------------------------------------------------------------
+	Stage* Movie::getStage() const
+	{
+		return mStage;
 	}
 	//-----------------------------------------------------------------------
 	bool Movie::addListener(Movie::Listener* listener)
@@ -307,6 +328,12 @@ namespace vtx
 		mMainMovieClip->_setParent(this);
 		mMainMovieClip->initFromResource(mFile->getMainMovieClip());
 
+		mStage = new Stage();
+		mStage->_setParent(this);
+
+		//mMainMovieClip->setParentContainer(mStage);
+		mStage->addChild(mMainMovieClip);
+
 		ScriptEngineFactory* scriptEngineFactory = 
 			InstanceManager::getSingletonPtr()->scriptEngines()->getFactory(mFile->getScriptEngine());
 
@@ -316,18 +343,22 @@ namespace vtx
 			mScriptEngine = scriptEngineFactory->createObject(this);
 		}
 
-		ScriptResource* script = static_cast<ScriptResource*>(mFile->getResource("Script", "Script"));
+		/*
+		ScriptResource* script = static_cast<ScriptResource*>(mFile->getResource("Frame0_Script", "Script"));
 		if(mScriptEngine && script)
 		{
 			if(mScriptEngine->executeCode(script->getBuffer(), script->getLength()))
 			{
-				ScriptObject* root_scriptobject = mScriptEngine->getRootScriptObject();
-				if(root_scriptobject)
-				{
-					mMainMovieClip->setScriptObject(root_scriptobject);
-				}
+				mMainMovieClip->initScriptObject();
+
+				////ScriptObject* root_scriptobject = mScriptEngine->getRootScriptObject();
+				////if(root_scriptobject)
+				////{
+				////	mMainMovieClip->setScriptObject(root_scriptobject);
+				////}
 			}
 		}
+		/**/
 
 		std::vector<Listener*> remove_listeners;
 
@@ -375,8 +406,9 @@ namespace vtx
 		}
 
 		delete mDebugger;
+		delete mStage;
+		//delete mMainMovieClip;
 		delete mScriptEngine;
-		delete mMainMovieClip;
 	}
 	//-----------------------------------------------------------------------
 }

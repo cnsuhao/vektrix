@@ -28,11 +28,13 @@ THE SOFTWARE.
 
 package flash.display
 {
-	public class Stage
-	{
-		import flash.geom.*;
-		import flash.text.*;
+	import flash.display.*;
+	import flash.geom.*;
+	import flash.text.*;
 
+	[native(cls="::vtx::as3::StageClass", instance="::vtx::as3::Stage", methods="auto")]
+	public class Stage extends DisplayObjectContainer
+	{
 		/* getters & setters */
 		public function get align():String { return ""; }
 		public function set align(value:String):void {}
@@ -46,12 +48,12 @@ package flash.display
 		public function get fullScreenSourceRect():Rectangle { return null; }
 		public function set fullScreenSourceRect(value:Rectangle):void {}
 		public function get fullScreenWidth():uint { return null; }
-		public function get height():Number { return null; }
-		public function set height(value:Number):void {}
-		public function get mouseChildren():Boolean { return false; }
-		public function set mouseChildren(value:Boolean):void {}
+		override public function get height():Number { return null; }
+		override public function set height(value:Number):void {}
+		override public function get mouseChildren():Boolean { return false; }
+		override public function set mouseChildren(value:Boolean):void {}
 		// AIR-only public function get nativeWindow():NativeWindow { return null; }
-		public function get numChildren():int { return 0; }
+		//override public function get numChildren():int { return 0; }
 		public function get quality():String { return ""; }
 		public function set quality(value:String):void {}
 		public function get scaleMode():String { return ""; }
@@ -60,15 +62,15 @@ package flash.display
 		public function set showDefaultContextMenu(value:Boolean):void {}
 		public function get stageFocusRect():Boolean { return false; }
 		public function set stageFocusRect(value:Boolean):void {}
-		public function get stageHeight():int { return 0; }
+		public native function get stageHeight():int
 		public function set stageHeight(value:int):void {}
-		public function get stageWidth():int { return 0; }
+		public native function get stageWidth():int
 		public function set stageWidth(value:int):void {}
-		public function get tabChildren():Boolean { return false; }
-		public function set tabChildren(value:Boolean):void {}
-		public function get textSnapshot():TextSnapshot { return null; }
-		public function get width():Number { return null; }
-		public function set width(value:Number):void {}
+		override public function get tabChildren():Boolean { return false; }
+		override public function set tabChildren(value:Boolean):void {}
+		override public function get textSnapshot():TextSnapshot { return null; }
+		override public function get width():Number { return null; }
+		override public function set width(value:Number):void {}
 
 		/* methods */
 		public function assignFocus(objectToFocus:InteractiveObject, direction:String):void {}

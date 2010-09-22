@@ -28,8 +28,14 @@ THE SOFTWARE.
 
 package flash.events
 {
+	import flash.display.InteractiveObject;
+	
+	[native(cls="::vtx::as3::MouseEventClass", instance="::vtx::as3::MouseEvent", methods="auto")]
 	public class MouseEvent extends Event 
 	{
+		private var mLocalX:Number;
+		private var mLocalY:Number;
+		
 		public static const CLICK:String = "click";
 		public static const DOUBLE_CLICK:String = "doubleClick";
 		public static const MOUSE_DOWN:String = "mouseDown";
@@ -41,9 +47,36 @@ package flash.events
 		public static const ROLL_OUT:String = "rollOut";
 		public static const ROLL_OVER:String = "rollOver";
 		
-		public function MouseEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false)
+		public function MouseEvent(
+			type:String, 
+			bubbles:Boolean = true, 
+			cancelable:Boolean = false, 
+			localX:Number = 0, 
+			localY:Number = 0, 
+			relatedObject:InteractiveObject = null, 
+			ctrlKey:Boolean = false, 
+			altKey:Boolean = false, 
+			shiftKey:Boolean = false, 
+			buttonDown:Boolean = false, 
+			delta:int = 0, 
+			commandKey:Boolean = false, 
+			controlKey:Boolean = false, 
+			clickCount:int = 0)
 		{
 			super(type, bubbles, cancelable);
+			
+			mLocalX = localX;
+			mLocalY = localY;
+		}
+		
+		public function get stageX():Number
+		{
+			return mLocalX;
+		}
+		
+		public function get stageY():Number
+		{
+			return mLocalY;
 		}
 		
 		override public function toString():String

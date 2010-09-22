@@ -1,23 +1,58 @@
-# include directories
-include_directories (
-../include
-../../../core/include
-$ENV{CURL_HOME}/include/curl
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
+
+#-----------------------------------------------------------------------
+# CMAKE OPTIONS
+#-----------------------------------------------------------------------
+
+#-----------------------------------------------------------------------
+# PREPROCESSOR SETTINGS
+#-----------------------------------------------------------------------
+
+if(WIN32)
+	# add uppercase export definition
+	add_definitions (-DVEKTRIX_CURLPLUGIN_EXPORTS)
+endif()
+
+#-----------------------------------------------------------------------
+# SOURCE FILES & INCLUDE DIRECTORIES & LINK LIBRARIES
+#-----------------------------------------------------------------------
+
+# read the source-files list
+include (vektrix_cURLPlugin_src_files)
+
+# the required include directories
+set (include_dirs
+	../include
+	../../../core/include
+	${curl_include_dirs}
 )
 
-# library directories
-#link_libraries ($ENV{CURL_HOME}/lib/libcurl.so)
+# the required link libraries
+set (libraries
+	vektrix
+	${curl_libraries}
+)
 
-file(GLOB VTXCURL_SRC "../src/*.cpp")
+#-----------------------------------------------------------------------
+# BUILD SETTINGS & COMPILATION
+#-----------------------------------------------------------------------
 
 # output directory
-set (LIBRARY_OUTPUT_PATH ../../../bin)
+set (LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
-# build
-add_library (vektrix_cURLPlugin SHARED ${VTXCURL_SRC})
+# set the include directories
+include_directories (${include_dirs})
 
-target_link_libraries(vektrix_cURLPlugin curl)
+# add the plugin library
+add_library (vektrix_cURLPlugin SHARED ${file_root})
 
+# automatically update the source-files list with folders4cmake
+auto_rebuild_src_files (vektrix_cURLPlugin)
+
+#if(VTX_STATIC_LIB)
 # remove "lib" prefix
-set_target_properties(vektrix_cURLPlugin PROPERTIES PREFIX "")
+set_target_properties (vektrix_cURLPlugin PROPERTIES PREFIX "")
+#endif()
 
+# link against the required libraries
+target_link_libraries (vektrix_cURLPlugin ${libraries})

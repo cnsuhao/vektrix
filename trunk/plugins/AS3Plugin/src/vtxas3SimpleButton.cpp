@@ -45,8 +45,8 @@ namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	void SimpleButton::setNativeObject(Instance* inst)
 	{
-		InteractiveObject::setNativeObject(inst);
-		mButton = static_cast<vtx::Button*>(inst);
+		//InteractiveObject::setNativeObject(inst);
+		//mButton = static_cast<vtx::Button*>(inst);
 	}
 	//-----------------------------------------------------------------------
 }}

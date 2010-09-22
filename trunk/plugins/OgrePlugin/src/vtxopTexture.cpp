@@ -153,7 +153,7 @@ namespace vtx
 			renderAllShapes();
 
 			// DEBUG
-			//debugOgreTexture();
+			debugOgreTexture();
 		}
 		//-----------------------------------------------------------------------
 	}

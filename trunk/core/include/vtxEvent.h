@@ -43,6 +43,7 @@ namespace vtx
 
 		static const String GENERIC_CATEGORY;
 		static const String ENTER_FRAME;
+		static const String RENDER;
 
 		/** Get the type of this Event */
 		const String& getType() const;

@@ -47,6 +47,8 @@ namespace vtx
 		/** @copybrief Resource::getType */
 		const String& getType() const;
 
+		WString getText() const;
+
 		/** Set the BoundingBox for this static text */
 		void setBoundingBox(const BoundingBox& bb);
 		/** Get the BoundingBox of this static text */

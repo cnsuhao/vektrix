@@ -165,6 +165,7 @@ namespace vtx
 	class ShapeElement;
 	class ShapeFactory;
 	class ShapeResource;
+	class Stage;
 	class StaticText;
 	class StaticTextFactory;
 	class StaticTextResource;
@@ -184,6 +185,7 @@ namespace vtx
 	typedef unsigned char uchar;
 	typedef unsigned short ushort;
 	typedef unsigned int uint;
+	typedef unsigned long ulong;
 	typedef long long int64;
 	typedef unsigned long long uint64;
 	typedef std::string String;

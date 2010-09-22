@@ -27,6 +27,9 @@ THE SOFTWARE.
 */
 
 #include "vtxStaticTextResource.h"
+#include "vtxFile.h"
+#include "vtxFontResource.h"
+#include "vtxGlyphResource.h"
 
 namespace vtx
 {
@@ -46,6 +49,39 @@ namespace vtx
 	{
 		static String type = "StaticText";
 		return type;
+	}
+	//-----------------------------------------------------------------------
+	WString StaticTextResource::getText() const
+	{
+		WString text;
+
+		GlyphStripList::const_iterator it = mGlyphStrips.begin();
+		GlyphStripList::const_iterator end = mGlyphStrips.end();
+		while(it != end)
+		{
+			const GlyphStrip& strip = *it;
+			FontResource* font = static_cast<FontResource*>(mParent->getResource(strip.fontid, "Font"));
+			if(!font)
+			{
+				++it;
+				continue;
+			}
+
+			GlyphStrip::GlyphList::const_iterator glyph_it = strip.glyphs.begin();
+			GlyphStrip::GlyphList::const_iterator glyph_end = strip.glyphs.end();
+			while(glyph_it != glyph_end)
+			{
+				const GlyphStrip::Glyph& glyph = *glyph_it;
+
+				GlyphResource* glyph_res = font->getGlyphByIndex(glyph.index);
+				text.append(1, glyph_res->getCode());
+				++glyph_it;
+			}
+
+			++it;
+		}
+
+		return text;
 	}
 	//-----------------------------------------------------------------------
 	void StaticTextResource::setBoundingBox(const BoundingBox& bb)

@@ -42,9 +42,9 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	CreateObjectEvent::CreateObjectEvent(DisplayObjectContainer* object_container, File* source_file, 
+	CreateObjectEvent::CreateObjectEvent(DisplayObjectContainer* container, File* source_file, 
 		const String& id, const uint& layer, const Matrix& matrix, const CXForm& cxform, const String& name) 
-		: FrameEvent(object_container), 
+		: FrameEvent(container), 
 		mSourceFile(source_file), 
 		mID(id), 
 		mLayer(layer), 
@@ -63,13 +63,17 @@ namespace vtx
 	void CreateObjectEvent::execute()
 	{
 		Resource* resource = mSourceFile->getResource(mID);
+
+		if(!resource) return;
+
 		Instance* instance = mObjectContainer->getParent()->createInstance(resource);
 
-		if(!instance/* // TODO: || !instance->isDisplayable()*/)
-		{
-			VTX_EXCEPT("%s: CreateObjectEvent requested an object (id: \"%s\") that is not a DisplayObject.", 
-				mObjectContainer->getParent()->getFile()->getFilename().c_str(), mID.c_str());
-		}
+		//if(!instance/* // TODO: || !instance->isDisplayable()*/)
+		//{
+		//	VTX_WARN("%s: CreateObjectEvent requested an object (id: \"%s\") that is not a DisplayObject.", 
+		//		mObjectContainer->getParent()->getFile()->getFilename().c_str(), mID.c_str());
+		//	return;
+		//}
 
 		mObject = static_cast<DisplayObject*>(instance);
 

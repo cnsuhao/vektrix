@@ -44,11 +44,15 @@ namespace vtx
 		ScriptObject();
 		virtual ~ScriptObject();
 
+		virtual void destroy() = 0;
+
 		/** Get the native Instance that is associated with this script object */
 		virtual Instance* getNativeObject();
 
 		/** Add a child script object which is contained within this one */
 		virtual void setChildObject(const String& name, ScriptObject* script_object) = 0;
+
+		virtual ScriptObject* getChildObject(const String& name) = 0;
 
 	protected:
 		Instance* mNativeObject;

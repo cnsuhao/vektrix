@@ -28,25 +28,53 @@ THE SOFTWARE.
 
 package flash.utils
 {
+	import avmplus.*;
+
+	[native(cls="::vtx::as3::FlashUtilsClass", methods="auto")]
+	class FlashUtils
+	{
+		native static function getClass(className:String):Class
+	}
+
 	public function clearInterval(id:uint):void {}
 	public function clearTimeout(id:uint):void {}
-	public function describeType(value:*):XML { return null; }
+	public function describeType(value:*):XML
+	{
+		trace("describeType");
+		return avmplus.describeType(value, FLASH10_FLAGS);
+	}
+
 	public function escapeMultiByte(value:String):String { return ""; }
 
 	public function getDefinitionByName(name:String):Object
 	{
 		trace("getDefinitionByName(", name, ")");
-		return null;
+		var obj = FlashUtils.getClass(name) as Object;
+		//obj = Domain.currentDomain.getClass(name) as Object;
+		//trace("AFTER getDefinitionByName(", name, ")=", obj);
+		return obj;
 	}
-	
+
 	public function getQualifiedClassName(value:*):String
 	{
-		trace("getQualifiedClassName(", value, ")");
-		return "";
+		//trace("getQualifiedClassName(", value, ")");
+		var name = avmplus.getQualifiedClassName(value);
+		//trace("AFTER getQualifiedClassName(", value, ")=", name);
+		return name;
 	}
-	
-	public function getQualifiedSuperclassName(value:*):String { return ""; }
-	public function getTimer():int { return 0; }
+
+	public function getQualifiedSuperclassName(value:*):String
+	{
+		trace("getQualifiedSuperclassName(", value, ")");
+		return avmplus.getQualifiedSuperclassName(value);
+	}
+
+	public function getTimer():int
+	{
+		trace("getTimer");
+		return System.getTimer();
+	}
+
 	public function setInterval(closure:Function, delay:Number, ... arguments):uint { return null; }
 	public function setTimeout(closure:Function, delay:Number, ... arguments):uint { return null; }
 	public function unescapeMultiByte(value:String):String { return ""; }

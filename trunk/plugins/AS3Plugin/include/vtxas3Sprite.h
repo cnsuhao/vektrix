@@ -39,6 +39,9 @@ namespace vtx { namespace as3 {
 		Sprite(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 
 		CSP_INST_SLOTS(Sprite);
+
+	protected:
+		virtual void setNativeObject(Instance* inst);
 	};
 	//-----------------------------------------------------------------------
 	CSP_DEFINE_CLASS(Sprite);

@@ -46,10 +46,10 @@ namespace vtx
 		virtual bool executeCode(const char* code, const uint& len) = 0;
 
 		/** Get the root ScriptObject that will be associated with the main MovieClip of a Movie */
-		virtual ScriptObject* getRootScriptObject() = 0;
+		virtual ScriptObject* getRootScriptObject(MovieClip* movieclip) = 0;
 
-		/** Create a ScriptObject for the given Resource type */
-		virtual ScriptObject* createScriptObject(Resource* res) = 0;
+		/** Create a ScriptObject for the given Instance */
+		virtual ScriptObject* createScriptObject(Instance* instance) = 0;
 
 		/** Destroy the given ScriptObject */
 		virtual void destroyScriptObject(ScriptObject* script_object) = 0;

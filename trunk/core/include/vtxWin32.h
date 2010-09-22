@@ -59,7 +59,7 @@ THE SOFTWARE.
 #		define VTX_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #		define malloc(x) _malloc_dbg(x, _NORMAL_BLOCK, __FILE__, __LINE__);
 #
-#		define new VTX_NEW
+//#		define new VTX_NEW
 #
 #		define VTX_MEM_DEBUG_ENABLE() _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF)
 #		define VTX_MEM_DEBUG_BREAK(a) _CrtSetBreakAlloc(a)
@@ -68,10 +68,10 @@ THE SOFTWARE.
 #		define VTX_MEM_DEBUG_BREAK(a)
 #	endif
 #
-#	if defined VTX_LOAD_PLUGIN && defined _DEBUG && !defined VTX_STATIC_LIB
-#		undef VTX_LOAD_PLUGIN
-#		define VTX_LOAD_PLUGIN(name) vtx::Root::getSingletonPtr()->loadLibrary(#name"_d")
-#	endif
+//#	if defined VTX_LOAD_PLUGIN && defined _DEBUG && !defined VTX_STATIC_LIB
+//#		undef VTX_LOAD_PLUGIN
+//#		define VTX_LOAD_PLUGIN(name) vtx::Root::getSingletonPtr()->loadLibrary(#name"_d")
+//#	endif
 #
 #endif // WIN32 settings
 

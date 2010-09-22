@@ -34,9 +34,9 @@ THE SOFTWARE.
 #define VTX_THREADING_BOOST 1
 
 // enable threaded loading of files
-#define VTX_THREADED_LOADING_ENABLED
+//#define VTX_THREADED_LOADING_ENABLED
 
 // select which threading library shall be used
-#define VTX_THREADING_LIB VTX_THREADING_BOOST
+//#define VTX_THREADING_LIB VTX_THREADING_BOOST
 
 #endif

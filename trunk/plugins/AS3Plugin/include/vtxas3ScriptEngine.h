@@ -50,17 +50,22 @@ namespace vtx { namespace as3 {
 		bool executeCode(const char* code, const uint& len);
 
 		/** @copybrief ScriptEngine::getRootScriptObject */
-		ScriptObject* getRootScriptObject();
+		ScriptObject* getRootScriptObject(vtx::MovieClip* movieclip);
 
 		/** @copybrief ScriptEngine::createScriptObject */
-		ScriptObject* createScriptObject(Resource* res);
+		ScriptObject* createScriptObject(Instance* instance);
 
 		/** @copybrief ScriptEngine::destroyScriptObject */
 		void destroyScriptObject(ScriptObject* script_object);
 
+		Instance* getQueuedInstance() const;
+
 	protected:
 		csp::VmCore* mVmCore;
 		as3::MovieClip* mRootObject;
+		SymbolClassResource* mSymbols;
+
+		Instance* mQueuedInstance;
 
 		/** Receive output from the ActionScript 3 virtual machine */
 		void output(const String& message);

@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "vtxRoot.h"
 
 #define CURL_STATICLIB
-#include "curl/curl.h"
+#include "curl.h"
 
 //-----------------------------------------------------------------------
 #ifdef VTX_STATIC_LIB

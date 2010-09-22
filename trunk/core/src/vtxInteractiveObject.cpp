@@ -132,6 +132,13 @@ namespace vtx
 				}
 			}
 		}
+		else
+		{
+			if(mScriptObject)
+			{
+				mScriptObject->eventFired(evt);
+			}
+		}
 	}
 	//-----------------------------------------------------------------------
 }

@@ -30,7 +30,7 @@ THE SOFTWARE.
 #define __vtxcaiRasterizer_H__
 
 #include "vtxcai.h"
-#include "vtxRastarizer.h"
+#include "vtxRasterizer.h"
 #include "vtxRect.h"
 
 #include "cairo.h"

@@ -60,6 +60,10 @@ namespace vtx { namespace as3 {
 		double get_height();
 		void set_height(double val);
 
+		DisplayObjectContainer* get_parent();
+
+		Stage* get_stage();
+
 		void set_visible(bool val);
 		bool get_visible();
 
@@ -68,7 +72,7 @@ namespace vtx { namespace as3 {
 	protected:
 		vtx::DisplayObject* mDisplayObject;
 
-		virtual void setNativeObject(Instance* inst);
+		virtual void init(Instance* inst, ScriptInterface* iface);
 	};
 	//-----------------------------------------------------------------------
 	CSP_DEFINE_CLASS(DisplayObject);

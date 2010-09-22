@@ -37,20 +37,10 @@ namespace vtx { namespace swf {
 	void FontParser::handleDefineFont(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
 	{
 		UI16 id = parser->readU16();
+		UI8 flags = parser->readU8();
+		UI8 lang_code = parser->readU8();
 
 		FontResource* font = new FontResource(StringHelper::toString(id));
-
-		parser->resetReadBits();
-		UI8 has_layout =	parser->readUBits(1);
-		UI8 shift_JIS =		parser->readUBits(1);
-		UI8 small_text =	parser->readUBits(1);
-		UI8 ANSI =			parser->readUBits(1);
-		UI8 wide_offsets =	parser->readUBits(1);
-		UI8 wide_codes =	parser->readUBits(1);
-		UI8 italic =		parser->readUBits(1);
-		UI8 bold =			parser->readUBits(1);
-
-		UI8 lang_code = parser->readU8();
 
 		// read non-ZERO terminated strings
 		String font_name = parser->readString(false);
@@ -60,7 +50,7 @@ namespace vtx { namespace swf {
 		UI16 num_glyphs = parser->readU16();
 		for(UI16 i=0; i<num_glyphs; ++i)
 		{
-			if(wide_offsets)
+			if(flags & FF_WideOffsets)
 			{
 				parser->readU32();
 			}
@@ -72,7 +62,7 @@ namespace vtx { namespace swf {
 
 		// Code Table Offset
 		UI32 codetable_offset = 0;
-		if(wide_offsets)
+		if(flags & FF_WideOffsets)
 		{
 			codetable_offset = parser->readU32();
 		}
@@ -104,7 +94,7 @@ namespace vtx { namespace swf {
 		}
 
 		// Font Layout
-		if(has_layout)
+		if(flags & FF_HasLayout)
 		{
 			SI16 ascender_height = parser->readS16();
 			SI16 descender_height = parser->readS16();
@@ -132,7 +122,7 @@ namespace vtx { namespace swf {
 			UI16 kerning_count = parser->readU16();
 			for(UI16 i=0; i<kerning_count; ++i)
 			{
-				parser->readKerningRecord(wide_codes);
+				parser->readKerningRecord(flags & FF_WideCodes);
 			}
 		}
 
@@ -144,8 +134,8 @@ namespace vtx { namespace swf {
 		Vector2 min;
 		Vector2 max;
 
-		types::ShapeElementList::iterator element_it = mFlashGlyph.elements.begin();
-		types::ShapeElementList::iterator element_end = mFlashGlyph.elements.end();
+		ShapeElementList::iterator element_it = mFlashGlyph.elements.begin();
+		ShapeElementList::iterator element_end = mFlashGlyph.elements.end();
 		while(element_it != element_end)
 		{
 			// the current element

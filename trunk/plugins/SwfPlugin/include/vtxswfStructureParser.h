@@ -49,6 +49,9 @@ namespace vtx { namespace swf {
 
 		void handleDefineScalingGrid();
 
+		void handleDoABC(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+		void handleSymbolClass(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+
 	protected:
 		SwfParser* mParser;
 

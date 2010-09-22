@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include "vtxogreShapeAtlasElement.h"
 
 #include "vtxAtlasNode.h"
-#include "vtxRastarizer.h"
+#include "vtxRasterizer.h"
 #include "vtxRect.h"
 #include "vtxShapeResource.h"
 #include "vtxSubshapeResource.h"

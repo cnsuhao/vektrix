@@ -30,7 +30,7 @@ THE SOFTWARE.
 #include "vtxLogManager.h"
 
 #define XML_STATIC
-#include "expat/expat.h"
+#include "expat.h"
 
 namespace vtx
 {

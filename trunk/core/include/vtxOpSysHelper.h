@@ -46,6 +46,9 @@ namespace vtx
 
 		/** Get the current system time as String */
 		static String getSystemTime();
+
+		static void showMouseCursor();
+		static void hideMouseCursor();
 	};
 	//-----------------------------------------------------------------------
 }

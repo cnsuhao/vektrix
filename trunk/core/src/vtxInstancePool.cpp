@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "vtxInstance.h"
 
 #include "vtxLogManager.h"
+#include "vtxResource.h"
 
 namespace vtx
 {
@@ -47,16 +48,26 @@ namespace vtx
 		PoolMap::iterator end = mPoolMap.end();
 		while(it != end)
 		{
-			VTX_LOG("Destroying %d instance(s) with type %s from instance pool", it->second->size(), it->first.c_str());
+			Pool* pool = it->second;
+			VTX_LOG("Destroying %d instance(s) with type %s from instance pool", pool->size(), it->first.c_str());
 
-			while(it->second->size())
+			while(pool->size())
 			{
+				Instance* inst = pool->top();
+				if(inst->getName().length())
+				{
+					VTX_LOG("Destroyed instance with name %s", inst->getName().c_str());
+				}
+				if(inst->getResource())
+				{
+					VTX_LOG("Destroyed instance with assigned resource %s", inst->getResource()->getType().c_str());
+				}
+				delete inst;
+				pool->pop();
 				++numDeletes;
-				delete it->second->top();
-				it->second->pop();
 			}
 
-			delete it->second;
+			delete pool;
 			++it;
 		}
 

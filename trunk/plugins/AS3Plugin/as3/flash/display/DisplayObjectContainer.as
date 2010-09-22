@@ -41,7 +41,8 @@ package flash.display
 		public function get mouseChildren():Boolean { return false; }
 		public function set mouseChildren(value:Boolean):void {}
 		
-		public function get numChildren():int { return 0; }
+		public native function get numChildren():int
+		/*{ return 0; }*/
 		
 		public function get tabChildren():Boolean { return false; }
 		public function set tabChildren(value:Boolean):void {}
@@ -52,18 +53,34 @@ package flash.display
 		public native function addChild(child:DisplayObject):DisplayObject
 		/*{ return null; }*/
 
-		public function addChildAt(child:DisplayObject, index:int):DisplayObject { return null; }
+		public native function addChildAt(child:DisplayObject, index:int):DisplayObject
+		/*{ return null; }*/
+		
 		public function areInaccessibleObjectsUnderPoint(point:Point):Boolean { return false; }
-		public function contains(child:DisplayObject):Boolean { return false; }
-		public function getChildAt(index:int):DisplayObject { return null; }
+		
+		public native function contains(child:DisplayObject):Boolean
+		/*{ return false; }*/
+		
+		public native function getChildAt(index:int):DisplayObject
+		/*{ return null; }*/
 		
 		public native function getChildByName(name:String):DisplayObject
+		/*{ return null; }*/
 		
-		public function getChildIndex(child:DisplayObject):int { return 0; }
+		public native function getChildIndex(child:DisplayObject):int
+		/*{ return 0; }*/
+		
 		public function getObjectsUnderPoint(point:Point):Array { return null; }
-		public function removeChild(child:DisplayObject):DisplayObject { return null; }
-		public function removeChildAt(index:int):DisplayObject { return null; }
-		public function setChildIndex(child:DisplayObject, index:int):void {}
+		
+		public native function removeChild(child:DisplayObject):DisplayObject
+		/*{ return null; }*/
+		
+		public native function removeChildAt(index:int):DisplayObject
+		/*{ return null; }*/
+		
+		public native function setChildIndex(child:DisplayObject, index:int):void
+		/*{}*/
+		
 		public function swapChildren(child1:DisplayObject, child2:DisplayObject):void {}
 		public function swapChildrenAt(index1:int, index2:int):void {}
 	}

@@ -53,6 +53,8 @@ namespace vtx
 
 			setBoundingBox(mShapeResource->getBoundingBox());
 		}
+
+		DisplayObject::initFromResource(resource);
 	}
 	//-----------------------------------------------------------------------
 	const String& Shape::getType() const

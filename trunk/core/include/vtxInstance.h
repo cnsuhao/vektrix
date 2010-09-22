@@ -48,7 +48,7 @@ namespace vtx
 		virtual bool isDisplayObjectContainer() const;
 
 		/** Initialize this Instance with the given Resource */
-		virtual void initFromResource(Resource* resource) = 0;
+		virtual void initFromResource(Resource* resource) { mResource = resource; }
 
 		/** Get the unique type of this instance */
 		virtual const String& getType() const = 0;
@@ -59,6 +59,8 @@ namespace vtx
 		/** Get the current parent Movie of this instance */
 		Movie* getParent() const;
 
+		Resource* getResource() const;
+
 		void setName(const String& name);
 		const String& getName() const;
 
@@ -68,9 +70,14 @@ namespace vtx
 		/** Get the ScriptObject that is associated with this instance */
 		virtual ScriptObject* getScriptObject() const;
 
+		virtual void initScriptObject();
+
+		//virtual void releaseScriptObject();
+
 	protected:
 		String mName;
 		Movie* mParentMovie;
+		Resource* mResource;
 		ScriptObject* mScriptObject;
 	};
 	//-----------------------------------------------------------------------

@@ -29,20 +29,49 @@ THE SOFTWARE.
 package flash.events
 {
 	import flash.events.IEventDispatcher;
+	import flash.utils.*;
 	
 	[native(cls="::vtx::as3::EventDispatcherClass", instance="::vtx::as3::EventDispatcher", methods="auto")]
 	public class EventDispatcher implements IEventDispatcher
 	{
+		private var mHandlers : Dictionary;
+
 		public function EventDispatcher(target:IEventDispatcher = null)
 		{
-
+			mHandlers = new Dictionary();
 		}
 		
-		public native function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
-		/*{ trace("addEventListener"); };*/
+		public /*native*/ function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
+		/**/
+		{
+			//trace("addEventListener", type);
+
+			if(mHandlers[type] == null)
+			{
+				//trace("new handler array for type:", type);
+				mHandlers[type] = new Array();
+			}
+			
+			mHandlers[type].push(listener);
+		};
+		/**/
 		
 		public native function dispatchEvent(event:Event):Boolean
-		/*{}*/
+		/*
+		{
+			var listeners:Array = mHandlers[event.type];
+			
+			if(listeners != null)
+			{
+				//trace("listeners != null for type:", event.type, "with", listeners.length, "listeners");
+
+				for(var i:uint = 0; i<listeners.length; ++i)
+				{
+					listeners[i].call(listeners[i], event);
+				}
+			}
+		}
+		*/
 		
 		public native function hasEventListener(type:String):Boolean
 		/*{
@@ -50,8 +79,28 @@ package flash.events
 			return false;
 		}*/
 		
-		public native function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void
-		/*{}*/
+		public /*native*/ function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void
+		/**/
+		{
+			trace("removeEventListener", type);
+
+			var listeners:Array = mHandlers[type];
+
+			if(listeners != null)
+			{
+				//trace("listeners != null for type:", event.type, "with", listeners.length, "listeners");
+
+				for(var i:uint = 0; i<listeners.length; ++i)
+				{
+					if(listeners[i] == listener)
+					{
+						listeners.splice(i, 1);
+						return;
+					}
+				}
+			}
+		}
+		/**/
 		
 		public native function willTrigger(type:String):Boolean
 		/*{

@@ -28,12 +28,34 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
+#include "cspVmCore.h"
+
+#include "vtxMovie.h"
+#include "vtxas3ScriptEngine.h"
+#include "vtxDisplayObjectContainer.h"
+
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	Sprite::Sprite(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
 		: DisplayObjectContainer(vtable, prototype)
 	{
+/*		AS3ScriptEngine* script_engine = static_cast<AS3ScriptEngine*>(CSP_CORE->getUserData());
+		Instance* inst = script_engine->getQueuedInstance();
 
+		if(!inst)
+		{
+			inst = script_engine->getParentMovie()->getInstanceByType("MovieClip");
+		}
+
+		inst->setScriptObject(this);
+
+		mDisplayObjectContainer->initScriptObject_2();
+		//setNativeObject(inst);*/
+	}
+	//-----------------------------------------------------------------------
+	void Sprite::setNativeObject(Instance* inst)
+	{
+		DisplayObjectContainer::setNativeObject(inst);
 	}
 	//-----------------------------------------------------------------------
 }}

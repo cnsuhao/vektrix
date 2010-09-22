@@ -31,18 +31,15 @@ THE SOFTWARE.
 
 #include "cspPrerequisites.h"
 
-#include "vtxas3ScriptObjectBase.h"
+#include "vtxas3Object.h"
 
 #include "vtxScriptObject.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
-	class EventDispatcher : public ScriptObjectBase
+	class EventDispatcher : public AS3Object
 	{
 	public:
-		typedef std::vector<avmplus::FunctionObject*> FunctionList;
-		typedef std::map<String, FunctionList> FunctionMap;
-
 		EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 		virtual ~EventDispatcher(){}
 
@@ -57,10 +54,9 @@ namespace vtx { namespace as3 {
 
 		void setChildObject(const String& name, vtx::ScriptObject* script_object);
 
-		CSP_INST_SLOTS(EventDispatcher);
+		vtx::ScriptObject* getChildObject(const String& name);
 
-	protected:
-		FunctionMap mHandlers;
+		CSP_INST_SLOTS(EventDispatcher);
 	};
 	//-----------------------------------------------------------------------
 	CSP_DEFINE_CLASS(EventDispatcher);

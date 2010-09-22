@@ -45,7 +45,7 @@ namespace vtx
 		DisplayObjectContainer();
 		virtual ~DisplayObjectContainer();
 
-		bool isDisplayObjectContainer() const;
+		virtual bool isDisplayObjectContainer() const;
 
 		/** Add a child object at the topmost available layer */
 		void addChild(DisplayObject* object);
@@ -56,10 +56,14 @@ namespace vtx
 		/** Get the child object located at the given layer */
 		DisplayObject* getChildAt(uint layer);
 
+		DisplayObject* getChildByIndex(const uint& index);
+
 		DisplayObject* getChildByName(const String& name);
 
 		/** Remove a child object from the given layer */
-		bool removeChildAt(uint layer);
+		DisplayObject* removeChildAt(uint layer);
+
+		uint numChildren() const;
 
 		/** Remove all objects from all layers */
 		void clearLayers();
@@ -74,6 +78,8 @@ namespace vtx
 
 		// inherited from EventListener
 		virtual void eventFired(const Event& evt);
+
+		virtual void initScriptObject_2();
 
 	protected:
 		bool mNeedBoundingBoxUpdate;

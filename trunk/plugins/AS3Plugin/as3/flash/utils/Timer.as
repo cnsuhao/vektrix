@@ -30,26 +30,21 @@ package flash.utils
 {
 	import flash.events.EventDispatcher;
 
+	[native(cls="::vtx::as3::TimerClass", instance="::vtx::as3::Timer", methods="auto")]
 	public class Timer extends EventDispatcher
 	{
 		public function Timer(delay:Number, repeatCount:int = 0)
 		{
+			trace("Timer::Timer(", delay, ", ", repeatCount, ")");
+			init(delay, repeatCount);
+		}
+		
+		public native function reset():void
+		
+		public native function start():void
+		
+		public native function stop():void
 
-		}
-		
-		public function reset():void
-		{
-		
-		}
-		
-		public function start():void
-		{
-		
-		}
-		
-		public function stop():void
-		{
-		
-		}
+		private native function ctor(delay:Number, repeatCount:int):void
 	}
 }

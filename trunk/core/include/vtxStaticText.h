@@ -44,6 +44,8 @@ namespace vtx
 		StaticText();
 		virtual ~StaticText();
 
+		const WString getText() const;
+
 		/** Implementation of Instance::initFromResource */
 		virtual void initFromResource(Resource* resource);
 

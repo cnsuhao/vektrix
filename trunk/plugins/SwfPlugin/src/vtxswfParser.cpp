@@ -40,7 +40,7 @@ THE SOFTWARE.
 #include "vtxStringHelper.h"
 
 #ifdef USE_ZLIB
-#include "zlib/zlib.h"
+#include "zlib.h"
 #endif
 
 namespace vtx { namespace swf {
@@ -114,7 +114,8 @@ namespace vtx { namespace swf {
 		mBuffer = NULL; 
 		mBitPos = 0; 
 		mBitBuf = 0; 
-		mFileLength = 0; 
+		mFileLength = 0;
+		mSWFVersion = 0;
 		mCurrentFile = NULL; 
 		mCurrentStream = NULL;
 	}
@@ -133,9 +134,9 @@ namespace vtx { namespace swf {
 
 		mCompressed = (sig[0] == 'C');
 
-		UI8 version;
-		mCurrentStream->read(&version, sizeof(UI8));
-		mHeader.version = StringHelper::toString(version);
+		//UI8 version;
+		mCurrentStream->read(&mSWFVersion, sizeof(UI8));
+		mHeader.version = StringHelper::toString(mSWFVersion);
 
 		mCurrentStream->read(&mFileLength, sizeof(UI32));
 
@@ -265,21 +266,21 @@ namespace vtx { namespace swf {
 			}
 			break;
 
-		case TT_DefineBits:
-		case TT_DefineBitsJPEG2:
-		case TT_DefineBitsJPEG3:
-		case TT_DefineBitsJPEG4:
-			{
-				mImageParser->handleDefineBitsJPEG(type, length, this);
-			}
-			break;
+		//case TT_DefineBits:
+		//case TT_DefineBitsJPEG2:
+		//case TT_DefineBitsJPEG3:
+		//case TT_DefineBitsJPEG4:
+		//	{
+		//		mImageParser->handleDefineBitsJPEG(type, length, this);
+		//	}
+		//	break;
 
-		case TT_DefineBitsLossless:
-		case TT_DefineBitsLossless2:
-			{
-				mImageParser->handleDefineBitsLossless(type, length, this);
-			}
-			break;
+		//case TT_DefineBitsLossless:
+		//case TT_DefineBitsLossless2:
+		//	{
+		//		mImageParser->handleDefineBitsLossless(type, length, this);
+		//	}
+		//	break;
 
 			// shapes
 		case TT_DefineShape:
@@ -292,6 +293,10 @@ namespace vtx { namespace swf {
 			break;
 
 			// structure
+		//case TT_DefineButton:
+		//	mStructureParser->handleDefineButton2()
+		//	break;
+
 		case TT_DefineButton2:
 			mStructureParser->handleDefineButton2();
 			break;
@@ -347,11 +352,11 @@ namespace vtx { namespace swf {
 
 			// ActionScript
 		case TT_SymbolClass:
-			mScriptParser->handleSymbolClass(type, length, this);
+			mStructureParser->handleSymbolClass(type, length, this);
 			break;
 
 		case TT_DoABC:
-			mScriptParser->handleDoABC(type, length, this);
+			mStructureParser->handleDoABC(type, length, this);
 			break;
 
 			// skip tags that don't need to be parsed (yet?)
@@ -366,6 +371,11 @@ namespace vtx { namespace swf {
 			mReadPos += length;
 			break;
 		}
+	}
+	//-----------------------------------------------------------------------
+	void SwfParser::skip(const uint& len)
+	{
+		mReadPos += len;
 	}
 	//-----------------------------------------------------------------------
 	UI8 SwfParser::readU8()
@@ -454,6 +464,8 @@ namespace vtx { namespace swf {
 	COLOR SwfParser::readColor(const bool& alpha)
 	{
 		COLOR result;
+		resetReadBits();
+
 		result.red = readU8();
 		result.green = readU8();
 		result.blue = readU8();
@@ -469,6 +481,8 @@ namespace vtx { namespace swf {
 	MATRIX SwfParser::readMatrix()
 	{
 		MATRIX result;
+		resetReadBits();
+
 		UI32 num_bits = 0;
 		resetReadBits();
 

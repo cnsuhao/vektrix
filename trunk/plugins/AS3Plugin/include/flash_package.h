@@ -36,7 +36,9 @@ using namespace avmplus;
 #include "flash.h"
 
 // flash.events
+#include "vtxas3Event.h"
 #include "vtxas3EventDispatcher.h"
+#include "vtxas3MouseEvent.h"
 
 // flash.system
 #include "vtxas3LoaderContext.h"
@@ -48,20 +50,27 @@ using namespace avmplus;
 #include "vtxas3DisplayObjectContainer.h"
 #include "vtxas3Loader.h"
 #include "vtxas3Sprite.h"
+#include "vtxas3Stage.h"
 #include "vtxas3MovieClip.h"
 
 // flash.net
 #include "vtxas3URLRequest.h"
 
+// flash.system
+
 // flash.text
 #include "vtxas3StaticText.h"
 #include "vtxas3TextField.h"
 
+// flash.ui
+#include "vtxas3Mouse.h"
+
 // flash.utils
-//#include "DictionaryGlue.h"
+#include "vtxas3FlashUtils.h"
+#include "DictionaryGlue.h"
+#include "vtxas3Timer.h"
 
 // vektrix.events
-#include "vtxas3Event.h"
 #include "vtxas3EventHandler.h"
 
 #endif
