@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "vtxInstance.h"
 #include "vtxMovie.h"
 #include "vtxResource.h"
+#include "vtxScriptEngine.h"
 #include "vtxScriptObject.h"
 
 namespace vtx
@@ -36,6 +37,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	Instance::Instance() 
 		: mParentMovie(NULL), 
+		mResource(NULL), 
 		mScriptObject(NULL)
 	{
 
@@ -43,7 +45,11 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	Instance::~Instance()
 	{
-
+		if(mScriptObject)
+		{
+			mScriptObject->destroy();
+			mScriptObject = NULL;
+		}
 	}
 	//-----------------------------------------------------------------------
 	bool Instance::isDisplayObject() const
@@ -66,6 +72,11 @@ namespace vtx
 		return mParentMovie;
 	}
 	//-----------------------------------------------------------------------
+	Resource* Instance::getResource() const
+	{
+		return mResource;
+	}
+	//-----------------------------------------------------------------------
 	void Instance::setName(const String& name)
 	{
 		mName = name;
@@ -79,15 +90,21 @@ namespace vtx
 	void Instance::setScriptObject(ScriptObject* obj)
 	{
 		// remove native object from original script object
-		if(obj)
-		{
-			Instance* inst = obj->getNativeObject();
-			if(inst)
-			{
-				inst->setScriptObject(NULL);
-			}
-			obj->setNativeObject(NULL);
-		}
+		//if(obj)
+		//{
+		//	Instance* inst = obj->getNativeObject();
+		//	if(inst)
+		//	{
+		//		inst->setScriptObject(NULL);
+		//	}
+		//	obj->setNativeObject(NULL);
+		//}
+
+		//if(mScriptObject)
+		//{
+		//	mScriptObject->destroy();
+		//	mScriptObject = NULL;
+		//}
 
 		mScriptObject = obj;
 
@@ -101,5 +118,26 @@ namespace vtx
 	{
 		return mScriptObject;
 	}
+	//-----------------------------------------------------------------------
+	void Instance::initScriptObject()
+	{
+		//releaseScriptObject();
+
+		ScriptEngine* script_engine = mParentMovie->getScriptEngine();
+		if(script_engine)
+		{
+			script_engine->createScriptObject(this);
+			//setScriptObject(script_engine->createScriptObject(this));
+		}
+	}
+	//-----------------------------------------------------------------------
+	//void Instance::releaseScriptObject()
+	//{
+	//	if(mScriptObject)
+	//	{
+	//		mScriptObject->destroy();
+	//		mScriptObject = NULL;
+	//	}
+	//}
 	//-----------------------------------------------------------------------
 }

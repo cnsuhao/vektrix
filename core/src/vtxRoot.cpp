@@ -76,8 +76,6 @@ namespace vtx
 			++it;
 		}
 
-		FileManager::getSingletonPtr()->unloadAllFiles();
-
 		VTX_LOG("Unloading Plugins...");
 
 		// unload plugins
@@ -88,6 +86,8 @@ namespace vtx
 			delete *plugin_it;
 			++plugin_it;
 		}
+
+		FileManager::getSingletonPtr()->unloadAllFiles();
 
 #if VTX_THREADING_LIB != VTX_THREADING_NONE
 		delete mMainJobQueue;

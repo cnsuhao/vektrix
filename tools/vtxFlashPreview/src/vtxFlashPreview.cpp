@@ -46,11 +46,12 @@ THE SOFTWARE.
 #undef new
 #include "vtxopMovableMovie.h"
 
+#include "OgreRenderSystem.h"
 #include "OgreRenderWindow.h"
 #include "OgreRoot.h"
 
-#include <conio.h>
-#include <direct.h>
+//#include <conio.h>
+//#include <direct.h>
 
 namespace vtx { namespace tools { namespace FlashPreview {
 	//-----------------------------------------------------------------------
@@ -67,11 +68,12 @@ namespace vtx { namespace tools { namespace FlashPreview {
 		if(argc < 2)
 		{
 			std::cout << "ERROR: no input file provided..." << std::endl;
-			getch();
+			std::cin.get();
 			return 1;
 		}
 
 		VTX_MEM_DEBUG_ENABLE();
+		//VTX_MEM_DEBUG_BREAK(15068);
 
 		mFilename = argv[1];
 

@@ -123,7 +123,7 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	const float Transform::getWidth() const
+	float Transform::getWidth() const
 	{
 		return mBounding.getWidth() * mScale.x;
 	}
@@ -136,7 +136,7 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
-	const float Transform::getHeight() const
+	float Transform::getHeight() const
 	{
 		return mBounding.getHeight() * mScale.y;
 	}

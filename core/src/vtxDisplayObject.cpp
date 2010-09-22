@@ -225,4 +225,14 @@ namespace vtx
 		return mTransform;
 	}
 	//-----------------------------------------------------------------------
+	/*void DisplayObject::initScriptObject()
+	{
+		//if(mParentContainer && mName.length())
+		//{
+		//	mParentContainer->getScriptObject()->setChildObject(mName, mScriptObject);
+		//}
+
+		Instance::initScriptObject();
+	}*/
+	//-----------------------------------------------------------------------
 }

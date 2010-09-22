@@ -46,7 +46,7 @@ namespace vtx { namespace as3 {
 	protected:
 		vtx::MovieClip* mMovieClip;
 
-		void setNativeObject(Instance* inst);
+		virtual void setNativeObject(Instance* inst);
 	};
 	//-----------------------------------------------------------------------
 	CSP_DEFINE_CLASS(MovieClip);

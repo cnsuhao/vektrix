@@ -174,9 +174,9 @@ namespace vtx
 		}
 
 #ifdef _DEBUG
-		VTX_LOG("\"%s\": Added resource with id \"%s\" of type \"%s\"", 
-			mFilename.c_str(), 
-			res->getID().c_str(), res->getType().c_str());
+		//VTX_LOG("\"%s\": Added resource with id \"%s\" of type \"%s\"", 
+		//	mFilename.c_str(), 
+		//	res->getID().c_str(), res->getType().c_str());
 #endif
 	}
 	//-----------------------------------------------------------------------

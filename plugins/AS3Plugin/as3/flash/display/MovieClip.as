@@ -45,7 +45,7 @@ package flash.display
 		public function set trackAsMenu(value:Boolean):void {}
 
 		/* methods */
-		public function addFrameScript(index:int, script:Object) {}
+		public function addFrameScript(... frame_scripts) {}
 		public function gotoAndPlay(frame:Object, scene:String = null):void {}
 		public function gotoAndStop(frame:Object, scene:String = null):void {}
 		public function nextFrame():void {}

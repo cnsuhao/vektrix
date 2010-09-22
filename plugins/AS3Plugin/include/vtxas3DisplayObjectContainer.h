@@ -39,9 +39,27 @@ namespace vtx { namespace as3 {
 		DisplayObjectContainer(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 		virtual ~DisplayObjectContainer();
 
+		// getters & setters
+		int get_numChildren();
+
+		// functions
 		DisplayObject* addChild(DisplayObject* child);
 
+		DisplayObject* addChildAt(DisplayObject* child, int index);
+
+		bool contains(DisplayObject* child);
+
+		DisplayObject* getChildAt(int index);
+
 		DisplayObject* getChildByName(avmplus::Stringp name);
+
+		int getChildIndex(DisplayObject* child);
+
+		DisplayObject* removeChild(DisplayObject* child);
+
+		DisplayObject* removeChildAt(int index);
+
+		void setChildIndex(DisplayObject* child, int index);
 
 		CSP_INST_SLOTS(DisplayObjectContainer);
 

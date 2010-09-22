@@ -57,7 +57,11 @@ package flash.display
 		public native function set height(value:Number):void
 		/*{}*/
 
-		public function get loaderInfo():LoaderInfo { return null; }
+		public function get loaderInfo():LoaderInfo
+		{
+			trace(this, "loaderInfo()")
+			return null
+		}
 		
 		public function get mask():DisplayObject { return null; }
 		public function set mask(value:DisplayObject):void {}
@@ -71,11 +75,13 @@ package flash.display
 		public function get opaqueBackground():Object { return null; }
 		public function set opaqueBackground(value:Object):void {}
 		
-		public function get parent():DisplayObjectContainer
+		public native function get parent():DisplayObjectContainer
+		/*
 		{
 			trace("DisplayObject::parent()");
 			return null;
 		}
+		*/
 		
 		public function get root():DisplayObject { return null; }
 
@@ -100,13 +106,14 @@ package flash.display
 		public function get scrollRect():Rectangle { return null; }
 		public function set scrollRect(value:Rectangle):void {}
 		
-		public function get stage():Stage { return null; }
+		public native function get stage():Stage
+		/*{ return null; }*/
 		
 		public function get transform():Transform { return null; }
 		public function set transform(value:Transform):void {}
 
-		public native function get visible():Boolean
-		/*{ return false; }*/
+		public /*native*/ function get visible():Boolean
+		{ trace("AS3 DisplayObject.visible"); return false; }
 		public native function set visible(value:Boolean):void
 		/*{}*/
 

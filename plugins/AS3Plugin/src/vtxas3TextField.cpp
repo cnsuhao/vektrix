@@ -28,6 +28,8 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
+#include "vtxas3ScriptEngine.h"
+
 #include "vtxEditText.h"
 #include "vtxMovie.h"
 
@@ -40,9 +42,9 @@ namespace vtx { namespace as3 {
 	TextField::TextField(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
 		: InteractiveObject(vtable, prototype)
 	{
-		Movie* movie = static_cast<Movie*>(CSP_CORE->getUserData());
-		Instance* inst = movie->getInstanceByType(EditText::TYPE);
-		inst->setScriptObject(this);
+/*		AS3ScriptEngine* script_engine = static_cast<AS3ScriptEngine*>(CSP_CORE->getUserData());
+		Instance* inst = script_engine->getParentMovie()->getInstanceByType(EditText::TYPE);
+		inst->setScriptObject(this);*/
 	}
 	//-----------------------------------------------------------------------
 	TextField::~TextField()
@@ -88,10 +90,10 @@ namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	void TextField::setNativeObject(Instance* inst)
 	{
-		Instance* instance = getNativeObject();
+/*		Instance* instance = getNativeObject();
 		if(instance)
 		{
-			Movie* movie = static_cast<Movie*>(CSP_CORE->getUserData());
+			AS3ScriptEngine* script_engine = static_cast<AS3ScriptEngine*>(CSP_CORE->getUserData());
 			vtx::DisplayObject* displ = static_cast<vtx::DisplayObject*>(instance);
 			if(displ)
 			{
@@ -102,13 +104,13 @@ namespace vtx { namespace as3 {
 				}
 				else
 				{
-					movie->releaseInstance(instance);
+					script_engine->getParentMovie()->destroyInstance(instance);
 				}
 			}
 		}
 
 		InteractiveObject::setNativeObject(inst);
-		mEditText = static_cast<vtx::EditText*>(inst);
+		mEditText = static_cast<vtx::EditText*>(inst);*/
 	}
 	//-----------------------------------------------------------------------
 }}

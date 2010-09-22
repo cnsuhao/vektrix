@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxas3_H__
 #define __vtxas3_H__
 
-#define VTX_DISABLE_MEMORY_DEBUGGING
+//#define VTX_DISABLE_MEMORY_DEBUGGING
 #include "vtxPrerequisites.h"
 
 #if VTX_OS == VTX_WIN32
@@ -62,6 +62,11 @@ namespace vtx
 		class LoaderContext;
 		class MovieClip;
 		class URLRequest;
+
+		class AS3Object;
+		class ScriptInterface;
+
+		class EventDispatcher;
 	}
 }
 

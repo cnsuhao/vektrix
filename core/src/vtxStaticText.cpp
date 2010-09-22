@@ -44,6 +44,16 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
+	const WString StaticText::getText() const
+	{
+		if(mStaticTextResource)
+		{
+			return mStaticTextResource->getText();
+		}
+
+		return L"";
+	}
+	//-----------------------------------------------------------------------
 	void StaticText::initFromResource(Resource* resource)
 	{
 		if(resource->getType() == "StaticText")
@@ -52,6 +62,8 @@ namespace vtx
 
 			setBoundingBox(mStaticTextResource->getBoundingBox());
 		}
+
+		DisplayObject::initFromResource(resource);
 	}
 	//-----------------------------------------------------------------------
 	const String& StaticText::getType() const

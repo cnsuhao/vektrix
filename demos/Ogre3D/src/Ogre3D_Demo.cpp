@@ -1,5 +1,3 @@
-#include <conio.h>
-
 #include "vtxFile.h"
 #include "vtxFileManager.h"
 #include "vtxMovie.h"
@@ -9,18 +7,26 @@
 #include "vtxopMovableMovie.h"
 
 // vektrix plugins
-#include "vtxas3Plugin.h"
-#include "vtxcaiPlugin.h"
-#include "vtxcurlPlugin.h"
-#include "vtxfreeimgPlugin.h"
-#include "vtxopPlugin.h"
-#include "vtxswfPlugin.h"
+#ifdef VTX_STATIC_LIB
+#	include "vtxas3Plugin.h"
+#	include "vtxcaiPlugin.h"
+#	include "vtxcurlPlugin.h"
+#	include "vtxfreeimgPlugin.h"
+#	include "vtxopPlugin.h"
+#	include "vtxswfPlugin.h"
+#endif
 
 #include "Ogre.h"
 #include "OgreFrameListener.h"
 
 #define OIS_DYNAMIC_LIB
 #include <OIS/OIS.h>
+
+#ifdef WIN32
+#	define MEDIA_PATH vtx::String("../../demos/media")
+#else
+#	define MEDIA_PATH vtx::String("../demos/media")
+#endif
 
 vtx::ogre::MovableMovie* movie = NULL;
 Ogre::Camera* camera = NULL;
@@ -280,7 +286,7 @@ int main(int argc, char **argv)
 	VTX_LOAD_PLUGIN(vektrix_OgrePlugin);
 	VTX_LOAD_PLUGIN(vektrix_SwfPlugin);
 
-	vtx::FileManager::getSingletonPtr()->addFileContainer("../demos/media");
+	vtx::FileManager::getSingletonPtr()->addFileContainer(MEDIA_PATH);
 	vtx::FileManager::getSingletonPtr()->addFileContainer("");
 	vtx::FileManager::getSingletonPtr()->addFileContainer("", "WebFileContainer");
 
@@ -382,7 +388,7 @@ int main(int argc, char **argv)
 	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie", &listener);
 	//movie->play();
 
-	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "C:/Users/stone/Desktop/vtx_flash_test/vtx_flash_test.swf", "OgreMovableMovie", &movie_listener);
+	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "shape_test.swf", "OgreMovableMovie", &movie_listener);
 	movie->play();
 
 	movie_node->attachObject(movie);

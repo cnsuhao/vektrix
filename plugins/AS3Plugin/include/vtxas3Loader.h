@@ -35,7 +35,7 @@ THE SOFTWARE.
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
-	class Loader : public DisplayObjectContainer, public File::Listener
+	class Loader : public DisplayObjectContainer
 	{
 	public:
 		Loader(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
@@ -50,7 +50,7 @@ namespace vtx { namespace as3 {
 	protected:
 		vtx::MovieClip* mMovieClip;
 
-		void _setNativeObject(Instance* inst);
+		void setNativeObject(Instance* inst);
 
 		void loadingCompleted(File* file);
 		void loadingFailed(File* file);

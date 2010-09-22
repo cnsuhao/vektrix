@@ -133,6 +133,8 @@ namespace vtx
 		/** Get the Transform that is associated with this object */
 		Transform& getTransform();
 
+		//virtual void initScriptObject();
+
 	protected:
 		Transform mTransform;
 		DisplayObjectContainer* mParentContainer;

@@ -157,57 +157,39 @@ namespace vtx { namespace swf {
 
 		edit_text->setBoundingBox(box);
 
-		parser->resetReadBits();
-		UI8 has_text =		parser->readUBits(1);
-		UI8 word_wrap =		parser->readUBits(1);
-		UI8 multi_line =	parser->readUBits(1);
-		UI8 password =		parser->readUBits(1);
-		UI8 read_only =		parser->readUBits(1);
-		UI8 has_color =		parser->readUBits(1);
-		UI8 has_max_len =	parser->readUBits(1);
-		UI8 has_font =		parser->readUBits(1);
+		UI16 flags = parser->readU16();
 
-		parser->resetReadBits();
-		UI8 has_font_class =	parser->readUBits(1);
-		UI8 auto_size =			parser->readUBits(1);
-		UI8 has_layout =		parser->readUBits(1);
-		UI8 no_select =			parser->readUBits(1);
-		UI8 border =			parser->readUBits(1);
-		UI8 was_static =		parser->readUBits(1);
-		UI8 html_text =			parser->readUBits(1);
-		UI8 use_glyph_font =	parser->readUBits(1);
-
-		if(has_font)
+		if(flags & ETF_HasFont)
 		{
 			// font id
 			UI16 fontid = parser->readU16();
 		}
 
-		if(has_font_class)
+		if(flags & ETF_HasFontClass)
 		{
 			// font as3 class
 			String font_class = parser->readString();
 		}
 
-		if(has_font)
+		if(flags & ETF_HasFont)
 		{
 			// font height
 			UI16 font_size = parser->readU16();
 		}
 
-		if(has_color)
+		if(flags & ETF_HasTextColor)
 		{
 			// text color
 			COLOR color = parser->readColor(true);
 		}
 
-		if(has_max_len)
+		if(flags & ETF_HasMaxLength)
 		{
 			// max text length
 			parser->readU16();
 		}
 
-		if(has_layout)
+		if(flags & ETF_HasLayout)
 		{
 			parser->readU8(); // align (left = 0, right, center, justify)
 			parser->readU16(); // left margin
@@ -219,7 +201,7 @@ namespace vtx { namespace swf {
 		// variable name
 		parser->readString();
 
-		if(has_text)
+		if(flags & ETF_HasText)
 		{
 			// initial text
 			String html_text = parser->readString();

@@ -44,8 +44,8 @@ namespace vtx { namespace tools { namespace FlashPreview {
 
 		mApplication->resizeWindow(width, height);
 
-		//movie->enableDebugger(true);
-		//movie->getDebugger()->debugBoundingBoxes(true);
+		movie->enableDebugger(true);
+		movie->getDebugger()->debugBoundingBoxes(true);
 
 		return false;
 	}

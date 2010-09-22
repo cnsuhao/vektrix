@@ -41,7 +41,7 @@ THE SOFTWARE.
 #include "vtxTimeline.h"
 
 #define FREEIMAGE_LIB
-#include "freeimage/FreeImage.h"
+#include "FreeImage.h"
 
 namespace vtx { namespace freeimg {
 	//-----------------------------------------------------------------------
@@ -174,7 +174,7 @@ namespace vtx { namespace freeimg {
 		Keyframe* keyframe = new Keyframe();
 
 		keyframe->setIndex(0);
-		keyframe->addEvent(new CreateObjectEvent(NULL, file, shape_res->getID(), 1, Matrix(), CXForm()));
+		keyframe->addEvent(new CreateObjectEvent(NULL, file, shape_res->getID(), 0, Matrix(), CXForm()));
 		timeline->addKeyframe(keyframe);
 
 		main_mc->setTimeline(timeline);

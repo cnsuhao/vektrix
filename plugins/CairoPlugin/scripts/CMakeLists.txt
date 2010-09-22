@@ -1,23 +1,58 @@
-# include directories
-include_directories (
-../include
-../../../core/include
-$ENV{CAIRO_HOME}/include/cairo
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
+
+#-----------------------------------------------------------------------
+# CMAKE OPTIONS
+#-----------------------------------------------------------------------
+
+#-----------------------------------------------------------------------
+# PREPROCESSOR SETTINGS
+#-----------------------------------------------------------------------
+
+if(WIN32)
+	# add uppercase export definition
+	add_definitions (-DVEKTRIX_CAIROPLUGIN_EXPORTS)
+endif()
+
+#-----------------------------------------------------------------------
+# SOURCE FILES & INCLUDE DIRECTORIES & LINK LIBRARIES
+#-----------------------------------------------------------------------
+
+# read the source-files list
+include (vektrix_CairoPlugin_src_files)
+
+# the required include directories
+set (include_dirs
+	../include
+	../../../core/include
+	${cairo_include_dirs}
 )
 
-# library directories
-#link_libraries ($ENV{CAIRO_HOME}/lib/libcairo.so)
+# the required link libraries
+set (libraries
+	vektrix
+	${cairo_libraries}
+)
 
-file(GLOB VTXCAI_SRC "../src/*.cpp")
+#-----------------------------------------------------------------------
+# BUILD SETTINGS & COMPILATION
+#-----------------------------------------------------------------------
 
 # output directory
-set (LIBRARY_OUTPUT_PATH ../../../bin)
+set (LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
-# build
-add_library (vektrix_CairoPlugin SHARED ${VTXCAI_SRC})
+# set the include directories
+include_directories (${include_dirs})
 
-target_link_libraries(vektrix_CairoPlugin cairo)
+# add the plugin library
+add_library (vektrix_CairoPlugin SHARED ${file_root})
 
+# automatically update the source-files list with folders4cmake
+auto_rebuild_src_files (vektrix_CairoPlugin)
+
+#if(VTX_STATIC_LIB)
 # remove "lib" prefix
-set_target_properties(vektrix_CairoPlugin PROPERTIES PREFIX "")
+set_target_properties (vektrix_CairoPlugin PROPERTIES PREFIX "")
+#endif()
 
+# link against the required libraries
+target_link_libraries (vektrix_CairoPlugin ${libraries})

@@ -32,7 +32,7 @@ package flash.display
 	import flash.system.*;
 	import flash.utils.*;
 
-	public class LoaderInfo
+	public class LoaderInfo extends EventDispatcher
 	{
 		/* getters & setters */
 		public function get actionScriptVersion():uint { return null; }

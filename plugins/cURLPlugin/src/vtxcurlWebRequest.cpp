@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include "vtxcurlWebRequest.h"
 
 #define CURL_STATICLIB
-#include "curl/curl.h"
+#include "curl.h"
 
 namespace vtx
 {

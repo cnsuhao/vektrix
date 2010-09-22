@@ -91,8 +91,8 @@ namespace vtx { namespace swf {
 	//-----------------------------------------------------------------------
 	void ShapeParser::getFlashStyles()
 	{
-		types::ShapeElementList::iterator it = mFlashShape.elements.begin();
-		types::ShapeElementList::iterator end = mFlashShape.elements.end();
+		ShapeElementList::iterator it = mFlashShape.elements.begin();
+		ShapeElementList::iterator end = mFlashShape.elements.end();
 		while(it != end)
 		{
 			const SHAPEELEMENT& se = *it;
@@ -135,8 +135,8 @@ namespace vtx { namespace swf {
 			// get and store the flash elements
 			const SHAPEELEMENT* prev_elem = NULL;
 
-			types::ShapeElementList::iterator elem_it = mFlashShape.elements.begin();
-			types::ShapeElementList::iterator elem_end = mFlashShape.elements.end();
+			ShapeElementList::iterator elem_it = mFlashShape.elements.begin();
+			ShapeElementList::iterator elem_end = mFlashShape.elements.end();
 			while(elem_it != elem_end)
 			{
 				const SHAPEELEMENT& se = *elem_it;

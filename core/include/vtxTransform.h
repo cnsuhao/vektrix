@@ -75,12 +75,12 @@ namespace vtx
 		/** Set the width for this object */
 		void setWidth(const float& width);
 		/** Get the width of this object */
-		const float getWidth() const;
+		float getWidth() const;
 
 		/** Set the height for this object */
 		void setHeight(const float& height);
 		/** Get the height of this object */
-		const float getHeight() const;
+		float getHeight() const;
 
 		/** Set the layer for this object */
 		void setLayer(const uint& layer);

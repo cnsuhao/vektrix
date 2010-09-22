@@ -127,6 +127,16 @@ namespace vtx
 		return result;
 	}
 	//-----------------------------------------------------------------------
+	void OpSysHelper::showMouseCursor()
+	{
+		while(ShowCursor(true) < 0);
+	}
+	//-----------------------------------------------------------------------
+	void OpSysHelper::hideMouseCursor()
+	{
+		while(ShowCursor(false) >= 0);
+	}
+	//-----------------------------------------------------------------------
 }
 
 #endif

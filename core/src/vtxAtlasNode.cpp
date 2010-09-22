@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include "vtxAtlasNode.h"
 
 #include "vtxAtlasElement.h"
-#include "vtxRastarizer.h"
+#include "vtxRasterizer.h"
 
 namespace vtx
 {

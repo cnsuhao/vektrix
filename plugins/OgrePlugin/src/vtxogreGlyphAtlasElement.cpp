@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "vtxColor.h"
 #include "vtxGlyphResource.h"
 #include "vtxMathHelper.h"
-#include "vtxRastarizer.h"
+#include "vtxRasterizer.h"
 #include "vtxRect.h"
 
 namespace vtx { namespace ogre {

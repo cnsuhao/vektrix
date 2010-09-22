@@ -47,13 +47,20 @@ namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	avmplus::Stringp StaticText::get_text()
 	{
-		return 0;
+		MMGC_GCENTER(core()->GetGC());
+
+		if(mStaticText)
+		{
+			return CSP_CORE->utfStringToAS3(mStaticText->getText());
+		}
+
+		return NULL;
 	}
 	//-----------------------------------------------------------------------
 	void StaticText::setNativeObject(Instance* inst)
 	{
-		DisplayObject::setNativeObject(inst);
-		mStaticText = static_cast<vtx::StaticText*>(inst);
+		//DisplayObject::setNativeObject(inst);
+		//mStaticText = static_cast<vtx::StaticText*>(inst);
 	}
 	//-----------------------------------------------------------------------
 }}

@@ -92,6 +92,11 @@ package vtx
 			'var errorMsg = \'vektrix Flash Preview: no document open/selected\';'+
 			'fl.outputPanel.trace(errorMsg);'+
 		'}'+
+		'else if(currDoc.path == null)'+
+		'{'+
+			'var errorMsg = \'vektrix Flash Preview: you have to save the current document before you can preview it\';'+
+			'fl.outputPanel.trace(errorMsg);'+
+		'}'+
 		'else'+
 		'{'+
 			'var swf_path = getSwfPath();'+

@@ -13,6 +13,13 @@
   <IncludeDirectory path="C:/SDKs/caspin/tamarin/eval" />
   <IncludeDirectory path="C:/SDKs/caspin/tamarin/extensions" />
 
+  <CodeFilePrefix filename="flash_package.h">
+	#define __avmplus_Hashtable_inlines__
+	#define __avmplus_MathUtilsWin_inlines__
+  </CodeFilePrefix>
+  
+  <IgnoreSymbol name="avmplus" />
+  
   <Macro name="#define UNDER_CE" />
   <Macro name="#define WIN32" />
   <Macro name="#define _WINDOWS" />
@@ -27,6 +34,7 @@
   <CodeDirectory path="../plugins/SWFPlugin/include" />
   <!--<CodeDirectory path="../tools/vtxFlashPreview/include" />-->
 
+  <IgnoreCodeFile name="vtxas3Mouse.h" />
   <IgnoreCodeFile name="flash.h" />
   <IgnoreCodeFile name="vtxas3DisplayObjectContainer.h" />
   <IgnoreCodeFile name="vtxas3MovieClip.h" />

@@ -124,8 +124,11 @@ namespace vtx
 			mParentMovieClip->clearLayers();
 
 			mCurrentFrame = 0;
-			mPosition = 1.0f / (float)mFrameRate;
-			addTime(0);
+			mPosition = 0.0f;
+			addTime(1.0f / (float)mFrameRate);
+
+			//mPosition = 1.0f / (float)mFrameRate;
+			//addTime(0);
 		}
 	}
 	//-----------------------------------------------------------------------

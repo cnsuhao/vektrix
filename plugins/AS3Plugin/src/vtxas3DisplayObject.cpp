@@ -28,7 +28,12 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
+#include "vtxas3Object.h"
+#include "vtxas3Stage.h"
+
 #include "vtxDisplayObject.h"
+#include "vtxMovie.h"
+#include "vtxStage.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
@@ -41,151 +46,122 @@ namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	double DisplayObject::get_x()
 	{
-		if(mDisplayObject)
-		{
-			return mDisplayObject->getX();
-		}
-
-		return 0;
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::get_x()");
+		return mDisplayObject->getX();
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObject::set_x(double val)
 	{
-		if(mDisplayObject)
-		{
-			mDisplayObject->setX((float)val);
-		}
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::set_x()");
+		mDisplayObject->setX((float)val);
 	}
 	//-----------------------------------------------------------------------
 	double DisplayObject::get_y()
 	{
-		if(mDisplayObject)
-		{
-			return mDisplayObject->getY();
-		}
-
-		return 0;
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::get_y()");
+		return mDisplayObject->getY();
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObject::set_y(double val)
 	{
-		if(mDisplayObject)
-		{
-			mDisplayObject->setY((float)val);
-		}
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::set_y()");
+		mDisplayObject->setY((float)val);
 	}
 	//-----------------------------------------------------------------------
 	double DisplayObject::get_rotation()
 	{
-		if(mDisplayObject)
-		{
-			return mDisplayObject->getAngle();
-		}
-
-		return 0;
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::get_rotation()");
+		return mDisplayObject->getAngle();
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObject::set_rotation(double val)
 	{
-		if(mDisplayObject)
-		{
-			mDisplayObject->setAngle((float)val);
-		}
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::set_rotation()");
+		mDisplayObject->setAngle((float)val);
 	}
 	//-----------------------------------------------------------------------
 	double DisplayObject::get_scaleX()
 	{
-		if(mDisplayObject)
-		{
-			return mDisplayObject->getScaleX();
-		}
-
-		return 0;
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::get_scaleX()");
+		return mDisplayObject->getScaleX();
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObject::set_scaleX(double val)
 	{
-		if(mDisplayObject)
-		{
-			mDisplayObject->setScaleX((float)val);
-		}
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::set_scaleX()");
+		mDisplayObject->setScaleX((float)val);
 	}
 	//-----------------------------------------------------------------------
 	double DisplayObject::get_scaleY()
 	{
-		if(mDisplayObject)
-		{
-			return mDisplayObject->getScaleY();
-		}
-
-		return 0;
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::get_scaleY()");
+		return mDisplayObject->getScaleY();
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObject::set_scaleY(double val)
 	{
-		if(mDisplayObject)
-		{
-			mDisplayObject->setScaleY((float)val);
-		}
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::set_scaleY()");
+		mDisplayObject->setScaleY((float)val);
 	}
 	//-----------------------------------------------------------------------
 	double DisplayObject::get_width()
 	{
-		if(mDisplayObject)
-		{
-			return mDisplayObject->getWidth();
-		}
-
-		return 0;
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::get_width()");
+		return mDisplayObject->getWidth();
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObject::set_width(double val)
 	{
-		if(mDisplayObject)
-		{
-			mDisplayObject->setWidth((float)val);
-		}
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::set_width()");
+		mDisplayObject->setWidth((float)val);
 	}
 	//-----------------------------------------------------------------------
 	double DisplayObject::get_height()
 	{
-		if(mDisplayObject)
-		{
-			return mDisplayObject->getHeight();
-		}
-
-		return 0;
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::get_height()");
+		return mDisplayObject->getHeight();
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObject::set_height(double val)
 	{
-		if(mDisplayObject)
-		{
-			mDisplayObject->setHeight((float)val);
-		}
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::set_height()");
+		mDisplayObject->setHeight((float)val);
+	}
+	//-----------------------------------------------------------------------
+	DisplayObjectContainer* DisplayObject::get_parent()
+	{
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::get_parent()");
+
+		return NULL;
+// 		DisplayObjectContainer* container = static_cast<DisplayObjectContainer*>(mDisplayObject->getParentContainer()->getScriptObject());
+// 		std::cout << "DisplayObject::parent() = " << container << std::endl;
+// 		return container;
+	}
+	//-----------------------------------------------------------------------
+	Stage* DisplayObject::get_stage()
+	{
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::get_stage()");
+
+		//std::cout << "DisplayObject::get_stage()=" << mDisplayObject->getParent()->getStage()->getScriptObject() << std::endl;
+		//return static_cast<Stage*>(mDisplayObject->getParent()->getStage()->getScriptObject());
+		return NULL;
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObject::set_visible(bool val)
 	{
-		if(mDisplayObject)
-		{
-			mDisplayObject->setVisible(val);
-		}
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::set_visible()");
+		mDisplayObject->setVisible(val);
 	}
 	//-----------------------------------------------------------------------
 	bool DisplayObject::get_visible()
 	{
-		if(mDisplayObject)
-		{
-			return mDisplayObject->getVisible();
-		}
-
-		return true;
+		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::get_visible()");
+		return mDisplayObject->getVisible();
 	}
 	//-----------------------------------------------------------------------
-	void DisplayObject::setNativeObject(Instance* inst)
+	void DisplayObject::init(Instance* inst, ScriptInterface* iface)
 	{
-		EventDispatcher::setNativeObject(inst);
+		EventDispatcher::init(inst, iface);
 		mDisplayObject = static_cast<vtx::DisplayObject*>(inst);
 	}
 	//-----------------------------------------------------------------------

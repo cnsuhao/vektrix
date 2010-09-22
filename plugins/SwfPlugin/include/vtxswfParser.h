@@ -52,6 +52,7 @@ namespace vtx { namespace swf {
 
 		File* getCurrentFile() const { return mCurrentFile; }
 		const uint& getFileLength() const { return mFileLength; }
+		const UI8& getSwfVersion() const { return mSWFVersion; }
 		const uint& getReadPosition() const { return mReadPos; }
 		File::FileHeader& getHeader() { return mHeader; }
 
@@ -64,6 +65,7 @@ namespace vtx { namespace swf {
 		int mBitBuf;
 
 		UI32 mFileLength;
+		UI8 mSWFVersion;
 		File::FileHeader mHeader;
 
 		File* mCurrentFile;
@@ -86,6 +88,7 @@ namespace vtx { namespace swf {
 
 	public:
 		// read basic types
+		void skip(const uint& len);
 		UI8 readU8();
 		UI16 readU16();
 		UI32 readU32();

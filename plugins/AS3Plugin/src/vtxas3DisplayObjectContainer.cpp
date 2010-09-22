@@ -32,6 +32,8 @@ THE SOFTWARE.
 
 #include "vtxDisplayObjectContainer.h"
 
+#include "vtxas3ScriptInterface.h"
+
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	DisplayObjectContainer::DisplayObjectContainer(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
@@ -46,11 +48,18 @@ namespace vtx { namespace as3 {
 
 	}
 	//-----------------------------------------------------------------------
+	int DisplayObjectContainer::get_numChildren()
+	{
+		return mDisplayObjectContainer->numChildren();
+	}
+	//-----------------------------------------------------------------------
 	DisplayObject* DisplayObjectContainer::addChild(DisplayObject* child)
 	{
+		MMGC_GCENTER(core()->GetGC());
+		//child->IncrementRef();
 		vtx::Instance* inst = child->getNativeObject();
 		vtx::DisplayObject* native_child = static_cast<vtx::DisplayObject*>(inst);
-		if(native_child)
+		if(native_child && mDisplayObjectContainer)
 		{
 			mDisplayObjectContainer->addChild(native_child);
 			return child;
@@ -59,23 +68,102 @@ namespace vtx { namespace as3 {
 		return NULL;
 	}
 	//-----------------------------------------------------------------------
-	DisplayObject* DisplayObjectContainer::getChildByName(avmplus::Stringp name)
+	DisplayObject* DisplayObjectContainer::addChildAt(DisplayObject* child, int index)
 	{
-		String stl_name = CSP_CORE->stringFromAS3(name);
-		vtx::DisplayObject* child = mDisplayObjectContainer->getChildByName(stl_name);
-
-		if(child)
+		vtx::DisplayObject* obj = static_cast<vtx::DisplayObject*>(child->getNativeObject());
+		if(obj && mDisplayObjectContainer)
 		{
-			return static_cast<DisplayObject*>(child->getScriptObject());
+			mDisplayObjectContainer->addChildAt(obj, index);
+			return child;
 		}
 
 		return NULL;
 	}
 	//-----------------------------------------------------------------------
+	bool DisplayObjectContainer::contains(DisplayObject* child)
+	{
+		return false;
+	}
+	//-----------------------------------------------------------------------
+	DisplayObject* DisplayObjectContainer::getChildAt(int index)
+	{
+		VTX_DEBUG_ASSERT(mDisplayObjectContainer, "DisplayObjectContainer::getChildAt()");
+
+		vtx::DisplayObject* child = mDisplayObjectContainer->getChildAt(index);
+		if(child)
+		{
+			ScriptInterface* iface = static_cast<ScriptInterface*>(child->getScriptObject());
+			return static_cast<DisplayObject*>(iface->getObject());
+		}
+
+		return NULL;
+	}
+	//-----------------------------------------------------------------------
+	DisplayObject* DisplayObjectContainer::getChildByName(avmplus::Stringp name)
+	{
+		MMGC_GCENTER(core()->GetGC());
+
+		VTX_DEBUG_ASSERT(mDisplayObjectContainer, "DisplayObjectContainer::getChildByName()");
+
+		String stl_name = CSP_CORE->stringFromAS3(name);
+		vtx::DisplayObject* child = mDisplayObjectContainer->getChildByName(stl_name);
+
+		if(child)
+		{
+			ScriptInterface* iface = static_cast<ScriptInterface*>(child->getScriptObject());
+			return static_cast<DisplayObject*>(iface->getObject());
+		}
+
+		return NULL;
+	}
+	//-----------------------------------------------------------------------
+	int DisplayObjectContainer::getChildIndex(DisplayObject* child)
+	{
+		return 0;
+	}
+	//-----------------------------------------------------------------------
+	DisplayObject* DisplayObjectContainer::removeChild(DisplayObject* child)
+	{
+		return NULL;
+	}
+	//-----------------------------------------------------------------------
+	DisplayObject* DisplayObjectContainer::removeChildAt(int index)
+	{
+		VTX_DEBUG_ASSERT(mDisplayObjectContainer, "DisplayObjectContainer::removeChildAt()");
+
+		vtx::DisplayObject* child = mDisplayObjectContainer->removeChildAt(index);
+
+		if(child)
+		{
+			ScriptInterface* iface = static_cast<ScriptInterface*>(child->getScriptObject());
+			return static_cast<DisplayObject*>(iface->getObject());
+		}
+
+		return NULL;
+	}
+	//-----------------------------------------------------------------------
+	void DisplayObjectContainer::setChildIndex(DisplayObject* child, int index)
+	{
+
+	}
+	//-----------------------------------------------------------------------
 	void DisplayObjectContainer::setNativeObject(Instance* inst)
 	{
-		InteractiveObject::setNativeObject(inst);
-		mDisplayObjectContainer = static_cast<vtx::DisplayObjectContainer*>(inst);
+// 		InteractiveObject::setNativeObject(inst);
+// 		mDisplayObjectContainer = static_cast<vtx::DisplayObjectContainer*>(inst);
+
+		//if(!inst) return;
+
+		//for(uint i=0; i<mDisplayObjectContainer->numChildren(); ++i)
+		//{
+		//	vtx::DisplayObject* child = mDisplayObjectContainer->getChildByIndex(i);
+		//	if(child->getName().length())
+		//	{
+		//		ScriptObjectBase* obj = static_cast<ScriptObjectBase*>(child->getScriptObject());
+		//		setChildObject(child->getName(), obj);
+		//		//csp::VmCore::setSlotObject(this, child->getName(), obj);
+		//	}
+		//}
 	}
 	//-----------------------------------------------------------------------
 }}

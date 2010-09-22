@@ -29,7 +29,7 @@ THE SOFTWARE.
 #ifndef __vtxas3Event_H__
 #define __vtxas3Event_H__
 
-#include "cspPrerequisites.h"
+#include "vtxas3.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
@@ -37,7 +37,7 @@ namespace vtx { namespace as3 {
 	{
 	public:
 		Event(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-		virtual ~Event(){}
+		virtual ~Event();
 
 		inline avmplus::AvmString getType()
 		{

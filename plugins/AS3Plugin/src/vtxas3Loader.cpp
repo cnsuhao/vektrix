@@ -28,6 +28,8 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
+#include "vtxas3ScriptEngine.h"
+
 #include "vtxFileManager.h"
 #include "vtxMovie.h"
 #include "vtxMovieClip.h"
@@ -40,9 +42,10 @@ namespace vtx { namespace as3 {
 	Loader::Loader(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
 		: DisplayObjectContainer(vtable, prototype)
 	{
-		Movie* movie = static_cast<Movie*>(CSP_CORE->getUserData());
-		mMovieClip = static_cast<vtx::MovieClip*>(movie->getInstanceByType(vtx::MovieClip::TYPE));
+/*		AS3ScriptEngine* script_engine = static_cast<AS3ScriptEngine*>(CSP_CORE->getUserData());
+		mMovieClip = static_cast<vtx::MovieClip*>(script_engine->getParentMovie()->getInstanceByType(vtx::MovieClip::TYPE));
 		mMovieClip->setScriptObject(this);
+		//setNativeObject(mMovieClip);*/
 	}
 	//-----------------------------------------------------------------------
 	Loader::~Loader()
@@ -53,7 +56,7 @@ namespace vtx { namespace as3 {
 	void Loader::load(URLRequest* request, LoaderContext* context)
 	{
 		String url = CSP_CORE->stringFromAS3(request->getURL());
-		FileManager::getSingletonPtr()->getFile(url, true, this);
+		//FileManager::getSingletonPtr()->getFile(url, true, this);
 	}
 	//-----------------------------------------------------------------------
 	void Loader::eventFired(const vtx::Event& evt)
@@ -61,7 +64,7 @@ namespace vtx { namespace as3 {
 		DisplayObjectContainer::eventFired(evt);
 	}
 	//-----------------------------------------------------------------------
-	void Loader::_setNativeObject(Instance* inst)
+	void Loader::setNativeObject(Instance* inst)
 	{
 		DisplayObjectContainer::setNativeObject(inst);
 	}

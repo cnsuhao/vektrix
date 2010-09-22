@@ -53,8 +53,19 @@ namespace vtx
 			/** Called once a Movie has finished to load */
 			virtual bool loadingCompleted(Movie* movie) { return false; }
 			virtual bool loadingFailed(Movie* movie) { return false; }
+			virtual void update(const float& delta_time) {}
 		};
 		typedef std::map<Listener*, Listener*> ListenerMap;
+
+		class Options
+		{
+		public:
+			void putBool(const String& option, const bool& value);
+			bool getBool(const String& option, const bool& default_value = false);
+
+		protected:
+			StringMap mOptions;
+		};
 
 		/** Get the unique name that is associated with this movie */
 		const String& getName();
@@ -122,6 +133,8 @@ namespace vtx
 		/** Get the main MovieClip of this movie */
 		MovieClip* getMainMovieClip() const;
 
+		Stage* getStage() const;
+
 		/** Add a Listener to this Movie */
 		bool addListener(Listener* listener);
 		/** Remove a Listener from this Movie */
@@ -144,6 +157,7 @@ namespace vtx
 		MovieDebugger* mDebugger;
 		MovieClip* mMainMovieClip;
 		ScriptEngine* mScriptEngine;
+		Stage* mStage;
 
 		/** Set the currently focused InteractiveObject of this Movie */
 		void _setFocusedObject(InteractiveObject* focused_object);

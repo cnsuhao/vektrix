@@ -61,6 +61,8 @@ namespace vtx
 			mTimeline = movieclip_res->getTimeline()->clone(this);
 			mTimeline->setFrameRate(mParentMovie->getFile()->getHeader().fps);
 		}
+
+		DisplayObjectContainer::initFromResource(resource);
 	}
 	//-----------------------------------------------------------------------
 	const String& MovieClip::getType() const

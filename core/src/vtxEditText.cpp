@@ -81,6 +81,8 @@ namespace vtx
 
 			setBoundingBox(text_res->getBoundingBox());
 		}
+
+		DisplayObjectContainer::initFromResource(resource);
 	}
 	//-----------------------------------------------------------------------
 	const String& EditText::getType() const

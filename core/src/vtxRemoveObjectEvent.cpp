@@ -27,14 +27,13 @@ THE SOFTWARE.
 */
 
 #include "vtxRemoveObjectEvent.h"
-
 #include "vtxDisplayObjectContainer.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	RemoveObjectEvent::RemoveObjectEvent(DisplayObjectContainer* object_container, const uint& layer) 
-		: FrameEvent(object_container), 
+	RemoveObjectEvent::RemoveObjectEvent(DisplayObjectContainer* container, const uint& layer) 
+		: FrameEvent(container), 
 		mLayer(layer)
 	{
 

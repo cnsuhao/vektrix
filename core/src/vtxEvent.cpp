@@ -31,13 +31,14 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	const String Event::GENERIC_CATEGORY =	"Generic";
+	const String Event::GENERIC_CATEGORY =	"Event";
 	const String Event::ENTER_FRAME =		"enterFrame";
+	const String Event::RENDER =			"render";
 	//-----------------------------------------------------------------------
 	Event::Event(const String& type) 
 		: mType(type)
 	{
-
+		VTX_DEBUG_ASSERT(type.length(), "Event::Event() -> type.length()==0");
 	}
 	//-----------------------------------------------------------------------
 	Event::~Event()

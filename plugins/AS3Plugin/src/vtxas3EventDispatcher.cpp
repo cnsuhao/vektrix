@@ -28,55 +28,81 @@ THE SOFTWARE.
 
 #include "flash_package.h"
 
-#include "vtxas3ScriptObjectBase.h"
+#include "vtxas3Object.h"
 
 #include "vtxFocusEvent.h"
 #include "vtxInstance.h"
 #include "vtxLogManager.h"
 #include "vtxMouseEvent.h"
+#include "vtxStringHelper.h"
 
 #include "cspVmCore.h"
+
+#include "vtxas3ScriptInterface.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	EventDispatcher::EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: ScriptObjectBase(vtable, prototype)
+		: AS3Object(vtable, prototype)
 	{
-		if(!RefCount())
-		{
-			IncrementRef();
-		}
+		//if(!RefCount())
+		//{
+		//	IncrementRef();
+		//}
 	}
 	//-----------------------------------------------------------------------
 	void EventDispatcher::addEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useCapture, int priority, bool useWeakReference)
 	{
 		MMGC_GCENTER(core()->GetGC());
-		String tp = CSP_CORE->stringFromAS3(type);
-		mHandlers[tp].push_back(function);
-		function->IncrementRef();
+
+		/*DictionaryObject* dict = get_private_mHandlers();
+		Atom listeners = dict->getStringProperty(type);
+
+		ArrayObject* array = NULL;
+
+		if(listeners == undefinedAtom)
+		{
+			array = CSP_CORE->getToplevel()->arrayClass->newArray();
+			dict->setStringProperty(type, array->atom());
+		}
+		else
+		{
+			array = static_cast<ArrayObject*>(AvmCore::atomToScriptObject(listeners));
+		}
+
+		Atom arg = function->atom();
+		array->push(&arg, 1);
+		*/
+
+		//String tp = CSP_CORE->stringFromAS3(type);
+		//mHandlers[tp].push_back(function);
+		//std::cout << "added as3 event listener: " << tp << std::endl;
+		//function->IncrementRef();
 	}
 	//-----------------------------------------------------------------------
 	bool EventDispatcher::dispatchEvent(as3::Event* event)
 	{
 		MMGC_GCENTER(core()->GetGC());
-		String type = CSP_CORE->stringFromAS3(event->getType());
 
-		FunctionMap::const_iterator funcs = mHandlers.find(type);
-		if(funcs != mHandlers.end())
+		DictionaryObject* dict = get_private_mHandlers();
+
+		Atom listeners = dict->getStringProperty(event->getType());
+		if(listeners != undefinedAtom)
 		{
-			const FunctionList& functions = funcs->second;
-
-			FunctionList::const_iterator it = functions.begin();
-			FunctionList::const_iterator end = functions.end();
-			while(it != end)
+			ArrayObject* array = static_cast<ArrayObject*>(AvmCore::atomToScriptObject(listeners));
+			if(array)
 			{
-				// call the function
-				Atom args[2] = { (*it)->atom(), event->atom() };
-				(*it)->call(1, args);
-				++it;
-			}
+				for(uint i=0; i<array->get_length(); ++i)
+				{
+					Atom func_atom = array->getUintProperty(i);
+					avmplus::ScriptObject* func = AvmCore::atomToScriptObject(func_atom);
 
-			return true;
+					Atom args[2] = { func->atom(), event->atom() };
+					func->call(1, args);
+				}
+
+				return true;
+			}
 		}
 
 		return false;
@@ -85,14 +111,53 @@ namespace vtx { namespace as3 {
 	bool EventDispatcher::hasEventListener(avmplus::Stringp type)
 	{
 		MMGC_GCENTER(core()->GetGC());
-		String stl_type = CSP_CORE->stringFromAS3(type);
 
-		return (mHandlers.find(stl_type) != mHandlers.end());
+		DictionaryObject* dict = get_private_mHandlers();
+
+		Atom listeners = dict->getStringProperty(type);
+
+		return (listeners != undefinedAtom);
 	}
 	//-----------------------------------------------------------------------
 	void EventDispatcher::removeEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useWeakReference)
 	{
 		MMGC_GCENTER(core()->GetGC());
+		
+		/*
+		DictionaryObject* dict = get_private_mHandlers();
+
+		Atom listeners = dict->getStringProperty(type);
+		if(listeners != undefinedAtom)
+		{
+			ArrayObject* array = static_cast<ArrayObject*>(AvmCore::atomToScriptObject(listeners));
+			if(array)
+			{
+				for(uint i=0; i<array->get_length(); ++i)
+				{
+					Atom func_atom = array->getIntProperty(i);
+
+					if(func_atom == function->atom())
+					{
+						ArrayObject* args = CSP_CORE->getToplevel()->arrayClass->newArray();
+						Atom atom_args[2] = { i, 1 };
+						args->push(atom_args, 2);
+
+						//array->delUintProperty(i);
+						toplevel()->arrayClass->splice(array->atom(), args);
+						//ArrayClass::generic_splice(toplevel(), array->atom(), args);
+						//array->delUintProperty(i);
+					}
+				}
+			}
+
+			if(array->get_length() == 0)
+			{
+				dict->deleteStringProperty(type);
+			}
+		}
+		*/
+
+		/*
 		String stl_type = CSP_CORE->stringFromAS3(type);
 
 		FunctionMap::iterator funcs = mHandlers.find(stl_type);
@@ -113,53 +178,108 @@ namespace vtx { namespace as3 {
 				++it;
 			}
 		}
-
+		*/
 	}
 	//-----------------------------------------------------------------------
 	void EventDispatcher::eventFired(const vtx::Event& evt)
 	{
 		MMGC_GCENTER(core()->GetGC());
 
-		if(evt.getCategory() == MouseEvent::CATEGORY)
+		TRY(core(), kCatchAction_ReportAsError)
 		{
-			const MouseEvent& mouse_evt = static_cast<const MouseEvent&>(evt);
+			VTX_DEBUG_ASSERT(evt.getType().length(), "evt.type.length == 0");
+			std::cout << "dispatch: " << evt.getType() << std::endl;
+			csp::ArgumentList args;
+			args.push_back(CSP_CORE->scriptString(evt.getType().c_str()));
+			args.push_back(CSP_CORE->scriptBoolean(false));
+			args.push_back(CSP_CORE->scriptBoolean(true));
+
+			if(evt.getCategory() == vtx::MouseEvent::CATEGORY)
+			{
+				const vtx::MouseEvent& mouse_evt = static_cast<const vtx::MouseEvent&>(evt);
+				args.push_back(CSP_CORE->internDouble(mouse_evt.stageX)->atom());
+				args.push_back(CSP_CORE->internDouble(mouse_evt.stageY)->atom());
+			}
+
+			avmplus::ScriptObject* as3_evt = CSP_CORE->createObject(evt.getCategory(), "flash.events", args);
+
+			dispatchEvent(static_cast<as3::Event*>(as3_evt));
+
+			as3_evt->DecrementRef();
+		}
+		CATCH(Exception* exception)
+		{
+			CSP_CORE->printException(exception);
+		}
+		END_CATCH
+		END_TRY
+
+		/* old
+		if(evt.getCategory() == vtx::MouseEvent::CATEGORY)
+		{
+			const vtx::MouseEvent& mouse_evt = static_cast<const vtx::MouseEvent&>(evt);
 
 			csp::ArgumentList args;
-			args.push_back(CSP_CORE->newString(evt.getType().c_str()));
-			args.push_back(CSP_CORE->newBoolean(false));
-			args.push_back(CSP_CORE->newBoolean(true));
+			args.push_back(CSP_CORE->scriptString(evt.getType().c_str()));
+			args.push_back(CSP_CORE->scriptBoolean(false));
+			args.push_back(CSP_CORE->scriptBoolean(true));
+			args.push_back(CSP_CORE->internDouble(mouse_evt.stageX)->atom());
+			args.push_back(CSP_CORE->internDouble(mouse_evt.stageY)->atom());
 
 			avmplus::ScriptObject* evt = CSP_CORE->createObject("MouseEvent", "flash.events", args);
 
-			dispatchEvent((as3::Event*)evt);
+			//args.clear();
+			//args.push_back(evt->atom());
 
-			delete evt;
+			//csp::VmCore::callObjectFunction(this, "dispatchEvent", args);
+			dispatchEvent(static_cast<as3::Event*>(evt));
+
+			//while(evt->RefCount() > 0) evt->DecrementRef();
+
+			evt->DecrementRef();
 		}
 		else if(evt.getCategory() == FocusEvent::CATEGORY)
 		{
 			const FocusEvent& focus_evt = static_cast<const FocusEvent&>(evt);
 
 			csp::ArgumentList args;
-			args.push_back(CSP_CORE->newString(evt.getType().c_str()));
-			args.push_back(CSP_CORE->newBoolean(false));
-			args.push_back(CSP_CORE->newBoolean(true));
+			args.push_back(CSP_CORE->scriptString(evt.getType().c_str()));
+			args.push_back(CSP_CORE->scriptBoolean(false));
+			args.push_back(CSP_CORE->scriptBoolean(true));
 
 			avmplus::ScriptObject* evt = CSP_CORE->createObject("FocusEvent", "flash.events", args);
 
-			dispatchEvent((as3::Event*)evt);
+			//args.clear();
+			//args.push_back(evt->atom());
 
-			delete evt;
+			//csp::VmCore::callObjectFunction(this, "dispatchEvent", args);
+			dispatchEvent(static_cast<as3::Event*>(evt));
+
+			//while(evt->RefCount() > 0) evt->DecrementRef();
+
+			evt->DecrementRef();
 		}
+		*/
 	}
 	//-----------------------------------------------------------------------
 	void EventDispatcher::setChildObject(const String& name, vtx::ScriptObject* script_object)
 	{
 		if(!script_object)
 		{
+			return;
 			VTX_EXCEPT("EventDispatcher::setChildObject(NULL)");
 		}
 
-		csp::VmCore::setSlotObject(this, name, static_cast<ScriptObjectBase*>(script_object));
+		ScriptInterface* iface = static_cast<ScriptInterface*>(script_object);
+
+
+		csp::VmCore::setSlotObject(this, name, iface->getObject());
+	}
+	//-----------------------------------------------------------------------
+	vtx::ScriptObject* EventDispatcher::getChildObject(const String& name)
+	{
+		AS3Object* as3_obj = static_cast<AS3Object*>(csp::VmCore::getSlotObject(this, name));
+		return as3_obj->getInterface();
 	}
 	//-----------------------------------------------------------------------
 }}

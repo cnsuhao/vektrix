@@ -27,6 +27,7 @@ THE SOFTWARE.
 */
 
 #include "vtxOpSysHelper.h"
+#include "vtxLogManager.h"
 
 #if VTX_OS == VTX_LINUX
 
@@ -44,6 +45,16 @@ namespace vtx
 	WString OpSysHelper::getWStringFromClipboard()
 	{
 		return clipboard_wstr;
+	}
+	//-----------------------------------------------------------------------
+	void OpSysHelper::showMouseCursor()
+	{
+		VTX_EXCEPT("Call to unsupported method: OpSysHelper::showMouseCursor()");
+	}
+	//-----------------------------------------------------------------------
+	void OpSysHelper::hideMouseCursor()
+	{
+		VTX_EXCEPT("Call to unsupported method: OpSysHelper::hideMouseCursor()");
 	}
 	//-----------------------------------------------------------------------
 }
