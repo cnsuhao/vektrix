@@ -26,13 +26,15 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
+#include "vtxas3DisplayObjectContainer.h"
 
-#include "cspVmCore.h"
+#include "vtxas3ScriptEngine.h"
+#include "vtxas3ScriptInterface.h"
 
 #include "vtxDisplayObjectContainer.h"
+#include "vtxMovie.h"
 
-#include "vtxas3ScriptInterface.h"
+#include "cspVmCore.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
@@ -48,6 +50,37 @@ namespace vtx { namespace as3 {
 
 	}
 	//-----------------------------------------------------------------------
+	void DisplayObjectContainer::ctor()
+	{
+		Instance* inst = getEngine()->getQueuedInstance();
+		if(inst)
+		{
+			ScriptInterface* iface = new ScriptInterface(this);
+			inst->setScriptObject(iface);
+
+			vtx::DisplayObjectContainer* cont = static_cast<vtx::DisplayObjectContainer*>(inst);
+
+			for(uint i=0; i<cont->numChildren(); ++i)
+			{
+				vtx::DisplayObject* disp = cont->getChildByIndex(i);
+				disp->initScriptObject();
+
+				const String& name = disp->getName();
+				if(name.length())
+				{
+					setChildObject(name, disp->getScriptObject());
+				}
+			}
+		}
+		else
+		{
+			Movie* parent = getParentMovie();
+			inst = parent->getInstanceByType(getMappedVektrixType());
+			ScriptInterface* iface = new ScriptInterface(this);
+			inst->setScriptObject(iface);
+		}
+	}
+	//-----------------------------------------------------------------------
 	int DisplayObjectContainer::get_numChildren()
 	{
 		return mDisplayObjectContainer->numChildren();
@@ -56,7 +89,7 @@ namespace vtx { namespace as3 {
 	DisplayObject* DisplayObjectContainer::addChild(DisplayObject* child)
 	{
 		MMGC_GCENTER(core()->GetGC());
-		//child->IncrementRef();
+		child->IncrementRef();
 		vtx::Instance* inst = child->getNativeObject();
 		vtx::DisplayObject* native_child = static_cast<vtx::DisplayObject*>(inst);
 		if(native_child && mDisplayObjectContainer)
@@ -93,6 +126,7 @@ namespace vtx { namespace as3 {
 		if(child)
 		{
 			ScriptInterface* iface = static_cast<ScriptInterface*>(child->getScriptObject());
+			if(!iface) return NULL;
 			return static_cast<DisplayObject*>(iface->getObject());
 		}
 
@@ -105,7 +139,7 @@ namespace vtx { namespace as3 {
 
 		VTX_DEBUG_ASSERT(mDisplayObjectContainer, "DisplayObjectContainer::getChildByName()");
 
-		String stl_name = CSP_CORE->stringFromAS3(name);
+		String stl_name = CSP_CORE->toString(name);
 		vtx::DisplayObject* child = mDisplayObjectContainer->getChildByName(stl_name);
 
 		if(child)
@@ -147,10 +181,10 @@ namespace vtx { namespace as3 {
 
 	}
 	//-----------------------------------------------------------------------
-	void DisplayObjectContainer::setNativeObject(Instance* inst)
+	void DisplayObjectContainer::init(Instance* inst, ScriptInterface* iface)
 	{
-// 		InteractiveObject::setNativeObject(inst);
-// 		mDisplayObjectContainer = static_cast<vtx::DisplayObjectContainer*>(inst);
+ 		InteractiveObject::init(inst, iface);
+ 		mDisplayObjectContainer = static_cast<vtx::DisplayObjectContainer*>(inst);
 
 		//if(!inst) return;
 

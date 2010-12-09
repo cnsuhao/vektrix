@@ -26,7 +26,7 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
+#include "vtxas3EventHandler.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------

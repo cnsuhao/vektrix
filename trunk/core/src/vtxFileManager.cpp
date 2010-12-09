@@ -28,6 +28,8 @@ THE SOFTWARE.
 
 #include "vtxFileManager.h"
 
+#include "vtxEventListener.h"
+#include "vtxFileEvent.h"
 #include "vtxFileParsingJob.h"
 #include "vtxFileStream.h"
 #include "vtxFileContainer.h"
@@ -113,7 +115,7 @@ namespace vtx
 		return false;
 	}
 	//-----------------------------------------------------------------------
-	File* FileManager::getFile(const String& filename, const bool& threadedParsing, File::Listener* listener)
+	File* FileManager::getFile(const String& filename, const bool& threadedParsing, EventListener* listener)
 	{
 		// empty filename
 		if(!filename.length())
@@ -137,7 +139,8 @@ namespace vtx
 				file_it->second->addListener(listener);
 			}
 
-			listener->loadingCompleted(file_it->second);
+			FileEvent evt(FileEvent::LOADING_COMPLETED, file_it->second);
+			listener->eventFired(evt);
 
 			return file_it->second;
 		}

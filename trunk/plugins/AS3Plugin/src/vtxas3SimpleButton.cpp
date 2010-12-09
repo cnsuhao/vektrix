@@ -26,22 +26,11 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
+#include "vtxas3SimpleButton.h"
 
 #include "vtxButton.h"
 
 namespace vtx { namespace as3 {
-	//-----------------------------------------------------------------------
-	SimpleButton::SimpleButton(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: InteractiveObject(vtable, prototype)
-	{
-
-	}
-	//-----------------------------------------------------------------------
-	SimpleButton::~SimpleButton()
-	{
-
-	}
 	//-----------------------------------------------------------------------
 	void SimpleButton::setNativeObject(Instance* inst)
 	{

@@ -29,6 +29,7 @@ THE SOFTWARE.
 package flash.net
 {
 	import flash.events.EventDispatcher;
+	import flash.utils.Endian;
 	
 	public class Socket extends EventDispatcher
 	{

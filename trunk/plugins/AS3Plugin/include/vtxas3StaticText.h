@@ -29,19 +29,29 @@ THE SOFTWARE.
 #ifndef __vtxas3StaticText_H__
 #define __vtxas3StaticText_H__
 
+#include "vtxas3.h"
 #include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_text.h"
+#endif
+
+#include "vtxas3DisplayObject.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	class StaticText : public DisplayObject
 	{
 	public:
-		StaticText(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-		virtual ~StaticText();
+		CSP_INST_CDTOR(StaticText, DisplayObject);
+
+		const String& getMappedVektrixType() const;
 
 		avmplus::Stringp get_text();
 
-		CSP_INST_SLOTS(StaticText);
+		CSP_SLOTS(StaticText, flash_text_);
 
 	protected:
 		vtx::StaticText* mStaticText;
@@ -49,7 +59,7 @@ namespace vtx { namespace as3 {
 		void setNativeObject(Instance* inst);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(StaticText);
+	CSP_DEFINE_CLASS(StaticTextClass, StaticText, flash_text_);
 	//-----------------------------------------------------------------------
 }}
 

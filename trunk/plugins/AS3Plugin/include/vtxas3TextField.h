@@ -29,15 +29,26 @@ THE SOFTWARE.
 #ifndef __vtxas3TextField_H__
 #define __vtxas3TextField_H__
 
+#include "vtxas3.h"
 #include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_text.h"
+#endif
+
+#include "vtxas3InteractiveObject.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	class TextField : public InteractiveObject
 	{
 	public:
-		TextField(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-		virtual ~TextField();
+		CSP_INST_CDTOR(TextField, InteractiveObject);
+
+		virtual void ctor();
+		const String& getMappedVektrixType() const;
 
 		/* getters / setters */
 		avmplus::Stringp get_htmlText();
@@ -47,7 +58,7 @@ namespace vtx { namespace as3 {
 		int getLineIndexAtPoint(double x, double y);
 		void setSelection(int beginIndex, int endIndex);
 
-		CSP_INST_SLOTS(StaticText);
+		CSP_SLOTS(TextField, flash_text_);
 
 	protected:
 		vtx::EditText* mEditText;
@@ -55,7 +66,7 @@ namespace vtx { namespace as3 {
 		void setNativeObject(Instance* inst);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(TextField);
+	CSP_DEFINE_CLASS(TextFieldClass, TextField, flash_text_);
 	//-----------------------------------------------------------------------
 }}
 

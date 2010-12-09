@@ -72,8 +72,6 @@ namespace vtx
 
 		virtual void initScriptObject();
 
-		//virtual void releaseScriptObject();
-
 	protected:
 		String mName;
 		Movie* mParentMovie;

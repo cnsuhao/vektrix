@@ -27,6 +27,8 @@ THE SOFTWARE.
 */
 
 #include "vtxas3Object.h"
+#include "vtxas3ScriptInterface.h"
+
 #include "vtxInstance.h"
 #include "vtxLogManager.h"
 #include "vtxScriptEngine.h"
@@ -38,31 +40,44 @@ namespace vtx { namespace as3 {
 	AS3Object::AS3Object(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
 		: avmplus::ScriptObject(vtable, prototype)
 	{
-		std::cout << "incr ref" << std::endl;
-		IncrementRef();
+		if(RefCount() == 0)
+		{
+			IncrementRef();
+			std::cout << "incr ref" << std::endl;
+		}
 	}
 	//-----------------------------------------------------------------------
 	AS3Object::~AS3Object()
 	{
-		//std::cout << "Really destroyed !!!" << std::endl;
-		//VTX_LOG("Really destroyed !!! %s", CSP_CORE->stringFromAS3(this->traits()->formatClassName()).c_str());
+
 	}
 	//-----------------------------------------------------------------------
-	void AS3Object::destroy()
+	void AS3Object::ctor()
 	{
-		//MMGC_GCENTER(gc());
-		VTX_LOG("Destroying via Refcount");
-		while(RefCount() > 0)
-		{
-			DecrementRef();
-		}
-		//core()->GetGC()->Collect();
+
 	}
 	//-----------------------------------------------------------------------
 	void AS3Object::init(Instance* inst, ScriptInterface* iface)
 	{
 		mNativeObject = inst;
 		mInterface = iface;
+	}
+	//-----------------------------------------------------------------------
+	void AS3Object::setChildObject(const String& name, vtx::ScriptObject* script_object)
+	{
+		ScriptInterface* iface = static_cast<ScriptInterface*>(script_object);
+		csp::VmCore::setSlotObject(this, name, iface->getObject());
+	}
+	//-----------------------------------------------------------------------
+	vtx::ScriptObject* AS3Object::getChildObject(const String& name)
+	{
+		AS3Object* as3_obj = static_cast<AS3Object*>(csp::VmCore::getSlotObject(this, name));
+		return as3_obj->getInterface();
+	}
+	//-----------------------------------------------------------------------
+	AS3ScriptEngine* AS3Object::getEngine() const
+	{
+		return static_cast<AS3ScriptEngine*>(CSP_CORE->getUserData());
 	}
 	//-----------------------------------------------------------------------
 	Movie* AS3Object::getParentMovie() const

@@ -47,6 +47,8 @@ if(WIN32)
 			set (caspin_lib caspin)
 			set (caspin_lib_d caspin)
 			
+			set (using_caspin_source TRUE)
+			
 		endif(EXISTS "${caspin__path}/cmake/caspin_import_${CMAKE_GENERATOR}.cmake")
 		
 	endif(NOT caspin_lib OR NOT caspin_lib_d OR NOT caspin_debugger_lib OR NOT caspin_debugger_lib_d OR NOT caspin_include_dirs)
@@ -138,8 +140,10 @@ else(caspin_found)
 	endif(caspin_FIND_REQUIRED)
 endif(caspin_found)
 
-# search for the tamarin dependency
-find_package (tamarin REQUIRED)
+if(NOT using_caspin_source)
+	# search for the tamarin dependency
+	find_package (tamarin REQUIRED)
+endif()
 
 # append tamarin include directories
 set (caspin_include_dirs

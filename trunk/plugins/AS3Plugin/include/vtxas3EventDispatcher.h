@@ -29,11 +29,16 @@ THE SOFTWARE.
 #ifndef __vtxas3EventDispatcher_H__
 #define __vtxas3EventDispatcher_H__
 
+#include "vtxas3.h"
 #include "cspPrerequisites.h"
 
-#include "vtxas3Object.h"
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_events.h"
+#endif
 
-#include "vtxScriptObject.h"
+#include "vtxas3Object.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
@@ -43,23 +48,18 @@ namespace vtx { namespace as3 {
 		EventDispatcher(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 		virtual ~EventDispatcher(){}
 
-		// ActionScript 3 functions
-		void addEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useCapture, int priority, bool useWeakReference);
-		bool dispatchEvent(as3::Event* event);
-		bool hasEventListener(avmplus::Stringp type);
-		void removeEventListener(avmplus::Stringp type, avmplus::FunctionObject* function, bool useWeakReference);
-		virtual bool willTrigger(avmplus::Stringp type) { return false; }
+		virtual void ctor(avmplus::ScriptObject* target = NULL);
+		const String& getMappedVektrixType() const;
 
 		virtual void eventFired(const vtx::Event& evt);
 
-		void setChildObject(const String& name, vtx::ScriptObject* script_object);
+		CSP_SLOTS(EventDispatcher, flash_events_);
 
-		vtx::ScriptObject* getChildObject(const String& name);
-
-		CSP_INST_SLOTS(EventDispatcher);
+	protected:
+		avmplus::MethodEnv* dispatchEvent;
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(EventDispatcher);
+	CSP_DEFINE_CLASS(EventDispatcherClass, EventDispatcher, flash_events_);
 	//-----------------------------------------------------------------------
 }}
 

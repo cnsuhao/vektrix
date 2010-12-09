@@ -28,31 +28,159 @@ THE SOFTWARE.
 
 package flash.display
 {
+	const DEBUG_MOVIECLIP = false;
+
+	import flash.events.Event;
+	import flash.utils.Dictionary;
+	//-----------------------------------------------------------------------
 	[native(cls="::vtx::as3::MovieClipClass", instance="::vtx::as3::MovieClip", methods="auto")]
 	public dynamic class MovieClip extends Sprite
 	{
-		/* getters & setters */
-		public function get currentFrame():int { return 0; }
-		public function get currentLabel():String { return ""; }
-		public function get currentLabels():Array { return null; }
-		public function get currentScene():Scene { return null; }
-		public function get enabled():Boolean { return false; }
-		public function set enabled(value:Boolean):void {}
-		public function get framesLoaded():int { return 0; }
-		public function get scenes():Array { return null; }
-		public function get totalFrames():int { return 0; }
-		public function get trackAsMenu():Boolean { return false; }
-		public function set trackAsMenu(value:Boolean):void {}
+		//-----------------------------------------------------------------------
+		private var mFrameScripts:Dictionary;
+		//-----------------------------------------------------------------------
+		private native function ctor():void;
+		//-----------------------------------------------------------------------
+		public function MovieClip()
+		{
+			super();
+			if(DEBUG_MOVIECLIP) { trace("new MovieClip()"); }
 
-		/* methods */
-		public function addFrameScript(... frame_scripts) {}
-		public function gotoAndPlay(frame:Object, scene:String = null):void {}
-		public function gotoAndStop(frame:Object, scene:String = null):void {}
-		public function nextFrame():void {}
-		public function nextScene():void {}
-		public function play():void {}
-		public function prevFrame():void {}
-		public function prevScene():void {}
-		public function stop():void {}
+			ctor();
+			mFrameScripts = new Dictionary();
+		}
+		///-----------------------------------------------------------------------
+		/// GETTERS & SETTERS
+		///-----------------------------------------------------------------------
+		public native function get _currentFrame():int;
+		//-----------------------------------------------------------------------
+		public function get currentFrame():int
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.get_currentFrame()"); }
+			return _currentFrame;
+		}
+		//-----------------------------------------------------------------------
+		public function get currentLabel():String
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.get.currentLabel()"); }
+			return "";
+		}
+		//-----------------------------------------------------------------------
+		public function get currentLabels():Array
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.get.currentLabels()"); }
+			return new Array();
+		}
+		//-----------------------------------------------------------------------
+		public function get currentScene():Scene
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.get.currentScene()"); }
+			return new Scene();
+		}
+		//-----------------------------------------------------------------------
+		public function get enabled():Boolean
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.get.enabled()"); }
+			return false;
+		}
+		//-----------------------------------------------------------------------
+		public function set enabled(value:Boolean):void
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.set.enabled(" + value + ")"); }
+		}
+		//-----------------------------------------------------------------------
+		public function get framesLoaded():int
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.get.framesLoaded()"); }
+			return 0;
+		}
+		//-----------------------------------------------------------------------
+		public function get scenes():Array
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.get.scenes()"); }
+			return new Array();
+		}
+		//-----------------------------------------------------------------------
+		public function get totalFrames():int
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.get.totalFrames()"); }
+			return 0;
+		}
+		//-----------------------------------------------------------------------
+		public function get trackAsMenu():Boolean
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.get.trackAsMenu()"); }
+			return false;
+		}
+		//-----------------------------------------------------------------------
+		public function set trackAsMenu(value:Boolean):void
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.set.trackAsMenu(" + value + ")"); }
+		}
+		///-----------------------------------------------------------------------
+		/// CLASS METHODS
+		///-----------------------------------------------------------------------
+		public function addFrameScript(frame_index:int, script_function:Function):void
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.addFrameScript(" + frame_index + ", " + script_function + ")"); }
+			mFrameScripts[frame_index] = script_function;
+		}
+		//-----------------------------------------------------------------------
+		override public function dispatchEvent(event:Event):Boolean
+		{
+			if(event.type == Event.ENTER_FRAME)
+			{
+				var frame_script:Function = mFrameScripts[currentFrame-1];
+				if(frame_script != null)
+				{
+					trace(frame_script);
+					frame_script();
+					//frame_script.call(frame_script);
+				}
+			}
+
+			return super.dispatchEvent(event);
+		}
+		//-----------------------------------------------------------------------
+		public function gotoAndPlay(frame:Object, scene:String = null):void
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.gotoAndPlay(" + frame + ", " + scene + ")"); }
+		}
+		//-----------------------------------------------------------------------
+		public function gotoAndStop(frame:Object, scene:String = null):void
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.gotoAndStop(" + frame + ", " + scene + ")"); }
+		}
+		//-----------------------------------------------------------------------
+		public function nextFrame():void
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.nextFrame()"); }
+		}
+		//-----------------------------------------------------------------------
+		public function nextScene():void
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.nextScene()"); }
+		}
+		//-----------------------------------------------------------------------
+		public function play():void
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.play()"); }
+		}
+		//-----------------------------------------------------------------------
+		public function prevFrame():void
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.prevFrame()"); }
+		}
+		//-----------------------------------------------------------------------
+		public function prevScene():void
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.prevScene()"); }
+		}
+		//-----------------------------------------------------------------------
+		public function stop():void
+		{
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.stop()"); }
+		}
+		//-----------------------------------------------------------------------
 	}
 }

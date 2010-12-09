@@ -77,6 +77,9 @@ namespace vtx
 		class ShapeParser;
 		class StructureParser;
 		class TextParser;
+
+		// Resources
+		class ScriptResource;
 	}
 }
 

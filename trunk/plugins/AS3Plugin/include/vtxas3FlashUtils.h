@@ -30,6 +30,13 @@ THE SOFTWARE.
 #define __vtxas3FlashUtils_H__
 
 #include "vtxas3.h"
+#include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_utils.h"
+#endif
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
@@ -38,11 +45,11 @@ namespace vtx { namespace as3 {
 	public:
 		FlashUtilsClass(avmplus::VTable* cvtable);
 
-		ClassClosure* getClass(Stringp name);
+		avmplus::ClassClosure* getClass(avmplus::Stringp name);
 
-		ScriptObject* finddef(const Multiname& multiname, DomainEnv* domainEnv);
+		avmplus::ScriptObject* finddef(const avmplus::Multiname& multiname, avmplus::DomainEnv* domainEnv);
 
-		CSP_CLASS_SLOTS(FlashUtils);
+		CSP_SLOTS(FlashUtilsClass, flash_utils_);
 	};
 	//-----------------------------------------------------------------------
 }}

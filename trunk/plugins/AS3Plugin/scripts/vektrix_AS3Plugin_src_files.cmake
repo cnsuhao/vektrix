@@ -122,6 +122,7 @@ set (file_root_as3_classes_flash_text
 	../as3/flash/text/StaticText.as
 	../as3/flash/text/StyleSheet.as
 	../as3/flash/text/TextField.as
+	../as3/flash/text/TextFieldAutoSize.as
 	../as3/flash/text/TextFieldType.as
 	../as3/flash/text/TextFormat.as
 	../as3/flash/text/TextFormatAlign.as
@@ -135,6 +136,7 @@ set (file_root_as3_classes_flash_text
 
 # AS3 classes -> flash -> ui files
 set (file_root_as3_classes_flash_ui
+	../as3/flash/ui/Keyboard.as
 	../as3/flash/ui/Mouse.as
 	../include/vtxas3Mouse.h
 	../src/vtxas3Mouse.cpp
@@ -143,10 +145,14 @@ set (file_root_as3_classes_flash_ui
 # AS3 classes -> flash -> utils files
 set (file_root_as3_classes_flash_utils
 	../as3/flash/utils/ByteArray.as
+	../as3/flash/utils/Dictionary.as
+	../as3/flash/utils/Endian.as
+	../as3/flash/utils/FlashUtils.as
 	../as3/flash/utils/Timer.as
-	../as3/flash/utils/utils.as
+	../include/vtxas3Dictionary.h
 	../include/vtxas3FlashUtils.h
 	../include/vtxas3Timer.h
+	../src/vtxas3Dictionary.cpp
 	../src/vtxas3FlashUtils.cpp
 	../src/vtxas3Timer.cpp
 )
@@ -163,8 +169,8 @@ set (file_root_binding
 	../include/flash_package.h
 	../include/vtxas3Object.h
 	../include/vtxas3ScriptInterface.h
-	../src/flash_package.cpp
 	../src/vtxas3Object.cpp
+	../src/vtxas3ScriptInterface.cpp
 )
 
 # Binding -> [exclude] files

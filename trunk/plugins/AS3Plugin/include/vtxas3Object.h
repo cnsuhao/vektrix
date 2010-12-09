@@ -43,11 +43,17 @@ namespace vtx { namespace as3 {
 		AS3Object(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 		virtual ~AS3Object();
 
-		void destroy();
+		virtual void ctor();
+
+		virtual const String& getMappedVektrixType() const = 0;
 
 		virtual void init(Instance* inst, ScriptInterface* iface);
 		virtual void eventFired(const vtx::Event& evt) = 0;
 
+		void setChildObject(const String& name, vtx::ScriptObject* script_object);
+		vtx::ScriptObject* getChildObject(const String& name);
+
+		AS3ScriptEngine* getEngine() const;
 		Movie* getParentMovie() const;
 		Instance* getNativeObject() const;
 		ScriptInterface* getInterface() const;

@@ -54,13 +54,16 @@ namespace vtx
 			while(pool->size())
 			{
 				Instance* inst = pool->top();
+				Resource* res = inst->getResource();
 				if(inst->getName().length())
 				{
 					VTX_LOG("Destroyed instance with name %s", inst->getName().c_str());
 				}
-				if(inst->getResource())
+				if(res)
 				{
-					VTX_LOG("Destroyed instance with assigned resource %s", inst->getResource()->getType().c_str());
+					VTX_LOG("Destroyed instance with assigned resource type: %s, id: %s", 
+						res->getType().c_str(), 
+						res->getID().c_str());
 				}
 				delete inst;
 				pool->pop();

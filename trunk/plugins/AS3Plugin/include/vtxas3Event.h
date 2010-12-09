@@ -30,6 +30,13 @@ THE SOFTWARE.
 #define __vtxas3Event_H__
 
 #include "vtxas3.h"
+#include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_events.h"
+#endif
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
@@ -44,10 +51,20 @@ namespace vtx { namespace as3 {
 			return get_flash_events_Event_mType();
 		}
 
-		CSP_INST_SLOTS(Event);
+		inline void setCurrentTarget(avmplus::ScriptObject* target)
+		{
+			set_flash_events_Event_mCurrentTarget(target->atom());
+		}
+
+		inline void setTarget(avmplus::ScriptObject* target)
+		{
+			set_flash_events_Event_mTarget(target->atom());
+		}
+
+		CSP_SLOTS(Event, flash_events_);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(Event);
+	CSP_DEFINE_CLASS(EventClass, Event, flash_events_);
 	//-----------------------------------------------------------------------
 }}
 

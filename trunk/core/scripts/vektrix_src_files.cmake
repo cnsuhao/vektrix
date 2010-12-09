@@ -98,11 +98,13 @@ set (file_root_debugging
 set (file_root_events
 	../include/vtxEvent.h
 	../include/vtxEventListener.h
+	../include/vtxFileEvent.h
 	../include/vtxFocusEvent.h
 	../include/vtxKeyCodes.h
 	../include/vtxKeyboardEvent.h
 	../include/vtxMouseEvent.h
 	../src/vtxEvent.cpp
+	../src/vtxFileEvent.cpp
 	../src/vtxFocusEvent.cpp
 	../src/vtxKeyboardEvent.cpp
 	../src/vtxMouseEvent.cpp
@@ -254,12 +256,6 @@ set (file_root_platforms
 
 # Resources files
 set (file_root_resources
-)
-
-# Resources -> Flash Specific files
-set (file_root_resources_flash_specific
-	../include/vtxSymbolClassResource.h
-	../src/vtxSymbolClassResource.cpp
 )
 
 # Resources -> Interfaces files
@@ -427,7 +423,6 @@ source_group("Instances\\Interfaces"                FILES ${file_root_instances_
 source_group("Instances\\Management"                FILES ${file_root_instances_management})
 source_group("Platforms"                            FILES ${file_root_platforms})
 source_group("Resources"                            FILES ${file_root_resources})
-source_group("Resources\\Flash Specific"            FILES ${file_root_resources_flash_specific})
 source_group("Resources\\Interfaces"                FILES ${file_root_resources_interfaces})
 source_group("Resources\\Resource Types"            FILES ${file_root_resources_resource_types})
 source_group("Resources\\Resource Types\\Button"    FILES ${file_root_resources_resource_types_button})
@@ -480,7 +475,6 @@ set (file_root
 	${file_root_instances_management}
 	${file_root_platforms}
 	${file_root_resources}
-	${file_root_resources_flash_specific}
 	${file_root_resources_interfaces}
 	${file_root_resources_resource_types}
 	${file_root_resources_resource_types_button}

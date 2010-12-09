@@ -29,7 +29,16 @@ THE SOFTWARE.
 #ifndef __vtxas3MouseEvent_H__
 #define __vtxas3MouseEvent_H__
 
+#include "vtxas3.h"
 #include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_events.h"
+#endif
+
+#include "vtxas3Event.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
@@ -42,10 +51,10 @@ namespace vtx { namespace as3 {
 		double get_stageX();
 		double get_stageY();
 
-		CSP_INST_SLOTS(MouseEvent);
+		CSP_SLOTS(MouseEvent, flash_events_);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(MouseEvent);
+	CSP_DEFINE_CLASS(MouseEventClass, MouseEvent, flash_events_);
 	//-----------------------------------------------------------------------
 }}
 

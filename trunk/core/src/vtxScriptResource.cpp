@@ -31,17 +31,16 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	ScriptResource::ScriptResource(const String& id, const char* code, uint len)
-		: Resource(id), 
-		mLength(len), 
-		mCodeBuffer(code)
+	ScriptResource::ScriptResource(const String& script_type)
+		: Resource("__ScriptResource__"), 
+		mScriptType(script_type)
 	{
 
 	}
 	//-----------------------------------------------------------------------
 	ScriptResource::~ScriptResource()
 	{
-		free((void*)mCodeBuffer);
+
 	}
 	//-----------------------------------------------------------------------
 	const String& ScriptResource::getType() const
@@ -50,14 +49,9 @@ namespace vtx
 		return type;
 	}
 	//-----------------------------------------------------------------------
-	const char* ScriptResource::getBuffer() const
+	const String& ScriptResource::getScriptType() const
 	{
-		return mCodeBuffer;
-	}
-	//-----------------------------------------------------------------------
-	const uint& ScriptResource::getLength() const
-	{
-		return mLength;
+		return mScriptType;
 	}
 	//-----------------------------------------------------------------------
 }

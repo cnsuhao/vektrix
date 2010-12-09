@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 package flash.text
 {
-	import flash.events.*;
+	import flash.events.EventDispatcher;
 	
 	public dynamic class StyleSheet extends EventDispatcher
 	{

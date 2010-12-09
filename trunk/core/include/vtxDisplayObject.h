@@ -106,6 +106,7 @@ namespace vtx
 		/** Get the local bounding box of this object */
 		const BoundingBox& getBoundingBox() const;
 
+		Stage* getStage() const;
 
 		/** Notify this object about its parent DisplayObjectContainer */
 		void setParentContainer(DisplayObjectContainer* parent);
@@ -132,8 +133,6 @@ namespace vtx
 
 		/** Get the Transform that is associated with this object */
 		Transform& getTransform();
-
-		//virtual void initScriptObject();
 
 	protected:
 		Transform mTransform;

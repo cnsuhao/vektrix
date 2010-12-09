@@ -30,14 +30,14 @@ THE SOFTWARE.
 #define __vtxMovie_H__
 
 #include "vtxPrerequisites.h"
-#include "vtxFile.h"
+#include "vtxEventListener.h"
 #include "vtxVector2.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
 	/** Defines a movie instance, which can be created by using Root::createMovie() */
-	class vtxExport Movie : public File::Listener
+	class vtxExport Movie : public EventListener
 	{
 		friend class InteractiveObject;
 		friend class Root;
@@ -144,6 +144,8 @@ namespace vtx
 		void setUserData(void* data);
 		/** Get the custom user data of this movie */
 		void* getUserData() const;
+
+		virtual void eventFired(const Event& evt);
 
 	protected:
 		String mName;

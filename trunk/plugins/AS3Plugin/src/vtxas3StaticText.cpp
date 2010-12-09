@@ -26,7 +26,7 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
+#include "vtxas3StaticText.h"
 
 #include "vtxStaticText.h"
 
@@ -34,15 +34,10 @@ THE SOFTWARE.
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
-	StaticText::StaticText(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: DisplayObject(vtable, prototype)
+	const String& StaticText::getMappedVektrixType() const
 	{
-
-	}
-	//-----------------------------------------------------------------------
-	StaticText::~StaticText()
-	{
-
+		static String type = vtx::StaticText::TYPE;
+		return type;
 	}
 	//-----------------------------------------------------------------------
 	avmplus::Stringp StaticText::get_text()
@@ -51,7 +46,7 @@ namespace vtx { namespace as3 {
 
 		if(mStaticText)
 		{
-			return CSP_CORE->utfStringToAS3(mStaticText->getText());
+			return CSP_CORE->toScriptPtr(mStaticText->getText());
 		}
 
 		return NULL;

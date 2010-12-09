@@ -26,7 +26,7 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
+#include "vtxas3MovieClip.h"
 
 #include "vtxas3ScriptEngine.h"
 
@@ -39,49 +39,19 @@ THE SOFTWARE.
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
-	MovieClip::MovieClip(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: Sprite(vtable, prototype)
+	const String& MovieClip::getMappedVektrixType() const
 	{
-		//csp::VmCore::initializeAllSlots(this);
-		//AS3ScriptEngine* script_engine = static_cast<AS3ScriptEngine*>(CSP_CORE->getUserData());
-		////Instance* inst = script_engine->getQueuedInstance();
-		//Instance* inst = script_engine->getParentMovie()->getInstanceByType("MovieClip");
-		//setNativeObject(inst);
-		//if(inst)
-		//{
-		//	inst->setScriptObject(this);
-		//}
-		//std::cout << "as3 movieclip" << std::endl;
-		//mNativeObject->setScriptObject(this);
+		return vtx::MovieClip::TYPE;
 	}
 	//-----------------------------------------------------------------------
-	MovieClip::~MovieClip()
+	int MovieClip::get__currentFrame()
 	{
-
+		return mMovieClip->getCurrentFrame() + 1;
 	}
 	//-----------------------------------------------------------------------
-	void MovieClip::eventFired(const vtx::Event& evt)
+	void MovieClip::init(Instance* inst, ScriptInterface* iface)
 	{
-		if(!mMovieClip)
-		{
-			std::cout << ("null movieclip") << std::endl;
-			return;
-		}
-
-		if(evt.getCategory() == vtx::Event::GENERIC_CATEGORY)
-		{
-			if(evt.getType() == vtx::Event::ENTER_FRAME)
-			{
-				const uint& frame = mMovieClip->getCurrentFrame();
-				csp::VmCore::callObjectFunction(this, "frame" + StringHelper::toString(frame+1));
-				//callFunction("frame" + StringHelper::toString(frame+1));
-			}
-		}
-	}
-	//-----------------------------------------------------------------------
-	void MovieClip::setNativeObject(Instance* inst)
-	{
-		Sprite::setNativeObject(inst);
+		Sprite::init(inst, iface);
 		mMovieClip = static_cast<vtx::MovieClip*>(inst);
 	}
 	//-----------------------------------------------------------------------

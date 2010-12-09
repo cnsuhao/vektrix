@@ -171,7 +171,6 @@ namespace vtx
 	class StaticTextResource;
 	class StringHelper;
 	class SubshapeResource;
-	class SymbolClassResource;
 	class TextLine;
 	class TextLineElement;
 	class Texture;

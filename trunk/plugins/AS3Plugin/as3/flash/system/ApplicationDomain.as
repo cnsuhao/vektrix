@@ -28,8 +28,8 @@ THE SOFTWARE.
 
 package flash.system
 {
-	import flash.utils.*;
-	
+	import flash.utils.ByteArray;
+
 	public final class ApplicationDomain
 	{
 		/* Constructor */
@@ -37,10 +37,10 @@ package flash.system
 
 		/* getters & setters */
 		public static function get currentDomain():ApplicationDomain { return null; }
-		
+
 		public function get domainMemory():ByteArray { return null; }
 		public function set domainMemory(value:ByteArray):void {}
-		
+
 		public static function get MIN_DOMAIN_MEMORY_LENGTH():uint { return null; }
 		public function get parentDomain():ApplicationDomain { return null; }
 

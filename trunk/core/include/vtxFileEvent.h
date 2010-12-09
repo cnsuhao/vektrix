@@ -26,58 +26,42 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxSymbolClassResource.h"
+#ifndef __vtxFileEvent_H__
+#define __vtxFileEvent_H__
 
-#include "vtxLogManager.h"
+#include "vtxPrerequisites.h"
+#include "vtxEvent.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	SymbolClassResource::SymbolClassResource() 
-		: Resource("__SymbolClassResource__")
+	/** A class for representing events that are related to vtx::File */
+	class vtxExport FileEvent : public Event
 	{
+	public:
+		FileEvent(const String& type, File* file);
+		FileEvent(const String& type, Resource* resource);
+		virtual ~FileEvent(){}
 
-	}
-	//-----------------------------------------------------------------------
-	SymbolClassResource::~SymbolClassResource()
-	{
+		static const String CATEGORY;
+		static const String LOADING_COMPLETED;
+		static const String LOADING_FAILED;
+		static const String RESOURCE_ADDED;
 
-	}
-	//-----------------------------------------------------------------------
-	const String& SymbolClassResource::getType() const
-	{
-		static String type = "__SymbolClassResource__";
-		return type;
-	}
-	//-----------------------------------------------------------------------
-	bool SymbolClassResource::addSymbol(const String& id, const String& class_name, const String& package)
-	{
-		SymbolMap::iterator it = mSymbols.find(id);
-		if(it == mSymbols.end())
+		/** Get the category to which this event belongs to */
+		virtual const String& getCategory() const
 		{
-			VTX_LOG("SymbolClass: [%s] %s -> %s", id.c_str(), package.c_str(), class_name.c_str());
-			mSymbols.insert(std::make_pair(id, StringPair(package, class_name)));
-			return true;
-		}
+			return CATEGORY;
+		};
 
-		return false;
-	}
-	//-----------------------------------------------------------------------
-	bool SymbolClassResource::hasSymbol(const String& id)
-	{
-		return (mSymbols.find(id) != mSymbols.end());
-	}
-	//-----------------------------------------------------------------------
-	const StringPair& SymbolClassResource::getSymbol(const String& id)
-	{
-		SymbolMap::iterator it = mSymbols.find(id);
-		if(it != mSymbols.end())
-		{
-			return it->second;
-		}
+		File* getFile() const;
+		Resource* getResource() const;
 
-		static StringPair empty;
-		return empty;
-	}
+	protected:
+		File* mFile;
+		Resource* mResource;
+	};
 	//-----------------------------------------------------------------------
 }
+
+#endif

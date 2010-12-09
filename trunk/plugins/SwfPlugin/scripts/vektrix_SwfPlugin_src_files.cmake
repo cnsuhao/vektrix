@@ -23,6 +23,12 @@ set (file_root_plugin
 	../src/vtxswfPlugin.cpp
 )
 
+# Resources files
+set (file_root_resources
+	../include/vtxswfScriptResource.h
+	../src/vtxswfScriptResource.cpp
+)
+
 # TagParsers files
 set (file_root_tagparsers
 	../include/vtxswfFontParser.h
@@ -54,6 +60,7 @@ source_group(""                  FILES ${file_root})
 source_group("_cmake_"           FILES ${file_root__cmake_})
 source_group("Parser"            FILES ${file_root_parser})
 source_group("Plugin"            FILES ${file_root_plugin})
+source_group("Resources"         FILES ${file_root_resources})
 source_group("TagParsers"        FILES ${file_root_tagparsers})
 source_group("TagParsers\\Shape" FILES ${file_root_tagparsers_shape})
 
@@ -63,6 +70,7 @@ set (file_root
 	${file_root__cmake_}
 	${file_root_parser}
 	${file_root_plugin}
+	${file_root_resources}
 	${file_root_tagparsers}
 	${file_root_tagparsers_shape}
 )

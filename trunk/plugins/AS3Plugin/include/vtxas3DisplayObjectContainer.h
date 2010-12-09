@@ -30,6 +30,15 @@ THE SOFTWARE.
 #define __vtxas3DisplayObjectContainer_H__
 
 #include "vtxas3.h"
+#include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_display.h"
+#endif
+
+#include "vtxas3InteractiveObject.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
@@ -38,6 +47,8 @@ namespace vtx { namespace as3 {
 	public:
 		DisplayObjectContainer(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 		virtual ~DisplayObjectContainer();
+
+		void ctor();
 
 		// getters & setters
 		int get_numChildren();
@@ -61,15 +72,15 @@ namespace vtx { namespace as3 {
 
 		void setChildIndex(DisplayObject* child, int index);
 
-		CSP_INST_SLOTS(DisplayObjectContainer);
+		CSP_SLOTS(DisplayObjectContainer, flash_display_);
 
 	protected:
 		vtx::DisplayObjectContainer* mDisplayObjectContainer;
 
-		virtual void setNativeObject(Instance* inst);
+		virtual void init(Instance* inst, ScriptInterface* iface);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(DisplayObjectContainer);
+	CSP_DEFINE_CLASS(DisplayObjectContainerClass, DisplayObjectContainer, flash_display_);
 	//-----------------------------------------------------------------------
 }}
 

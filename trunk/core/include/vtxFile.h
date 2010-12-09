@@ -67,24 +67,7 @@ namespace vtx
 			}
 		};
 
-		/** Listen to File events */
-		class vtxExport Listener
-		{
-		public:
-			/** A Resource has been added to this File */
-			virtual void resourceAdded(Resource* resource){}
-
-			/** A Resource has been removed from this File */
-			virtual void resourceRemoved(Resource* resource) {}
-
-			/** The file has been successfully loaded */
-			virtual void loadingCompleted(File* file) {}
-
-			/** The file has failed to load properly */
-			virtual void loadingFailed(File* file) {}
-		};
-		typedef std::map<Listener*, Listener*> ListenerMap;
-
+		typedef std::map<EventListener*, EventListener*> ListenerMap;
 		typedef std::map<String, FontResource*> FontMap;
 
 		/** Represents the current loading state of a File instance */
@@ -133,9 +116,9 @@ namespace vtx
 		FontResource* getFontByName(const String& font_name);
 
 		/** Add a Listener to this File */
-		bool addListener(Listener* listener);
+		bool addListener(EventListener* listener);
 		/** Remove a Listener from this File */
-		bool removeListener(Listener* listener);
+		bool removeListener(EventListener* listener);
 
 	protected:
 		const String mFilename;

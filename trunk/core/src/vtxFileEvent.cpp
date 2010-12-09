@@ -26,5 +26,38 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
-#include "flash.cpp"
+#include "vtxFileEvent.h"
+
+namespace vtx
+{
+	//-----------------------------------------------------------------------
+	const String FileEvent::CATEGORY =			"FileEvent";
+	const String FileEvent::LOADING_COMPLETED =	"loadingCompleted";
+	const String FileEvent::LOADING_FAILED =	"loadingFailed";
+	const String FileEvent::RESOURCE_ADDED =	"resourceAdded";
+	//-----------------------------------------------------------------------
+	FileEvent::FileEvent(const String& type, File* file) 
+		: Event(type), 
+		mFile(file)
+	{
+		VTX_DEBUG_ASSERT(type.length(), "FileEvent::FileEvent() -> type.length()==0");
+	}
+	//-----------------------------------------------------------------------
+	FileEvent::FileEvent(const String& type, Resource* res) 
+		: Event(type), 
+		mResource(res)
+	{
+		VTX_DEBUG_ASSERT(type.length(), "FileEvent::FileEvent() -> type.length()==0");
+	}
+	//-----------------------------------------------------------------------
+	File* FileEvent::getFile() const
+	{
+		return mFile;
+	}
+	//-----------------------------------------------------------------------
+	Resource* FileEvent::getResource() const
+	{
+		return mResource;
+	}
+	//-----------------------------------------------------------------------
+}

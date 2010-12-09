@@ -30,18 +30,27 @@ THE SOFTWARE.
 #define __vtxas3InteractiveObject_H__
 
 #include "vtxas3.h"
+#include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_display.h"
+#endif
+
+#include "vtxas3DisplayObject.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
-	class InteractiveObject : public DisplayObject
+	class InteractiveObject : public as3::DisplayObject
 	{
 	public:
-		InteractiveObject(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		CSP_INST_CDTOR(InteractiveObject, DisplayObject);
 
-		CSP_INST_SLOTS(InteractiveObject);
+		CSP_SLOTS(InteractiveObject, flash_display_);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(InteractiveObject);
+	CSP_DEFINE_CLASS(InteractiveObjectClass, InteractiveObject, flash_display_);
 	//-----------------------------------------------------------------------
 }}
 

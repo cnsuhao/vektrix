@@ -168,6 +168,16 @@ namespace vtx
 		return mTransform.getBounding();
 	}
 	//-----------------------------------------------------------------------
+	Stage* DisplayObject::getStage() const
+	{
+		if(mParentMovie)
+		{
+			return mParentMovie->getStage();
+		}
+
+		return NULL;
+	}
+	//-----------------------------------------------------------------------
 	void DisplayObject::setParentContainer(DisplayObjectContainer* parent)
 	{
 		mParentContainer = parent;
@@ -224,15 +234,5 @@ namespace vtx
 	{
 		return mTransform;
 	}
-	//-----------------------------------------------------------------------
-	/*void DisplayObject::initScriptObject()
-	{
-		//if(mParentContainer && mName.length())
-		//{
-		//	mParentContainer->getScriptObject()->setChildObject(mName, mScriptObject);
-		//}
-
-		Instance::initScriptObject();
-	}*/
 	//-----------------------------------------------------------------------
 }

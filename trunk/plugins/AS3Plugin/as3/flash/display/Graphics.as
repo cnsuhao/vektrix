@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 package flash.display
 {
-	import flash.geom.*;
+	import flash.geom.Matrix;
 	
 	public class Graphics
 	{

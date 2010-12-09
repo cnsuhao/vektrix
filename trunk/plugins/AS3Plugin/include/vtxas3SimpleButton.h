@@ -30,16 +30,24 @@ THE SOFTWARE.
 #define __vtxas3SimpleButton_H__
 
 #include "vtxas3.h"
+#include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_display.h"
+#endif
+
+#include "vtxas3InteractiveObject.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	class SimpleButton : public InteractiveObject
 	{
 	public:
-		SimpleButton(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-		virtual ~SimpleButton();
+		CSP_INST_CDTOR(SimpleButton, InteractiveObject);
 
-		CSP_INST_SLOTS(SimpleButton);
+		CSP_SLOTS(SimpleButton, flash_display_);
 
 	protected:
 		vtx::Button* mButton;
@@ -47,7 +55,7 @@ namespace vtx { namespace as3 {
 		void setNativeObject(Instance* inst);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(SimpleButton);
+	CSP_DEFINE_CLASS(SimpleButtonClass, SimpleButton, flash_display_);
 	//-----------------------------------------------------------------------
 }}
 

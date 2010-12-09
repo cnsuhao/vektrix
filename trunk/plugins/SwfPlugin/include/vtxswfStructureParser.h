@@ -59,12 +59,15 @@ namespace vtx { namespace swf {
 		uint mMovieClipFrameIndex;
 		MovieClipResource* mCurrentMovieClip;
 		Timeline* mMovieClipTimeline;
+		Keyframe* mMovieClipKeyframe;
 
 		// main movieclip
 		uint mMainFrameIndex;
 		MovieClipResource* mMainMovieClip;
 		Timeline* mMainTimeline;
-		Keyframe* mCurrentKeyframe;
+		Keyframe* mMainKeyframe;
+
+		Keyframe* mCurrKeyframe;
 	};
 	//-----------------------------------------------------------------------
 }}

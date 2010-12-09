@@ -39,7 +39,8 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	DisplayObjectContainer::DisplayObjectContainer() 
-		: mNeedBoundingBoxUpdate(false)
+		: mNeedBoundingBoxUpdate(false), 
+		mChildListChanged(false)
 	{
 
 	}
@@ -70,6 +71,7 @@ namespace vtx
 	bool DisplayObjectContainer::addChildAt(DisplayObject* object, uint layer)
 	{
 		mNeedBoundingBoxUpdate = true;
+		mChildListChanged = true;
 
 		LayerMap::iterator it = mLayers.find(layer);
 		LayerMap::iterator end = mLayers.end();
@@ -158,6 +160,7 @@ namespace vtx
 	DisplayObject* DisplayObjectContainer::removeChildAt(uint layer)
 	{
 		mNeedBoundingBoxUpdate = true;
+		mChildListChanged = true;
 
 		LayerMap::iterator it = mLayers.find(layer);
 		if(it == mLayers.end())
@@ -203,6 +206,7 @@ namespace vtx
 	void DisplayObjectContainer::clearLayers()
 	{
 		mNeedBoundingBoxUpdate = true;
+		mChildListChanged = true;
 
 		LayerMap::iterator it = mLayers.begin();
 		LayerMap::iterator end = mLayers.end();
@@ -299,8 +303,6 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void DisplayObjectContainer::eventFired(const Event& evt)
 	{
-		InteractiveObject::eventFired(evt);
-
 		if(evt.getCategory() != FocusEvent::CATEGORY)
 		{
 			LayerMap::iterator it = mLayers.begin();
@@ -326,32 +328,18 @@ namespace vtx
 					child->eventFired(evt);
 				}
 
-				++it;
+				if(mChildListChanged)
+				{
+					mChildListChanged = false;
+					it = mLayers.begin();
+					end = mLayers.end();
+				}
+				else
+					++it;
 			}
 		}
-	}
-	//-----------------------------------------------------------------------
-	void DisplayObjectContainer::initScriptObject_2()
-	{
-		//InteractiveObject::initScriptObject();
 
-		LayerMap::iterator it = mLayers.begin();
-		LayerMap::iterator end = mLayers.end();
-
-		while(it != end)
-		{
-			it->second->initScriptObject();
-
-			const String& name = it->second->getName();
-			if(name.length() && mScriptObject)
-			{
-				mScriptObject->setChildObject(name, it->second->getScriptObject());
-				//ScriptObject* child = mScriptObject->getChildObject(name);
-				//it->second->setScriptObject(child);
-			}
-
-			++it;
-		}
+		InteractiveObject::eventFired(evt);
 	}
 	//-----------------------------------------------------------------------
 }

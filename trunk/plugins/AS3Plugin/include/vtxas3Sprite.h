@@ -30,21 +30,30 @@ THE SOFTWARE.
 #define __vtxas3Sprite_H__
 
 #include "vtxas3.h"
+#include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_display.h"
+#endif
+
+#include "vtxas3DisplayObjectContainer.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	class Sprite : public DisplayObjectContainer
 	{
 	public:
-		Sprite(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
+		CSP_INST_CDTOR(Sprite, DisplayObjectContainer);
 
-		CSP_INST_SLOTS(Sprite);
+		CSP_SLOTS(Sprite, flash_display_);
 
 	protected:
-		virtual void setNativeObject(Instance* inst);
+		virtual void init(Instance* inst, ScriptInterface* iface);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(Sprite);
+	CSP_DEFINE_CLASS(SpriteClass, Sprite, flash_display_);
 	//-----------------------------------------------------------------------
 }}
 

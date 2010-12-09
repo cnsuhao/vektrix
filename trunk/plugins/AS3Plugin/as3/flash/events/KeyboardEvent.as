@@ -48,5 +48,26 @@ package flash.events
 		{
 			super(type, bubbles, cancelable);
 		}
+
+				/* getters & setters */
+		public function get altKey():Boolean { return false; }
+		public function set altKey(value:Boolean):void {}
+		public function get charCode():uint { return null; }
+		public function set charCode(value:uint):void {}
+		public function get commandKey():Boolean { return false; }
+		public function set commandKey(value:Boolean):void {}
+		public function get controlKey():Boolean { return false; }
+		public function set controlKey(value:Boolean):void {}
+		public function get ctrlKey():Boolean { return false; }
+		public function set ctrlKey(value:Boolean):void {}
+		public function get keyCode():uint { return null; }
+		public function set keyCode(value:uint):void {}
+		public function get keyLocation():uint { return null; }
+		public function set keyLocation(value:uint):void {}
+		public function get shiftKey():Boolean { return false; }
+		public function set shiftKey(value:Boolean):void {}
+
+		/* methods */
+		public function updateAfterEvent():void {}
 	}
 }

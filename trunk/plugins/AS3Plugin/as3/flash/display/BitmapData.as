@@ -28,9 +28,12 @@ THE SOFTWARE.
 
 package flash.display
 {
-	import flash.filters.*;
-	import flash.geom.*;
-	import flash.utils.*;
+	import flash.filters.BitmapFilter;
+	import flash.geom.ColorTransform;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.utils.ByteArray;
 	
 	public class BitmapData
 	{

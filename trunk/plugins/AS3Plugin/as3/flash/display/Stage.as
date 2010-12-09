@@ -28,13 +28,18 @@ THE SOFTWARE.
 
 package flash.display
 {
-	import flash.display.*;
-	import flash.geom.*;
-	import flash.text.*;
+	import flash.geom.Rectangle;
+	import flash.text.TextSnapshot;
 
 	[native(cls="::vtx::as3::StageClass", instance="::vtx::as3::Stage", methods="auto")]
 	public class Stage extends DisplayObjectContainer
 	{
+		public function Stage()
+		{
+			super();
+			trace("AS3 Stage CTOR");
+		}
+
 		/* getters & setters */
 		public function get align():String { return ""; }
 		public function set align(value:String):void {}

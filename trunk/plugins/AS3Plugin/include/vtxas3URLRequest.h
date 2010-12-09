@@ -29,7 +29,14 @@ THE SOFTWARE.
 #ifndef __vtxas3URLRequest_H__
 #define __vtxas3URLRequest_H__
 
+#include "vtxas3.h"
 #include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_net.h"
+#endif
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
@@ -44,10 +51,10 @@ namespace vtx { namespace as3 {
 			return get_private_mURL();
 		}
 
-		CSP_INST_SLOTS(URLRequest);
+		CSP_SLOTS(URLRequest, flash_net_);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(URLRequest);
+	CSP_DEFINE_CLASS(URLRequestClass, URLRequest, flash_net_);
 	//-----------------------------------------------------------------------
 }}
 

@@ -28,23 +28,47 @@ THE SOFTWARE.
 
 package flash.utils
 {
+	const DEBUG_TIMER:Boolean = false;
+
 	import flash.events.EventDispatcher;
 
 	[native(cls="::vtx::as3::TimerClass", instance="::vtx::as3::Timer", methods="auto")]
 	public class Timer extends EventDispatcher
 	{
+		//-----------------------------------------------------------------------
+		private native function ctor(delay:Number, repeatCount:int):void;
+		//-----------------------------------------------------------------------
 		public function Timer(delay:Number, repeatCount:int = 0)
 		{
-			trace("Timer::Timer(", delay, ", ", repeatCount, ")");
-			init(delay, repeatCount);
-		}
-		
-		public native function reset():void
-		
-		public native function start():void
-		
-		public native function stop():void
+			super();
+			if(DEBUG_TIMER) { trace("new Timer(", delay, ", ", repeatCount, ")"); }
 
-		private native function ctor(delay:Number, repeatCount:int):void
+			ctor(delay, repeatCount);
+		}
+		//-----------------------------------------------------------------------
+		private native function _reset():void;
+		//-----------------------------------------------------------------------
+		public function reset():void
+		{
+			if(DEBUG_TIMER) { trace("Timer.reset()"); }
+			_reset();
+		}
+		//-----------------------------------------------------------------------
+		private native function _start():void;
+		//-----------------------------------------------------------------------
+		public function start():void
+		{
+			if(DEBUG_TIMER) { trace("Timer.start()"); }
+			_start();
+		}
+		//-----------------------------------------------------------------------
+		private native function _stop():void;
+		//-----------------------------------------------------------------------
+		public function stop():void
+		{
+			if(DEBUG_TIMER) { trace("Timer.stop()"); }
+			_stop();
+		}
+		//-----------------------------------------------------------------------
 	}
 }

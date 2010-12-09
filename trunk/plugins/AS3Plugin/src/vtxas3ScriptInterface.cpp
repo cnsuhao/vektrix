@@ -26,35 +26,48 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxas3Stage_H__
-#define __vtxas3Stage_H__
+#include "vtxas3ScriptInterface.h"
+#include "vtxas3Object.h"
 
-#include "vtxas3.h"
-#include "cspPrerequisites.h"
-
-#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
-#	include "flash.h"
-#else
-#	include "flash_display.h"
-#endif
-
-#include "vtxas3DisplayObjectContainer.h"
+#include "cspVmCore.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
-	class Stage : public DisplayObjectContainer
+	ScriptInterface::ScriptInterface(AS3Object* as3_object) 
+		: mAS3Object(as3_object)
 	{
-	public:
-		CSP_INST_CDTOR(Stage, DisplayObjectContainer);
 
-		int get_stageHeight();
-		int get_stageWidth();
-
-		CSP_SLOTS(Stage, flash_display_);
-	};
+	}
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(StageClass, Stage, flash_display_);
+	ScriptInterface::~ScriptInterface()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	AS3Object* ScriptInterface::getObject() const
+	{
+		return mAS3Object;
+	}
+	//-----------------------------------------------------------------------
+	void ScriptInterface::eventFired(const vtx::Event& evt)
+	{
+		mAS3Object->eventFired(evt);
+	}
+	//-----------------------------------------------------------------------
+	void ScriptInterface::setNativeObject(Instance* inst)
+	{
+		vtx::ScriptObject::setNativeObject(inst);
+		mAS3Object->init(inst, this);
+	}
+	//-----------------------------------------------------------------------
+	void ScriptInterface::setChildObject(const String& name, vtx::ScriptObject* script_object)
+	{
+		mAS3Object->setChildObject(name, script_object);
+	}
+	//-----------------------------------------------------------------------
+	vtx::ScriptObject* ScriptInterface::getChildObject(const String& name)
+	{
+		return mAS3Object->getChildObject(name);
+	}
 	//-----------------------------------------------------------------------
 }}
-
-#endif

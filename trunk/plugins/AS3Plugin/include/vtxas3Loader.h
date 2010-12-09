@@ -29,7 +29,16 @@ THE SOFTWARE.
 #ifndef __vtxas3Loader_H__
 #define __vtxas3Loader_H__
 
+#include "vtxas3.h"
 #include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_display.h"
+#endif
+
+#include "vtxas3DisplayObjectContainer.h"
 
 #include "vtxFile.h"
 
@@ -38,25 +47,22 @@ namespace vtx { namespace as3 {
 	class Loader : public DisplayObjectContainer
 	{
 	public:
-		Loader(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-		virtual ~Loader();
+		CSP_INST_CDTOR(Loader, DisplayObjectContainer);
+		const String& getMappedVektrixType() const;
 
 		void load(URLRequest* request, LoaderContext* context);
 
 		void eventFired(const vtx::Event& evt);
 
-		CSP_INST_SLOTS(Loader);
+		CSP_SLOTS(Loader, flash_display_);
 
 	protected:
 		vtx::MovieClip* mMovieClip;
 
-		void setNativeObject(Instance* inst);
-
-		void loadingCompleted(File* file);
-		void loadingFailed(File* file);
+		void init(Instance* inst, ScriptInterface* iface);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(Loader);
+	CSP_DEFINE_CLASS(LoaderClass, Loader, flash_display_);
 	//-----------------------------------------------------------------------
 }}
 

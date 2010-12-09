@@ -29,7 +29,14 @@ THE SOFTWARE.
 #ifndef __vtxas3EventHandler_H__
 #define __vtxas3EventHandler_H__
 
+#include "vtxas3.h"
 #include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "vektrix.h"
+#endif
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
@@ -42,7 +49,7 @@ namespace vtx { namespace as3 {
 		int add(int a, int b);
 		void handle(avmplus::ScriptObject* evt);
 
-		CSP_CLASS_SLOTS(EventHandler);
+		CSP_SLOTS(EventHandlerClass, vektrix_);
 	};
 	//-----------------------------------------------------------------------
 	class EventHandler : public avmplus::ScriptObject
@@ -50,7 +57,7 @@ namespace vtx { namespace as3 {
 	public:
 		EventHandler(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 
-		CSP_INST_SLOTS(EventHandler);
+		CSP_SLOTS(EventHandler, vektrix_);
 	};
 	//-----------------------------------------------------------------------
 }}

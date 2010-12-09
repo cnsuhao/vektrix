@@ -29,8 +29,9 @@ THE SOFTWARE.
 #ifndef __vtxas3_H__
 #define __vtxas3_H__
 
-//#define VTX_DISABLE_MEMORY_DEBUGGING
 #include "vtxPrerequisites.h"
+
+#define VTX_AS3_USE_SINGLE_ABC_PACKAGE
 
 #if VTX_OS == VTX_WIN32
 #

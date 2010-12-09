@@ -31,6 +31,10 @@ package flash.display
 	[native(cls="::vtx::as3::SimpleButtonClass", instance="::vtx::as3::SimpleButton", methods="auto")]
 	public class SimpleButton extends InteractiveObject
 	{
-
+		public function SimpleButton()
+		{
+			super();
+			trace("AS3 SimpleButton CTOR");
+		}
 	}
 }
