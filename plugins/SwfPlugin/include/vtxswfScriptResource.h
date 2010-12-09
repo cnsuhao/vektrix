@@ -26,34 +26,40 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxas3Stage_H__
-#define __vtxas3Stage_H__
+#ifndef __vtxswfScriptResource_H__
+#define __vtxswfScriptResource_H__
 
-#include "vtxas3.h"
-#include "cspPrerequisites.h"
+#include "vtxswf.h"
+#include "vtxScriptResource.h"
 
-#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
-#	include "flash.h"
-#else
-#	include "flash_display.h"
-#endif
-
-#include "vtxas3DisplayObjectContainer.h"
-
-namespace vtx { namespace as3 {
+namespace vtx { namespace swf {
 	//-----------------------------------------------------------------------
-	class Stage : public DisplayObjectContainer
+	/** A Flash specific ScriptResource for linking Resource IDs to ActionScript 3 classes */
+	class vtxswfExport ScriptResource : public vtx::ScriptResource
 	{
 	public:
-		CSP_INST_CDTOR(Stage, DisplayObjectContainer);
+		static const String SCRIPT_TYPE;
 
-		int get_stageHeight();
-		int get_stageWidth();
+		typedef std::map<String, StringPair> SymbolMap;
 
-		CSP_SLOTS(Stage, flash_display_);
+		ScriptResource(char* buffer, const uint& buffer_size);
+		virtual ~ScriptResource();
+
+		const char* getBuffer() const;
+		const uint& getBufferSize() const;
+
+		/** Add a link from a Resource ID to the given script class */
+		bool addSymbol(const String& id, const String& class_name, const String& package);
+		/** Check if a script class has been registered for this Resource ID */
+		bool hasSymbol(const String& id);
+		/** Get the script class for the given Resource ID */
+		const StringPair& getSymbol(const String& id);
+
+	protected:
+		char* mBuffer;
+		uint mBufferSize;
+		SymbolMap mSymbols;
 	};
-	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(StageClass, Stage, flash_display_);
 	//-----------------------------------------------------------------------
 }}
 

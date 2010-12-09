@@ -30,14 +30,22 @@ THE SOFTWARE.
 #define __vtxas3DisplayObject_H__
 
 #include "vtxas3.h"
+#include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_display.h"
+#endif
+
+#include "vtxas3EventDispatcher.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	class DisplayObject : public EventDispatcher
 	{
 	public:
-		DisplayObject(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-		virtual ~DisplayObject(){}
+		CSP_INST_CDTOR(DisplayObject, EventDispatcher);
 
 		double get_x();
 		void set_x(double val);
@@ -57,17 +65,18 @@ namespace vtx { namespace as3 {
 		double get_width();
 		void set_width(double val);
 
-		double get_height();
-		void set_height(double val);
+		double get__height();
+		void set__height(double val);
 
-		DisplayObjectContainer* get_parent();
+		DisplayObjectContainer* get__parent();
+		DisplayObject* get__root();
 
 		Stage* get_stage();
 
-		void set_visible(bool val);
-		bool get_visible();
+		void set__visible(bool val);
+		bool get__visible();
 
-		CSP_INST_SLOTS(DisplayObject);
+		CSP_SLOTS(DisplayObject, flash_display_);
 
 	protected:
 		vtx::DisplayObject* mDisplayObject;
@@ -75,7 +84,7 @@ namespace vtx { namespace as3 {
 		virtual void init(Instance* inst, ScriptInterface* iface);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(DisplayObject);
+	CSP_DEFINE_CLASS(DisplayObjectClass, DisplayObject, flash_display_);
 	//-----------------------------------------------------------------------
 }}
 

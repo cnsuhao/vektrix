@@ -31,7 +31,11 @@ package flash.display
 	[native(cls="::vtx::as3::InteractiveObjectClass", instance="::vtx::as3::InteractiveObject", methods="auto")]
 	public class InteractiveObject extends DisplayObject
 	{
-		public function InteractiveObject() {}
+		public function InteractiveObject()
+		{
+			super();
+			trace("AS3 InteractiveObject CTOR");
+		}
 		
 		/* getters & setters */
 		// AIR-only public function get contextMenu():NativeMenu { return null; }

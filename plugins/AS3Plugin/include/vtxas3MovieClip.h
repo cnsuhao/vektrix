@@ -30,26 +30,33 @@ THE SOFTWARE.
 #define __vtxas3MovieClip_H__
 
 #include "vtxas3.h"
+#include "vtxas3Sprite.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_display.h"
+#endif
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	class MovieClip : public Sprite
 	{
 	public:
-		MovieClip(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-		virtual ~MovieClip();
+		CSP_INST_CDTOR(MovieClip, Sprite);
+		const String& getMappedVektrixType() const;
 
-		void eventFired(const vtx::Event& evt);
+		int get__currentFrame();
 
-		CSP_INST_SLOTS(MovieClip);
+		CSP_SLOTS(MovieClip, flash_display_);
 
 	protected:
 		vtx::MovieClip* mMovieClip;
 
-		virtual void setNativeObject(Instance* inst);
+		virtual void init(Instance* inst, ScriptInterface* iface);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(MovieClip);
+	CSP_DEFINE_CLASS(MovieClipClass, MovieClip, flash_display_);
 	//-----------------------------------------------------------------------
 }}
 

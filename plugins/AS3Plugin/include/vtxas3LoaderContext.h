@@ -29,7 +29,14 @@ THE SOFTWARE.
 #ifndef __vtxas3LoaderContext_H__
 #define __vtxas3LoaderContext_H__
 
+#include "vtxas3.h"
 #include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_system.h"
+#endif
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
@@ -39,10 +46,10 @@ namespace vtx { namespace as3 {
 		LoaderContext(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 		virtual ~LoaderContext(){}
 
-		CSP_INST_SLOTS(LoaderContext);
+		CSP_SLOTS(LoaderContext, flash_system_);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(LoaderContext);
+	CSP_DEFINE_CLASS(LoaderContextClass, LoaderContext, flash_system_);
 	//-----------------------------------------------------------------------
 }}
 

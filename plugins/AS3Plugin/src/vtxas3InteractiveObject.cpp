@@ -26,14 +26,10 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
+#include "vtxas3InteractiveObject.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
-	InteractiveObject::InteractiveObject(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: DisplayObject(vtable, prototype)
-	{
 
-	}
 	//-----------------------------------------------------------------------
 }}

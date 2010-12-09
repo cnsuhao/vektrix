@@ -55,16 +55,15 @@ namespace vtx
 	{
 		if(mExecuted) return;
 		VTX_LOG("executing frame script: %s", mScriptResource->getID().c_str());
-		/**/
+
 		Movie* parent = mObjectContainer->getParent();
 		ScriptEngine* script_engine = parent->getScriptEngine();
 		if(script_engine)
 		{
 			try
 			{
-				script_engine->executeCode(mScriptResource->getBuffer(), mScriptResource->getLength());
+				script_engine->executeCode(mScriptResource);
 				parent->getStage()->initScriptObject();
-				parent->getMainMovieClip()->initScriptObject();
 				mExecuted = true;
 			}
 			catch(std::exception& e)
@@ -72,27 +71,6 @@ namespace vtx
 				VTX_EXCEPT(e.what());
 			}
 		}
-
-		/* cOOOOOOLD
-		TODO: add virtual void Instance::initializeScripting() = 0;
-		TODO: at DisplayObjectContainer -> initialize all children
-		TODO: NEW: add "initializeSlots()" to as3::ScriptObjectBase constructor
-		child objects retrieve their vtx::ScriptObjects when Instance::initScripting() is being called
-		*/
-		/*
-		// TODO: add as3::AS3ScriptEngine::createScriptObject(Instance* instance)
-		{
-			mCreatingInstance = instance;
-			return mVmCore->createObject(...);
-		}
-		inside as3::MovieClip::MovieClip(...)
-		{
-			this->setNativeObject(core->getCreatingInstance());
-		}
-		*/
-
-		//parent->getMainMovieClip()->setScriptObject(script_engine->getRootScriptObject(parent->getMainMovieClip()));
-		//parent->getMainMovieClip()->initScriptObject();
 	}
 	//-----------------------------------------------------------------------
 }

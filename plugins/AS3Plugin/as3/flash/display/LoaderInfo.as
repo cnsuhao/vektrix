@@ -28,9 +28,9 @@ THE SOFTWARE.
 
 package flash.display
 {
-	import flash.events.*;
-	import flash.system.*;
-	import flash.utils.*;
+	import flash.events.EventDispatcher;
+	import flash.system.ApplicationDomain;
+	import flash.utils.ByteArray;
 
 	public class LoaderInfo extends EventDispatcher
 	{

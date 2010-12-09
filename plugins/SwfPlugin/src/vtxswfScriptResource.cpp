@@ -26,97 +26,65 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxas3TextField.h"
-#include "vtxas3ScriptEngine.h"
-#include "vtxas3ScriptInterface.h"
-
-#include "vtxEditText.h"
-#include "vtxMovie.h"
-
-#include "cspVmCore.h"
+#include "vtxswfScriptResource.h"
 
 #include "vtxLogManager.h"
 
-namespace vtx { namespace as3 {
+namespace vtx { namespace swf {
 	//-----------------------------------------------------------------------
-	void TextField::ctor()
+	const String ScriptResource::SCRIPT_TYPE = "adobe/swf/actionscript3";
+	//-----------------------------------------------------------------------
+	ScriptResource::ScriptResource(char* buffer, const uint& buffer_size) 
+		: vtx::ScriptResource(SCRIPT_TYPE), 
+		mBuffer(buffer), 
+		mBufferSize(buffer_size)
 	{
-		InteractiveObject::ctor();
 
-		if(!getEngine()->getQueuedInstance())
-		{
-			Movie* parent = getParentMovie();
-			EditText* text = static_cast<EditText*>(parent->getInstanceByType(EditText::TYPE));
-			ScriptInterface* iface = new ScriptInterface(this);
-			text->setScriptObject(iface);
-		}
 	}
 	//-----------------------------------------------------------------------
-	const String& TextField::getMappedVektrixType() const
+	ScriptResource::~ScriptResource()
 	{
-		static String type = vtx::EditText::TYPE;
-		return type;
-	}
-	//-----------------------------------------------------------------------
-	avmplus::Stringp TextField::get_htmlText()
-	{
-		if(mEditText)
-		{
-			return CSP_CORE->toScriptPtr(mEditText->getHtmlText());
-		}
 
-		return CSP_CORE->toScriptPtr("");
 	}
 	//-----------------------------------------------------------------------
-	void TextField::set_htmlText(avmplus::Stringp htmlText)
+	const char* ScriptResource::getBuffer() const
 	{
-		if(mEditText)
-		{
-			mEditText->setHtmlText(CSP_CORE->toUTFString(htmlText));
-		}
+		return mBuffer;
 	}
 	//-----------------------------------------------------------------------
-	int TextField::getLineIndexAtPoint(double x, double y)
+	const uint& ScriptResource::getBufferSize() const
 	{
-		if(mEditText)
+		return mBufferSize;
+	}
+	//-----------------------------------------------------------------------
+	bool ScriptResource::addSymbol(const String& id, const String& class_name, const String& package)
+	{
+		SymbolMap::iterator it = mSymbols.find(id);
+		if(it == mSymbols.end())
 		{
-			return mEditText->getLineAtPoint(Vector2((float)x, (float)y)).index;
+			VTX_LOG("SymbolClass: [%s] %s -> %s", id.c_str(), package.c_str(), class_name.c_str());
+			mSymbols.insert(std::make_pair(id, StringPair(package, class_name)));
+			return true;
 		}
 
-		return -1;
+		return false;
 	}
 	//-----------------------------------------------------------------------
-	void TextField::setSelection(int beginIndex, int endIndex)
+	bool ScriptResource::hasSymbol(const String& id)
 	{
-		if(mEditText)
-		{
-			mEditText->setSelection(beginIndex, endIndex);
-		}
+		return (mSymbols.find(id) != mSymbols.end());
 	}
 	//-----------------------------------------------------------------------
-	void TextField::setNativeObject(Instance* inst)
+	const StringPair& ScriptResource::getSymbol(const String& id)
 	{
-/*		Instance* instance = getNativeObject();
-		if(instance)
+		SymbolMap::iterator it = mSymbols.find(id);
+		if(it != mSymbols.end())
 		{
-			AS3ScriptEngine* script_engine = static_cast<AS3ScriptEngine*>(CSP_CORE->getUserData());
-			vtx::DisplayObject* displ = static_cast<vtx::DisplayObject*>(instance);
-			if(displ)
-			{
-				vtx::DisplayObjectContainer* cont = displ->getParentContainer();
-				if(cont)
-				{
-					cont->removeChildAt(displ->getLayer());
-				}
-				else
-				{
-					script_engine->getParentMovie()->destroyInstance(instance);
-				}
-			}
+			return it->second;
 		}
 
-		InteractiveObject::setNativeObject(inst);
-		mEditText = static_cast<vtx::EditText*>(inst);*/
+		static StringPair empty;
+		return empty;
 	}
 	//-----------------------------------------------------------------------
 }}

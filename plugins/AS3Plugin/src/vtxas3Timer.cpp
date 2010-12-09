@@ -26,39 +26,11 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
+#include "vtxas3Timer.h"
 
 #include "cspVmCore.h"
 
 namespace vtx { namespace as3 {
-	//-----------------------------------------------------------------------
-	Timer::Timer(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: EventDispatcher(vtable, prototype)
-	{
-
-	}
-	//-----------------------------------------------------------------------
-	Timer::~Timer()
-	{
-
-	}
-	//-----------------------------------------------------------------------
-	void Timer::reset()
-	{
-		mCounter = 0;
-		mTime = 0.0f;
-	}
-	//-----------------------------------------------------------------------
-	void Timer::start()
-	{
-		//getParentMovie()->addListener(this);
-	}
-	//-----------------------------------------------------------------------
-	void Timer::stop()
-	{
-		mTime = 0.0f;
-		//getParentMovie()->removeListener(this);
-	}
 	//-----------------------------------------------------------------------
 	void Timer::ctor(double delay, int repeatCount)
 	{
@@ -69,6 +41,23 @@ namespace vtx { namespace as3 {
 		mTime = 0.0f;
 
 		//getParentMovie()->addListener(this);
+	}
+	//-----------------------------------------------------------------------
+	void Timer::_reset()
+	{
+		mCounter = 0;
+		mTime = 0.0f;
+	}
+	//-----------------------------------------------------------------------
+	void Timer::_start()
+	{
+		//getParentMovie()->addListener(this);
+	}
+	//-----------------------------------------------------------------------
+	void Timer::_stop()
+	{
+		mTime = 0.0f;
+		//getParentMovie()->removeListener(this);
 	}
 	//-----------------------------------------------------------------------
 	void Timer::update(const float& delta_time)
@@ -90,14 +79,23 @@ namespace vtx { namespace as3 {
 
 			mTime = 0.0f;
 
-			csp::ArgumentList args;
-			args.push_back(CSP_CORE->scriptString("timer"));
-			args.push_back(CSP_CORE->scriptBoolean(false));
-			args.push_back(CSP_CORE->scriptBoolean(true));
+			Atom args[] = 
+			{
+				0, 
+				CSP_CORE->toScript("timer"), 
+				CSP_CORE->toScript(false), 
+				CSP_CORE->toScript(true)
+			};
 
 			avmplus::ScriptObject* evt = CSP_CORE->createObject("TimerEvent", "flash.events", args);
 
-			dispatchEvent(static_cast<as3::Event*>(evt));
+			Atom dispatch_args[] = 
+			{
+				0, 
+				evt->atom()
+			};
+
+			csp::VmCore::callFunction(this, dispatchEvent, dispatch_args);
 
 			evt->DecrementRef();
 		}

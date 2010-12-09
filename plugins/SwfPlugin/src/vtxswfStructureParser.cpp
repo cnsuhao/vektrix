@@ -28,6 +28,7 @@ THE SOFTWARE.
 
 #include "vtxswfStructureParser.h"
 #include "vtxswfParser.h"
+#include "vtxswfScriptResource.h"
 
 #include "vtxButtonResource.h"
 #include "vtxButtonState.h"
@@ -41,8 +42,9 @@ THE SOFTWARE.
 #include "vtxRemoveObjectEvent.h"
 #include "vtxScriptResource.h"
 #include "vtxStringHelper.h"
-#include "vtxSymbolClassResource.h"
 #include "vtxTimeline.h"
+
+#include "vtxLogManager.h"
 
 namespace vtx { namespace swf {
 	//-----------------------------------------------------------------------
@@ -52,15 +54,18 @@ namespace vtx { namespace swf {
 		mMovieClipFrameIndex(0), 
 		mCurrentMovieClip(NULL), 
 		mMovieClipTimeline(NULL), 
+		mMovieClipKeyframe(NULL), 
 		// main movieclip
 		mMainFrameIndex(0), 
 		mMainMovieClip(NULL), 
 		mMainTimeline(NULL), 
-		mCurrentKeyframe(NULL)
+		mMainKeyframe(NULL)
 	{
 		mMainMovieClip = new MovieClipResource("0");
 		mMainTimeline = new Timeline;
-		mCurrentKeyframe = new Keyframe;
+		mMainKeyframe = new Keyframe;
+
+		mCurrKeyframe = mMainKeyframe;
 
 		mMainMovieClip->setTimeline(mMainTimeline);
 		mParser->getCurrentFile()->setMainMovieClip(mMainMovieClip);
@@ -68,11 +73,11 @@ namespace vtx { namespace swf {
 	//-----------------------------------------------------------------------
 	StructureParser::~StructureParser()
 	{
-		// release empty frame
-		if(mCurrentKeyframe)
+		// release empty frames
+		if(mMainKeyframe)
 		{
-			delete mCurrentKeyframe;
-			mCurrentKeyframe = NULL;
+			delete mMainKeyframe;
+			mMainKeyframe = NULL;
 		}
 	}
 	//-----------------------------------------------------------------------
@@ -118,10 +123,14 @@ namespace vtx { namespace swf {
 	//-----------------------------------------------------------------------
 	void StructureParser::handleDefineSprite()
 	{
+		VTX_WARN("MovieClip START");
 		UI16 sprite_id = mParser->readU16();
 		UI16 frame_count = mParser->readU16();
 		mCurrentMovieClip = new MovieClipResource(StringHelper::toString(sprite_id));
 		mMovieClipTimeline = new Timeline;
+		mMovieClipKeyframe = new Keyframe;
+
+		mCurrKeyframe = mMovieClipKeyframe;
 	}
 	//-----------------------------------------------------------------------
 	void StructureParser::handlePlaceObject2()
@@ -217,20 +226,21 @@ namespace vtx { namespace swf {
 		if(flags & POF_Move)
 		{
 			// move
-			mCurrentKeyframe->addEvent(new MoveObjectEvent(NULL, depth, matrix, cxform));
+			mCurrKeyframe->addEvent(new MoveObjectEvent(NULL, depth, matrix, cxform));
 		}
 		else if(flags & POF_HasCharacter)
 		{
 			// place
 			String id = StringHelper::toString(character);
-			mCurrentKeyframe->addEvent(new CreateObjectEvent(NULL, mParser->getCurrentFile(), id, depth, matrix, cxform, name));
+			mCurrKeyframe->addEvent(new CreateObjectEvent(NULL, mParser->getCurrentFile(), id, depth, matrix, cxform, name));
+			VTX_WARN("Create Object %s", id.c_str());
 		}
 	}
 	//-----------------------------------------------------------------------
 	void StructureParser::handleRemoveObject2()
 	{
 		UI16 depth = mParser->readU16();
-		mCurrentKeyframe->addEvent(new RemoveObjectEvent(NULL, depth));
+		mCurrKeyframe->addEvent(new RemoveObjectEvent(NULL, depth));
 	}
 	//-----------------------------------------------------------------------
 	void StructureParser::handleShowFrame()
@@ -238,30 +248,36 @@ namespace vtx { namespace swf {
 		// main timeline
 		if(!mCurrentMovieClip)
 		{
+			VTX_WARN("Main Showframe %d events", mMainKeyframe->getEventCount());
+
 			++mMainFrameIndex;
 
 			//if(mCurrentKeyframe->getEventCount())
 			{
-				mCurrentKeyframe->setIndex(mMainFrameIndex);
-				mMainTimeline->addKeyframe(mCurrentKeyframe);
-				mCurrentKeyframe = NULL;
+				mMainKeyframe->setIndex(mMainFrameIndex);
+				mMainTimeline->addKeyframe(mMainKeyframe);
+				mMainKeyframe = NULL;
 			}
 
 			if(mMainFrameIndex < mParser->getHeader().frames)
 			{
-				mCurrentKeyframe = new Keyframe;
+				mMainKeyframe = new Keyframe;
+				mCurrKeyframe = mMainKeyframe;
 			}
 		}
 		// movieclip timeline
 		else
 		{
+			VTX_WARN("MovieClip Showframe %d events", mMovieClipKeyframe->getEventCount());
+
 			++mMovieClipFrameIndex;
 
-			if(mCurrentKeyframe->getEventCount())
+			//if(mCurrentKeyframe->getEventCount())
 			{
-				mCurrentKeyframe->setIndex(mMovieClipFrameIndex);
-				mMovieClipTimeline->addKeyframe(mCurrentKeyframe);
-				mCurrentKeyframe = new Keyframe;
+				mMovieClipKeyframe->setIndex(mMovieClipFrameIndex);
+				mMovieClipTimeline->addKeyframe(mMovieClipKeyframe);
+				mMovieClipKeyframe = new Keyframe;
+				mCurrKeyframe = mMainKeyframe;
 			}
 		}
 	}
@@ -271,6 +287,7 @@ namespace vtx { namespace swf {
 		// end of a movieclip definition
 		if(mCurrentMovieClip)
 		{
+			VTX_WARN("MovieClip END");
 			mCurrentMovieClip->setTimeline(mMovieClipTimeline);
 			mParser->getCurrentFile()->addResource(mCurrentMovieClip);
 			mMovieClipFrameIndex = 0;
@@ -279,6 +296,7 @@ namespace vtx { namespace swf {
 		// end of the entire swf file
 		else
 		{
+			VTX_WARN("Main END");
 			int unread_bytes = mParser->getFileLength() - mParser->getReadPosition();
 			VTX_DEBUG_ASSERT(!unread_bytes, "Unread bytes after TT_End tag");
 		}
@@ -311,17 +329,19 @@ namespace vtx { namespace swf {
 		char* abc_buf = new char[abc_len];
 		parser->readByteBlock(abc_buf, abc_len);
 
-		String script_name = "Frame" + StringHelper::toString(mMainFrameIndex) + "_Script";
-		ScriptResource* script = new ScriptResource(script_name, abc_buf, abc_len);
+		//String script_name = "Frame" + StringHelper::toString(mMainFrameIndex) + "_Script";
+		ScriptResource* script = new ScriptResource(abc_buf, abc_len);
 		parser->getCurrentFile()->addResource(script);
 
-		ExecuteScriptEvent* evt = new ExecuteScriptEvent(NULL, script);
-		mCurrentKeyframe->addEvent(evt);
+		mCurrKeyframe->addEvent(new ExecuteScriptEvent(NULL, script));
 	}
 	//-----------------------------------------------------------------------
 	void StructureParser::handleSymbolClass(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)
 	{
 		UI16 num_symbols = parser->readU16();
+
+		Resource* res = parser->getCurrentFile()->getResource("__ScriptResource__");
+		ScriptResource* swf_as3_script = static_cast<ScriptResource*>(res);
 
 		for(UI16 i=0; i<num_symbols; ++i)
 		{
@@ -335,32 +355,23 @@ namespace vtx { namespace swf {
 			}
 			//else
 			{
-				SymbolClassResource* symbol_res = NULL;
-				Resource* res = parser->getCurrentFile()->getResource("__SymbolClassResource__");
-				if(!res)
+				if(swf_as3_script)
 				{
-					symbol_res = new SymbolClassResource();
-					parser->getCurrentFile()->addResource(symbol_res);
-				}
-				else
-				{
-					symbol_res = static_cast<SymbolClassResource*>(res);
-				}
+					uint seperator = name.find_last_of('.');
+					String class_name, package;
 
-				uint seperator = name.find_last_of('.');
-				String class_name, package;
+					if(seperator != String::npos)
+					{
+						class_name = name.substr(seperator+1, name.length()-seperator-1);
+						package = name.substr(0, seperator);
+					}
+					else
+					{
+						class_name = name;
+					}
 
-				if(seperator != String::npos)
-				{
-					class_name = name.substr(seperator+1, name.length()-seperator-1);
-					package = name.substr(0, seperator);
+					swf_as3_script->addSymbol(StringHelper::toString(id), class_name, package);
 				}
-				else
-				{
-					class_name = name;
-				}
-
-				symbol_res->addSymbol(StringHelper::toString(id), class_name, package);
 			}
 		}
 	}

@@ -27,6 +27,8 @@ THE SOFTWARE.
 */
 
 #include "vtxMovieListener.h"
+
+#include "vtxFile.h"
 #include "vtxMovie.h"
 #include "vtxMovieDebugger.h"
 

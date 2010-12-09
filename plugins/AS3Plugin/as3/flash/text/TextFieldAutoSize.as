@@ -26,38 +26,13 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxSymbolClassResource_H__
-#define __vtxSymbolClassResource_H__
-
-#include "vtxPrerequisites.h"
-#include "vtxResource.h"
-
-namespace vtx
+package flash.text
 {
-	//-----------------------------------------------------------------------
-	/** A Flash specific resource for linking Resource IDs to script classes */
-	class vtxExport SymbolClassResource : public Resource
+	public final class TextFieldAutoSize
 	{
-	public:
-		typedef std::map<String, StringPair> SymbolMap;
-
-		SymbolClassResource();
-		virtual ~SymbolClassResource();
-
-		/** @copybrief Resource::getType */
-		const String& getType() const;
-
-		/** Add a link from a Resource ID to the given script class */
-		bool addSymbol(const String& id, const String& class_name, const String& package);
-		/** Check if a script class has been registered for this Resource ID */
-		bool hasSymbol(const String& id);
-		/** Get the script class for the given Resource ID */
-		const StringPair& getSymbol(const String& id);
-
-	protected:
-		SymbolMap mSymbols;
-	};
-	//-----------------------------------------------------------------------
+		public static const CENTER:String = "center";
+		public static const LEFT:String = "left";
+		public static const NONE:String = "none";
+		public static const RIGHT:String = "right";
+	}
 }
-
-#endif

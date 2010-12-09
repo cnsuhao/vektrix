@@ -121,23 +121,12 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Instance::initScriptObject()
 	{
-		//releaseScriptObject();
-
 		ScriptEngine* script_engine = mParentMovie->getScriptEngine();
 		if(script_engine)
 		{
-			script_engine->createScriptObject(this);
-			//setScriptObject(script_engine->createScriptObject(this));
+			//script_engine->createScriptObject(this);
+			setScriptObject(script_engine->createScriptObject(this));
 		}
 	}
-	//-----------------------------------------------------------------------
-	//void Instance::releaseScriptObject()
-	//{
-	//	if(mScriptObject)
-	//	{
-	//		mScriptObject->destroy();
-	//		mScriptObject = NULL;
-	//	}
-	//}
 	//-----------------------------------------------------------------------
 }

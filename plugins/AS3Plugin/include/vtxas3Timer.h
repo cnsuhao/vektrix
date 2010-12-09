@@ -30,26 +30,32 @@ THE SOFTWARE.
 #define __vtxas3Timer_H__
 
 #include "vtxas3.h"
+#include "cspPrerequisites.h"
 
-#include "vtxMovie.h"
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_utils.h"
+#endif
+
+#include "vtxas3EventDispatcher.h"
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
-	class Timer : public EventDispatcher
+	class Timer : public as3::EventDispatcher
 	{
 	public:
-		Timer(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
-		virtual ~Timer();
-
-		void reset();
-		void start();
-		void stop();
+		CSP_INST_CDTOR(Timer, EventDispatcher);
 
 		void ctor(double delay, int repeatCount);
 
+		void _reset();
+		void _start();
+		void _stop();
+
 		void update(const float& delta_time);
 
-		CSP_INST_SLOTS(Timer);
+		CSP_SLOTS(Timer, flash_utils_);
 
 	protected:
 		float mDelay;
@@ -60,7 +66,7 @@ namespace vtx { namespace as3 {
 		//void setNativeObject(Instance* inst);
 	};
 	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(Timer);
+	CSP_DEFINE_CLASS(TimerClass, Timer, flash_utils_);
 	//-----------------------------------------------------------------------
 }}
 

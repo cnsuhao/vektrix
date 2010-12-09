@@ -26,10 +26,12 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
-
+#include "vtxas3Loader.h"
 #include "vtxas3ScriptEngine.h"
+#include "vtxas3ScriptInterface.h"
+#include "vtxas3URLRequest.h"
 
+#include "vtxFileEvent.h"
 #include "vtxFileManager.h"
 #include "vtxMovie.h"
 #include "vtxMovieClip.h"
@@ -39,44 +41,35 @@ THE SOFTWARE.
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
-	Loader::Loader(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: DisplayObjectContainer(vtable, prototype)
+	const String& Loader::getMappedVektrixType() const
 	{
-/*		AS3ScriptEngine* script_engine = static_cast<AS3ScriptEngine*>(CSP_CORE->getUserData());
-		mMovieClip = static_cast<vtx::MovieClip*>(script_engine->getParentMovie()->getInstanceByType(vtx::MovieClip::TYPE));
-		mMovieClip->setScriptObject(this);
-		//setNativeObject(mMovieClip);*/
-	}
-	//-----------------------------------------------------------------------
-	Loader::~Loader()
-	{
-
+		return vtx::MovieClip::TYPE;
 	}
 	//-----------------------------------------------------------------------
 	void Loader::load(URLRequest* request, LoaderContext* context)
 	{
-		String url = CSP_CORE->stringFromAS3(request->getURL());
-		//FileManager::getSingletonPtr()->getFile(url, true, this);
+		String url = CSP_CORE->toString(request->getURL());
+		FileManager::getSingletonPtr()->getFile(url, true, this->getInterface());
 	}
 	//-----------------------------------------------------------------------
 	void Loader::eventFired(const vtx::Event& evt)
 	{
 		DisplayObjectContainer::eventFired(evt);
-	}
-	//-----------------------------------------------------------------------
-	void Loader::setNativeObject(Instance* inst)
-	{
-		DisplayObjectContainer::setNativeObject(inst);
-	}
-	//-----------------------------------------------------------------------
-	void Loader::loadingCompleted(File* file)
-	{
-		mMovieClip->initFromResource(file->getMainMovieClip());
-	}
-	//-----------------------------------------------------------------------
-	void Loader::loadingFailed(File* file)
-	{
 
+		if(evt.getCategory() == FileEvent::CATEGORY)
+		{
+			if(evt.getType() == FileEvent::LOADING_COMPLETED)
+			{
+				const FileEvent& file_evt = static_cast<const FileEvent&>(evt);
+				mMovieClip->initFromResource(file_evt.getFile()->getMainMovieClip());
+			}
+		}
+	}
+	//-----------------------------------------------------------------------
+	void Loader::init(Instance* inst, ScriptInterface* iface)
+	{
+		DisplayObjectContainer::init(inst, iface);
+		mMovieClip = static_cast<vtx::MovieClip*>(inst);
 	}
 	//-----------------------------------------------------------------------
 }}

@@ -28,16 +28,16 @@ THE SOFTWARE.
 
 package flash.display
 {
-	import flash.display.*;
-	import flash.geom.*;
-	import flash.media.*;
+	import flash.geom.Rectangle;
+	import flash.media.SoundTransform;
 	
 	[native(cls="::vtx::as3::SpriteClass", instance="::vtx::as3::Sprite", methods="auto")]
 	public class Sprite extends DisplayObjectContainer
 	{
 		public function Sprite()
 		{
-		
+			super();
+			trace("AS3 Sprite CTOR");
 		}
 		
 		/* getters & setters */

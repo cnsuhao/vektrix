@@ -30,6 +30,7 @@ THE SOFTWARE.
 #define __vtxas3AS3ScriptEngine_H__
 
 #include "vtxas3.h"
+#include "vtxswf.h"
 
 #include "vtxFactory.h"
 #include "vtxScriptEngine.h"
@@ -47,7 +48,7 @@ namespace vtx { namespace as3 {
 		virtual ~AS3ScriptEngine();
 
 		/** @copybrief ScriptEngine::executeCode */
-		bool executeCode(const char* code, const uint& len);
+		bool executeCode(ScriptResource* resource);
 
 		/** @copybrief ScriptEngine::getRootScriptObject */
 		ScriptObject* getRootScriptObject(vtx::MovieClip* movieclip);
@@ -58,12 +59,12 @@ namespace vtx { namespace as3 {
 		/** @copybrief ScriptEngine::destroyScriptObject */
 		void destroyScriptObject(ScriptObject* script_object);
 
-		Instance* getQueuedInstance() const;
+		Instance* getQueuedInstance();
 
 	protected:
 		csp::VmCore* mVmCore;
 		as3::MovieClip* mRootObject;
-		SymbolClassResource* mSymbols;
+		swf::ScriptResource* mScriptResource;
 
 		Instance* mQueuedInstance;
 

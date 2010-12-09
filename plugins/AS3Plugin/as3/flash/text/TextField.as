@@ -28,12 +28,21 @@ THE SOFTWARE.
 
 package flash.text
 {
-	import flash.display.*;;
-	import flash.geom.*;
+	import flash.display.DisplayObject;
+	import flash.display.InteractiveObject;
+	import flash.geom.Rectangle;
 
 	[native(cls="::vtx::as3::TextFieldClass", instance="::vtx::as3::TextField", methods="auto")]
 	public class TextField extends InteractiveObject
 	{
+		//-----------------------------------------------------------------------
+		private native function ctor():void;
+		//-----------------------------------------------------------------------
+		public function TextField()
+		{
+			super();
+			ctor();
+		}
 		/* getters & setters */
 		public function get alwaysShowSelection():Boolean { return false; }
 		public function set alwaysShowSelection(value:Boolean):void {}

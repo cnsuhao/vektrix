@@ -42,6 +42,7 @@ public:
 	{
 		//movie_node->attachObject(static_cast<vtx::ogre::MovableMovie*>(movie));
 		movie->enableDebugger(true);
+		movie->getDebugger()->debugBoundingBoxes(true);
 
 		int width = movie->getFile()->getHeader().width;
 		int height = movie->getFile()->getHeader().height;
@@ -157,7 +158,7 @@ private:
 	OIS::Mouse* mMouse;
 };
 //-----------------------------------------------------------------------
-class SimpleKeyListener : public OIS::KeyListener , /* DEBUG */ public vtx::File::Listener
+class SimpleKeyListener : public OIS::KeyListener
 {
 public: 
 	bool keyPressed(const OIS::KeyEvent& e)
@@ -200,11 +201,6 @@ public:
 			{
 				movie->enableDebugger(true);
 			}
-		}
-		else if(e.key == OIS::KC_F10)
-		{
-			vtx::File* file = vtx::FileManager::getSingletonPtr()->getFile("http://www.geneburch.com/wallpaper/01/1920x1200.jpg", true);
-			file->addListener(this);
 		}
 
 		return true;
@@ -254,7 +250,7 @@ public:
 int main(int argc, char **argv)
 {
 	VTX_MEM_DEBUG_ENABLE();
-	//VTX_MEM_DEBUG_BREAK(3649);
+	//VTX_MEM_DEBUG_BREAK(4149);
 
 	// start vektrix
 	vtx::Root* vektrix_root = new vtx::Root();
@@ -288,6 +284,7 @@ int main(int argc, char **argv)
 
 	vtx::FileManager::getSingletonPtr()->addFileContainer(MEDIA_PATH);
 	vtx::FileManager::getSingletonPtr()->addFileContainer("");
+	vtx::FileManager::getSingletonPtr()->addFileContainer("C:/Users/stone/Desktop/vtx_flash_test");
 	vtx::FileManager::getSingletonPtr()->addFileContainer("", "WebFileContainer");
 
 	//if(!ogre_root->restoreConfig())
@@ -388,7 +385,7 @@ int main(int argc, char **argv)
 	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie", &listener);
 	//movie->play();
 
-	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "shape_test.swf", "OgreMovableMovie", &movie_listener);
+	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "button_test_as3.swf", "OgreMovableMovie", &movie_listener);
 	movie->play();
 
 	movie_node->attachObject(movie);

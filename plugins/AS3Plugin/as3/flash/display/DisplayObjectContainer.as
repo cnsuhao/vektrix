@@ -28,14 +28,22 @@ THE SOFTWARE.
 
 package flash.display
 {
-	import flash.geom.*;
-	import flash.text.*;
+	import flash.geom.Point;
+	import flash.text.TextSnapshot;
 	
 	[native(cls="::vtx::as3::DisplayObjectContainerClass", instance="::vtx::as3::DisplayObjectContainer", methods="auto")]
 	public class DisplayObjectContainer extends InteractiveObject
 	{
+		private native function ctor():void;
+
 		/* Constructor */
-		public function DisplayObjectContainer() {}
+		public function DisplayObjectContainer()
+		{
+			super();
+			trace("AS3 DisplayObjectContainer CTOR");
+
+			ctor();
+		}
 		
 		/* getters & setters */
 		public function get mouseChildren():Boolean { return false; }

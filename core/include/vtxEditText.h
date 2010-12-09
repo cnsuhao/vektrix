@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 #include "vtxPrerequisites.h"
 #include "vtxDisplayObjectContainer.h"
-#include "vtxFile.h"
+#include "vtxEventListener.h"
 #include "vtxHtmlOperations.h"
 #include "vtxHtmlRenderable.h"
 #include "vtxTextLine.h"
@@ -43,8 +43,7 @@ namespace vtx
 	class vtxExport EditText : 
 		public DisplayObjectContainer, 
 		public HtmlOperations, 
-		public HtmlRenderable, 
-		public File::Listener
+		public HtmlRenderable
 	{
 	public:
 		static const String TYPE;

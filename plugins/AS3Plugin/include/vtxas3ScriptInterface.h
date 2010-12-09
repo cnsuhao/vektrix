@@ -37,31 +37,22 @@ namespace vtx { namespace as3 {
 	class ScriptInterface : public vtx::ScriptObject
 	{
 	public:
+		ScriptInterface(AS3Object* as3_object);
+		virtual ~ScriptInterface();
+
+		// deprecated
+		void destroy(){}
+
+		AS3Object* getObject() const;
+
+		virtual void eventFired(const vtx::Event& evt);
+		virtual void setNativeObject(Instance* inst);
+
+		void setChildObject(const String& name, vtx::ScriptObject* script_object);
+		vtx::ScriptObject* getChildObject(const String& name);
+
+	protected:
 		AS3Object* mAS3Object;
-
-		ScriptInterface(AS3Object* base)
-		{
-			mAS3Object = base;
-		}
-
-		AS3Object* getObject() const
-		{
-			return mAS3Object;
-		}
-
-		virtual void eventFired(const vtx::Event& evt)
-		{
-			mAS3Object->eventFired(evt);
-		}
-
-		virtual void setChildObject(const String& name, vtx::ScriptObject* script_object)
-		{
-
-		}
-
-		virtual vtx::ScriptObject* getChildObject(const String& name) {return NULL;}
-
-		void destroy() {}
 	};
 	//-----------------------------------------------------------------------
 }}

@@ -28,6 +28,10 @@ THE SOFTWARE.
 
 package flash.events
 {
+	const DEBUG_EVENT:Boolean = false;
+
+	//import flash.display.InteractiveObject;
+
 	[native(cls="::vtx::as3::EventClass", instance="::vtx::as3::Event", methods="auto")]
 	public class Event
 	{
@@ -75,93 +79,108 @@ package flash.events
 		public static const UNLOAD:String = "unload";
 		public static const USER_IDLE:String = "userIdle"; //AIR
 		public static const USER_PRESENT:String = "userPresent"; //AIR
-		
+
 		protected var mType:String;
 		protected var mBubbles:Boolean;
 		protected var mCancelable:Boolean;
-		protected var mEventDispatcher:EventDispatcher;
-		
+
+		protected var mCurrentTarget:Object;
+		protected var mTarget:Object;
+
 		public function Event(type:String, bubbles:Boolean = false, cancelable:Boolean = false)
 		{
+			if(DEBUG_EVENT) { trace("new Event(" + [type,bubbles,cancelable].join(", ") + ")"); }
+
 			mType = type;
 			mBubbles = bubbles;
 			mCancelable = cancelable;
-			mEventDispatcher = null;
-		}
-		
-		public function setEventDispatcher(disp:EventDispatcher)
-		{
-			mEventDispatcher = disp;
-		}
-		
-		public function debugEventDispatcher()
-		{
-			trace(mEventDispatcher);
 		}
 
 		public function get bubbles():Boolean
 		{
+			if(DEBUG_EVENT) { trace("Event.get_bubbles()"); }
 			return mBubbles;
 		}
-		
+
 		public function get cancelable():Boolean
 		{
+			if(DEBUG_EVENT) { trace("Event.get_cancelable()"); }
 			return mCancelable;
 		}
-		
+
+		public function set currentTarget(value:Object):void
+		{
+			mCurrentTarget = value;
+		}
+
 		public function get currentTarget():Object
 		{
-			return new Object();
+			if(DEBUG_EVENT) { trace("Event.get_currentTarget()=" + mCurrentTarget); }
+			return mCurrentTarget;
+			//return new InteractiveObject();
 		}
-		
+
 		public function get eventPhase():uint
 		{
+			if(DEBUG_EVENT) { trace("Event.get_eventPhase()"); }
 			return 0;
 		}
-		
+
+		public function set target(value:Object):void
+		{
+			mTarget = value;
+		}
+
 		public function get target():Object
 		{
-			return new Object();
+			if(DEBUG_EVENT) { trace("Event.get_target()=" + mTarget); }
+			return mTarget;
+			//return new InteractiveObject();
 		}
-		
+
 		public function get type():String
 		{
+			if(DEBUG_EVENT) { trace("Event.get_type()"); }
 			return mType;
 		}
-		
-		
+
 		public function clone():Event
 		{
+			if(DEBUG_EVENT) { trace("Event.clone()"); }
 			return new Event("");
 		}
-		
+
 		public function formatToString(className:String, ... arguments):String
 		{
+			if(DEBUG_EVENT) { trace("Event.formatToString(" + className + ", " + arguments + ")"); }
 			return "";
 		}
-		
+
 		public function isDefaultPrevented():Boolean
 		{
+			if(DEBUG_EVENT) { trace("Event.isDefaultPrevented()"); }
 			return false;
 		}
-		
+
 		public function preventDefault():void
 		{
-			
+			if(DEBUG_EVENT) { trace("Event.preventDefault()"); }
 		}
-		
+
 		public function stopImmediatePropagation():void
 		{
-			
+			if(DEBUG_EVENT) { trace("Event.stopImmediatePropagation()"); }
 		}
-		
+
 		public function stopPropagation():void
 		{
-			
+			if(DEBUG_EVENT) { trace("Event.stopPropagation()"); }
 		}
-		
+
 		public function toString():String
 		{
+			if(DEBUG_EVENT) { trace("Event.toString()"); }
+
 			return "[Event type=\"" + 
 				mType + 
 				"bubbles=" + 
@@ -170,6 +189,6 @@ package flash.events
 				mCancelable + 
 				"]";
 		}
-		
+
 	}
 }

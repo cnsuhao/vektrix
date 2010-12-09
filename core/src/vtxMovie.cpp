@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include "vtxAtlasPacker.h"
 #include "vtxButton.h"
 #include "vtxFile.h"
+#include "vtxFileEvent.h"
 #include "vtxFileManager.h"
 #include "vtxFocusEvent.h"
 #include "vtxInstanceManager.h"
@@ -50,6 +51,8 @@ THE SOFTWARE.
 #include "vtxShapeResource.h"
 #include "vtxStage.h"
 #include "vtxStringHelper.h"
+
+//#include "windows.h"
 
 namespace vtx
 {
@@ -92,14 +95,21 @@ namespace vtx
 			mDebugger->preDebug();
 		}
 
-		if(mMainMovieClip)
+		// DEBUG
+		//Sleep(10);
+
+		if(mStage)
 		{
+			//MouseEvent evt(MouseEvent::MOUSE_MOVE);
+			//evt.stageX = 250 + rand() % 50 - 25;
+			//evt.stageY = 125 + rand() % 50 - 25;
+			//mStage->eventFired(evt);
 			Event evt(Event::RENDER);
 
 			//mMainMovieClip->eventFired(evt);
-			//mStage->eventFired(evt);
+			mStage->eventFired(evt);
 
-			mMainMovieClip->_update(delta_time);
+			mStage->_update(delta_time);
 		}
 
 		ListenerMap::iterator it = mListeners.begin();
@@ -129,12 +139,12 @@ namespace vtx
 
 		mMousePosition = Vector2((float)x, (float)y);
 
-		if(mMainMovieClip)
+		if(mStage)
 		{
 			MouseEvent evt(MouseEvent::MOUSE_MOVE);
 			evt.stageX = mMousePosition.x;
 			evt.stageY = mMousePosition.y;
-			mMainMovieClip->eventFired(evt);
+			mStage->eventFired(evt);
 		}
 	}
 	//-----------------------------------------------------------------------
@@ -163,39 +173,41 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void Movie::mouseDown()
 	{
-		if(mMainMovieClip)
+		if(mStage)
 		{
 			MouseEvent evt(MouseEvent::MOUSE_DOWN);
 			evt.stageX = mMousePosition.x;
 			evt.stageY = mMousePosition.y;
-			mMainMovieClip->eventFired(evt);
+			mStage->eventFired(evt);
 		}
 	}
 	//-----------------------------------------------------------------------
 	void Movie::mouseUp()
 	{
-		if(mMainMovieClip)
+		if(mStage)
 		{
 			MouseEvent evt(MouseEvent::MOUSE_UP);
 			evt.stageX = mMousePosition.x;
 			evt.stageY = mMousePosition.y;
-			mMainMovieClip->eventFired(evt);
+			mStage->eventFired(evt);
 		}
 	}
 	//-----------------------------------------------------------------------
 	void Movie::keyDown(const uint& keyCode, const uint& charCode)
 	{
-		if(mMainMovieClip)
+		if(mStage)
 		{
-			mMainMovieClip->eventFired(KeyboardEvent(KeyboardEvent::KEY_DOWN, (KeyCode)keyCode, charCode));
+			KeyboardEvent evt(KeyboardEvent::KEY_DOWN, (KeyCode)keyCode, charCode);
+			mStage->eventFired(evt);
 		}
 	}
 	//-----------------------------------------------------------------------
 	void Movie::keyUp(const uint& keyCode, const uint& charCode)
 	{
-		if(mMainMovieClip)
+		if(mStage)
 		{
-			mMainMovieClip->eventFired(KeyboardEvent(KeyboardEvent::KEY_UP, (KeyCode)keyCode, charCode));
+			KeyboardEvent evt(KeyboardEvent::KEY_UP, (KeyCode)keyCode, charCode);
+			mStage->eventFired(evt);
 		}
 	}
 	//-----------------------------------------------------------------------
@@ -308,6 +320,19 @@ namespace vtx
 		return mUserData;
 	}
 	//-----------------------------------------------------------------------
+	void Movie::eventFired(const Event& evt)
+	{
+		if(evt.getCategory() == FileEvent::CATEGORY)
+		{
+			const FileEvent& file_evt = static_cast<const FileEvent&>(evt);
+
+			if(evt.getType() == FileEvent::LOADING_COMPLETED)
+				loadingCompleted(file_evt.getFile());
+			else if(evt.getType() == FileEvent::LOADING_FAILED)
+				loadingFailed(file_evt.getFile());
+		}
+	}
+	//-----------------------------------------------------------------------
 	void Movie::_setFocusedObject(InteractiveObject* focused_object)
 	{
 		mFocusedObject = focused_object;
@@ -331,7 +356,6 @@ namespace vtx
 		mStage = new Stage();
 		mStage->_setParent(this);
 
-		//mMainMovieClip->setParentContainer(mStage);
 		mStage->addChild(mMainMovieClip);
 
 		ScriptEngineFactory* scriptEngineFactory = 
@@ -342,23 +366,6 @@ namespace vtx
 		{
 			mScriptEngine = scriptEngineFactory->createObject(this);
 		}
-
-		/*
-		ScriptResource* script = static_cast<ScriptResource*>(mFile->getResource("Frame0_Script", "Script"));
-		if(mScriptEngine && script)
-		{
-			if(mScriptEngine->executeCode(script->getBuffer(), script->getLength()))
-			{
-				mMainMovieClip->initScriptObject();
-
-				////ScriptObject* root_scriptobject = mScriptEngine->getRootScriptObject();
-				////if(root_scriptobject)
-				////{
-				////	mMainMovieClip->setScriptObject(root_scriptobject);
-				////}
-			}
-		}
-		/**/
 
 		std::vector<Listener*> remove_listeners;
 

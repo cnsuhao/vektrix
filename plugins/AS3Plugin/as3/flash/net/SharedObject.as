@@ -94,7 +94,7 @@ package flash.net
 		
 		public function flush(minDiskSpace:int = 0):String
 		{
-			
+			return "";
 		}
 		
 		public static function getLocal(name:String, localPath:String = null, secure:Boolean = false):SharedObject

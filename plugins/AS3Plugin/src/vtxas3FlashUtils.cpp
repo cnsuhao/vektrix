@@ -26,9 +26,11 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
+#include "vtxas3FlashUtils.h"
 
 #include "cspVmCore.h"
+
+using namespace avmplus;
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------

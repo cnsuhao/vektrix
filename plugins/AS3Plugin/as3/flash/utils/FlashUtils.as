@@ -28,7 +28,10 @@ THE SOFTWARE.
 
 package flash.utils
 {
-	import avmplus.*;
+	import avmplus.describeType;
+	import avmplus.getQualifiedClassName;
+	import avmplus.getQualifiedSuperclassName;
+	import avmplus.FLASH10_FLAGS;
 
 	[native(cls="::vtx::as3::FlashUtilsClass", methods="auto")]
 	class FlashUtils
@@ -48,7 +51,7 @@ package flash.utils
 
 	public function getDefinitionByName(name:String):Object
 	{
-		trace("getDefinitionByName(", name, ")");
+		//trace("getDefinitionByName(", name, ")");
 		var obj = FlashUtils.getClass(name) as Object;
 		//obj = Domain.currentDomain.getClass(name) as Object;
 		//trace("AFTER getDefinitionByName(", name, ")=", obj);
@@ -72,7 +75,8 @@ package flash.utils
 	public function getTimer():int
 	{
 		trace("getTimer");
-		return System.getTimer();
+		//return System.getTimer();
+		return 0;
 	}
 
 	public function setInterval(closure:Function, delay:Number, ... arguments):uint { return null; }

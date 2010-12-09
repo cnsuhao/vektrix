@@ -42,8 +42,8 @@ namespace vtx
 		ScriptEngine(Movie* parent);
 		virtual ~ScriptEngine();
 
-		/** Execute a given script code buffer */
-		virtual bool executeCode(const char* code, const uint& len) = 0;
+		/** Execute a given ScriptResource */
+		virtual bool executeCode(ScriptResource* resource) = 0;
 
 		/** Get the root ScriptObject that will be associated with the main MovieClip of a Movie */
 		virtual ScriptObject* getRootScriptObject(MovieClip* movieclip) = 0;

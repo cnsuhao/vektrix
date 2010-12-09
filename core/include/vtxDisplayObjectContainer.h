@@ -79,9 +79,8 @@ namespace vtx
 		// inherited from EventListener
 		virtual void eventFired(const Event& evt);
 
-		virtual void initScriptObject_2();
-
 	protected:
+		bool mChildListChanged;
 		bool mNeedBoundingBoxUpdate;
 		LayerMap mLayers;
 		NameMap mNameMap;

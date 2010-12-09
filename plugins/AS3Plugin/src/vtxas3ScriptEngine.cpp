@@ -27,6 +27,9 @@ THE SOFTWARE.
 */
 
 #include "vtxas3ScriptEngine.h"
+//#include "vtxas3MovieClip.h"
+
+#include "vtxswfScriptResource.h"
 
 #include "vtxButton.h"
 #include "vtxEditText.h"
@@ -39,7 +42,6 @@ THE SOFTWARE.
 #include "vtxStage.h"
 #include "vtxStaticText.h"
 #include "vtxStringHelper.h"
-#include "vtxSymbolClassResource.h"
 
 #include "cspNativePackage.h"
 #include "cspSystem.h"
@@ -49,12 +51,15 @@ THE SOFTWARE.
 
 #include "vtxas3ScriptInterface.h"
 
+using namespace avmplus;
+
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	AS3ScriptEngine::AS3ScriptEngine(Movie* parent) 
 		: ScriptEngine(parent), 
 		mVmCore(NULL), 
 		mRootObject(NULL), 
+		mScriptResource(NULL), 
 		mQueuedInstance(NULL)
 	{
 		CSP_CREATE_VMCORE(mVmCore);
@@ -62,12 +67,33 @@ namespace vtx { namespace as3 {
 
 		mVmCore->addListener(this);
 
-		NativePackage(mVmCore, caspin_base);
-		NativePackage(mVmCore, flash);
+		NativePackage(mVmCore, avmplus::NativeID, caspin_base);
+		//NativePackage(mVmCore, avmplus::NativeID, flash);
+
+#ifdef  VTX_AS3_USE_SINGLE_ABC_PACKAGE
+
+		NativePackage(mVmCore, flash, flash);
+
+#else
+
+		NativePackage(mVmCore, flash::accessibility,	flash_accessibility);
+		NativePackage(mVmCore, flash::events,			flash_events);
+		NativePackage(mVmCore, flash::display,			flash_display);
+		NativePackage(mVmCore, flash::filters,			flash_filters);
+		NativePackage(mVmCore, flash::geom,				flash_geom);
+		NativePackage(mVmCore, flash::media,			flash_media);
+		NativePackage(mVmCore, flash::net,				flash_net);
+		NativePackage(mVmCore, flash::system,			flash_system);
+		NativePackage(mVmCore, flash::text,				flash_text);
+		NativePackage(mVmCore, flash::ui,				flash_ui);
+		NativePackage(mVmCore, flash::utils,			flash_utils);
+		NativePackage(mVmCore, vektrix,					vektrix);
+
+#endif
 
 		mVmCore->initializePackages();
 
-		mSymbols = static_cast<SymbolClassResource*>(mParent->getFile()->getResource("__SymbolClassResource__"));
+		//mScriptResource = static_cast<swf::ScriptResource*>(mParent->getFile()->getResource("__ScriptResource__"));
 	}
 	//-----------------------------------------------------------------------
 	AS3ScriptEngine::~AS3ScriptEngine()
@@ -75,9 +101,16 @@ namespace vtx { namespace as3 {
 		CSP_DESTROY_VMCORE(mVmCore);
 	}
 	//-----------------------------------------------------------------------
-	bool AS3ScriptEngine::executeCode(const char* code, const uint& len)
+	bool AS3ScriptEngine::executeCode(ScriptResource* resource)
 	{
-		return mVmCore->executeByteCode(code, len);
+		if(resource->getScriptType() != swf::ScriptResource::SCRIPT_TYPE || mScriptResource)
+		{
+			return false;
+		}
+
+		mScriptResource = static_cast<swf::ScriptResource*>(resource);
+		
+		return mVmCore->executeByteCode(mScriptResource->getBuffer(), mScriptResource->getBufferSize());
 	}
 	//-----------------------------------------------------------------------
 	ScriptObject* AS3ScriptEngine::getRootScriptObject(vtx::MovieClip* movieclip)
@@ -114,51 +147,76 @@ namespace vtx { namespace as3 {
 	{
 		MMGC_GCENTER(mVmCore->GetGC());
 
-		AS3Object* script_object = NULL;
-		Resource* resource = instance->getResource();
-
-		mQueuedInstance = instance;
-
-		if(mSymbols && resource)
+		TRY(mVmCore, kCatchAction_ReportAsError)
 		{
-			if(mSymbols->hasSymbol(resource->getID()))
-			{
-				const StringPair class_def = mSymbols->getSymbol(resource->getID());
-				std::cout << "Creating script object: " << class_def.second << " -> " << class_def.first << std::endl;
-				script_object = static_cast<AS3Object*>(mVmCore->createObject(class_def.second, class_def.first));
-			}
-		}
+			AS3Object* script_object = NULL;
+			Resource* resource = instance->getResource();
 
-		if(!script_object)
+			mQueuedInstance = instance;
+
+			if(mScriptResource && resource)
+			{
+				if(mScriptResource->hasSymbol(resource->getID()))
+				{
+					const StringPair class_def = mScriptResource->getSymbol(resource->getID());
+					std::cout << "-----------------------------------------------------------" << std::endl;
+					VTX_LOG("Creating script object: %s -> %s", class_def.second.c_str(), class_def.first.c_str());
+					std::cout << "-----------------------------------------------------------" << std::endl;
+					script_object = static_cast<AS3Object*>(mVmCore->createObject(class_def.second, class_def.first));
+				}
+			}
+
+			if(!script_object)
+			{
+				std::cout << "-----------------------------------------------------------" << std::endl;
+				std::cout << "Creating script object: " << instance->getType() << std::endl;
+				std::cout << "-----------------------------------------------------------" << std::endl;
+
+				if(instance->getType() == vtx::Stage::TYPE)
+				{
+					script_object = static_cast<AS3Object*>(mVmCore->createObject("Stage", "flash.display"));
+				}
+				else if(instance->getType() == vtx::MovieClip::TYPE)
+				{
+					script_object = static_cast<AS3Object*>(mVmCore->createObject("MovieClip", "flash.display"));
+				}
+				else if(instance->getType() == vtx::EditText::TYPE)
+				{
+					script_object = static_cast<AS3Object*>(mVmCore->createObject("TextField", "flash.text"));
+				}
+				else if(instance->getType() == vtx::StaticText::TYPE)
+				{
+					script_object = static_cast<AS3Object*>(mVmCore->createObject("StaticText", "flash.text"));
+				}
+				else if(instance->getType() == vtx::Button::TYPE)
+				{
+					script_object = static_cast<AS3Object*>(mVmCore->createObject("SimpleButton", "flash.display"));
+				}
+			}
+
+			mVmCore->stickyObject(script_object->atom());
+
+			mQueuedInstance = NULL;
+
+			if(!script_object)
+				return NULL;
+
+			if(!instance->getScriptObject())
+			{
+				ScriptInterface* iface = new ScriptInterface(script_object);
+				instance->setScriptObject(iface);
+			}
+
+			return instance->getScriptObject();
+		}
+		CATCH(Exception* exception)
 		{
-			std::cout << "Creating script object: " << instance->getType() << std::endl;
-
-			if(instance->getType() == vtx::Stage::TYPE)
-			{
-				script_object = static_cast<AS3Object*>(mVmCore->createObject("Stage", "flash.display"));
-			}
-			else if(instance->getType() == vtx::MovieClip::TYPE)
-			{
-				script_object = static_cast<AS3Object*>(mVmCore->createObject("MovieClip", "flash.display"));
-			}
-			else if(instance->getType() == vtx::EditText::TYPE)
-			{
-				script_object = static_cast<AS3Object*>(mVmCore->createObject("TextField", "flash.text"));
-			}
-			else if(instance->getType() == vtx::StaticText::TYPE)
-			{
-				script_object = static_cast<AS3Object*>(mVmCore->createObject("StaticText", "flash.text"));
-			}
-			else if(instance->getType() == vtx::Button::TYPE)
-			{
-				script_object = static_cast<AS3Object*>(mVmCore->createObject("SimpleButton", "flash.display"));
-			}
+			mVmCore->printException(exception);
 		}
+		END_CATCH;
+		END_TRY;
 
-		mQueuedInstance = NULL;
-
-		ScriptInterface* iface = new ScriptInterface(script_object);
-		return iface;
+		return NULL;
 	}
 	//-----------------------------------------------------------------------
 	void AS3ScriptEngine::destroyScriptObject(ScriptObject* script_object)
@@ -166,9 +224,11 @@ namespace vtx { namespace as3 {
 
 	}
 	//-----------------------------------------------------------------------
-	Instance* AS3ScriptEngine::getQueuedInstance() const
+	Instance* AS3ScriptEngine::getQueuedInstance()
 	{
-		return mQueuedInstance;
+		Instance* result = mQueuedInstance;
+		mQueuedInstance = NULL;
+		return result;
 	}
 	//-----------------------------------------------------------------------
 	void AS3ScriptEngine::output(const String& message)

@@ -29,6 +29,8 @@ THE SOFTWARE.
 #include "vtxFile.h"
 
 #include "vtxAtlasPacker.h"
+#include "vtxEventListener.h"
+#include "vtxFileEvent.h"
 #include "vtxFileManager.h"
 #include "vtxFileStream.h"
 #include "vtxFontResource.h"
@@ -165,11 +167,13 @@ namespace vtx
 			mFonts[font->getName()] = font;
 		}
 
+		FileEvent evt(FileEvent::RESOURCE_ADDED, res);
+
 		ListenerMap::iterator listener_it = mListeners.begin();
 		ListenerMap::iterator listener_end = mListeners.end();
 		while(listener_it != listener_end)
 		{
-			listener_it->second->resourceAdded(res);
+			listener_it->second->eventFired(evt);
 			++listener_it;
 		}
 
@@ -230,7 +234,7 @@ namespace vtx
 		return NULL;
 	}
 	//-----------------------------------------------------------------------
-	bool File::addListener(Listener* listener)
+	bool File::addListener(EventListener* listener)
 	{
 		ListenerMap::iterator it = mListeners.find(listener);
 		if(it == mListeners.end())
@@ -242,7 +246,7 @@ namespace vtx
 		return false;
 	}
 	//-----------------------------------------------------------------------
-	bool File::removeListener(Listener* listener)
+	bool File::removeListener(EventListener* listener)
 	{
 		ListenerMap::iterator it = mListeners.find(listener);
 		if(it != mListeners.end())
@@ -256,22 +260,26 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void File::_loadingCompleted()
 	{
+		FileEvent evt(FileEvent::LOADING_COMPLETED, this);
+
 		ListenerMap::iterator listener_it = mListeners.begin();
 		ListenerMap::iterator listener_end = mListeners.end();
 		while(listener_it != listener_end)
 		{
-			listener_it->second->loadingCompleted(this);
+			listener_it->second->eventFired(evt);
 			++listener_it;
 		}
 	}
 	//-----------------------------------------------------------------------
 	void File::_loadingFailed()
 	{
+		FileEvent evt(FileEvent::LOADING_FAILED, this);
+
 		ListenerMap::iterator listener_it = mListeners.begin();
 		ListenerMap::iterator listener_end = mListeners.end();
 		while(listener_it != listener_end)
 		{
-			listener_it->second->loadingFailed(this);
+			listener_it->second->eventFired(evt);
 			++listener_it;
 		}
 	}

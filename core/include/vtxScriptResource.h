@@ -39,20 +39,16 @@ namespace vtx
 	class vtxExport ScriptResource : public Resource
 	{
 	public:
-		ScriptResource(const String& id, const char* code, uint len);
+		ScriptResource(const String& script_type);
 		virtual ~ScriptResource();
 
 		/** @copybrief Resource::getType */
 		const String& getType() const;
 
-		/** Get the buffer that contains the script data */
-		const char* getBuffer() const;
-		/** Get the length of the buffer that contains the script data */
-		const uint& getLength() const;
+		const String& getScriptType() const;
 
 	protected:
-		uint mLength;
-		const char* mCodeBuffer;
+		String mScriptType;
 	};
 	//-----------------------------------------------------------------------
 }

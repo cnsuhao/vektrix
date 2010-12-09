@@ -28,83 +28,137 @@ THE SOFTWARE.
 
 package flash.events
 {
+	const DEBUG_EVENTDISPATCHER = false;
+
 	import flash.events.IEventDispatcher;
-	import flash.utils.*;
+	import flash.utils.Dictionary;
 	
 	[native(cls="::vtx::as3::EventDispatcherClass", instance="::vtx::as3::EventDispatcher", methods="auto")]
 	public class EventDispatcher implements IEventDispatcher
 	{
-		private var mHandlers : Dictionary;
-
+		//-----------------------------------------------------------------------
+		private var mTarget:IEventDispatcher;
+		private var mHandlers:Dictionary;
+		//-----------------------------------------------------------------------
+		private native function ctor(target:IEventDispatcher = null):void;
+		//-----------------------------------------------------------------------
 		public function EventDispatcher(target:IEventDispatcher = null)
 		{
-			mHandlers = new Dictionary();
+			super();
+			if(DEBUG_EVENTDISPATCHER) { trace("new EventDispatcher(" + target + ")"); }
+
+			ctor(target);
+
+			mTarget = target;
+
+			if(mTarget == null)
+			{
+				mHandlers = new Dictionary();
+			}
 		}
-		
-		public /*native*/ function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
-		/**/
+		//-----------------------------------------------------------------------
+		public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
 		{
-			//trace("addEventListener", type);
+			if(DEBUG_EVENTDISPATCHER) { trace("EventDispatcher.addEventListener(" + [type,listener,useCapture,priority,useWeakReference].join(", ") + ")"); }
+
+			if(mTarget != null)
+			{
+				mTarget.addEventListener(type, listener, useCapture, priority, useWeakReference);
+				return;
+			}
 
 			if(mHandlers[type] == null)
 			{
-				//trace("new handler array for type:", type);
 				mHandlers[type] = new Array();
 			}
 			
-			mHandlers[type].push(listener);
+			// only add listener if not already present
+			if(mHandlers[type].indexOf(listener) < 0)
+			{
+				mHandlers[type].push(listener);
+			}
 		};
-		/**/
-		
-		public native function dispatchEvent(event:Event):Boolean
-		/*
+		//-----------------------------------------------------------------------
+		public function dispatchEvent(event:Event):Boolean
 		{
+			if(DEBUG_EVENTDISPATCHER) { trace("EventDispatcher.addEventListener(" + event + ")" ); }
+
+			if(mTarget != null)
+			{
+				return mTarget.dispatchEvent(event);
+			}
+
+			event.currentTarget = this;
+			event.target = this;
+
 			var listeners:Array = mHandlers[event.type];
-			
+
 			if(listeners != null)
 			{
-				//trace("listeners != null for type:", event.type, "with", listeners.length, "listeners");
-
 				for(var i:uint = 0; i<listeners.length; ++i)
 				{
 					listeners[i].call(listeners[i], event);
 				}
 			}
+
+			return true;
 		}
-		*/
-		
-		public native function hasEventListener(type:String):Boolean
-		/*{
-			trace(type);
-			return false;
-		}*/
-		
-		public /*native*/ function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void
-		/**/
+		//-----------------------------------------------------------------------
+		public function hasEventListener(type:String):Boolean
 		{
-			trace("removeEventListener", type);
+            if(DEBUG_EVENTDISPATCHER) { trace("EventDispatcher.hasEventListener(" + type + ")"); }
+
+			if(mTarget != null)
+			{
+				return mTarget.hasEventListener(type);
+			}
+
+			return (mHandlers[type] != null);
+		}
+		//-----------------------------------------------------------------------
+		public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void
+		{
+            if(DEBUG_EVENTDISPATCHER) { trace("EventDispatcher.removeEventListener(" + [type,listener,useCapture].join(", ") + ")"); }
+
+			if(mTarget != null)
+			{
+				mTarget.removeEventListener(type, listener, useCapture);
+				return;
+			}
 
 			var listeners:Array = mHandlers[type];
 
-			if(listeners != null)
-			{
-				//trace("listeners != null for type:", event.type, "with", listeners.length, "listeners");
+			if(listeners == null)
+				return;
 
-				for(var i:uint = 0; i<listeners.length; ++i)
-				{
-					if(listeners[i] == listener)
-					{
-						listeners.splice(i, 1);
-						return;
-					}
-				}
+			var index:int = listeners.indexOf(listener);
+
+			if(index < 0)
+				return;
+
+			if(listeners.length > 1)
+			{
+				listeners.splice(index, 1);
+			}
+			else
+			{
+				// the last listener for this type has been removed, 
+				// we can free the listener array for this type
+				mHandlers[type] = null;
 			}
 		}
-		/**/
-		
-		public native function willTrigger(type:String):Boolean
-		/*{
-			return false;
-		}*/
+		//-----------------------------------------------------------------------
+		public function willTrigger(type:String):Boolean
+		{
+			if(DEBUG_EVENTDISPATCHER) { trace("EventDispatcher.willTrigger(" + type + ")"); }
+
+			if(mTarget != null)
+			{
+				return mTarget.willTrigger(type);
+			}
+
+			return true;
+		}
+		//-----------------------------------------------------------------------
 	}
 }

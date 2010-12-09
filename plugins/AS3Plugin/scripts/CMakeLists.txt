@@ -47,6 +47,7 @@ include (vektrix_AS3Plugin_src_files)
 # the required include directories
 set (include_dirs
 	../include
+	../../SwfPlugin/include
 	../../../core/include
 	${caspin_include_dirs}
 )
@@ -54,11 +55,19 @@ set (include_dirs
 # the required link libraries
 if(PLUGINS_AS3_use_runtime_debugger)
 #{
-	set (libraries vektrix ${caspin_debugger_libraries})
+	set (libraries 
+		vektrix
+		vektrix_SwfPlugin
+		${caspin_debugger_libraries}
+	)
 #}
 else(PLUGINS_AS3_use_runtime_debugger)
 #{
-	set (libraries vektrix ${caspin_libraries})
+	set (libraries 
+		vektrix
+		vektrix_SwfPlugin
+		${caspin_libraries}
+	)
 #}
 endif(PLUGINS_AS3_use_runtime_debugger)
 

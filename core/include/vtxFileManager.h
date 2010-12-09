@@ -63,7 +63,7 @@ namespace vtx
 		bool doesFileExist(const String& filename);
 
 		/** Request to load a File by filename */
-		File* getFile(const String& filename, const bool& threadedParsing = false, File::Listener* listener = NULL);
+		File* getFile(const String& filename, const bool& threadedParsing = false, EventListener* listener = NULL);
 
 		/** Open a new FileStream */
 		FileStream* getFileStream(const String& filename);

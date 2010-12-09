@@ -28,10 +28,9 @@ THE SOFTWARE.
 
 #include "vtxswfScriptParser.h"
 #include "vtxswfParser.h"
+#include "vtxswfScriptResource.h"
 
-#include "vtxScriptResource.h"
 #include "vtxStringHelper.h"
-#include "vtxSymbolClassResource.h"
 
 namespace vtx { namespace swf {
 	////-----------------------------------------------------------------------

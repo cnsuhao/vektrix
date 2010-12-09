@@ -26,25 +26,16 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "flash_package.h"
-
+#include "vtxas3Stage.h"
 #include "vtxas3ScriptEngine.h"
+
+#include "vtxFile.h"
 #include "vtxInstance.h"
+#include "vtxMovie.h"
 
 #include "cspVmCore.h"
 
 namespace vtx { namespace as3 {
-	//-----------------------------------------------------------------------
-	Stage::Stage(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: DisplayObjectContainer(vtable, prototype)
-	{
-/*		AS3ScriptEngine* script_engine = static_cast<AS3ScriptEngine*>(CSP_CORE->getUserData());
-		Instance* inst = script_engine->getQueuedInstance();
-
-		VTX_DEBUG_ASSERT(inst, "native stage == NULL");
-
-		inst->setScriptObject(this);*/
-	}
 	//-----------------------------------------------------------------------
 	int Stage::get_stageHeight()
 	{

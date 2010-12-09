@@ -29,7 +29,14 @@ THE SOFTWARE.
 #ifndef __vtxas3Mouse_H__
 #define __vtxas3Mouse_H__
 
+#include "vtxas3.h"
 #include "cspPrerequisites.h"
+
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_ui.h"
+#endif
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
@@ -42,7 +49,7 @@ namespace vtx { namespace as3 {
 		void hide();
 		void show();
 
-		CSP_CLASS_SLOTS(Mouse);
+		CSP_SLOTS(MouseClass, flash_ui_);
 	};
 	//-----------------------------------------------------------------------
 	class Mouse : public avmplus::ScriptObject
@@ -50,7 +57,7 @@ namespace vtx { namespace as3 {
 	public:
 		Mouse(avmplus::VTable* vtable, avmplus::ScriptObject* prototype);
 
-		CSP_INST_SLOTS(Mouse);
+		CSP_SLOTS(Mouse, flash_ui_);
 	};
 	//-----------------------------------------------------------------------
 }}

@@ -26,35 +26,11 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxas3Stage_H__
-#define __vtxas3Stage_H__
-
-#include "vtxas3.h"
-#include "cspPrerequisites.h"
-
-#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
-#	include "flash.h"
-#else
-#	include "flash_display.h"
-#endif
-
-#include "vtxas3DisplayObjectContainer.h"
-
-namespace vtx { namespace as3 {
-	//-----------------------------------------------------------------------
-	class Stage : public DisplayObjectContainer
+package flash.utils
+{
+	public final class Endian
 	{
-	public:
-		CSP_INST_CDTOR(Stage, DisplayObjectContainer);
-
-		int get_stageHeight();
-		int get_stageWidth();
-
-		CSP_SLOTS(Stage, flash_display_);
-	};
-	//-----------------------------------------------------------------------
-	CSP_DEFINE_CLASS(StageClass, Stage, flash_display_);
-	//-----------------------------------------------------------------------
-}}
-
-#endif
+		public static const BIG_ENDIAN:String = "bigEndian";
+		public static const LITTLE_ENDIAN:String = "littleEndian";
+	}
+}
