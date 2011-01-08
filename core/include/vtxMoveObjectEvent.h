@@ -41,8 +41,7 @@ namespace vtx
 	class vtxExport MoveObjectEvent : public FrameEvent
 	{
 	public:
-		MoveObjectEvent(DisplayObjectContainer* container, 
-			const uint& layer, const Matrix& matrix, const CXForm& cxform);
+		MoveObjectEvent(const uint& layer, const Matrix& matrix, const CXForm& cxform);
 
 		/** @copybrief FrameEvent::clone */
 		FrameEvent* clone(DisplayObjectContainer* container);

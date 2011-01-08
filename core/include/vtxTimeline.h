@@ -49,6 +49,9 @@ namespace vtx
 		/** Add a Keyframe to this timeline */
 		void addKeyframe(Keyframe* frame);
 
+		/** Get a Keyframe by its index */
+		Keyframe* getKeyframe(const uint& index) const;
+
 		/** Remove all keyframes and reset the timeline */
 		void clear();
 

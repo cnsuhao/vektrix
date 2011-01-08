@@ -38,7 +38,7 @@ namespace vtx
 	class vtxExport FrameEvent
 	{
 	public:
-		FrameEvent(DisplayObjectContainer* container);
+		FrameEvent();
 		virtual ~FrameEvent();
 
 		/** Create an identical clone of this event */

@@ -59,7 +59,9 @@ namespace vtx
 
 	protected:
 		bool mHasFocus;
-		MouseState mMouseState;
+		MouseState mMouseState, mPrevMouseState;
+
+		void changeMouseState(const MouseState& new_state);
 	};
 	//-----------------------------------------------------------------------
 }

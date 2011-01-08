@@ -47,6 +47,8 @@ namespace vtx { namespace as3 {
 	public:
 		CSP_INST_CDTOR(DisplayObject, EventDispatcher);
 
+		virtual void ctor();
+
 		double get_x();
 		void set_x(double val);
 

@@ -49,7 +49,7 @@ package flash.display
 			super();
 			if(DEBUG_DISPLAYOBJECT) { trace("new DisplayObject()"); }
 
-			ctor();
+			//ctor();
 		}
 		///-----------------------------------------------------------------------
 		/// GETTERS & SETTERS

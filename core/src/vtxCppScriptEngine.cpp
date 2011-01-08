@@ -26,31 +26,27 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxExecuteScript_H__
-#define __vtxExecuteScript_H__
-
-#include "vtxPrerequisites.h"
-#include "vtxFrameEvent.h"
+#include "vtxCppScriptEngine.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	class vtxExport ExecuteScriptEvent : public FrameEvent
+	CppScriptEngine::CppScriptEngine(Movie* parent) 
+		: ScriptEngine(parent)
 	{
-	public:
-		ExecuteScriptEvent(ScriptResource* script_resource);
 
-		/** @copybrief FrameEvent::clone */
-		FrameEvent* clone(DisplayObjectContainer* container);
+	}
+	//-----------------------------------------------------------------------
+	CppScriptEngine::~CppScriptEngine()
+	{
 
-		/** @copybrief FrameEvent::execute */
-		void execute();
-
-	protected:
-		bool mExecuted;
-		ScriptResource* mScriptResource;
-	};
+	}
+	//-----------------------------------------------------------------------
+	bool CppScriptEngine::executeCode(ScriptResource* resource)
+	{
+		CppScriptResource* cpp_script = static_cast<CppScriptResource*>(resource);
+		cpp_script->execute(mParent);
+		return true;
+	}
 	//-----------------------------------------------------------------------
 }
-
-#endif

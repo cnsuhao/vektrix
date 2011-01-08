@@ -38,10 +38,8 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	MoveObjectEvent::MoveObjectEvent(DisplayObjectContainer* container, 
-		const uint& layer, const Matrix& matrix, const CXForm& cxform) 
-		: FrameEvent(container), 
-		mLayer(layer), 
+	MoveObjectEvent::MoveObjectEvent(const uint& layer, const Matrix& matrix, const CXForm& cxform) 
+		: mLayer(layer), 
 		mMatrix(matrix), 
 		mCXForm(cxform)
 	{
@@ -50,7 +48,9 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	FrameEvent* MoveObjectEvent::clone(DisplayObjectContainer* container)
 	{
-		return new MoveObjectEvent(container, mLayer, mMatrix, mCXForm);
+		MoveObjectEvent* evt = new MoveObjectEvent(mLayer, mMatrix, mCXForm);
+		evt->mObjectContainer = container;
+		return evt;
 	}
 	//-----------------------------------------------------------------------
 	void MoveObjectEvent::execute()

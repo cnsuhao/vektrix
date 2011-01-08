@@ -52,8 +52,6 @@ THE SOFTWARE.
 #include "vtxStage.h"
 #include "vtxStringHelper.h"
 
-//#include "windows.h"
-
 namespace vtx
 {
 	//-----------------------------------------------------------------------
@@ -112,12 +110,9 @@ namespace vtx
 			mStage->_update(delta_time);
 		}
 
-		ListenerMap::iterator it = mListeners.begin();
-		ListenerMap::iterator end = mListeners.end();
-		while(it != end)
+		for_each(it, ListenerMap, mListeners)
 		{
 			it->second->update(delta_time);
-			++it;
 		}
 	}
 	//-----------------------------------------------------------------------
@@ -349,6 +344,13 @@ namespace vtx
 
 		mFile = file;
 
+		ScriptEngineFactory* scriptEngineFactory = 
+			InstanceManager::getSingletonPtr()->scriptEngines()->getFactory(mFile->getScriptEngine());
+
+		// create script VM if available
+		if(scriptEngineFactory)
+			mScriptEngine = scriptEngineFactory->createObject(this);
+
 		mMainMovieClip = new MovieClip();
 		mMainMovieClip->_setParent(this);
 		mMainMovieClip->initFromResource(mFile->getMainMovieClip());
@@ -358,27 +360,15 @@ namespace vtx
 
 		mStage->addChild(mMainMovieClip);
 
-		ScriptEngineFactory* scriptEngineFactory = 
-			InstanceManager::getSingletonPtr()->scriptEngines()->getFactory(mFile->getScriptEngine());
-
-		// create script VM if available
-		if(scriptEngineFactory)
-		{
-			mScriptEngine = scriptEngineFactory->createObject(this);
-		}
-
 		std::vector<Listener*> remove_listeners;
 
-		ListenerMap::iterator it = mListeners.begin();
-		ListenerMap::iterator end = mListeners.end();
-		while(it != end)
+		for_each(it, ListenerMap, mListeners)
 		{
 			if(it->second->loadingCompleted(this))
 			{
 				// remove this listener
 				remove_listeners.push_back(it->second);
 			}
-			++it;
 		}
 
 		for(uint i=0; i<remove_listeners.size(); ++i)
@@ -391,12 +381,9 @@ namespace vtx
 	{
 		bool destroy = false;
 
-		ListenerMap::iterator it = mListeners.begin();
-		ListenerMap::iterator end = mListeners.end();
-		while(it != end)
+		for_each(it, ListenerMap, mListeners)
 		{
 			destroy = destroy || it->second->loadingFailed(this);
-			++it;
 		}
 
 		if(destroy)

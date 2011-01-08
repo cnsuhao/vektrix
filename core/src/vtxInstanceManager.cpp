@@ -27,6 +27,7 @@ THE SOFTWARE.
 */
 
 #include "vtxInstanceManager.h"
+#include "vtxCppScriptEngine.h"
 
 namespace vtx
 {
@@ -38,10 +39,16 @@ namespace vtx
 	{
 		mScriptEngines = new ScriptEngines;
 		mTextures = new Textures;
+
+		mCppScriptEngine = new CppScriptEngineFactory;
+		mScriptEngines->addFactory(mCppScriptEngine);
 	}
 	//-----------------------------------------------------------------------
 	InstanceManager::~InstanceManager()
 	{
+		mScriptEngines->removeFactory(mCppScriptEngine);
+		delete mCppScriptEngine;
+
 		delete mScriptEngines;
 		delete mTextures;
 	}

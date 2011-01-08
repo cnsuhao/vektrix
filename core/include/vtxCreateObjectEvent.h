@@ -41,8 +41,8 @@ namespace vtx
 	class vtxExport CreateObjectEvent : public FrameEvent
 	{
 	public:
-		CreateObjectEvent(DisplayObjectContainer* container, File* source_file, 
-			const String& id, const uint& layer, const Matrix& matrix, const CXForm& cxform, const String& name = "");
+		CreateObjectEvent(Resource* resource, const uint& layer, 
+			const Matrix& matrix = Matrix(), const CXForm& cxform = CXForm(), const String& name = "");
 
 		/** @copybrief FrameEvent::clone */
 		FrameEvent* clone(DisplayObjectContainer* container);
@@ -51,14 +51,13 @@ namespace vtx
 		void execute();
 
 	protected:
+		/// the Resource that shall be used to create the DisplayObject
+		Resource* mResource;
 		uint mLayer;
-		String mID;
 		Matrix mMatrix;
 		CXForm mCXForm;
 		String mName;
 		DisplayObject* mObject;
-		/// the File that defines this CreateObjectEvent
-		File* mSourceFile;
 	};
 	//-----------------------------------------------------------------------
 }

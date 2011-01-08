@@ -108,7 +108,7 @@ namespace vtx { namespace swf {
 				cx.mul_red/256.0f, cx.mul_green/256.0f, cx.mul_blue/256.0f, cx.mul_alpha/256.0f, 
 				cx.add_red/256.0f, cx.add_green/256.0f, cx.add_blue/256.0f, cx.add_alpha/256.0f);
 
-			btn_state->addEvent(new CreateObjectEvent(NULL, mParser->getCurrentFile(), id, layer-1, matrix, cxform));
+			btn_state->addEvent(new CreateObjectEvent(mParser->getCurrentFile()->getResource(id), layer-1, matrix, cxform));
 
 			if(state & 1) button->setState(btn_state, ButtonResource::SID_UP);
 			if(state & 2) button->setState(btn_state, ButtonResource::SID_OVER);
@@ -226,13 +226,13 @@ namespace vtx { namespace swf {
 		if(flags & POF_Move)
 		{
 			// move
-			mCurrKeyframe->addEvent(new MoveObjectEvent(NULL, depth, matrix, cxform));
+			mCurrKeyframe->addEvent(new MoveObjectEvent(depth, matrix, cxform));
 		}
 		else if(flags & POF_HasCharacter)
 		{
 			// place
 			String id = StringHelper::toString(character);
-			mCurrKeyframe->addEvent(new CreateObjectEvent(NULL, mParser->getCurrentFile(), id, depth, matrix, cxform, name));
+			mCurrKeyframe->addEvent(new CreateObjectEvent(mParser->getCurrentFile()->getResource(id), depth, matrix, cxform, name));
 			VTX_WARN("Create Object %s", id.c_str());
 		}
 	}
@@ -240,7 +240,7 @@ namespace vtx { namespace swf {
 	void StructureParser::handleRemoveObject2()
 	{
 		UI16 depth = mParser->readU16();
-		mCurrKeyframe->addEvent(new RemoveObjectEvent(NULL, depth));
+		mCurrKeyframe->addEvent(new RemoveObjectEvent(depth));
 	}
 	//-----------------------------------------------------------------------
 	void StructureParser::handleShowFrame()
@@ -333,7 +333,7 @@ namespace vtx { namespace swf {
 		ScriptResource* script = new ScriptResource(abc_buf, abc_len);
 		parser->getCurrentFile()->addResource(script);
 
-		mCurrKeyframe->addEvent(new ExecuteScriptEvent(NULL, script));
+		mCurrKeyframe->addEvent(new ExecuteScriptEvent(script));
 	}
 	//-----------------------------------------------------------------------
 	void StructureParser::handleSymbolClass(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser)

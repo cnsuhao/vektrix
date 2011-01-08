@@ -61,6 +61,8 @@ namespace vtx
 		ScriptEngines* mScriptEngines;
 		Textures* mTextures;
 
+		CppScriptEngineFactory* mCppScriptEngine;
+
 		InstanceManager();
 		virtual ~InstanceManager();
 	};

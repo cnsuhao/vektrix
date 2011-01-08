@@ -46,12 +46,12 @@ namespace vtx { namespace as3 {
 	Dictionary::Dictionary(VTable *vtable, ScriptObject *delegate)
 		: ScriptObject(vtable, delegate)
 	{
-		GCAssert(vtable->traits->isDictionary());
+		GCAssert(vtable->traits->isDictionary);
 	}
 	//-----------------------------------------------------------------------
 	void Dictionary::ctor(bool weakKeys)
 	{
-		GCAssert(vtable->traits->isDictionary());
+		GCAssert(vtable->traits->isDictionary);
 		MMgc::GC* gc = this->gc();
 
 		HeapHashtable* ht = weakKeys ? new (gc) WeakKeyHashtable(gc)
@@ -181,13 +181,13 @@ namespace vtx { namespace as3 {
 		: ClassClosure(vtable)
 	{
 		createVanillaPrototype();
-		vtable->traits->itraits->set_isDictionary();
+		vtable->traits->itraits->isDictionary = 1;
 	}
 	//-----------------------------------------------------------------------
 	avmplus::ScriptObject* DictionaryClass::createInstance(VTable *ivtable, ScriptObject* /*delegate*/)
 	{
-		GCAssert(ivtable->traits->isDictionary());
-		return new (core()->GetGC(), ivtable->getExtraSize()) Dictionary(ivtable, prototypePtr());
+		GCAssert(ivtable->traits->isDictionary);
+		return new (core()->GetGC(), ivtable->getExtraSize()) Dictionary(ivtable, prototype);
 	}
 	//-----------------------------------------------------------------------
 }}

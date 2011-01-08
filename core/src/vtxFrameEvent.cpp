@@ -31,8 +31,8 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	FrameEvent::FrameEvent(DisplayObjectContainer* container) 
-		: mObjectContainer(container)
+	FrameEvent::FrameEvent() 
+		: mObjectContainer(NULL)
 	{
 
 	}

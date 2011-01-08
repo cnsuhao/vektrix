@@ -40,6 +40,11 @@ THE SOFTWARE.
 
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
+	void DisplayObject::ctor()
+	{
+		EventDispatcher::ctor();
+	}
+	//-----------------------------------------------------------------------
 	double DisplayObject::get_x()
 	{
 		VTX_DEBUG_ASSERT(mDisplayObject, "DisplayObject::get_x()");

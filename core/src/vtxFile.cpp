@@ -98,12 +98,14 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	File::~File()
 	{
-		// only destroy internal resources
+		// destroy internal resources
 		ResourceMap::iterator it = mResources.begin();
 		ResourceMap::iterator end = mResources.end();
 		while(it != end)
 		{
-			delete it->second;
+			if(it->second != mMainMovieClip)
+				delete it->second;
+
 			++it;
 		}
 

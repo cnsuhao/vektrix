@@ -31,13 +31,13 @@ THE SOFTWARE.
 
 #include "vtxPrerequisites.h"
 #include "vtxBoundingBox.h"
-#include "vtxResource.h"
+#include "vtxDisplayResource.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
 	/** A Resource which contains all necessary data for creating a Shape instance */
-	class vtxExport ShapeResource : public Resource
+	class vtxExport ShapeResource : public DisplayResource
 	{
 	public:
 		typedef std::vector<SubshapeResource*> SubshapeList;

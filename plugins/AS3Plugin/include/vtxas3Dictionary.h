@@ -59,13 +59,13 @@ namespace vtx { namespace as3 {
 		void ctor(bool weakKeys);
 
 		// multiname and Stringp forms fall through to ScriptObject
-		virtual Atom getAtomProperty(Atom name) const;
-		virtual bool hasAtomProperty(Atom name) const;
-		virtual bool deleteAtomProperty(Atom name);
-		virtual void setAtomProperty(Atom name, Atom value);
+		virtual avmplus::Atom getAtomProperty(avmplus::Atom name) const;
+		virtual bool hasAtomProperty(avmplus::Atom name) const;
+		virtual bool deleteAtomProperty(avmplus::Atom name);
+		virtual void setAtomProperty(avmplus::Atom name, avmplus::Atom value);
 
-		virtual Atom nextName(int index);
-		virtual Atom nextValue(int index);
+		virtual avmplus::Atom nextName(int index);
+		virtual avmplus::Atom nextValue(int index);
 		virtual int nextNameIndex(int index);
 
 		bool isUsingWeakKeys() const { return getHeapHashtable()->weakKeys(); }
@@ -77,7 +77,7 @@ namespace vtx { namespace as3 {
 			return *(avmplus::HeapHashtable**)(uintptr_t(this) + vtable->traits->getHashtableOffset());
 		}
 
-		Atom FASTCALL getKeyFromObject(Atom object) const;
+		avmplus::Atom FASTCALL getKeyFromObject(avmplus::Atom object) const;
 
 		CSP_SLOTS(Dictionary, flash_utils_);
 	};
