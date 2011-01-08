@@ -49,7 +49,7 @@ public:
 
 		if(!mWindow->isFullScreen())
 		{
-			mWindow->resize(width * 2, height * 2);
+			mWindow->resize(width, height);
 		}
 
 		const OIS::MouseState& ms = mouse->getMouseState();
@@ -287,7 +287,9 @@ int main(int argc, char **argv)
 	vtx::FileManager::getSingletonPtr()->addFileContainer("C:/Users/stone/Desktop/vtx_flash_test");
 	vtx::FileManager::getSingletonPtr()->addFileContainer("", "WebFileContainer");
 
-	//if(!ogre_root->restoreConfig())
+	VTX_LOAD_PLUGIN(vektrix_EditorPlugin);
+
+	if(!ogre_root->restoreConfig())
 	{
 		if(!ogre_root->showConfigDialog())
 		{
@@ -385,7 +387,8 @@ int main(int argc, char **argv)
 	//movie = (vtx::ogre::MovableMovie*)vektrix_root->createMovie("swf_movie", "dyn_text.swf", "OgreMovableMovie", &listener);
 	//movie->play();
 
-	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "button_test_as3.swf", "OgreMovableMovie", &movie_listener);
+	//movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("editor_movie", "vtx.ed.Editor", "OgreMovableMovie", &movie_listener);
+	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "button_test2.swf", "OgreMovableMovie", &movie_listener);
 	movie->play();
 
 	movie_node->attachObject(movie);

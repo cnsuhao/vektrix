@@ -34,9 +34,9 @@ THE SOFTWARE.
 #include "vtxThreadingDefines.h"
 #include "vtxThreadingHeaders.h"
 
-#define VTX_EXCEPT vtx::LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->line(__LINE__); LogManager::getSingletonPtr()->exception
-#define VTX_WARN vtx::LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->warning
-#define VTX_LOG vtx::LogManager::getSingletonPtr()->log
+#define VTX_EXCEPT(...)	{ vtx::LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->line(__LINE__); LogManager::getSingletonPtr()->exception(__VA_ARGS__); }
+#define VTX_WARN(...)	{ vtx::LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->warning(__VA_ARGS__); }
+#define VTX_LOG(...)	{ vtx::LogManager::getSingletonPtr()->log(__VA_ARGS__); }
 
 #ifdef _DEBUG
 #	define VTX_DEBUG vtx::LogManager::getSingletonPtr()->log

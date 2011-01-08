@@ -11,8 +11,10 @@ set (file_root__cmake_
 
 # Parser files
 set (file_root_parser
+	../include/vtxswfDataReader.h
 	../include/vtxswfParser.h
 	../include/vtxswfParserTypes.h
+	../src/vtxswfDataReader.cpp
 	../src/vtxswfParser.cpp
 )
 

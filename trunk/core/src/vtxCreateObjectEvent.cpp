@@ -42,31 +42,24 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	CreateObjectEvent::CreateObjectEvent(DisplayObjectContainer* container, File* source_file, 
-		const String& id, const uint& layer, const Matrix& matrix, const CXForm& cxform, const String& name) 
-		: FrameEvent(container), 
-		mSourceFile(source_file), 
-		mID(id), 
+	CreateObjectEvent::CreateObjectEvent(Resource* resource, const uint& layer, 
+		const Matrix& matrix, const CXForm& cxform, const String& name)
+		: mResource(resource), 
 		mLayer(layer), 
 		mMatrix(matrix), 
 		mCXForm(cxform), 
-		mName(name)
-	{
-
-	}
+		mName(name)	{}
 	//-----------------------------------------------------------------------
 	FrameEvent* CreateObjectEvent::clone(DisplayObjectContainer* container)
 	{
-		return new CreateObjectEvent(container, mSourceFile, mID, mLayer, mMatrix, mCXForm, mName);
+		CreateObjectEvent* evt = new CreateObjectEvent(mResource, mLayer, mMatrix, mCXForm, mName);
+		evt->mObjectContainer = container;
+		return evt;
 	}
 	//-----------------------------------------------------------------------
 	void CreateObjectEvent::execute()
 	{
-		Resource* resource = mSourceFile->getResource(mID);
-
-		if(!resource) return;
-
-		Instance* instance = mObjectContainer->getParent()->createInstance(resource);
+		Instance* instance = mObjectContainer->getParent()->createInstance(mResource);
 
 		//if(!instance/* // TODO: || !instance->isDisplayable()*/)
 		//{

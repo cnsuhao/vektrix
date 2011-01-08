@@ -169,16 +169,17 @@ namespace vtx { namespace freeimg {
 		file->addResource(material_res);
 		file->addResource(shape_res);
 
-		MovieClipResource* main_mc = new MovieClipResource("MainMovieClip");
+		MovieClipResource* main_mc = new MovieClipResource("0");
 		Timeline* timeline = new Timeline();
 		Keyframe* keyframe = new Keyframe();
 
 		keyframe->setIndex(0);
-		keyframe->addEvent(new CreateObjectEvent(NULL, file, shape_res->getID(), 0, Matrix(), CXForm()));
+		keyframe->addEvent(new CreateObjectEvent(shape_res, 0));
 		timeline->addKeyframe(keyframe);
 
 		main_mc->setTimeline(timeline);
 		file->setMainMovieClip(main_mc);
+		file->addResource(main_mc);
 
 		File::FileHeader header;
 		header.fps = 1;

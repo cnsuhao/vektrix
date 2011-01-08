@@ -79,7 +79,7 @@ namespace vtx { namespace as3 {
 
 			mTime = 0.0f;
 
-			Atom args[] = 
+			avmplus::Atom args[] = 
 			{
 				0, 
 				CSP_CORE->toScript("timer"), 
@@ -89,7 +89,7 @@ namespace vtx { namespace as3 {
 
 			avmplus::ScriptObject* evt = CSP_CORE->createObject("TimerEvent", "flash.events", args);
 
-			Atom dispatch_args[] = 
+			avmplus::Atom dispatch_args[] = 
 			{
 				0, 
 				evt->atom()

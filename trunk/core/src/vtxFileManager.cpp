@@ -137,10 +137,10 @@ namespace vtx
 			if(listener)
 			{
 				file_it->second->addListener(listener);
-			}
 
-			FileEvent evt(FileEvent::LOADING_COMPLETED, file_it->second);
-			listener->eventFired(evt);
+				FileEvent evt(FileEvent::LOADING_COMPLETED, file_it->second);
+				listener->eventFired(evt);
+			}
 
 			return file_it->second;
 		}
@@ -173,7 +173,7 @@ namespace vtx
 		if(!factory)
 		{
 			// no parser found
-			VTX_WARN("Unable to find parser to handle a file with extension '%s'.", file_extension.c_str());
+			VTX_WARN("Unable to find a parser to handle a file with extension '%s'.", file_extension.c_str());
 			return NULL;
 		}
 
@@ -205,6 +205,30 @@ namespace vtx
 		}
 
 		return file;
+	}
+	//-----------------------------------------------------------------------
+	bool FileManager::addFile(File* file)
+	{
+		FileMap::const_iterator it = mReadyFiles.find(file->getFilename());
+		if(it == mReadyFiles.end())
+		{
+			mReadyFiles.insert(std::make_pair(file->getFilename(), file));
+			return true;
+		}
+
+		return false;
+	}
+	//-----------------------------------------------------------------------
+	bool FileManager::removeFile(File* file)
+	{
+		FileMap::const_iterator it = mReadyFiles.find(file->getFilename());
+		if(it != mReadyFiles.end())
+		{
+			mReadyFiles.erase(it);
+			return true;
+		}
+
+		return false;
 	}
 	//-----------------------------------------------------------------------
 	FileStream* FileManager::getFileStream(const String& filename)

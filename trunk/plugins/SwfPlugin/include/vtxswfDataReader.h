@@ -26,31 +26,59 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxExecuteScript_H__
-#define __vtxExecuteScript_H__
+#ifndef __vtxswfDataReader_H__
+#define __vtxswfDataReader_H__
 
-#include "vtxPrerequisites.h"
-#include "vtxFrameEvent.h"
+#include "vtxswf.h"
+#include "vtxswfParserTypes.h"
 
-namespace vtx
-{
-	//-----------------------------------------------------------------------
-	class vtxExport ExecuteScriptEvent : public FrameEvent
+namespace vtx { namespace swf {
+	class DataReader
 	{
 	public:
-		ExecuteScriptEvent(ScriptResource* script_resource);
+		DataReader();
 
-		/** @copybrief FrameEvent::clone */
-		FrameEvent* clone(DisplayObjectContainer* container);
+		void reset();
 
-		/** @copybrief FrameEvent::execute */
-		void execute();
+		void init(char* buffer);
 
-	protected:
-		bool mExecuted;
-		ScriptResource* mScriptResource;
+		void setReadPosition(const uint& offset);
+		const uint& getReadPosition() const;
+
+		// read basic types
+		void skip(const uint& len);
+		UI8 readU8();
+		UI16 readU16();
+		UI32 readU32();
+		UI32 readUBits(UI32 n);
+		SI16 readS16();
+		int readSBits(UI32 n);
+		void readByteBlock(char* buf, UI32 n);
+
+		void resetReadBits();
+
+		RECT readRect();
+		COLOR readColor(const bool& alpha = false);
+		MATRIX readMatrix();
+		CXFORM readCxForm(const bool& alpha = false);
+		String readString(const bool& zero_terminated = true);
+		KERNINGRECORD readKerningRecord(const UI8& wide_codes);
+
+		// read shapes and fill-/line-styles
+		void readShape(const TagTypes& type, SHAPE& result);
+		void readShapeWithStyle(const TagTypes& type, SHAPE& result);
+		void readFillstyleArray(const TagTypes& type, FillstyleList& result);
+		void readLinestyleArray(const TagTypes& type, LinestyleList& result);
+
+	private:
+		uint mReadPos;
+		char* mBuffer;
+
+		int mBitPos;
+		int mBitBuf;
+
+		void fillReadBits();
 	};
-	//-----------------------------------------------------------------------
-}
+}}
 
 #endif

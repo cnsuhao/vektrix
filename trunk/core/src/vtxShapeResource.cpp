@@ -39,7 +39,7 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	ShapeResource::ShapeResource(const String& id) 
-		: Resource(id), 
+		: DisplayResource(id), 
 		mMaximumScale(Vector2(1, 1))
 	{
 

@@ -101,9 +101,9 @@ namespace vtx { namespace as3 {
 	avmplus::ScriptObject* FlashUtilsClass::finddef(const Multiname& multiname, DomainEnv* domainEnv)
 	{
 		Toplevel* tplvl = domainEnv->toplevel();
-		AvmCore* core = tplvl->core();
+		csp::VmCore* core = CSP_CORE_EX(tplvl->core());
 
-		ScriptEnv* script = core->domainMgr()->findScriptEnvInDomainEnvByMultiname(domainEnv, multiname);
+		ScriptEnv* script = (ScriptEnv*)core->getDomainEnv()->getScriptInit(multiname);
 
 		if(script == (ScriptEnv*)BIND_AMBIGUOUS)
 			tplvl->throwReferenceError(kAmbiguousBindingError, multiname);

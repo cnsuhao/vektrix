@@ -38,9 +38,8 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	ExecuteScriptEvent::ExecuteScriptEvent(DisplayObjectContainer* container, ScriptResource* script_resource) 
-		: FrameEvent(container), 
-		mExecuted(false), 
+	ExecuteScriptEvent::ExecuteScriptEvent(ScriptResource* script_resource) 
+		: mExecuted(false), 
 		mScriptResource(script_resource)
 	{
 
@@ -48,7 +47,9 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	FrameEvent* ExecuteScriptEvent::clone(DisplayObjectContainer* container)
 	{
-		return new ExecuteScriptEvent(container, mScriptResource);
+		ExecuteScriptEvent* evt = new ExecuteScriptEvent(mScriptResource);
+		evt->mObjectContainer = container;
+		return evt;
 	}
 	//-----------------------------------------------------------------------
 	void ExecuteScriptEvent::execute()
@@ -67,10 +68,10 @@ namespace vtx
 				mExecuted = true;
 			}
 			catch(std::exception& e)
-			{
 				VTX_EXCEPT(e.what());
-			}
 		}
+		else
+			VTX_WARN("No ScriptEngine was set to execute the given ScriptResource");
 	}
 	//-----------------------------------------------------------------------
 }

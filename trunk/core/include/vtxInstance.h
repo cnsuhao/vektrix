@@ -30,6 +30,7 @@ THE SOFTWARE.
 #define __vtxInstance_H__
 
 #include "vtxPrerequisites.h"
+#include "vtxEventDispatcher.h"
 #include "vtxEventListener.h"
 #include "vtxFactory.h"
 
@@ -37,7 +38,7 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	/** Base class for everything visual, audible, etc that can be created by a Movie instance */
-	class vtxExport Instance : public EventListener
+	class vtxExport Instance : public EventListener, public EventDispatcher
 	{
 	public:
 		Instance();

@@ -32,16 +32,17 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	RemoveObjectEvent::RemoveObjectEvent(DisplayObjectContainer* container, const uint& layer) 
-		: FrameEvent(container), 
-		mLayer(layer)
+	RemoveObjectEvent::RemoveObjectEvent(const uint& layer) 
+		: mLayer(layer)
 	{
 
 	}
 	//-----------------------------------------------------------------------
 	FrameEvent* RemoveObjectEvent::clone(DisplayObjectContainer* container)
 	{
-		return new RemoveObjectEvent(container, mLayer);
+		RemoveObjectEvent* evt = new RemoveObjectEvent(mLayer);
+		evt->mObjectContainer = container;
+		return evt;
 	}
 	//-----------------------------------------------------------------------
 	void RemoveObjectEvent::execute()

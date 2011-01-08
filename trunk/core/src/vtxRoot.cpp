@@ -168,12 +168,10 @@ namespace vtx
 			Movie* movie = factory->createObject(name);
 			//movie->goto_frame(1);
 
-			FileManager::getSingletonPtr()->getFile(filename, true, movie);
-
 			if(listener)
-			{
 				movie->addListener(listener);
-			}
+
+			FileManager::getSingletonPtr()->getFile(filename, true, movie);
 
 			mMovies.insert(MovieMap::value_type(name, movie));
 			return movie;

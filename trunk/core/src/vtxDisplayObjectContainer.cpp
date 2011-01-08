@@ -303,6 +303,9 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void DisplayObjectContainer::eventFired(const Event& evt)
 	{
+		// TODO: evtl. unify eventFired vs. dispatchEvent
+		dispatchEvent(evt);
+
 		if(evt.getCategory() != FocusEvent::CATEGORY)
 		{
 			LayerMap::iterator it = mLayers.begin();

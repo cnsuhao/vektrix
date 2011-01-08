@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os, glob
-import sys;
+import sys
 
 def compile_class(clazz):
 	cmd = "python %CASPIN_HOME%/tools/cspcompile.py " + clazz + " " + clazz + ".as"
@@ -23,7 +23,7 @@ def compile(output, input):
 
 def generate(package, dependencies):
 	namespace = package.replace("_", "::")
-	if os.system("python %CASPIN_HOME%/tools/cspgenerate.py " + package + " --native-id-namespace vtx::as3::" + namespace + " " + dependencies) != 0:
+	if os.system("python %CASPIN_HOME%/tools/cspgenerate.py " + package + " " + dependencies) != 0:
 		exit(1)
 
 if len(sys.argv) < 2 or sys.argv[1] != "multi":

@@ -39,7 +39,7 @@ namespace vtx
 	class vtxExport RemoveObjectEvent : public FrameEvent
 	{
 	public:
-		RemoveObjectEvent(DisplayObjectContainer* container, const uint& layer);
+		RemoveObjectEvent(const uint& layer);
 
 		/** @copybrief FrameEvent::clone */
 		FrameEvent* clone(DisplayObjectContainer* container);

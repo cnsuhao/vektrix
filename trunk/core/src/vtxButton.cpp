@@ -75,9 +75,7 @@ namespace vtx
 		clearLayers();
 
 		if(mParentMovie)
-		{
 			mUp->execute();
-		}
 	}
 	//-----------------------------------------------------------------------
 	const String& Button::getType() const
@@ -93,21 +91,20 @@ namespace vtx
 		{
 			const MouseEvent& mouse_evt = static_cast<const MouseEvent&>(evt);
 
-			//if(isPointInside(Vector2(mouse_evt.stageX, mouse_evt.stageY)))
+			if(evt.getType() == MouseEvent::MOUSE_DOWN)
 			{
-				if(evt.getType() == MouseEvent::MOUSE_DOWN)
-				{
-					clearLayers();
-					mDown->execute();
-				}
-				else if(evt.getType() == MouseEvent::MOUSE_UP)
-				{
-					clearLayers();
-					mOver->execute();
-				}
+				clearLayers();
+				mDown->execute();
 			}
+			else if(evt.getType() == MouseEvent::MOUSE_UP)
+			{
+				clearLayers();
+				mOver->execute();
 
-			if(evt.getType() == MouseEvent::MOUSE_OVER)
+				if(mPrevMouseState == MS_IN_DOWN)
+					dispatchEvent(MouseEvent(MouseEvent::CLICK));
+			}
+			else if(evt.getType() == MouseEvent::MOUSE_OVER)
 			{
 				clearLayers();
 				mOver->execute();
@@ -117,7 +114,7 @@ namespace vtx
 				clearLayers();
 				mUp->execute();
 			}
-		}
+		} // MouseEvent::CATEGORY
 	}
 	//-----------------------------------------------------------------------
 }

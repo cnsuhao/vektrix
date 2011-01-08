@@ -40,7 +40,8 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	InteractiveObject::InteractiveObject() 
 		: mHasFocus(false), 
-		mMouseState(MS_OUT_UP)
+		mMouseState(MS_OUT_UP), 
+		mPrevMouseState(MS_OUT_UP)
 	{
 
 	}
@@ -66,7 +67,7 @@ namespace vtx
 					mScriptObject->eventFired(evt);
 				}
 
-				mMouseState = MS_IN_UP;
+				changeMouseState(MS_IN_UP);
 			}
 		}
 		else
@@ -81,7 +82,7 @@ namespace vtx
 					mScriptObject->eventFired(evt);
 				}
 
-				mMouseState = MS_OUT_UP;
+				changeMouseState(MS_OUT_UP);
 			}
 		}
 	}
@@ -106,20 +107,33 @@ namespace vtx
 					}
 				}
 
+				if(mMouseState == MS_IN_UP)
+					changeMouseState(MS_IN_DOWN);
+
 				if(mScriptObject)
-				{
 					mScriptObject->eventFired(evt);
-				}
 
 			} // MOUSE_DOWN
-			else if(evt.getType() == MouseEvent::MOUSE_UP || evt.getType() == MouseEvent::MOUSE_MOVE)
+
+			else if(evt.getType() == MouseEvent::MOUSE_UP)
+			{
+				if(mMouseState == MS_IN_DOWN)
+					changeMouseState(MS_IN_UP);
+
+				if(mScriptObject)
+					mScriptObject->eventFired(evt);
+
+			} // MOUSE_UP
+
+			else if(evt.getType() == MouseEvent::MOUSE_MOVE)
 			{
 				if(mScriptObject)
-				{
 					mScriptObject->eventFired(evt);
-				}
-			}
+
+			} // MOUSE_MOVE
+
 		} // MouseEvents
+
 		else if(evt.getCategory() == FocusEvent::CATEGORY)
 		{
 			if(evt.getType() == FocusEvent::FOCUS_OUT)
@@ -139,6 +153,12 @@ namespace vtx
 				mScriptObject->eventFired(evt);
 			}
 		}
+	}
+	//-----------------------------------------------------------------------
+	void InteractiveObject::changeMouseState(const MouseState& new_state)
+	{
+		mPrevMouseState = mMouseState;
+		mMouseState = new_state;
 	}
 	//-----------------------------------------------------------------------
 }

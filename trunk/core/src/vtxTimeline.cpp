@@ -81,6 +81,14 @@ namespace vtx
 		mKeyframes.push_back(frame);
 	}
 	//-----------------------------------------------------------------------
+	Keyframe* Timeline::getKeyframe(const uint& index) const
+	{
+		if(index >= mKeyframes.size())
+			return NULL;
+
+		return mKeyframes.at(index);
+	}
+	//-----------------------------------------------------------------------
 	void Timeline::clear()
 	{
 		mPlaying = false;

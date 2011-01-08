@@ -133,7 +133,6 @@ package flash.display
 				var frame_script:Function = mFrameScripts[currentFrame-1];
 				if(frame_script != null)
 				{
-					trace(frame_script);
 					frame_script();
 					//frame_script.call(frame_script);
 				}

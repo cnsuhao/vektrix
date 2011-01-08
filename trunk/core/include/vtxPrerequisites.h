@@ -90,6 +90,11 @@ THE SOFTWARE.
 # define R_OK 4
 #endif
 
+#define for_each(var, type, container) \
+	type::iterator var = container.begin(); \
+	type::iterator var##_end = container.end(); \
+	for( ; var != var##_end; ++var)
+
 /** The root namespace of the vektrix library */
 namespace vtx
 {
@@ -102,6 +107,8 @@ namespace vtx
 	class ButtonResource;
 	class ButtonState;
 	class Color;
+	class CppScriptEngine;
+	class CppScriptEngineFactory;
 	class CXForm;
 	class DefaultFileContainer;
 	class DefaultFileContainerFactory;

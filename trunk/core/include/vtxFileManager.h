@@ -65,6 +65,9 @@ namespace vtx
 		/** Request to load a File by filename */
 		File* getFile(const String& filename, const bool& threadedParsing = false, EventListener* listener = NULL);
 
+		bool addFile(File* file);
+		bool removeFile(File* file);
+
 		/** Open a new FileStream */
 		FileStream* getFileStream(const String& filename);
 

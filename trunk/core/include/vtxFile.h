@@ -100,6 +100,14 @@ namespace vtx
 		/** Get the MovieClipResource which defines the main MovieClip for related Movie instances */
 		MovieClipResource* getMainMovieClip();
 
+		template<class T>
+		T* createResource(const String& id)
+		{
+			T* res = new T(id);
+			addResource(res);
+			return res;
+		}
+
 		/** Add a Resource instance to this File */
 		void addResource(Resource* res);
 

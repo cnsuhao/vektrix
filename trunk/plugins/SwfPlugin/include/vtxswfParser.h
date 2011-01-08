@@ -31,6 +31,7 @@ THE SOFTWARE.
 
 #include "vtxswf.h"
 #include "vtxswfContourElement.h"
+#include "vtxswfDataReader.h"
 #include "vtxswfParserTypes.h"
 
 #include "vtxFile.h"
@@ -41,7 +42,7 @@ THE SOFTWARE.
 
 namespace vtx { namespace swf {
 	//-----------------------------------------------------------------------
-	class SwfParser : public FileParser
+	class SwfParser : public FileParser, public DataReader
 	{
 	public:
 		SwfParser();
@@ -53,16 +54,11 @@ namespace vtx { namespace swf {
 		File* getCurrentFile() const { return mCurrentFile; }
 		const uint& getFileLength() const { return mFileLength; }
 		const UI8& getSwfVersion() const { return mSWFVersion; }
-		const uint& getReadPosition() const { return mReadPos; }
 		File::FileHeader& getHeader() { return mHeader; }
 
 	protected:
 		bool mCompressed;
-		uint mReadPos;
 		char* mBuffer;
-
-		int mBitPos;
-		int mBitBuf;
 
 		UI32 mFileLength;
 		UI8 mSWFVersion;
@@ -85,35 +81,6 @@ namespace vtx { namespace swf {
 
 		void debug_contour_element(const ContourElement& element, FILE* file);
 		void debug_shape_element(const ShapeElement& element, FILE* file);
-
-	public:
-		// read basic types
-		void skip(const uint& len);
-		UI8 readU8();
-		UI16 readU16();
-		UI32 readU32();
-		UI32 readUBits(UI32 n);
-		SI16 readS16();
-		int readSBits(UI32 n);
-		void readByteBlock(char* buf, UI32 n);
-
-		void resetReadBits();
-
-		RECT readRect();
-		COLOR readColor(const bool& alpha = false);
-		MATRIX readMatrix();
-		CXFORM readCxForm(const bool& alpha = false);
-		String readString(const bool& zero_terminated = true);
-		KERNINGRECORD readKerningRecord(const UI8& wide_codes);
-
-		// read shapes and fill-/line-styles
-		void readShape(const TagTypes& type, SHAPE& result);
-		void readShapeWithStyle(const TagTypes& type, SHAPE& result);
-		void readFillstyleArray(const TagTypes& type, FillstyleList& result);
-		void readLinestyleArray(const TagTypes& type, LinestyleList& result);
-
-	protected:
-		void fillReadBits();
 	};
 	//-----------------------------------------------------------------------
 	/** The FileParserFactory for creating FileParser objects */

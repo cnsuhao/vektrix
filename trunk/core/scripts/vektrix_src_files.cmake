@@ -97,7 +97,6 @@ set (file_root_debugging
 # Events files
 set (file_root_events
 	../include/vtxEvent.h
-	../include/vtxEventListener.h
 	../include/vtxFileEvent.h
 	../include/vtxFocusEvent.h
 	../include/vtxKeyCodes.h
@@ -108,6 +107,13 @@ set (file_root_events
 	../src/vtxFocusEvent.cpp
 	../src/vtxKeyboardEvent.cpp
 	../src/vtxMouseEvent.cpp
+)
+
+# Events -> Interfaces files
+set (file_root_events_interfaces
+	../include/vtxEventDispatcher.h
+	../include/vtxEventListener.h
+	../src/vtxEventDispatcher.cpp
 )
 
 # Files files
@@ -332,6 +338,12 @@ set (file_root_scripting
 	../src/vtxScriptObject.cpp
 )
 
+# Scripting -> C++ Scripts files
+set (file_root_scripting_c++_scripts
+	../include/vtxCppScriptEngine.h
+	../src/vtxCppScriptEngine.cpp
+)
+
 # Threading files
 set (file_root_threading
 	../include/vtxInterLockedType.h
@@ -402,6 +414,7 @@ source_group("Common\\Helpers\\OS"                  FILES ${file_root_common_hel
 source_group("Common\\Templates"                    FILES ${file_root_common_templates})
 source_group("Debugging"                            FILES ${file_root_debugging})
 source_group("Events"                               FILES ${file_root_events})
+source_group("Events\\Interfaces"                   FILES ${file_root_events_interfaces})
 source_group("Files"                                FILES ${file_root_files})
 source_group("Files\\Default Impl"                  FILES ${file_root_files_default_impl})
 source_group("Files\\General"                       FILES ${file_root_files_general})
@@ -434,6 +447,7 @@ source_group("Resources\\Resource Types\\Script"    FILES ${file_root_resources_
 source_group("Resources\\Resource Types\\Shape"     FILES ${file_root_resources_resource_types_shape})
 source_group("Resources\\Resource Types\\Text"      FILES ${file_root_resources_resource_types_text})
 source_group("Scripting"                            FILES ${file_root_scripting})
+source_group("Scripting\\C++ Scripts"               FILES ${file_root_scripting_c++_scripts})
 source_group("Threading"                            FILES ${file_root_threading})
 source_group("Threading\\Defines"                   FILES ${file_root_threading_defines})
 source_group("Threading\\File Loading"              FILES ${file_root_threading_file_loading})
@@ -454,6 +468,7 @@ set (file_root
 	${file_root_common_templates}
 	${file_root_debugging}
 	${file_root_events}
+	${file_root_events_interfaces}
 	${file_root_files}
 	${file_root_files_default_impl}
 	${file_root_files_general}
@@ -486,6 +501,7 @@ set (file_root
 	${file_root_resources_resource_types_shape}
 	${file_root_resources_resource_types_text}
 	${file_root_scripting}
+	${file_root_scripting_c++_scripts}
 	${file_root_threading}
 	${file_root_threading_defines}
 	${file_root_threading_file_loading}

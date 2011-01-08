@@ -26,31 +26,29 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxExecuteScript_H__
-#define __vtxExecuteScript_H__
+#ifndef __vtxEventDispatcher_H__
+#define __vtxEventDispatcher_H__
 
 #include "vtxPrerequisites.h"
-#include "vtxFrameEvent.h"
 
 namespace vtx
 {
-	//-----------------------------------------------------------------------
-	class vtxExport ExecuteScriptEvent : public FrameEvent
+	class vtxExport EventDispatcher
 	{
 	public:
-		ExecuteScriptEvent(ScriptResource* script_resource);
+		typedef std::map<EventListener*, EventListener*> ListenerMap;
 
-		/** @copybrief FrameEvent::clone */
-		FrameEvent* clone(DisplayObjectContainer* container);
+		/** Add a Listener to this object */
+		bool addListener(EventListener* listener);
 
-		/** @copybrief FrameEvent::execute */
-		void execute();
+		/** Remove a Listener from this object */
+		bool removeListener(EventListener* listener);
+
+		void dispatchEvent(const Event& evt);
 
 	protected:
-		bool mExecuted;
-		ScriptResource* mScriptResource;
+		ListenerMap mListeners;
 	};
-	//-----------------------------------------------------------------------
 }
 
 #endif
