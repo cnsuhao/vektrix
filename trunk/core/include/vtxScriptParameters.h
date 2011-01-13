@@ -43,55 +43,135 @@ namespace vtx
 		SPT_int, 
 		SPT_float, 
 		SPT_double, 
-		SPT_String, 
-		SPT_WString, 
+		SPT_string, 
+		SPT_wstring, 
 		SPT_Object, 
 		SPT_Null
 	};
 	//-----------------------------------------------------------------------
-#define ScriptParamInternalType(container, kind) \
-	ScriptParam(const kind& val) { type_ = SPT_##kind; container##.##kind##_ = val; } \
-	ScriptParam& operator= (const kind& val) { type_ = SPT_##kind; container##.##kind##_ = val; return *this; } \
+#define ScriptParamInternalType(kind) \
+	ScriptParam(const kind& val) \
+	{ \
+		_type = SPT_##kind; \
+		_data.##kind##_ = val; \
+	} \
+	ScriptParam& operator= (const kind& val) \
+	{ \
+		_type = SPT_##kind; \
+		_data.##kind##_ = val; \
+		return *this; \
+	} \
 	inline const kind& kind##Value() const \
-	{ if(type_ != SPT_##kind) VTX_WARN("Requested type '%s' but ScriptParam type is '%d'", #kind, type_); return container##.##kind##_; }
+	{ \
+		if(_type != SPT_##kind) \
+			VTX_WARN("Requested type '%s' but ScriptParam type is '%d'", #kind, _type); return _data.##kind##_; \
+	}
 	//-----------------------------------------------------------------------
-#define ScriptParamInternalTypeAlias(container, kind, alias) \
-	ScriptParam(alias val) { type_ = SPT_##kind; container##.##kind##_ = val; } \
-	ScriptParam& operator= (alias val) { type_ = SPT_##kind; container##.##kind##_ = val; return *this; }
+#define ScriptParamCopyString(dest, src, chr, fns) \
+	dest = new chr[(fns##len(src) + 1) * sizeof(chr)]; \
+	fns##cpy(dest, src)
+	//-----------------------------------------------------------------------
+#define ScriptParamInternalStringType(kind, chr, fns) \
+	ScriptParam(const chr* val) \
+	{ \
+		_type = SPT_##kind; \
+		ScriptParamCopyString(_data.##kind##_, val, chr, fns); \
+	} \
+	ScriptParam& operator= (const chr* val) \
+	{ \
+		_type = SPT_##kind; \
+		ScriptParamCopyString(_data.##kind##_, val, chr, fns); \
+		return *this; \
+	} \
+	inline chr* kind##Value() const \
+	{ \
+		if(_type != SPT_##kind) \
+			VTX_WARN("Requested type '%s' but ScriptParam type is '%d'", #kind, _type); \
+		return _data.##kind##_; \
+	}
 	//-----------------------------------------------------------------------
 	class vtxExport ScriptParam
 	{
 	public:
-		ScriptParam() { const_cast<ScriptParam&>(Null).type_ = SPT_Null; }
-
+		//-----------------------------------------------------------------------
 		static const ScriptParam Null;
+		//-----------------------------------------------------------------------
+		ScriptParam()
+		{
+			const_cast<ScriptParam&>(Null)._type = SPT_Null;
+		}
+		//-----------------------------------------------------------------------
+		ScriptParam(const ScriptParam& src)
+		{
+			_type = src._type;
 
-		inline const uchar& type() const { return type_; }
+			if(_type == SPT_string)
+			{ 
+				ScriptParamCopyString(_data.string_, src._data.string_, char, str);
+			}
+			else if(_type == SPT_wstring)
+			{
+				ScriptParamCopyString(_data.wstring_, src._data.wstring_, wchar_t, wcs);
+			}
+			else
+				_data = src._data;
+		}
+		//-----------------------------------------------------------------------
+		virtual ~ScriptParam()
+		{
+			if(_type == SPT_string)
+				delete[] (_data.string_);
 
-		ScriptParamInternalType(_b, bool);
-		ScriptParamInternalType(_b, int);
-		ScriptParamInternalType(_b, double);
-		ScriptParamInternalType(_s, String);
-		ScriptParamInternalType(_s, WString);
+			else if(_type == SPT_wstring)
+				delete[] (_data.wstring_);
+		}
+		//-----------------------------------------------------------------------
+		ScriptParam(const String& val)
+		{
+			_type = SPT_string;
+			ScriptParamCopyString(_data.string_, val.c_str(), char, str);
+		}
+		//-----------------------------------------------------------------------
+		ScriptParam& operator= (const String& val)
+		{
+			_type = SPT_string;
+			ScriptParamCopyString(_data.string_, val.c_str(), char, str);
+			return *this;
+		}
+		//-----------------------------------------------------------------------
+		ScriptParam(const WString& val)
+		{
+			_type = SPT_wstring;
+			ScriptParamCopyString(_data.wstring_, val.c_str(), wchar_t, wcs);
+		}
+		//-----------------------------------------------------------------------
+		ScriptParam& operator= (const WString& val)
+		{
+			_type = SPT_wstring;
+			ScriptParamCopyString(_data.wstring_, val.c_str(), wchar_t, wcs);
+			return *this;
+		}
+		//-----------------------------------------------------------------------
+		inline const uchar& type() const { return _type; }
+		//-----------------------------------------------------------------------
+		ScriptParamInternalType(bool);
+		ScriptParamInternalType(int);
+		ScriptParamInternalType(double);
 
-		ScriptParamInternalTypeAlias(_s, String, const char*);
-		ScriptParamInternalTypeAlias(_s, WString, const wchar_t*);
+		ScriptParamInternalStringType(string, char, str);
+		ScriptParamInternalStringType(wstring, wchar_t, wcs);
 
 	private:
-		uchar type_;
+		uchar _type;
 
-		union _base_types
+		union _data_types
 		{
 			bool bool_;
 			int int_;
 			double double_;
-		} _b;
-
-		struct _string_types
-		{
-			String String_;
-			WString WString_;
-		} _s;
+			char* string_;
+			wchar_t* wstring_;
+		} _data;
 	};
 	//-----------------------------------------------------------------------
 	class ScriptParamObject

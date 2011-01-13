@@ -288,8 +288,8 @@ namespace vtx { namespace as3 {
 			return mVmCore->toScript(param.intValue());
 			break;
 
-		case SPT_String:
-			return mVmCore->toScript(param.StringValue());
+		case SPT_string:
+			return mVmCore->toScript(param.stringValue());
 			break;
 		}
 
