@@ -50,7 +50,7 @@ public:
 				args[1].intValue() << ", " << 
 				args[2].intValue() << ", " << 
 				args[3].doubleValue() << ", " << 
-				args[4].StringValue() << 
+				args[4].stringValue() << 
 				");" << std::endl;
 		}
 
@@ -232,7 +232,7 @@ public:
 			args.push_back(54.321);
 			args.push_back("hello world!");
 			vtx::ScriptParam result = movie->getScriptEngine()->callScriptFunction("setValuesFromCpp", args);
-			std::cout << "return value from AS3: " << result.StringValue() << std::endl;
+			std::cout << "return value from AS3: " << result.stringValue() << std::endl;
 		}
 
 		return true;
