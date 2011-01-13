@@ -43,12 +43,18 @@ namespace vtx { namespace as3 {
 	/** The ScriptEngine that wraps the Adobe ActionScript 3 virtual machine */
 	class AS3ScriptEngine : public ScriptEngine, public csp::OutputListener
 	{
+		friend class ExternalInterfaceClass;
+
 	public:
+		typedef std::map<String, avmplus::FunctionObject*> FunctionMap;
+
 		AS3ScriptEngine(Movie* parent);
 		virtual ~AS3ScriptEngine();
 
 		/** @copybrief ScriptEngine::executeCode */
 		bool executeCode(ScriptResource* resource);
+
+		ScriptParam callScriptFunction(const String& function_name, const ScriptParamList& args);
 
 		/** @copybrief ScriptEngine::getRootScriptObject */
 		ScriptObject* getRootScriptObject(vtx::MovieClip* movieclip);
@@ -65,11 +71,16 @@ namespace vtx { namespace as3 {
 		csp::VmCore* mVmCore;
 		as3::MovieClip* mRootObject;
 		swf::ScriptResource* mScriptResource;
-
 		Instance* mQueuedInstance;
+		FunctionMap mCallableFunctions;
 
 		/** Receive output from the ActionScript 3 virtual machine */
 		void output(const String& message);
+
+		void addScriptFunction(const String& function_name, avmplus::FunctionObject* function);
+
+		ScriptParam atomToParam(avmplus::Atom atom);
+		avmplus::Atom paramToAtom(ScriptParam param);
 	};
 	//-----------------------------------------------------------------------
 	FactoryImpl_P1(AS3ScriptEngine, ScriptEngine, Movie*);

@@ -137,22 +137,22 @@ namespace vtx { namespace swf {
 	//-----------------------------------------------------------------------
 	enum EditTextFlag
 	{
-		ETF_HasText			= 0x8000, 
-		ETF_WordWrap		= 0x4000, 
-		ETF_Multiline		= 0x2000, 
-		ETF_Password		= 4096, 
-		ETF_ReadOnly		= 2048, 
-		ETF_HasTextColor	= 1024, 
-		ETF_HasMaxLength	= 512, 
-		ETF_HasFont			= 256, 
-		ETF_HasFontClass	= 128, 
-		ETF_AutoSize		= 64, 
-		ETF_HasLayout		= 32, 
-		ETF_NoSelect		= 16, 
-		ETF_Border			= 8, 
-		ETF_WasStatic		= 4, 
-		ETF_HTML			= 2, 
-		ETF_UseOutlines		= 1
+		ETF_HasText			= 128,
+		ETF_WordWrap		= 64, 
+		ETF_Multiline		= 32, 
+		ETF_Password		= 16, 
+		ETF_ReadOnly		= 8, 
+		ETF_HasTextColor	= 4, 
+		ETF_HasMaxLength	= 2, 
+		ETF_HasFont			= 1, 
+		ETF_HasFontClass	= 128 << 8, 
+		ETF_AutoSize		= 64 << 8, 
+		ETF_HasLayout		= 32 << 8, 
+		ETF_NoSelect		= 16 << 8, 
+		ETF_Border			= 8 << 8, 
+		ETF_WasStatic		= 4 << 8, 
+		ETF_HTML			= 2 << 8, 
+		ETF_UseOutlines		= 1 << 8
 	};
 	//-----------------------------------------------------------------------
 	class RECT
@@ -246,6 +246,7 @@ namespace vtx { namespace swf {
 		COLOR color;
 		GradientMap gradient;
 		MATRIX matrix;
+		UI16 bitmapId;
 	};
 	typedef std::vector<FILLSTYLE> FillstyleList;
 	typedef std::map<uint, FILLSTYLE> FillstyleMap;

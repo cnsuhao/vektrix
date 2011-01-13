@@ -95,6 +95,11 @@ THE SOFTWARE.
 	type::iterator var##_end = container.end(); \
 	for( ; var != var##_end; ++var)
 
+#define for_each_const(var, type, container) \
+	type::const_iterator var = container.begin(); \
+	type::const_iterator var##_end = container.end(); \
+	for( ; var != var##_end; ++var)
+
 /** The root namespace of the vektrix library */
 namespace vtx
 {
@@ -164,9 +169,11 @@ namespace vtx
 	class RectF;
 	class Resource;
 	class Root;
+	class ScriptCallbackListener;
 	class ScriptEngine;
 	class ScriptEngineFactory;
 	class ScriptObject;
+	class ScriptParam;
 	class ScriptResource;
 	class Shape;
 	class ShapeElement;

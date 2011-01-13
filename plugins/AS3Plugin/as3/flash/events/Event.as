@@ -28,13 +28,13 @@ THE SOFTWARE.
 
 package flash.events
 {
-	const DEBUG_EVENT:Boolean = false;
-
 	//import flash.display.InteractiveObject;
 
 	[native(cls="::vtx::as3::EventClass", instance="::vtx::as3::Event", methods="auto")]
 	public class Event
 	{
+		const DEBUG_EVENT:Boolean = false;
+
 		public static const ACTIVATE:String = "activate";
 		public static const ADDED:String = "added";
 		public static const ADDED_TO_STAGE:String = "addedToStage";

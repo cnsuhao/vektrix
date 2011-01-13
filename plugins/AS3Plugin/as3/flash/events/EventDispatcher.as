@@ -28,14 +28,13 @@ THE SOFTWARE.
 
 package flash.events
 {
-	const DEBUG_EVENTDISPATCHER = false;
-
 	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
 	
 	[native(cls="::vtx::as3::EventDispatcherClass", instance="::vtx::as3::EventDispatcher", methods="auto")]
 	public class EventDispatcher implements IEventDispatcher
 	{
+		const DEBUG_EVENTDISPATCHER = false;
 		//-----------------------------------------------------------------------
 		private var mTarget:IEventDispatcher;
 		private var mHandlers:Dictionary;

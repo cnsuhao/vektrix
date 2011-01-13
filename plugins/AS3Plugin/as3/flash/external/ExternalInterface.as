@@ -26,38 +26,21 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxScriptEngine.h"
-
-namespace vtx
+package flash.external
 {
-	//-----------------------------------------------------------------------
-	const ScriptParam ScriptParam::Null;
-	//-----------------------------------------------------------------------
-	ScriptEngine::ScriptEngine(Movie* parent) 
-		: mParent(parent), 
-		mCallbackListener(NULL)
+	[native(cls="::vtx::as3::ExternalInterfaceClass", methods="auto")]
+	public final class ExternalInterface
 	{
+		/* attributes */
+		public static var marshallExceptions:Boolean = false;
 
-	}
-	//-----------------------------------------------------------------------
-	ScriptEngine::~ScriptEngine()
-	{
+		/* getters & setters */
+		public native static function get available():Boolean;
+		public static function get objectID():String
+		{ return "" }
 
+		/* methods */
+		public native static function addCallback(functionName:String, closure:Function):void;
+		public native static function call(functionName:String, ... arguments):*;
 	}
-	//-----------------------------------------------------------------------
-	void ScriptEngine::setCallbackListener(ScriptCallbackListener* listener)
-	{
-		mCallbackListener = listener;
-	}
-	//-----------------------------------------------------------------------
-	ScriptCallbackListener* ScriptEngine::getCallbackListener() const
-	{
-		return mCallbackListener;
-	}
-	//-----------------------------------------------------------------------
-	Movie* ScriptEngine::getParentMovie() const
-	{
-		return mParent;
-	}
-	//-----------------------------------------------------------------------
 }

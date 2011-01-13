@@ -28,14 +28,13 @@ THE SOFTWARE.
 
 package flash.display
 {
-	const DEBUG_MOVIECLIP = false;
-
 	import flash.events.Event;
 	import flash.utils.Dictionary;
 	//-----------------------------------------------------------------------
 	[native(cls="::vtx::as3::MovieClipClass", instance="::vtx::as3::MovieClip", methods="auto")]
 	public dynamic class MovieClip extends Sprite
 	{
+		const DEBUG_MOVIECLIP = false;
 		//-----------------------------------------------------------------------
 		private var mFrameScripts:Dictionary;
 		//-----------------------------------------------------------------------

@@ -31,6 +31,7 @@ THE SOFTWARE.
 
 #include "vtxPrerequisites.h"
 #include "vtxFactory.h"
+#include "vtxScriptParameters.h"
 
 namespace vtx
 {
@@ -54,11 +55,18 @@ namespace vtx
 		/** Destroy the given ScriptObject */
 		virtual void destroyScriptObject(ScriptObject* script_object) = 0;
 
+		virtual ScriptParam callScriptFunction(const String& function_name, const ScriptParamList& args = ScriptParamList()) { return ScriptParam::Null; }
+
+		void setCallbackListener(ScriptCallbackListener* listener);
+
+		ScriptCallbackListener* getCallbackListener() const;
+
 		/** Get the Movie that uses this ScriptEngine */
 		Movie* getParentMovie() const;
 
 	protected:
 		Movie* mParent;
+		ScriptCallbackListener* mCallbackListener;
 	};
 	//-----------------------------------------------------------------------
 	/** The Factory for creating ScriptEngine objects */

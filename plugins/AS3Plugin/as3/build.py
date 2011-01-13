@@ -31,6 +31,7 @@ if len(sys.argv) < 2 or sys.argv[1] != "multi":
 	"flash/accessibility/*.as", 
 	"flash/display/*.as", 
 	"flash/events/*.as", 
+	"flash/external/*.as", 
 	"flash/filters/*.as", 
 	"flash/geom/*.as", 
 	"flash/media/*.as", 

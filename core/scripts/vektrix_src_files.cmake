@@ -254,6 +254,16 @@ set (file_root_instances_management
 	../src/vtxInstancePool.cpp
 )
 
+# Networking files
+set (file_root_networking
+	../include/vtxNetClient.h
+	../include/vtxNetPacket.h
+	../include/vtxNetServer.h
+	../src/vtxNetClient.cpp
+	../src/vtxNetPacket.cpp
+	../src/vtxNetServer.cpp
+)
+
 # Platforms files
 set (file_root_platforms
 	../include/vtxLinux.h
@@ -332,8 +342,10 @@ set (file_root_resources_resource_types_text
 
 # Scripting files
 set (file_root_scripting
+	../include/vtxScriptCallbackListener.h
 	../include/vtxScriptEngine.h
 	../include/vtxScriptObject.h
+	../include/vtxScriptParameters.h
 	../src/vtxScriptEngine.cpp
 	../src/vtxScriptObject.cpp
 )
@@ -434,6 +446,7 @@ source_group("Instances\\Instance Types\\Text"      FILES ${file_root_instances_
 source_group("Instances\\Instance Types\\Texture"   FILES ${file_root_instances_instance_types_texture})
 source_group("Instances\\Interfaces"                FILES ${file_root_instances_interfaces})
 source_group("Instances\\Management"                FILES ${file_root_instances_management})
+source_group("Networking"                           FILES ${file_root_networking})
 source_group("Platforms"                            FILES ${file_root_platforms})
 source_group("Resources"                            FILES ${file_root_resources})
 source_group("Resources\\Interfaces"                FILES ${file_root_resources_interfaces})
@@ -488,6 +501,7 @@ set (file_root
 	${file_root_instances_instance_types_texture}
 	${file_root_instances_interfaces}
 	${file_root_instances_management}
+	${file_root_networking}
 	${file_root_platforms}
 	${file_root_resources}
 	${file_root_resources_interfaces}

@@ -76,6 +76,13 @@ set (file_root_as3_classes_flash_events
 	../src/vtxas3MouseEvent.cpp
 )
 
+# AS3 classes -> flash -> external files
+set (file_root_as3_classes_flash_external
+	../as3/flash/external/ExternalInterface.as
+	../include/vtxas3ExternalInterface.h
+	../src/vtxas3ExternalInterface.cpp
+)
+
 # AS3 classes -> flash -> filters files
 set (file_root_as3_classes_flash_filters
 	../as3/flash/filters/BitmapFilter.as
@@ -194,6 +201,7 @@ source_group("AS3 classes\\flash"                FILES ${file_root_as3_classes_f
 source_group("AS3 classes\\flash\\accessibility" FILES ${file_root_as3_classes_flash_accessibility})
 source_group("AS3 classes\\flash\\display"       FILES ${file_root_as3_classes_flash_display})
 source_group("AS3 classes\\flash\\events"        FILES ${file_root_as3_classes_flash_events})
+source_group("AS3 classes\\flash\\external"      FILES ${file_root_as3_classes_flash_external})
 source_group("AS3 classes\\flash\\filters"       FILES ${file_root_as3_classes_flash_filters})
 source_group("AS3 classes\\flash\\geom"          FILES ${file_root_as3_classes_flash_geom})
 source_group("AS3 classes\\flash\\media"         FILES ${file_root_as3_classes_flash_media})
@@ -216,6 +224,7 @@ set (file_root
 	${file_root_as3_classes_flash_accessibility}
 	${file_root_as3_classes_flash_display}
 	${file_root_as3_classes_flash_events}
+	${file_root_as3_classes_flash_external}
 	${file_root_as3_classes_flash_filters}
 	${file_root_as3_classes_flash_geom}
 	${file_root_as3_classes_flash_media}
