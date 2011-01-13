@@ -26,38 +26,18 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxScriptEngine.h"
+#ifndef __vtxNetPacket_H__
+#define __vtxNetPacket_H__
+
+#include "vtxPrerequisites.h"
 
 namespace vtx
 {
-	//-----------------------------------------------------------------------
-	const ScriptParam ScriptParam::Null;
-	//-----------------------------------------------------------------------
-	ScriptEngine::ScriptEngine(Movie* parent) 
-		: mParent(parent), 
-		mCallbackListener(NULL)
+	class NetPacket
 	{
-
-	}
-	//-----------------------------------------------------------------------
-	ScriptEngine::~ScriptEngine()
-	{
-
-	}
-	//-----------------------------------------------------------------------
-	void ScriptEngine::setCallbackListener(ScriptCallbackListener* listener)
-	{
-		mCallbackListener = listener;
-	}
-	//-----------------------------------------------------------------------
-	ScriptCallbackListener* ScriptEngine::getCallbackListener() const
-	{
-		return mCallbackListener;
-	}
-	//-----------------------------------------------------------------------
-	Movie* ScriptEngine::getParentMovie() const
-	{
-		return mParent;
-	}
-	//-----------------------------------------------------------------------
+	public:
+		
+	};
 }
+
+#endif

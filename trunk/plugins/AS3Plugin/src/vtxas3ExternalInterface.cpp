@@ -26,38 +26,49 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxScriptEngine.h"
+#include "vtxas3ExternalInterface.h"
+#include "vtxas3ScriptEngine.h"
 
-namespace vtx
-{
-	//-----------------------------------------------------------------------
-	const ScriptParam ScriptParam::Null;
-	//-----------------------------------------------------------------------
-	ScriptEngine::ScriptEngine(Movie* parent) 
-		: mParent(parent), 
-		mCallbackListener(NULL)
-	{
+#include "vtxScriptCallbackListener.h"
 
-	}
+#include "cspVmCore.h"
+
+namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
-	ScriptEngine::~ScriptEngine()
+	ExternalInterfaceClass::ExternalInterfaceClass(avmplus::VTable* cvtable) 
+		: ClassClosure(cvtable)
 	{
 
 	}
 	//-----------------------------------------------------------------------
-	void ScriptEngine::setCallbackListener(ScriptCallbackListener* listener)
+	bool ExternalInterfaceClass::get_available()
 	{
-		mCallbackListener = listener;
+		AS3ScriptEngine* engine = static_cast<AS3ScriptEngine*>(CSP_CORE->getUserData());
+		return (engine->getCallbackListener() != 0);
 	}
 	//-----------------------------------------------------------------------
-	ScriptCallbackListener* ScriptEngine::getCallbackListener() const
+	void ExternalInterfaceClass::addCallback(avmplus::Stringp functionName, avmplus::FunctionObject* function)
 	{
-		return mCallbackListener;
+		AS3ScriptEngine* engine = static_cast<AS3ScriptEngine*>(CSP_CORE->getUserData());
+		engine->addScriptFunction(CSP_CORE->toString(functionName), function);
 	}
 	//-----------------------------------------------------------------------
-	Movie* ScriptEngine::getParentMovie() const
+	avmplus::Atom ExternalInterfaceClass::call(avmplus::Stringp functionName, avmplus::Atom* args, uint argc)
 	{
-		return mParent;
+		AS3ScriptEngine* engine = static_cast<AS3ScriptEngine*>(CSP_CORE->getUserData());
+		ScriptCallbackListener* listener = engine->getCallbackListener();
+
+		if(listener)
+		{
+			ScriptParamList params;
+			for(uint i=0; i<argc; ++i)
+				params.push_back(engine->atomToParam(args[i]));
+
+			ScriptParam result = listener->scriptCallback(CSP_CORE->toString(functionName), params);
+			return engine->paramToAtom(result);
+		}
+		else
+			return nullObjectAtom;
 	}
 	//-----------------------------------------------------------------------
-}
+}}

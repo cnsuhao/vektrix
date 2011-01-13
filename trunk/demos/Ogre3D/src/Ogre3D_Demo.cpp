@@ -3,6 +3,8 @@
 #include "vtxMovie.h"
 #include "vtxMovieDebugger.h"
 #include "vtxRoot.h"
+#include "vtxScriptCallbackListener.h"
+#include "vtxScriptEngine.h"
 
 #include "vtxopMovableMovie.h"
 
@@ -35,11 +37,30 @@ Ogre::RenderWindow* mWindow = NULL;
 OIS::Mouse*	mouse = NULL;
 
 //-----------------------------------------------------------------------
-class MovieListener : public vtx::Movie::Listener
+class MovieListener : public vtx::Movie::Listener, public vtx::ScriptCallbackListener
 {
 public:
+	vtx::ScriptParam scriptCallback(const vtx::String& callback_name, const vtx::ScriptParamList& args)
+	{
+		if(callback_name == "returnValuesToCpp")
+		{
+			std::cout << callback_name << 
+				"(" << 
+				(args[0].boolValue() ? "true":"false") << ", " << 
+				args[1].intValue() << ", " << 
+				args[2].intValue() << ", " << 
+				args[3].doubleValue() << ", " << 
+				args[4].StringValue() << 
+				");" << std::endl;
+		}
+
+		return __TIMESTAMP__;
+	}
+
 	bool loadingCompleted(vtx::Movie* movie)
 	{
+		movie->getScriptEngine()->setCallbackListener(&movie_listener);
+
 		//movie_node->attachObject(static_cast<vtx::ogre::MovableMovie*>(movie));
 		movie->enableDebugger(true);
 		movie->getDebugger()->debugBoundingBoxes(true);
@@ -202,6 +223,17 @@ public:
 				movie->enableDebugger(true);
 			}
 		}
+		else if(e.key == OIS::KC_F8 && movie)
+		{
+			vtx::ScriptParamList args;
+			args.push_back(true);
+			args.push_back(12345);
+			args.push_back(67890);
+			args.push_back(54.321);
+			args.push_back("hello world!");
+			vtx::ScriptParam result = movie->getScriptEngine()->callScriptFunction("setValuesFromCpp", args);
+			std::cout << "return value from AS3: " << result.StringValue() << std::endl;
+		}
 
 		return true;
 	}
@@ -287,7 +319,7 @@ int main(int argc, char **argv)
 	vtx::FileManager::getSingletonPtr()->addFileContainer("C:/Users/stone/Desktop/vtx_flash_test");
 	vtx::FileManager::getSingletonPtr()->addFileContainer("", "WebFileContainer");
 
-	VTX_LOAD_PLUGIN(vektrix_EditorPlugin);
+	//VTX_LOAD_PLUGIN(vektrix_EditorPlugin);
 
 	if(!ogre_root->restoreConfig())
 	{
@@ -388,7 +420,7 @@ int main(int argc, char **argv)
 	//movie->play();
 
 	//movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("editor_movie", "vtx.ed.Editor", "OgreMovableMovie", &movie_listener);
-	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "button_test2.swf", "OgreMovableMovie", &movie_listener);
+	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "flash_external.swf", "OgreMovableMovie", &movie_listener);
 	movie->play();
 
 	movie_node->attachObject(movie);

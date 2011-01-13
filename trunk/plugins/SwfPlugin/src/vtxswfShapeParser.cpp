@@ -426,13 +426,15 @@ namespace vtx { namespace swf {
 				}
 				break;
 
+			case FST_RepeatingBitmap:
 			case FST_ClippedBitmap:
+			case FST_NonSmoothedRepeatingBitmap:
+			case FST_NonSmoothedClippedBitmap:
 				{
 					material = new MaterialResource(
 						StringHelper::toString(shape_id)+"->"+StringHelper::toString(it->first), 
 						MaterialResource::MT_IMAGE);
-
-					//material->setImageID(it->second.color);
+					material->setImageID(StringHelper::toString(it->second.bitmapId));
 				}
 				break;
 

@@ -26,38 +26,28 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxScriptEngine.h"
-
-namespace vtx
+package flash.media
 {
-	//-----------------------------------------------------------------------
-	const ScriptParam ScriptParam::Null;
-	//-----------------------------------------------------------------------
-	ScriptEngine::ScriptEngine(Movie* parent) 
-		: mParent(parent), 
-		mCallbackListener(NULL)
+	import flash.events.EventDispatcher;
+	
+	public final class Microphone extends EventDispatcher
 	{
+		/* getters & setters */
+		public function get activityLevel():Number { return 0; }
+		public function get gain():Number { return 0; }
+		public function get index():int { return 0; }
+		public function get muted():Boolean { return false; }
+		public function get name():String { return ""; }
+		public static function get names():Array { return null; }
+		public function get rate():int { return 0; }
+		public function get silenceLevel():Number { return 0; }
+		public function get silenceTimeout():int { return 0; }
+		public function get soundTransform():SoundTransform { return null; }
+		public function get useEchoSuppression():Boolean { return false; }
 
+		/* methods */
+		public function setLoopBack(state:Boolean = true):void {}
+		public function setSilenceLevel(silenceLevel:Number, timeout:int = -1):void {}
+		public function setUseEchoSuppression(useEchoSuppression:Boolean):void {}
 	}
-	//-----------------------------------------------------------------------
-	ScriptEngine::~ScriptEngine()
-	{
-
-	}
-	//-----------------------------------------------------------------------
-	void ScriptEngine::setCallbackListener(ScriptCallbackListener* listener)
-	{
-		mCallbackListener = listener;
-	}
-	//-----------------------------------------------------------------------
-	ScriptCallbackListener* ScriptEngine::getCallbackListener() const
-	{
-		return mCallbackListener;
-	}
-	//-----------------------------------------------------------------------
-	Movie* ScriptEngine::getParentMovie() const
-	{
-		return mParent;
-	}
-	//-----------------------------------------------------------------------
 }

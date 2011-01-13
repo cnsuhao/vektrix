@@ -493,6 +493,21 @@ namespace vtx { namespace swf {
 				}
 				break;
 
+			case FST_RepeatingBitmap:
+			case FST_ClippedBitmap:
+			case FST_NonSmoothedRepeatingBitmap:
+			case FST_NonSmoothedClippedBitmap:
+				{
+					UI16 bitmapId = readU16();
+					MATRIX bitmapMatrix = readMatrix();
+
+					FILLSTYLE fs;
+					fs.type = (FillStyleType)fill_type;
+					fs.bitmapId = bitmapId;					
+					result.push_back(fs);
+				}
+				break;
+
 			default:
 				VTX_DEBUG_FAIL("SWF shape fillstyle type not implemented");
 				break;

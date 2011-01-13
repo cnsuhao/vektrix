@@ -115,6 +115,35 @@ namespace vtx { namespace as3 {
 		return mVmCore->executeByteCode(mScriptResource->getBuffer(), mScriptResource->getBufferSize());
 	}
 	//-----------------------------------------------------------------------
+	ScriptParam AS3ScriptEngine::callScriptFunction(const String& function_name, const ScriptParamList& args)
+	{
+		TRY(mVmCore, kCatchAction_ReportAsError)
+		{
+			MMGC_GCENTER(mVmCore->GetGC());
+			static avmplus::Atom params[16];
+
+			FunctionMap::iterator it = mCallableFunctions.find(function_name);
+			if(it != mCallableFunctions.end())
+			{
+				params[0] = it->second->atom();
+
+				for(uint i=0; i<args.size(); ++i)
+					params[i+1] = paramToAtom(args[i]);
+
+				avmplus::Atom result = it->second->call(args.size(), params);
+				return atomToParam(result);
+			}
+		}
+		CATCH(Exception* exception)
+		{
+			mVmCore->printException(exception);
+		}
+		END_CATCH;
+		END_TRY;
+
+		return ScriptParam::Null;
+	}
+	//-----------------------------------------------------------------------
 	ScriptObject* AS3ScriptEngine::getRootScriptObject(vtx::MovieClip* movieclip)
 	{
 		VTX_EXCEPT("Deprecated function called!");
@@ -206,6 +235,65 @@ namespace vtx { namespace as3 {
 	void AS3ScriptEngine::output(const String& message)
 	{
 		VTX_LOG("ActionScript3: '%s'", message.c_str());
+	}
+	//-----------------------------------------------------------------------
+	void AS3ScriptEngine::addScriptFunction(const String& function_name, avmplus::FunctionObject* function)
+	{
+		FunctionMap::iterator it = mCallableFunctions.find(function_name);
+		if(it == mCallableFunctions.end())
+		{
+			mVmCore->stickyObject(function->atom());
+			mCallableFunctions.insert(std::make_pair(function_name, function));
+			return;
+		}
+
+		// remove previously added function
+		if(!function)
+		{
+			mVmCore->unstickyObject(it->second->atom());
+			mCallableFunctions.erase(it);
+		}
+	}
+	//-----------------------------------------------------------------------
+	ScriptParam AS3ScriptEngine::atomToParam(avmplus::Atom atom)
+	{
+		if(csp::VmCore::isBoolean(atom))
+			return csp::VmCore::atomToBool(atom); // bool
+
+		else if(csp::VmCore::isNumber(atom))
+			if(csp::VmCore::isDouble(atom))
+				return csp::VmCore::atomToDouble(atom); // double
+			else
+				return csp::VmCore::integer(atom); // int
+
+		else if(mVmCore->isString(atom))
+			return mVmCore->toString(csp::VmCore::atomToString(atom)); // String
+
+		return ScriptParam::Null;
+	}
+	//-----------------------------------------------------------------------
+	avmplus::Atom AS3ScriptEngine::paramToAtom(ScriptParam param)
+	{
+		switch(param.type())
+		{
+		case SPT_bool:
+			return mVmCore->toScript(param.boolValue());
+			break;
+
+		case SPT_double:
+			return mVmCore->toScript(param.doubleValue());
+			break;
+
+		case SPT_int:
+			return mVmCore->toScript(param.intValue());
+			break;
+
+		case SPT_String:
+			return mVmCore->toScript(param.StringValue());
+			break;
+		}
+
+		return nullObjectAtom;
 	}
 	//-----------------------------------------------------------------------
 }}

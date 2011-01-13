@@ -43,7 +43,7 @@ namespace vtx
 		class vtxopExport OgreTexture : public Texture, public Ogre::ManualResourceLoader
 		{
 		public:
-			OgreTexture(uint size = 1024);
+			OgreTexture(uint size = 2048);
 			virtual ~OgreTexture();
 
 			void paintPixelsToRect(const Rect& coordinates, unsigned char* pixelData);

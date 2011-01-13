@@ -28,8 +28,6 @@ THE SOFTWARE.
 
 package flash.display
 {
-	const DEBUG_DISPLAYOBJECT:Boolean = true;
-
 	import flash.accessibility.AccessibilityProperties;
 	import flash.display.IBitmapDrawable;
 	import flash.events.Event;
@@ -41,6 +39,7 @@ package flash.display
 	[native(cls="::vtx::as3::DisplayObjectClass", instance="::vtx::as3::DisplayObject", methods="auto")]
 	public class DisplayObject extends EventDispatcher implements IBitmapDrawable
 	{
+		const DEBUG_DISPLAYOBJECT:Boolean = true;
 		//-----------------------------------------------------------------------
 		private native function ctor():void;
 		//-----------------------------------------------------------------------

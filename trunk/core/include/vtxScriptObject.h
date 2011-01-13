@@ -59,7 +59,6 @@ namespace vtx
 
 		/** Set the C++ object that is associated with this script object */
 		virtual void setNativeObject(Instance* inst);
-
 	};
 	//-----------------------------------------------------------------------
 }

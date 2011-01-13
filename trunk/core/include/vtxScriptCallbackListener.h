@@ -26,38 +26,19 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxScriptEngine.h"
+#ifndef __vtxScriptCallbackListener_H__
+#define __vtxScriptCallbackListener_H__
+
+#include "vtxPrerequisites.h"
+#include "vtxScriptParameters.h"
 
 namespace vtx
 {
-	//-----------------------------------------------------------------------
-	const ScriptParam ScriptParam::Null;
-	//-----------------------------------------------------------------------
-	ScriptEngine::ScriptEngine(Movie* parent) 
-		: mParent(parent), 
-		mCallbackListener(NULL)
+	class ScriptCallbackListener
 	{
-
-	}
-	//-----------------------------------------------------------------------
-	ScriptEngine::~ScriptEngine()
-	{
-
-	}
-	//-----------------------------------------------------------------------
-	void ScriptEngine::setCallbackListener(ScriptCallbackListener* listener)
-	{
-		mCallbackListener = listener;
-	}
-	//-----------------------------------------------------------------------
-	ScriptCallbackListener* ScriptEngine::getCallbackListener() const
-	{
-		return mCallbackListener;
-	}
-	//-----------------------------------------------------------------------
-	Movie* ScriptEngine::getParentMovie() const
-	{
-		return mParent;
-	}
-	//-----------------------------------------------------------------------
+	public:
+		virtual ScriptParam scriptCallback(const String& callback_name, const ScriptParamList& args) = 0;
+	};
 }
+
+#endif

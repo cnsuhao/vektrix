@@ -70,6 +70,16 @@ namespace vtx { namespace swf {
 		void readFillstyleArray(const TagTypes& type, FillstyleList& result);
 		void readLinestyleArray(const TagTypes& type, LinestyleList& result);
 
+#ifdef _DEBUG
+		void saveMemoryDump(const String& dumpname, const uint& length)
+		{
+			std::ofstream dump;
+			dump.open(dumpname.c_str(), std::ios::binary | std::ios::out);
+			dump.write(mBuffer + mReadPos, length);
+			dump.close();
+		}
+#endif
+
 	private:
 		uint mReadPos;
 		char* mBuffer;

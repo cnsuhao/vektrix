@@ -26,38 +26,83 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxScriptEngine.h"
+#ifndef __vtxScriptParameters_H__
+#define __vtxScriptParameters_H__
+
+#include "vtxPrerequisites.h"
+#include "vtxLogManager.h"
 
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	const ScriptParam ScriptParam::Null;
+	class ScriptParamObject;
 	//-----------------------------------------------------------------------
-	ScriptEngine::ScriptEngine(Movie* parent) 
-		: mParent(parent), 
-		mCallbackListener(NULL)
+	enum ScriptParamType
 	{
+		SPT_bool, 
+		SPT_int, 
+		SPT_float, 
+		SPT_double, 
+		SPT_String, 
+		SPT_WString, 
+		SPT_Object, 
+		SPT_Null
+	};
+	//-----------------------------------------------------------------------
+#define ScriptParamInternalType(container, kind) \
+	ScriptParam(const kind& val) { type_ = SPT_##kind; container##.##kind##_ = val; } \
+	ScriptParam& operator= (const kind& val) { type_ = SPT_##kind; container##.##kind##_ = val; return *this; } \
+	inline const kind& kind##Value() const \
+	{ if(type_ != SPT_##kind) VTX_WARN("Requested type '%s' but ScriptParam type is '%d'", #kind, type_); return container##.##kind##_; }
+	//-----------------------------------------------------------------------
+#define ScriptParamInternalTypeAlias(container, kind, alias) \
+	ScriptParam(alias val) { type_ = SPT_##kind; container##.##kind##_ = val; } \
+	ScriptParam& operator= (alias val) { type_ = SPT_##kind; container##.##kind##_ = val; return *this; }
+	//-----------------------------------------------------------------------
+	class vtxExport ScriptParam
+	{
+	public:
+		ScriptParam() { const_cast<ScriptParam&>(Null).type_ = SPT_Null; }
 
-	}
-	//-----------------------------------------------------------------------
-	ScriptEngine::~ScriptEngine()
-	{
+		static const ScriptParam Null;
 
-	}
+		inline const uchar& type() const { return type_; }
+
+		ScriptParamInternalType(_b, bool);
+		ScriptParamInternalType(_b, int);
+		ScriptParamInternalType(_b, double);
+		ScriptParamInternalType(_s, String);
+		ScriptParamInternalType(_s, WString);
+
+		ScriptParamInternalTypeAlias(_s, String, const char*);
+		ScriptParamInternalTypeAlias(_s, WString, const wchar_t*);
+
+	private:
+		uchar type_;
+
+		union _base_types
+		{
+			bool bool_;
+			int int_;
+			double double_;
+		} _b;
+
+		struct _string_types
+		{
+			String String_;
+			WString WString_;
+		} _s;
+	};
 	//-----------------------------------------------------------------------
-	void ScriptEngine::setCallbackListener(ScriptCallbackListener* listener)
+	class ScriptParamObject
 	{
-		mCallbackListener = listener;
-	}
+	public:
+		typedef std::map<String, ScriptParam> MemberList;
+		MemberList members;
+	};
 	//-----------------------------------------------------------------------
-	ScriptCallbackListener* ScriptEngine::getCallbackListener() const
-	{
-		return mCallbackListener;
-	}
-	//-----------------------------------------------------------------------
-	Movie* ScriptEngine::getParentMovie() const
-	{
-		return mParent;
-	}
+	typedef std::vector<ScriptParam> ScriptParamList;
 	//-----------------------------------------------------------------------
 }
+
+#endif

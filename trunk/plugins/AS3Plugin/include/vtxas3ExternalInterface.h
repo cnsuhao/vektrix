@@ -26,38 +26,35 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#include "vtxScriptEngine.h"
+#ifndef __vtxas3ExternalInterface_H__
+#define __vtxas3ExternalInterface_H__
 
-namespace vtx
-{
-	//-----------------------------------------------------------------------
-	const ScriptParam ScriptParam::Null;
-	//-----------------------------------------------------------------------
-	ScriptEngine::ScriptEngine(Movie* parent) 
-		: mParent(parent), 
-		mCallbackListener(NULL)
-	{
+#include "vtxas3.h"
+#include "cspPrerequisites.h"
 
-	}
-	//-----------------------------------------------------------------------
-	ScriptEngine::~ScriptEngine()
-	{
+#ifdef VTX_AS3_USE_SINGLE_ABC_PACKAGE
+#	include "flash.h"
+#else
+#	include "flash_external.h"
+#endif
 
-	}
+namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
-	void ScriptEngine::setCallbackListener(ScriptCallbackListener* listener)
+	class ExternalInterfaceClass : public avmplus::ClassClosure
 	{
-		mCallbackListener = listener;
-	}
+	public:
+		ExternalInterfaceClass(avmplus::VTable* cvtable);
+
+		bool get_available();
+
+		void addCallback(avmplus::Stringp functionName, avmplus::FunctionObject* function);
+		avmplus::Atom call(avmplus::Stringp functionName, avmplus::Atom* args, uint argc);
+
+		//CSP_CLASS_CREATE_INSTANCE(ExternalInterfaceClass, avmplus::ScriptObject);
+
+		CSP_SLOTS(ExternalInterfaceClass, flash_external_);
+	};
 	//-----------------------------------------------------------------------
-	ScriptCallbackListener* ScriptEngine::getCallbackListener() const
-	{
-		return mCallbackListener;
-	}
-	//-----------------------------------------------------------------------
-	Movie* ScriptEngine::getParentMovie() const
-	{
-		return mParent;
-	}
-	//-----------------------------------------------------------------------
-}
+}}
+
+#endif

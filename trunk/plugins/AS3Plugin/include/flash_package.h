@@ -80,6 +80,11 @@ THE SOFTWARE.
 #include "vtxas3MouseEvent.h"
 
 //-------------------------------
+// flash.external
+//-------------------------------
+#include "vtxas3ExternalInterface.h"
+
+//-------------------------------
 // flash.filters
 //-------------------------------
 

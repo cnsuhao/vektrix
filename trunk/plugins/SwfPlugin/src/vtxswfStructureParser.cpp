@@ -298,7 +298,8 @@ namespace vtx { namespace swf {
 		{
 			VTX_WARN("Main END");
 			int unread_bytes = mParser->getFileLength() - mParser->getReadPosition();
-			VTX_DEBUG_ASSERT(!unread_bytes, "Unread bytes after TT_End tag");
+			if(unread_bytes)
+				VTX_EXCEPT("%d unread bytes after TT_End tag", unread_bytes);
 		}
 	}
 	//-----------------------------------------------------------------------
