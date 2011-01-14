@@ -41,10 +41,7 @@ namespace vtx { namespace as3 {
 		: avmplus::ScriptObject(vtable, prototype)
 	{
 		if(RefCount() == 0)
-		{
 			IncrementRef();
-			std::cout << "incr ref" << std::endl;
-		}
 	}
 	//-----------------------------------------------------------------------
 	AS3Object::~AS3Object()

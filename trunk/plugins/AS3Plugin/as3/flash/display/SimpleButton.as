@@ -34,7 +34,7 @@ package flash.display
 		public function SimpleButton()
 		{
 			super();
-			trace("AS3 SimpleButton CTOR");
+			//trace("AS3 SimpleButton CTOR");
 		}
 	}
 }

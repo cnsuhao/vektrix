@@ -46,6 +46,7 @@ namespace vtx { namespace swf {
 		TT_End = 0, 
 		TT_ShowFrame = 1, 
 		TT_DefineShape = 2, 
+		TT_PlaceObject = 4,
 		TT_DefineBits = 6,
 		TT_DefineButton = 7, 
 		TT_JPEGTables = 8,
@@ -64,6 +65,7 @@ namespace vtx { namespace swf {
 		TT_DefineBitsLossless2 = 36, 
 		TT_DefineEditText = 37, 
 		TT_DefineSprite = 39, 
+		TT_FrameLabel = 43,
 		TT_FileAttributes = 69, 
 		TT_DefineFont3 = 75, 
 		TT_SymbolClass = 76, 
@@ -155,34 +157,18 @@ namespace vtx { namespace swf {
 		ETF_UseOutlines		= 1 << 8
 	};
 	//-----------------------------------------------------------------------
+	// MATH
+	//-----------------------------------------------------------------------
 	class RECT
 	{
 	public:
-		SBits xmin;
-		SBits ymin;
-		SBits xmax;
-		SBits ymax;
+		SBits xmin, ymin, xmax, ymax;
 
 		RECT() 
 			: xmin(0), 
 			xmax(0), 
 			ymin(0), 
 			ymax(0){}
-	};
-	//-----------------------------------------------------------------------
-	class COLOR
-	{
-	public:
-		UI8 red, 
-			green, 
-			blue, 
-			alpha;
-
-		COLOR() 
-			: red(255), 
-			green(255), 
-			blue(255), 
-			alpha(255){}
 	};
 	//-----------------------------------------------------------------------
 	class MATRIX
@@ -207,6 +193,43 @@ namespace vtx { namespace swf {
 			mul_red(255), mul_green(255), mul_blue(255), mul_alpha(255){}
 	};
 	//-----------------------------------------------------------------------
+	// COLORS
+	//-----------------------------------------------------------------------
+	class RGB
+	{
+	public:
+		UI8 red, green, blue;
+
+		RGB() 
+			: red(255), 
+			green(255), 
+			blue(255) {}
+	};
+	//-----------------------------------------------------------------------
+	class RGBA
+	{
+	public:
+		UI8 red, green, blue, alpha;
+
+		RGBA() 
+			: red(255), 
+			green(255), 
+			blue(255), 
+			alpha(255) {}
+	};
+	//-----------------------------------------------------------------------
+	class ARGB
+	{
+	public:
+		UI8 alpha, red, green, blue;
+
+		ARGB() 
+			: alpha(255), 
+			red(255), 
+			green(255), 
+			blue(255) {}
+	};
+	//-----------------------------------------------------------------------
 	// FONT TYPES
 	//-----------------------------------------------------------------------
 	class KERNINGRECORD
@@ -221,7 +244,7 @@ namespace vtx { namespace swf {
 	{
 	public:
 		UI16 font_id;
-		COLOR color;
+		RGBA color;
 		SI16 x, y;
 		UI16 size;
 	};
@@ -240,10 +263,10 @@ namespace vtx { namespace swf {
 	class FILLSTYLE
 	{
 	public:
-		typedef std::map<UI8, COLOR> GradientMap;
+		typedef std::map<UI8, RGBA> GradientMap;
 
 		FillStyleType type;
-		COLOR color;
+		RGBA color;
 		GradientMap gradient;
 		MATRIX matrix;
 		UI16 bitmapId;
@@ -254,7 +277,7 @@ namespace vtx { namespace swf {
 	class LINESTYLE
 	{
 	public:
-		COLOR color;
+		RGBA color;
 		UI16 width;
 	};
 	typedef std::vector<LINESTYLE> LinestyleList;

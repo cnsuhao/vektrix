@@ -330,8 +330,8 @@ namespace vtx { namespace swf {
 		char* abc_buf = new char[abc_len];
 		parser->readByteBlock(abc_buf, abc_len);
 
-		//String script_name = "Frame" + StringHelper::toString(mMainFrameIndex) + "_Script";
-		ScriptResource* script = new ScriptResource(abc_buf, abc_len);
+		String script_name = "Frame" + StringHelper::toString(mMainFrameIndex) + "_Script";
+		ScriptResource* script = new ScriptResource(script_name, abc_buf, abc_len);
 		parser->getCurrentFile()->addResource(script);
 
 		mCurrKeyframe->addEvent(new ExecuteScriptEvent(script));
@@ -341,7 +341,7 @@ namespace vtx { namespace swf {
 	{
 		UI16 num_symbols = parser->readU16();
 
-		Resource* res = parser->getCurrentFile()->getResource("__ScriptResource__");
+		Resource* res = parser->getCurrentFile()->getResource("Frame0_Script");
 		ScriptResource* swf_as3_script = static_cast<ScriptResource*>(res);
 
 		for(UI16 i=0; i<num_symbols; ++i)

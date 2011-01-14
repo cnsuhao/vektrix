@@ -118,7 +118,7 @@ namespace vtx
 		{
 			mMaterial = static_cast<OgreTexture*>(quad.texture)->getMaterial();
 			RectF tex_coords = quad.node->getRect().contractedCopy(1).relativeTo(
-				quad.texture->getSize(), quad.texture->getSize());
+				quad.texture->getWidth(), quad.texture->getHeight());
 
 			const BoundingBox& bb = getBoundingBox();
 

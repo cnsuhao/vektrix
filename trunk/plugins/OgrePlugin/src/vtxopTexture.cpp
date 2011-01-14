@@ -45,14 +45,14 @@ namespace vtx
 	namespace ogre
 	{
 		//-----------------------------------------------------------------------
-		OgreTexture::OgreTexture(uint size) 
-			: Texture(size)
+		OgreTexture::OgreTexture(const uint& width, const uint& height) 
+			: Texture(width, height)
 		{
 			mTexture = Ogre::TextureManager::getSingletonPtr()->createManual(
 				vtx::StringHelper::toString((int)this), 
 				"General", 
 				Ogre::TEX_TYPE_2D, 
-				size, size, 5, 
+				width, height, 5, 
 				0, 
 				Ogre::PF_A8R8G8B8, 
 				Ogre::TU_DYNAMIC_WRITE_ONLY, 
@@ -66,8 +66,6 @@ namespace vtx
 
 			size_t* data = static_cast<size_t*>(pixelBox.data);
 
-			size_t height = pixelBox.getHeight();
-			size_t width = pixelBox.getWidth();
 			size_t pitch = pixelBox.rowPitch; // Skip between rows of image
 
 			for(size_t y=0; y<height; ++y)

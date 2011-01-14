@@ -27,12 +27,14 @@ set (include_dirs
 	../include
 	../../../core/include
 	${zlib_include_dirs}
+	${freeimage_include_dirs}
 )
 
 # the required link libraries
 set (libraries
 	vektrix
 	${zlib_libraries}
+	${freeimage_libraries}
 )
 
 #-----------------------------------------------------------------------

@@ -124,10 +124,10 @@ namespace vtx { namespace tools { namespace FlashPreview {
 	//-----------------------------------------------------------------------
 	bool FlashPreview::leaveRequested()
 	{
-		// exit on ESC ?
-		//if(mKeyboard && mKeyboard->isKeyDown(OIS::KC_ESCAPE)) return true;
-		if(mWindow && mWindow->isClosed()) return true;
-		return false;
+		// exit on SHIFT + ESC or if the window has been closed
+		return 
+			(mKeyboard && mKeyboard->isKeyDown(OIS::KC_LSHIFT) && mKeyboard->isKeyDown(OIS::KC_ESCAPE)) || 
+			(mWindow && mWindow->isClosed());
 	}
 	//-----------------------------------------------------------------------
 	void FlashPreview::resizeWindow(const int& width, const int& height)

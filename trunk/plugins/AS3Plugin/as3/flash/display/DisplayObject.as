@@ -39,7 +39,7 @@ package flash.display
 	[native(cls="::vtx::as3::DisplayObjectClass", instance="::vtx::as3::DisplayObject", methods="auto")]
 	public class DisplayObject extends EventDispatcher implements IBitmapDrawable
 	{
-		const DEBUG_DISPLAYOBJECT:Boolean = true;
+		const DEBUG_DISPLAYOBJECT:Boolean = false;
 		//-----------------------------------------------------------------------
 		private native function ctor():void;
 		//-----------------------------------------------------------------------

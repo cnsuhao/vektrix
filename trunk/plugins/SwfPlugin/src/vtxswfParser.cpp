@@ -243,50 +243,40 @@ namespace vtx { namespace swf {
 		UI32 length = tnl & 63;
 
 		if(length == 63)
-		{
 			length = readU32();
-		}
+
+		const uint& tag_start = getReadPosition();
 
 		switch(type)
 		{
 			// fonts
 		case TT_DefineFont3:
-			{
 				mFontParser->handleDefineFont(type, length, this);
-			}
 			break;
 
 			// images
 		case TT_JPEGTables:
-			{
 				mImageParser->handleJPEGTables(type, length, this);
-			}
 			break;
 
-		//case TT_DefineBits:
-		//case TT_DefineBitsJPEG2:
-		//case TT_DefineBitsJPEG3:
-		//case TT_DefineBitsJPEG4:
-		//	{
-		//		mImageParser->handleDefineBitsJPEG(type, length, this);
-		//	}
-		//	break;
+		case TT_DefineBits:
+		case TT_DefineBitsJPEG2:
+		case TT_DefineBitsJPEG3:
+		case TT_DefineBitsJPEG4:
+				mImageParser->handleDefineBitsJPEG(type, length, this);
+			break;
 
-		//case TT_DefineBitsLossless:
-		//case TT_DefineBitsLossless2:
-		//	{
-		//		mImageParser->handleDefineBitsLossless(type, length, this);
-		//	}
-		//	break;
+		case TT_DefineBitsLossless:
+		case TT_DefineBitsLossless2:
+				mImageParser->handleDefineBitsLossless(type, length, this);
+			break;
 
 			// shapes
 		case TT_DefineShape:
 		case TT_DefineShape2:
 		case TT_DefineShape3:
 		case TT_DefineShape4:
-			{
 				mShapeParser->handleDefineShape(type, this);
-			}
 			break;
 
 			// structure
@@ -324,7 +314,7 @@ namespace vtx { namespace swf {
 
 		case TT_SetBackgroundColor:
 			{
-				COLOR color = readColor();
+				RGBA color = readRGBA();
 				mHeader.bgcolor = Color(
 					(float)color.red/255.0f, 
 					(float)color.green/255.0f, 
@@ -342,9 +332,7 @@ namespace vtx { namespace swf {
 			// static text
 		case TT_DefineText:
 		case TT_DefineText2:
-			{
 				mTextParser->handleDefineText(type, length, this);
-			}
 			break;
 
 			// ActionScript
@@ -367,6 +355,14 @@ namespace vtx { namespace swf {
 			VTX_WARN("SWF tag type not implemented: %d", type);
 			skip(length);
 			break;
+		}
+
+		uint tag_end = tag_start + length;
+		if(getReadPosition() != tag_end)
+		{
+			// something has gone wrong
+			VTX_WARN("%d unread bytes after tag type: %d bytes: ", tag_end - getReadPosition(), type);			
+			setReadPosition(tag_end);
 		}
 	}
 	//-----------------------------------------------------------------------

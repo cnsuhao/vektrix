@@ -48,7 +48,10 @@ namespace vtx
 		mLayer(layer), 
 		mMatrix(matrix), 
 		mCXForm(cxform), 
-		mName(name)	{}
+		mName(name)	
+	{
+		VTX_DEBUG_ASSERT(mResource, "Null resource");
+	}
 	//-----------------------------------------------------------------------
 	FrameEvent* CreateObjectEvent::clone(DisplayObjectContainer* container)
 	{

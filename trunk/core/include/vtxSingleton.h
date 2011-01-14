@@ -36,29 +36,50 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	/** A template for globally accessible singleton classes */
 	template <typename T>
-	class Singleton
+	class SingletonBase
 	{
 	public:
-		Singleton()
+		SingletonBase()
 		{
 			VTX_DEBUG_ASSERT(!sInstance, "");
 			sInstance = (T*)this;
 		}
 
-		virtual ~Singleton()
+		virtual ~SingletonBase()
 		{
 			VTX_DEBUG_ASSERT(sInstance, "");
 			sInstance = 0;
 		}
 
+	protected:
+		static T* sInstance;
+	};
+	//-----------------------------------------------------------------------
+	/** A template for globally accessible singleton classes */
+	template <typename T>
+	class Singleton : public SingletonBase<T>
+	{
+	public:
 		/** Get the unique instance of this class */
 		static T* getSingletonPtr()
 		{
 			return sInstance;
 		}
+	};
+	//-----------------------------------------------------------------------
+	/** A template for globally accessible singleton classes */
+	template <typename T>
+	class AutoSingleton : public SingletonBase<T>
+	{
+	public:
+		/** Get the unique instance of this class */
+		static T* getSingletonPtr()
+		{
+			if(!sInstance)
+				sInstance = new T;
 
-	protected:
-		static T* sInstance;
+			return sInstance;
+		}
 	};
 	//-----------------------------------------------------------------------
 }

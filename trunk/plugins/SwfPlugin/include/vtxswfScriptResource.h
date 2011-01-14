@@ -42,7 +42,7 @@ namespace vtx { namespace swf {
 
 		typedef std::map<String, StringPair> SymbolMap;
 
-		ScriptResource(char* buffer, const uint& buffer_size);
+		ScriptResource(const String& name, char* buffer, const uint& buffer_size);
 		virtual ~ScriptResource();
 
 		const char* getBuffer() const;

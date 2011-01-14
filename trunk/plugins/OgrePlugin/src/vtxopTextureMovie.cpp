@@ -41,7 +41,7 @@ namespace vtx
 		TextureMovie::TextureMovie(const String& name, MovieFactory* creator) 
 			: vtx::Movie(name, creator)
 		{
-			mMovieTexture = mCreator->getTextureFactory()->createObject();
+			mMovieTexture = mCreator->getTextureFactory()->createObject(123, 456);
 		}
 		//-----------------------------------------------------------------------
 		Instance* TextureMovie::getInstance(Resource* resource)

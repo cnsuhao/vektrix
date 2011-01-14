@@ -34,8 +34,8 @@ namespace vtx { namespace swf {
 	//-----------------------------------------------------------------------
 	const String ScriptResource::SCRIPT_TYPE = "adobe/swf/actionscript3";
 	//-----------------------------------------------------------------------
-	ScriptResource::ScriptResource(char* buffer, const uint& buffer_size) 
-		: vtx::ScriptResource(SCRIPT_TYPE), 
+	ScriptResource::ScriptResource(const String& name, char* buffer, const uint& buffer_size) 
+		: vtx::ScriptResource(name, SCRIPT_TYPE), 
 		mBuffer(buffer), 
 		mBufferSize(buffer_size)
 	{

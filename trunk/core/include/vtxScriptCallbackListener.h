@@ -37,7 +37,7 @@ namespace vtx
 	class ScriptCallbackListener
 	{
 	public:
-		virtual ScriptParam scriptCallback(const String& callback_name, const ScriptParamList& args) = 0;
+		virtual ScriptParam scriptCallback(const String& callback_name, const ScriptParamList& args) { return ScriptParam::Null; };
 	};
 }
 

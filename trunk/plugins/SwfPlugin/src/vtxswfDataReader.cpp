@@ -65,6 +65,11 @@ namespace vtx { namespace swf {
 		return mReadPos;
 	}
 	//-----------------------------------------------------------------------
+	char* DataReader::getReadData() const
+	{
+		return &mBuffer[mReadPos];
+	}
+	//-----------------------------------------------------------------------
 	void DataReader::skip(const uint& len)
 	{
 		mReadPos += len;
@@ -153,9 +158,9 @@ namespace vtx { namespace swf {
 		return result;
 	}
 	//-----------------------------------------------------------------------
-	COLOR DataReader::readColor(const bool& alpha)
+	RGBA DataReader::readRGBA(const bool& alpha)
 	{
-		COLOR result;
+		RGBA result;
 		resetReadBits();
 
 		result.red = readU8();
@@ -163,9 +168,7 @@ namespace vtx { namespace swf {
 		result.blue = readU8();
 
 		if(alpha)
-		{
 			result.alpha = readU8();
-		}
 
 		return result;
 	}
@@ -465,7 +468,7 @@ namespace vtx { namespace swf {
 				{
 					FILLSTYLE fs;
 					fs.type = FST_Solid;
-					fs.color = readColor(type == TT_DefineShape3 || type == TT_DefineShape4);
+					fs.color = readRGBA(type == TT_DefineShape3 || type == TT_DefineShape4);
 					result.push_back(fs);
 				}
 				break;
@@ -485,7 +488,7 @@ namespace vtx { namespace swf {
 					for(UI8 j=0; j<num_gradients; ++j)
 					{
 						UI8 ratio = readU8();
-						COLOR color = readColor(type == TT_DefineShape3 || type == TT_DefineShape4);
+						RGBA color = readRGBA(type == TT_DefineShape3 || type == TT_DefineShape4);
 						fs.gradient[ratio] = color;
 					}
 
@@ -555,7 +558,7 @@ namespace vtx { namespace swf {
 			{
 				LINESTYLE ls;
 				ls.width = line_width;
-				ls.color = readColor(type == TT_DefineShape3 || type == TT_DefineShape4);
+				ls.color = readRGBA(type == TT_DefineShape3 || type == TT_DefineShape4);
 				result.push_back(ls);
 			}
 		}

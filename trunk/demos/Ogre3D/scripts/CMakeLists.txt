@@ -43,6 +43,7 @@ set (EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 # set the include directories
 include_directories (${include_dirs})
 
+# set additional link directories
 link_directories (${boost_library_dirs})
 
 # add the tool executable
