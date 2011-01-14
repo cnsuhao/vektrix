@@ -1,7 +1,4 @@
-<DOMDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" currentTimeline="1" xflVersion="2.0" creatorInfo="Adobe Flash Professional CS5" platform="Windows" versionInfo="Saved by Adobe Flash Windows 11.0 build 485" majorVersion="11" buildNumber="485" nextSceneIdentifier="2" playOptionsPlayLoop="false" playOptionsPlayPages="false" playOptionsPlayFrameActions="false">
-     <fonts>
-          <DOMFontItem name="Font 1" itemID="4c45d181-000001d3" font="Calibri" size="0" id="1" sourceLastImported="1279644033" embedRanges="1|2|3"/>
-     </fonts>
+<DOMDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" currentTimeline="1" xflVersion="2.0" creatorInfo="Adobe Flash Professional CS5" platform="Windows" versionInfo="Saved by Adobe Flash Windows 11.0 build 489" majorVersion="11" buildNumber="489" nextSceneIdentifier="2" playOptionsPlayLoop="false" playOptionsPlayPages="false" playOptionsPlayFrameActions="false">
      <timelines>
           <DOMTimeline name="Scene 1">
                <layers>
@@ -9,63 +6,22 @@
                          <frames>
                               <DOMFrame index="0" keyMode="9728">
                                    <Actionscript>
-                                        <script><![CDATA[trace(this.numChildren);
-for(var i:uint=0; i<this.numChildren; i++)
+                                        <script><![CDATA[trace("ExternalInterface.available = " + ExternalInterface.available);
+
+function setValuesFromCpp(b:Boolean, i:int, ui:uint, n:Number, s:String):String
 {
-	var displayitem:DisplayObject = this.getChildAt(i);
-	if(displayitem is StaticText)
-	{
-		trace("a static text field is item " + i + " on the display list");
-		var myFieldLabel:StaticText = StaticText(displayitem);
-		trace("and contains the text: " + myFieldLabel.text);
-	}
-	else
-	{
-		trace("noooot");
-	}
-}]]></script>
+	trace("AS3 function called from C++");
+
+	var cpp_result = ExternalInterface.call("returnValuesToCpp", b, i, ui, n, s);
+	trace("return value from C++ = " + cpp_result);
+	
+	return new Date().toString();
+}
+
+ExternalInterface.addCallback("setValuesFromCpp", setValuesFromCpp);
+]]></script>
                                    </Actionscript>
-                                   <elements>
-                                        <DOMStaticText width="100" height="29.3" isSelectable="false">
-                                             <matrix>
-                                                  <Matrix tx="63.95" ty="39.15"/>
-                                             </matrix>
-                                             <textRuns>
-                                                  <DOMTextRun>
-                                                       <characters>text1</characters>
-                                                       <textAttrs>
-                                                            <DOMTextAttrs aliasText="false" size="24" bitmapSize="480" face="Calibri"/>
-                                                       </textAttrs>
-                                                  </DOMTextRun>
-                                             </textRuns>
-                                        </DOMStaticText>
-                                        <DOMStaticText selected="true" width="50.25" height="29.3" autoExpand="true" isSelectable="false">
-                                             <matrix>
-                                                  <Matrix tx="68.95" ty="81.15"/>
-                                             </matrix>
-                                             <textRuns>
-                                                  <DOMTextRun>
-                                                       <characters>text2</characters>
-                                                       <textAttrs>
-                                                            <DOMTextAttrs aliasText="false" size="24" bitmapSize="480" face="Calibri"/>
-                                                       </textAttrs>
-                                                  </DOMTextRun>
-                                             </textRuns>
-                                        </DOMStaticText>
-                                        <DOMStaticText width="50.25" height="29.3" autoExpand="true" isSelectable="false">
-                                             <matrix>
-                                                  <Matrix tx="68.95" ty="130.15"/>
-                                             </matrix>
-                                             <textRuns>
-                                                  <DOMTextRun>
-                                                       <characters>text3</characters>
-                                                       <textAttrs>
-                                                            <DOMTextAttrs aliasText="false" size="24" bitmapSize="480" face="Calibri"/>
-                                                       </textAttrs>
-                                                  </DOMTextRun>
-                                             </textRuns>
-                                        </DOMStaticText>
-                                   </elements>
+                                   <elements/>
                               </DOMFrame>
                          </frames>
                     </DOMLayer>
@@ -375,18 +331,13 @@ for(var i:uint=0; i<this.numChildren; i++)
      </extendedSwatchLists>
      <PrinterSettings/>
      <publishHistory>
-          <PublishItem publishSize="15053" publishTime="1279645509"/>
-          <PublishItem publishSize="15035" publishTime="1279645217"/>
-          <PublishItem publishSize="14999" publishTime="1279645154"/>
-          <PublishItem publishSize="14998" publishTime="1279644773"/>
-          <PublishItem publishSize="14986" publishTime="1279644746"/>
-          <PublishItem publishSize="14979" publishTime="1279644262"/>
-          <PublishItem publishSize="14974" publishTime="1279644150"/>
-          <PublishItem publishSize="14973" publishTime="1279644125"/>
-          <PublishItem publishSize="14966" publishTime="1279644056"/>
-          <PublishItem publishSize="1027" publishTime="1279644000"/>
-          <PublishItem publishSize="523" publishTime="1279643992"/>
-          <PublishItem publishSize="1029" publishTime="1279643978"/>
-          <PublishItem publishSize="1029" publishTime="1279643967"/>
+          <PublishItem publishSize="1080" publishTime="1295041910"/>
+          <PublishItem publishSize="1079" publishTime="1295040598"/>
+          <PublishItem publishSize="1086" publishTime="1295038075"/>
+          <PublishItem publishSize="1077" publishTime="1295037837"/>
+          <PublishItem publishSize="1077" publishTime="1295036534"/>
+          <PublishItem publishSize="1069" publishTime="1295036423"/>
+          <PublishItem publishSize="522" publishTime="1295036413"/>
+          <PublishItem publishSize="1066" publishTime="1295036393"/>
      </publishHistory>
 </DOMDocument>

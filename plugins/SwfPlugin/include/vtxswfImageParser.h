@@ -45,6 +45,41 @@ namespace vtx { namespace swf {
 		void handleDefineBitsJPEG(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
 
 	protected:
+		struct BitmapData
+		{
+			BitmapData()
+				: 
+				width(0), 
+				height(0), 
+				bpp(0),
+				bitmap_data_size(0),
+				color_table_size(0),
+				color_table(NULL),
+				bitmap_data(NULL),
+				has_alpha_data(false)
+			{		
+			}
+
+			uint width;
+			uint height;
+			uint bpp;
+			uint bitmap_data_size;
+			uint color_table_size;
+			RGBA* color_table;
+			uchar* bitmap_data;
+			bool has_alpha_data;
+		};
+
+		ImageResource* createImageFromJPEG(ushort id, void* fileBuf, uint size);
+		ImageResource* createImageFromBitmapData(ushort id, void* fileBuf, uint size, BitmapData& data);
+
+		uint calculatePitch(uint width, uint bpp);
+		uint calculateBitmapDataSize(const TagTypes& tag_type, uchar bitmap_format, uint width, uint height, UI8 color_table_size);
+
+		void readAlphaData(SwfParser* parser, uint zlib_alpha_size, uint alpha_size, ImageResource* image_res);
+		void setAlphaData(ImageResource* image_res, uint alpha_size, const UI8* alpha_data);
+		void checkZlibError(int ret_value);
+		
 		// jpeg tables
 		char* mJPEGTables;
 	};

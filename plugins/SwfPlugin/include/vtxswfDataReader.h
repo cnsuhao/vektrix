@@ -45,6 +45,8 @@ namespace vtx { namespace swf {
 		void setReadPosition(const uint& offset);
 		const uint& getReadPosition() const;
 
+		char* getReadData() const;
+
 		// read basic types
 		void skip(const uint& len);
 		UI8 readU8();
@@ -58,7 +60,7 @@ namespace vtx { namespace swf {
 		void resetReadBits();
 
 		RECT readRect();
-		COLOR readColor(const bool& alpha = false);
+		RGBA readRGBA(const bool& alpha = false);
 		MATRIX readMatrix();
 		CXFORM readCxForm(const bool& alpha = false);
 		String readString(const bool& zero_terminated = true);

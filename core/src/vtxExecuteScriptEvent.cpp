@@ -68,7 +68,9 @@ namespace vtx
 				mExecuted = true;
 			}
 			catch(std::exception& e)
+			{
 				VTX_EXCEPT(e.what());
+			}
 		}
 		else
 			VTX_WARN("No ScriptEngine was set to execute the given ScriptResource");

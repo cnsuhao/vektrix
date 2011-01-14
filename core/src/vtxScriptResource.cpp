@@ -38,6 +38,13 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
+	ScriptResource::ScriptResource(const String& name, const String& script_type)
+		: Resource(name), 
+		mScriptType(script_type)
+	{
+
+	}
+	//-----------------------------------------------------------------------
 	ScriptResource::~ScriptResource()
 	{
 

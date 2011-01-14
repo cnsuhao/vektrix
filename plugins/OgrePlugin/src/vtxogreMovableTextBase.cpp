@@ -106,7 +106,7 @@ namespace vtx
 								const float size = glyph_strip.size * 0.05f;
 								const BoundingBox& bb = glyph_res->getBoundingBox();
 								const RectF& uv_rect = atlas_quad.node->getRect().contractedCopy(1).relativeTo(
-									atlas_quad.texture->getSize(), atlas_quad.texture->getSize());
+									atlas_quad.texture->getWidth(), atlas_quad.texture->getHeight());
 
 								const RectF pos_rect(
 									bb.getMinX() * size + glyph_x, // left

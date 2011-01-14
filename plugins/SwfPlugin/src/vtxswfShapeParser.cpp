@@ -411,7 +411,7 @@ namespace vtx { namespace swf {
 				// COLOR
 			case FST_Solid:
 				{
-					const COLOR& swfColor = it->second.color;
+					const RGBA& swfColor = it->second.color;
 					material = new MaterialResource(
 						StringHelper::toString(shape_id)+"->"+StringHelper::toString(it->first), 
 						MaterialResource::MT_COLOR);
@@ -460,7 +460,7 @@ namespace vtx { namespace swf {
 
 					while(grd_it != grd_end)
 					{
-						const COLOR& swfColor = grd_it->second;
+						const RGBA& swfColor = grd_it->second;
 
 						Color color = Color(
 							(float)swfColor.red/255.0f, 

@@ -37,11 +37,12 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	Texture::Texture(uint size) 
-		: mSize(size), 
+	Texture::Texture(const uint& width, const uint& height)
+		: mWidth(width), 
+		mHeight(height), 
 		mRoot(NULL)
 	{
-		mRoot = new AtlasNode(Rect(0, 0, size, size), this);
+		mRoot = new AtlasNode(Rect(0, 0, width, height), this);
 	}
 	//-----------------------------------------------------------------------
 	Texture::~Texture()
@@ -51,9 +52,9 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	AtlasNode* Texture::packElement(AtlasElement* element)
 	{
-		if(element->getPackableWidth() > mSize || element->getPackableHeight() > mSize)
+		if(element->getPackableWidth() > mWidth || element->getPackableHeight() > mHeight)
 		{
-			VTX_EXCEPT("An AtlasPackable exceeds the maximum atlas size of '%u'", mSize);
+			VTX_EXCEPT("An AtlasPackable exceeds the maximum atlas size of '%u x %u'", mWidth, mHeight);
 			return NULL;
 		}
 
@@ -71,19 +72,26 @@ namespace vtx
 	void Texture::clear()
 	{
 		delete mRoot;
-		mRoot = new AtlasNode(Rect(0, 0, mSize, mSize), this);
+		mRoot = new AtlasNode(Rect(0, 0, mWidth, mHeight), this);
 	}
 	//-----------------------------------------------------------------------
 	void Texture::renderAllShapes()
 	{
 		// TODO: implement dynamic rasterizer assignment
 		Rasterizer* rst = RasterizerManager::getSingletonPtr()->getRasterizer("Cairo");
-		mRoot->renderElement(rst);
+
+		if(rst)
+			mRoot->renderElement(rst);
 	}
 	//-----------------------------------------------------------------------
-	const uint& Texture::getSize() const
+	const uint& Texture::getWidth() const
 	{
-		return mSize;
+		return mWidth;
+	}
+	//-----------------------------------------------------------------------
+	const uint& Texture::getHeight() const
+	{
+		return mHeight;
 	}
 	//-----------------------------------------------------------------------
 	uint Texture::getPackedSize()

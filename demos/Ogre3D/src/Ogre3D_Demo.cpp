@@ -37,7 +37,9 @@ Ogre::RenderWindow* mWindow = NULL;
 OIS::Mouse*	mouse = NULL;
 
 //-----------------------------------------------------------------------
-class MovieListener : public vtx::Movie::Listener, public vtx::ScriptCallbackListener
+class MovieListener : 
+	public vtx::Movie::Listener, 
+	public vtx::ScriptCallbackListener
 {
 public:
 	vtx::ScriptParam scriptCallback(const vtx::String& callback_name, const vtx::ScriptParamList& args)
@@ -316,7 +318,7 @@ int main(int argc, char **argv)
 
 	vtx::FileManager::getSingletonPtr()->addFileContainer(MEDIA_PATH);
 	vtx::FileManager::getSingletonPtr()->addFileContainer("");
-	vtx::FileManager::getSingletonPtr()->addFileContainer("C:/Users/stone/Desktop/vtx_flash_test");
+	vtx::FileManager::getSingletonPtr()->addFileContainer("C:/SDKs/vektrix/dev/unit_tests/tests/as3/flash_external_ExternalInterface/media");
 	vtx::FileManager::getSingletonPtr()->addFileContainer("", "WebFileContainer");
 
 	//VTX_LOAD_PLUGIN(vektrix_EditorPlugin);

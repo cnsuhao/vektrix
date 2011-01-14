@@ -16,7 +16,8 @@ include (folders4cmake)
 option (BUILD_AS3_PLUGIN "Include/exclude the AS3 plugin from the build" ON)
 option (BUILD_EDITOR_PLUGIN "Include/exclude the vektrix Editor plugin from the build" ON)
 option (BUILD_SWF_PLUGIN "Include/exclude the SWF plugin from the build" ON)
-option (BUILD_FLASH_PREVIEW "Include/exclude the Flash IDE Plugin from the build" OFF)
+option (BUILD_FLASH_PREVIEW "Include/exclude the Flash IDE Plugin from the build" ON)
+option (BUILD_UNIT_TESTS "Include/exclude the unit test components from the build" OFF)
 
 # dependency discovery
 # core
@@ -61,9 +62,14 @@ if(BUILD_EDITOR_PLUGIN)
 endif(BUILD_EDITOR_PLUGIN)
 
 #add_subdirectory (plugins/XmlPlugin/scripts)
+#--------------------------------------------
+find_package (ois REQUIRED)
+
+if(BUILD_UNIT_TESTS)
+	add_subdirectory (dev/unit_tests/scripts)
+endif(BUILD_UNIT_TESTS)
 
 # demos
-find_package (ois REQUIRED)
 add_subdirectory (demos/Ogre3D/scripts)
 
 # tools

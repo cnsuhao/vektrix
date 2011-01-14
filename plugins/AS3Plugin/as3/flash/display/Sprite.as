@@ -37,7 +37,7 @@ package flash.display
 		public function Sprite()
 		{
 			super();
-			trace("AS3 Sprite CTOR");
+			//trace("AS3 Sprite CTOR");
 		}
 		
 		/* getters & setters */

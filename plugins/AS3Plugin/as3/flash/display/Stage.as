@@ -37,7 +37,7 @@ package flash.display
 		public function Stage()
 		{
 			super();
-			trace("AS3 Stage CTOR");
+			//trace("AS3 Stage CTOR");
 		}
 
 		/* getters & setters */

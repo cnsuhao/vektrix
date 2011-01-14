@@ -34,7 +34,7 @@ package flash.display
 		public function InteractiveObject()
 		{
 			super();
-			trace("AS3 InteractiveObject CTOR");
+			//trace("AS3 InteractiveObject CTOR");
 		}
 		
 		/* getters & setters */

@@ -103,7 +103,7 @@ namespace vtx
 
 		if(!mTextures.size())
 		{
-			mTextures.push_back(mTextureFactory->createObject());
+			mTextures.push_back(mTextureFactory->createObject(mSize, mSize));
 		}
 
 		AtlasElementList::iterator elem_it = mElements.begin();

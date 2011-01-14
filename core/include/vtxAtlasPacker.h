@@ -67,7 +67,7 @@ namespace vtx
 		typedef std::vector<Texture*> AtlasTextureList;
 		typedef std::vector<AtlasElement*> AtlasElementList;
 
-		AtlasPacker(TextureFactory* factory, uint atlasSize = 1024);
+		AtlasPacker(TextureFactory* factory, uint atlasSize = 2048);
 		virtual ~AtlasPacker();
 
 		/** Sorts the elements that are registered to the atlas by area */

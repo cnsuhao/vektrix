@@ -40,7 +40,7 @@ package flash.display
 		public function DisplayObjectContainer()
 		{
 			super();
-			trace("AS3 DisplayObjectContainer CTOR");
+			//trace("AS3 DisplayObjectContainer CTOR");
 
 			ctor();
 		}

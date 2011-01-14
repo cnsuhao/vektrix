@@ -81,7 +81,7 @@ namespace vtx { namespace swf {
 			// has color
 			if(flags & 4)
 			{
-				text_record.color = parser->readColor(tag_type == TT_DefineText2);
+				text_record.color = parser->readRGBA(tag_type == TT_DefineText2);
 				glyph_strip.color = Color(
 					(float)text_record.color.red/255.0f, 
 					(float)text_record.color.green/255.0f, 
@@ -180,7 +180,7 @@ namespace vtx { namespace swf {
 		if(flags & ETF_HasTextColor)
 		{
 			// text color
-			COLOR color = parser->readColor(true);
+			RGBA color = parser->readRGBA(true);
 		}
 
 		if(flags & ETF_HasMaxLength)

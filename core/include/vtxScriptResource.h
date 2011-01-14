@@ -40,6 +40,7 @@ namespace vtx
 	{
 	public:
 		ScriptResource(const String& script_type);
+		ScriptResource(const String& name, const String& script_type);
 		virtual ~ScriptResource();
 
 		/** @copybrief Resource::getType */

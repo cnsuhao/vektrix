@@ -49,8 +49,6 @@ namespace vtx
 		: FactoryManager<MovieFactory>("Movie"), 
 		mFileManager(NULL)
 	{
-		new LogManager();
-
 		VTX_LOG("<< vektrix %s started >>", StringHelper::versionString(VTX_VERSION).c_str());
 		VTX_LOG("<< Codename: %s >>", VTX_VERSION_NAME);
 

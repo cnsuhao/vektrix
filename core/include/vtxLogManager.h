@@ -34,9 +34,9 @@ THE SOFTWARE.
 #include "vtxThreadingDefines.h"
 #include "vtxThreadingHeaders.h"
 
-#define VTX_EXCEPT(...)	{ vtx::LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->line(__LINE__); LogManager::getSingletonPtr()->exception(__VA_ARGS__); }
-#define VTX_WARN(...)	{ vtx::LogManager::getSingletonPtr()->file(__FILE__); LogManager::getSingletonPtr()->warning(__VA_ARGS__); }
-#define VTX_LOG(...)	{ vtx::LogManager::getSingletonPtr()->log(__VA_ARGS__); }
+#define VTX_EXCEPT(...)	do { vtx::LogManager* log = vtx::LogManager::getSingletonPtr(); log->file(__FILE__); log->line(__LINE__); log->exception(__VA_ARGS__); } while(false)
+#define VTX_WARN(...)	do { vtx::LogManager* log = vtx::LogManager::getSingletonPtr(); log->file(__FILE__); log->warning(__VA_ARGS__); } while(false)
+#define VTX_LOG(...)	do { vtx::LogManager::getSingletonPtr()->log(__VA_ARGS__); } while(false)
 
 #ifdef _DEBUG
 #	define VTX_DEBUG vtx::LogManager::getSingletonPtr()->log
@@ -48,10 +48,14 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	/** The manager for logging events, warnings and errors */
-	class vtxExport LogManager : public Singleton<LogManager>
+	class vtxExport LogManager : public AutoSingleton<LogManager>
 	{
-	public:
+		friend class AutoSingleton<LogManager>;
+
+	protected:
 		LogManager();
+
+	public:
 		virtual ~LogManager();
 
 		void logToCout(bool log_to_cout);

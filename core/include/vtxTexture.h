@@ -39,7 +39,7 @@ namespace vtx
 	class vtxExport Texture
 	{
 	public:
-		Texture(uint size);
+		Texture(const uint& width, const uint& height);
 		virtual ~Texture();
 
 		// TODO: refactor packing, this shouldn't be located here
@@ -51,19 +51,22 @@ namespace vtx
 		/** Draw all contained elements to this texture */
 		void renderAllShapes();
 
-		const uint& getSize() const;
+		const uint& getWidth() const;
+		const uint& getHeight() const;
+
 		uint getPackedSize();
 
 		/** Paint a given RGBA pixel buffer to the given coordinates inside this texture */
 		virtual void paintPixelsToRect(const Rect& coordinates, unsigned char* pixelData) = 0;
 
 	protected:
-		uint mSize;
+		uint mWidth;
+		uint mHeight;
 		AtlasNode* mRoot;
 	};
 	//-----------------------------------------------------------------------
 	/** The Factory for creating Texture objects */
-	class vtxExport TextureFactory : public Factory<Texture> {};
+	class vtxExport TextureFactory : public Factory<Texture, const uint&, const uint&> {};
 	//-----------------------------------------------------------------------
 }
 
