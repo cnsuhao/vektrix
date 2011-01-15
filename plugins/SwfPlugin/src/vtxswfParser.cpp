@@ -245,7 +245,7 @@ namespace vtx { namespace swf {
 		if(length == 63)
 			length = readU32();
 
-		const uint& tag_start = getReadPosition();
+		const uint tag_start = getReadPosition();
 
 		switch(type)
 		{
@@ -357,11 +357,11 @@ namespace vtx { namespace swf {
 			break;
 		}
 
-		uint tag_end = tag_start + length;
+		const uint tag_end = tag_start + length;
 		if(getReadPosition() != tag_end)
 		{
 			// something has gone wrong
-			VTX_WARN("%d unread bytes after tag type: %d bytes: ", tag_end - getReadPosition(), type);			
+			VTX_WARN("%d unread bytes after tag type: %d", tag_end - getReadPosition(), type);			
 			setReadPosition(tag_end);
 		}
 	}
