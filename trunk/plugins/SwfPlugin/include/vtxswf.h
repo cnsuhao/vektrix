@@ -31,56 +31,37 @@ THE SOFTWARE.
 
 #include "vtxPrerequisites.h"
 
-#if VTX_OS == VTX_WIN32
-#	ifdef VTX_STATIC_LIB
-#		define vtxswfExport
-#	else
-#		ifdef VEKTRIX_SWFPLUGIN_EXPORTS
-#			define vtxswfExport __declspec(dllexport)
-#		else
-#			define vtxswfExport __declspec(dllimport)
-#		endif
-#	endif
-#endif
-
-#if VTX_OS == VTX_LINUX
-#	define vtxswfExport
-#endif
+#define vtxswfExport
 
 // uncomment this if you want to load compressed SWFs
 #define USE_ZLIB
 
-namespace vtx
+__namespace2(vtx, swf)
+// enumerations
+enum ContourID
 {
-	/** The namespace for all classes of the SWF plugin */
-	namespace swf
-	{
-		// enumerations
-		enum ContourID
-		{
-			CID_LINE = 1, 
-			CID_BEZIER, 
-			CID_MOVE // pseudo element
-		};
+	CID_LINE = 0, 
+	CID_BEZIER, 
+	CID_MOVE // pseudo element
+};
 
-		// class pre-declarations
-		class ContourChunk;
-		class ContourPoint;
-		class SubShape;
-		class SwfParser;
-		class SwfParserFactory;
+// class pre-declarations
+class ContourChunk;
+class ContourPoint;
+class SubShape;
+class SwfParser;
+class SwfParserFactory;
 
-		// TagParsers
-		class FontParser;
-		class ImageParser;
-		class ScriptParser;
-		class ShapeParser;
-		class StructureParser;
-		class TextParser;
+// TagParsers
+class FontParser;
+class ImageParser;
+class ScriptParser;
+class ShapeParser;
+class StructureParser;
+class TextParser;
 
-		// Resources
-		class ScriptResource;
-	}
-}
+// Resources
+class ScriptResource;
+}}
 
 #endif

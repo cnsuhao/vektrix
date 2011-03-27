@@ -31,21 +31,7 @@ THE SOFTWARE.
 
 #include "vtxPrerequisites.h"
 
-#if VTX_OS == VTX_WIN32
-#	ifdef VTX_STATIC_LIB
-#		define vtxopExport
-#	else
-#		ifdef VEKTRIX_OGREPLUGIN_EXPORTS
-#			define vtxopExport __declspec(dllexport)
-#		else
-#			define vtxopExport __declspec(dllimport)
-#		endif
-#	endif
-#endif
-
-#if VTX_OS == VTX_LINUX
-#	define vtxopExport
-#endif
+#define vtxopExport
 
 namespace vtx
 {

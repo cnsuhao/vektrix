@@ -80,6 +80,8 @@ namespace vtx
 		/** Extend the boundaries of this box by the ones of another */
 		void extend(const BoundingBox& bb);
 
+		void extend(const Vector2& vec);
+
 		/** Transform the box using the given affine matrix */
 		void transformAffine(const Matrix& m);
 

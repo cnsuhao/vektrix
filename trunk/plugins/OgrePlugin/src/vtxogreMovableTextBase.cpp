@@ -52,7 +52,6 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void MovableTextBase::_updateVertexBuffer(const GlyphStripList& glyph_strips, const AtlasPacker::PackResultList& atlas_list, File* file)
 		{
-			//File* file = mResource->getFile();
 			OgreTexture* texture = NULL;
 
 			GlyphStrip::GlyphList::const_iterator glyph_it;
@@ -70,13 +69,11 @@ namespace vtx
 			while(it != end)
 			{
 				const GlyphStrip& glyph_strip = *it;
-				FontResource* font = static_cast<FontResource*>(file->getResource(glyph_strip.fontid));
+				FontResource* font = static_cast<FontResource*>(file->getResource(glyph_strip.fontid, "Font"));
 
 				// jump to a new line
 				if(glyph_strip.newline)
-				{
 					glyph_x = 0.0f;
-				}
 
 				glyph_x += glyph_strip.x;
 

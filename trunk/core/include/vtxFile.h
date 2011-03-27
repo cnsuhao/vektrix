@@ -86,7 +86,7 @@ namespace vtx
 		const String& getFilename() const;
 
 		/** Set the FileHeader for this file */
-		void setHeader(FileHeader header);
+		void setHeader(const FileHeader& header);
 		/** Get the FileHeader of this file */
 		const FileHeader& getHeader();
 

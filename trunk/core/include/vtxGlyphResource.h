@@ -59,7 +59,7 @@ namespace vtx
 		void setAdvance(const float& advance);
 
 		/** Add a ShapeElement to the outline of this glyph */
-		void addShapeElement(ShapeElement element);
+		void addShapeElement(ShapeElement element, const bool& auto_extend_bb = true);
 		/** Get a list of all contained shape elements */
 		const ShapeElementList& getElementList() const;
 

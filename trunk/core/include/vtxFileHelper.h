@@ -38,6 +38,8 @@ namespace vtx
 	class vtxExport FileHelper
 	{
 	public:
+		static String getWorkingDirectory();
+
 		/** Check if the given file exists */
 		static bool doesFileExist(String name);
 

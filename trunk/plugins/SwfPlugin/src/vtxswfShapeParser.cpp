@@ -37,6 +37,121 @@ THE SOFTWARE.
 
 namespace vtx { namespace swf {
 	//-----------------------------------------------------------------------
+	void debug_contour_element(const ContourElement& element, FILE* file);
+	void debug_shape_element(const ShapeElement& element, FILE* file);
+	void debug_c2(std::ofstream& out, const ContourElement& ce)
+	{
+		switch(ce.type)
+		{
+		case CID_LINE:
+			out << "LINE " << ce.p0.x << " " << ce.p0.y << std::endl;
+			out << "TO " << ce.p1.x << " " << ce.p1.y << std::endl;
+			break;
+
+		case CID_BEZIER:
+			out << "CURVE " << ce.p0.x << " " << ce.p0.y << std::endl;
+			out << "VIA " << ce.ctrl.x << " " << ce.ctrl.y << std::endl;
+			out << "TO " << ce.p1.x << " " << ce.p1.y << std::endl;
+			break;
+
+		default:
+			out << "ERROR!!!" << std::endl;
+			break;
+		}
+	}
+	void debug_2(std::ofstream& out, const SHAPEELEMENT& elem, const uint& index)
+	{
+		switch(elem.type)
+		{
+		case SET_MOVE:
+			out << index << " MOVE " << elem.x << " " << elem.y << " " << elem.fill0 << " " << elem.fill1 << " " << elem.line << std::endl;
+			break;
+
+		case SET_LINE:
+			out << index << " LINE " << elem.x << " " << elem.y << " " << elem.fill0 << " " << elem.fill1 << " " << elem.line << std::endl;
+			break;
+
+		case SET_BEZIER:
+			out << index << " CTRL " << elem.cx << " " << elem.cy << " " << elem.fill0 << " " << elem.fill1 << " " << elem.line << std::endl;
+			out << index << " TO " << elem.x << " " << elem.y << " " << elem.fill0 << " " << elem.fill1 << " " << elem.line << std::endl;
+			break;
+		}
+	}
+	//-----------------------------------------------------------------------
+	bool hasFill(const SHAPEELEMENT* elem, uint fill_id)
+	{
+		if(!elem)
+			return false;
+
+		return (elem->fill0 == fill_id || elem->fill1 == fill_id);
+	}
+	//-----------------------------------------------------------------------
+	bool equalFill(const SHAPEELEMENT* elem, const SHAPEELEMENT* other)
+	{
+		if(!elem || !other)
+			return false;
+
+		return (elem->fill0 == other->fill0 && elem->fill1 == other->fill1);
+	}
+	//-----------------------------------------------------------------------
+	bool continousFill(const SHAPEELEMENT* elem, const SHAPEELEMENT* other, uint fill_id)
+	{
+		if(!elem || !other)
+			return false;
+
+		return 
+			(elem->fill0 == other->fill0 && elem->fill0 == fill_id) || 
+			(elem->fill1 == other->fill1 && elem->fill1 == fill_id);
+	}
+	//-----------------------------------------------------------------------
+	bool equalPos(const SHAPEELEMENT* elem, const SHAPEELEMENT* other)
+	{
+		if(!elem || !other)
+			return false;
+
+		return (elem->x == other->x && elem->y == other->y);
+	}
+	//-----------------------------------------------------------------------
+	void copyReverse(ShapeElementList& out, const ShapeElementList& in, int start, int end)
+	{
+		for(int j=end; j >= start; --j)
+		{
+			if(in.at(j).type == SET_BEZIER)
+			{
+				SHAPEELEMENT new_elem = in.at(j);
+				std::swap(new_elem.x, new_elem.cx);
+				std::swap(new_elem.y, new_elem.cy);
+				out.push_back(new_elem);
+			}
+			else
+				out.push_back(in.at(j));
+		}
+	}
+	class OutlineChunk
+	{
+	public:
+		OutlineChunk() : reverse(false) {}
+		OutlineChunk(const OutlineChunk& src, bool reverse)
+		{
+			this->reverse = reverse;
+			this->start = reverse ? src.end : src.start;
+			this->end = reverse ? src.start : src.end;
+		}
+		bool reverse;
+		int start, end;
+
+		int start_()
+		{
+			return reverse ? end : start;
+		}
+
+		int end_()
+		{
+			return reverse ? start : end;
+		}
+	};
+	typedef std::vector<OutlineChunk> OutlineChunkList;
+	//-----------------------------------------------------------------------
 	void ShapeParser::handleDefineShape(const TagTypes& tag_type, SwfParser* parser)
 	{
 		// clear all lists
@@ -50,7 +165,7 @@ namespace vtx { namespace swf {
 		mSubShapeList.clear();
 		mSubLineList.clear();
 
-		UI16 shape_id = parser->readU16();
+		mShapeId = parser->readU16();
 
 		RECT bounds = parser->readRect();
 
@@ -60,7 +175,7 @@ namespace vtx { namespace swf {
 			parser->readU8(); // line flags
 		}
 
-		ShapeResource* shape_resource = new ShapeResource(StringHelper::toString(shape_id));
+		ShapeResource* shape_resource = new ShapeResource(StringHelper::toString(mShapeId));
 		parser->getCurrentFile()->addResource(shape_resource);
 
 		BoundingBox box(
@@ -85,7 +200,7 @@ namespace vtx { namespace swf {
 		generateSublines();
 
 		// write the processed data to our own format
-		writeFillstyles(shape_id, parser->getCurrentFile());
+		writeFillstyles(mShapeId, parser->getCurrentFile());
 		writeSubshapes(shape_resource);
 	}
 	//-----------------------------------------------------------------------
@@ -135,9 +250,7 @@ namespace vtx { namespace swf {
 			// get and store the flash elements
 			const SHAPEELEMENT* prev_elem = NULL;
 
-			ShapeElementList::iterator elem_it = mFlashShape.elements.begin();
-			ShapeElementList::iterator elem_end = mFlashShape.elements.end();
-			while(elem_it != elem_end)
+			for_each_const(elem_it, ShapeElementList, mFlashShape.elements)
 			{
 				const SHAPEELEMENT& se = *elem_it;
 
@@ -189,7 +302,6 @@ namespace vtx { namespace swf {
 				}
 
 				prev_elem = &se;
-				++elem_it;
 			} // while(shape_elements)
 
 			mChunkLists[fill_it->first] = curr_chunk;
@@ -206,7 +318,7 @@ namespace vtx { namespace swf {
 
 		// DEBUG
 		char filename[512];
-		sprintf_s(filename, "%sall_elements.txt", DEBUG_OUTPUT_PATH);
+		sprintf_s(filename, "%sshape_%d_all_elements.txt", DEBUG_OUTPUT_PATH, mShapeId);
 		FILE* file = fopen(filename, "w");
 
 		ShapeElementList::iterator elem_it = mFlashShape.elements.begin();
@@ -252,7 +364,7 @@ namespace vtx { namespace swf {
 		for( ; map_it != map_end; ++map_it)
 		{
 			char filename[512];
-			sprintf_s(filename, "%schunks_%d.txt", DEBUG_OUTPUT_PATH, map_it->first);
+			sprintf_s(filename, "%sshape_%d_chunks_%u.txt", DEBUG_OUTPUT_PATH, mShapeId, map_it->first);
 			FILE* file = fopen(filename, "w");
 
 			ContourElementList::const_iterator chunk_it = map_it->second.begin();
@@ -367,7 +479,7 @@ namespace vtx { namespace swf {
 			if(FileHelper::doesDirectoryExist(DEBUG_OUTPUT_PATH))
 			{
 				char filename[512];
-				sprintf_s(filename, "%ssubshapes_%d.txt", DEBUG_OUTPUT_PATH, fill_it->first);
+				sprintf_s(filename, "%sshape_%d_subshapes_%d.txt", DEBUG_OUTPUT_PATH, mShapeId, fill_it->first);
 				FILE* file = fopen(filename, "w");
 
 				elem_it = subshape.elements.begin();
@@ -567,7 +679,7 @@ namespace vtx { namespace swf {
 		} // for(subshapes)
 	}
 	//-----------------------------------------------------------------------
-	void SwfParser::debug_contour_element(const ContourElement& element, FILE* file)
+	void debug_contour_element(const ContourElement& element, FILE* file)
 	{
 #if defined DEBUG_FLASH_SHAPES && defined _DEBUG
 
@@ -608,7 +720,7 @@ namespace vtx { namespace swf {
 #endif
 	}
 	//-----------------------------------------------------------------------
-	void SwfParser::debug_shape_element(const ShapeElement& element, FILE* file)
+	void debug_shape_element(const ShapeElement& element, FILE* file)
 	{
 #if defined DEBUG_FLASH_SHAPES && defined _DEBUG
 

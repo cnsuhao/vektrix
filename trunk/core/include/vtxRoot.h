@@ -78,6 +78,7 @@ namespace vtx
 		MovieMap mMovies;
 		PluginList mPlugins;
 		FileManager* mFileManager;
+		FontManager* mFontManager;
 		ThreadJobQueue* mMainJobQueue;
 	};
 	//-----------------------------------------------------------------------

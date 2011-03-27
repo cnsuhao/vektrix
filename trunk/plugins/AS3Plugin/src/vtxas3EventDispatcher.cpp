@@ -88,6 +88,9 @@ namespace vtx { namespace as3 {
 				num_args = 5;
 			}
 
+			if(evt.getType() == vtx::Event::ENTER_FRAME)
+				VTX_LOG("ENTER_FRAME dispatched from %u", (uint)this);
+
 			Event* as3_evt = static_cast<Event*>(CSP_CORE->createObject(evt.getCategory(), "flash.events", num_args, evt_args));
 			delete[] evt_args;
 
@@ -96,13 +99,10 @@ namespace vtx { namespace as3 {
 
 			// call the AS3 "dispatch" method
 			Atom dispatch_args[] = { atom(), as3_evt->atom() };
-			//csp::VmCore::callFunction(this, dispatchEvent, dispatch_args);
-			csp::VmCore::callFunction(this, "dispatchEvent", 1, dispatch_args);
+			csp::VmCore::callFunction(this, dispatchEvent, dispatch_args);
 
 			if(as3_evt->RefCount() > 0)
-			{
 				as3_evt->DecrementRef();
-			}
 		}
 		CATCH(Exception* exception)
 		{

@@ -42,7 +42,7 @@ namespace vtx
 	{
 		if(!FileHelper::doesDirectoryExist(mLocation))
 		{
-			VTX_EXCEPT("The FileContainer '%s' does not exist!", location.c_str());
+			VTX_WARN("The FileContainer '%s' does not exist!", location.c_str());
 		}
 
 		if(mLocation.length() > 0 && mLocation.substr(mLocation.length()-1, 1) != "/")

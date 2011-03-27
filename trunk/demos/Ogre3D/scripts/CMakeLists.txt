@@ -27,15 +27,20 @@ set (include_dirs
 # the required link libraries
 set (libraries
 	vektrix
-	#vektrix_AS3Plugin
-	#vektrix_CairoPlugin
 	${ois_libraries}
 	${ogre_libraries}
+	${freetype_libraries}
+	${vtx_plugins_list}
 )
 
 #-----------------------------------------------------------------------
 # BUILD SETTINGS & COMPILATION
 #-----------------------------------------------------------------------
+
+if(WIN32 AND BUILD_USE_STATIC_CRT)
+	# link statically against the MSVCRT
+	link_static_crt()
+endif()
 
 # output directory
 set (EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)

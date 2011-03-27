@@ -54,6 +54,9 @@ namespace vtx { namespace as3 {
 		avmplus::Stringp get_htmlText();
 		void set_htmlText(avmplus::Stringp htmlText);
 
+		avmplus::Stringp get_text();
+		void set_text(avmplus::Stringp text);
+
 		/* methods */
 		int getLineIndexAtPoint(double x, double y);
 		void setSelection(int beginIndex, int endIndex);

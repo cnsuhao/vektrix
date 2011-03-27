@@ -87,31 +87,18 @@ namespace vtx
 		return mName;
 	}
 	//-----------------------------------------------------------------------
+	void Instance::processEvents()
+	{
+		//if(mScriptObject)
+		//	mScriptObject->fireEvents();
+	}
+	//-----------------------------------------------------------------------
 	void Instance::setScriptObject(ScriptObject* obj)
 	{
-		// remove native object from original script object
-		//if(obj)
-		//{
-		//	Instance* inst = obj->getNativeObject();
-		//	if(inst)
-		//	{
-		//		inst->setScriptObject(NULL);
-		//	}
-		//	obj->setNativeObject(NULL);
-		//}
-
-		//if(mScriptObject)
-		//{
-		//	mScriptObject->destroy();
-		//	mScriptObject = NULL;
-		//}
-
 		mScriptObject = obj;
 
 		if(mScriptObject)
-		{
 			mScriptObject->setNativeObject(this);
-		}
 	}
 	//-----------------------------------------------------------------------
 	ScriptObject* Instance::getScriptObject() const
@@ -122,11 +109,9 @@ namespace vtx
 	void Instance::initScriptObject()
 	{
 		ScriptEngine* script_engine = mParentMovie->getScriptEngine();
+
 		if(script_engine)
-		{
-			//script_engine->createScriptObject(this);
 			setScriptObject(script_engine->createScriptObject(this));
-		}
 	}
 	//-----------------------------------------------------------------------
 }

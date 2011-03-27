@@ -62,6 +62,28 @@ for test in tests:
 
 write_separator(file)
 
+file.write("const char* STR_TEST_LIST[] = \n")
+file.write("{\n")
+
+for i in range(0, len(tests)):
+	test = tests[i]
+	info = test.partition("/")
+	name = info[0] + "::" + info[2]
+	file.write("	\"" + name + "\"")
+
+	if i != len(tests)-1:
+		file.write(", ")
+
+	file.write("\n")
+
+file.write("};\n")
+
+write_separator(file)
+
+file.write("const int& STR_TEST_LIST_LEN = " + str(len(tests)) + ";\n");
+
+write_separator(file)
+
 file.write("#define RUN_TEST_FROM_STRING(host, str) \\\n")
 file.write("	if(false){} \\\n")
 
@@ -71,7 +93,7 @@ for test in tests:
 	file.write("	else if(str == \"" + name + "\") \\\n")
 	file.write("		host.runTest<" + name + ">(); \\\n	\\\n")
 
-file.write("	else VTX_EXCEPT(\"Unknown test: %s\", test_name.c_str())\n")
+file.write("	else VTX_EXCEPT(\"Unknown test: %s\", str.c_str())\n")
 
 write_separator(file)
 

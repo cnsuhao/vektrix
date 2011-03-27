@@ -65,8 +65,10 @@ namespace vtx
 		/** @copybrief Timeline::getCurrentFrame */
 		uint getCurrentFrame() const;
 
+		virtual void processEvents();
+
 		/** @copybrief DisplayObjectContainer::_update */
-		void _update(const float& delta_time);
+		virtual void updateGraphics(const float& delta_time);
 
 	protected:
 		Timeline* mTimeline;

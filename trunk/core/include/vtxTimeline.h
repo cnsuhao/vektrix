@@ -76,11 +76,14 @@ namespace vtx
 		/** Get the frame index of the currently displayed KeyFrame */
 		const uint& getCurrentFrame() const;
 
+		const bool frameChanged();
+
 	protected:
 		bool mPlaying;
 		float mPosition;
 		uint mFrameRate;
 		uint mCurrentFrame;
+		uint mPrevFrame;
 		KeyframeList mKeyframes;
 		MovieClip* mParentMovieClip;
 	};

@@ -36,16 +36,7 @@ THE SOFTWARE.
 #if VTX_OS == VTX_WIN32
 #
 #	pragma warning (disable : 4291)
-#
-#	ifdef VTX_STATIC_LIB
-#		define vtxas3Export
-#	else
-#		ifdef VEKTRIX_AS3PLUGIN_EXPORTS
-#			define vtxas3Export __declspec(dllexport)
-#		else
-#			define vtxas3Export __declspec(dllimport)
-#		endif
-#	endif
+#	define vtxas3Export
 #endif
 
 #if VTX_OS == VTX_LINUX

@@ -1,5 +1,6 @@
 # top-level files
 set (file_root
+	../include/std_cpp_ext.h
 	../include/vtxConfig.h
 	../include/vtxPrerequisites.h
 	../include/vtxThreadingConfig.h
@@ -43,8 +44,8 @@ set (file_root_common
 # Common -> Attributes files
 set (file_root_common_attributes
 	../include/vtxBoundingBox.h
-	../include/vtxCXForm.h
 	../include/vtxColor.h
+	../include/vtxCXForm.h
 	../include/vtxGlyphStrip.h
 	../include/vtxMatrix.h
 	../include/vtxRect.h
@@ -54,8 +55,8 @@ set (file_root_common_attributes
 	../include/vtxTransform.h
 	../include/vtxVector2.h
 	../src/vtxBoundingBox.cpp
-	../src/vtxCXForm.cpp
 	../src/vtxColor.cpp
+	../src/vtxCXForm.cpp
 	../src/vtxMatrix.cpp
 	../src/vtxRect.cpp
 	../src/vtxTransform.cpp
@@ -99,8 +100,8 @@ set (file_root_events
 	../include/vtxEvent.h
 	../include/vtxFileEvent.h
 	../include/vtxFocusEvent.h
-	../include/vtxKeyCodes.h
 	../include/vtxKeyboardEvent.h
+	../include/vtxKeyCodes.h
 	../include/vtxMouseEvent.h
 	../src/vtxEvent.cpp
 	../src/vtxFileEvent.cpp
@@ -144,6 +145,13 @@ set (file_root_files_general
 set (file_root_files_inferfaces
 	../include/vtxFileContainer.h
 	../include/vtxFileStream.h
+)
+
+# Fonts files
+set (file_root_fonts
+	../include/vtxFontManager.h
+	../include/vtxFontParser.h
+	../src/vtxFontManager.cpp
 )
 
 # HTML files
@@ -431,6 +439,7 @@ source_group("Files"                                FILES ${file_root_files})
 source_group("Files\\Default Impl"                  FILES ${file_root_files_default_impl})
 source_group("Files\\General"                       FILES ${file_root_files_general})
 source_group("Files\\Inferfaces"                    FILES ${file_root_files_inferfaces})
+source_group("Fonts"                                FILES ${file_root_fonts})
 source_group("HTML"                                 FILES ${file_root_html})
 source_group("HTML\\DOM"                            FILES ${file_root_html_dom})
 source_group("HTML\\DOM\\Elements"                  FILES ${file_root_html_dom_elements})
@@ -486,6 +495,7 @@ set (file_root
 	${file_root_files_default_impl}
 	${file_root_files_general}
 	${file_root_files_inferfaces}
+	${file_root_fonts}
 	${file_root_html}
 	${file_root_html_dom}
 	${file_root_html_dom_elements}

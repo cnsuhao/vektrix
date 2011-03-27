@@ -41,15 +41,7 @@ THE SOFTWARE.
 #	include <io.h>
 #	include <sys/stat.h>
 #
-#	ifdef VTX_STATIC_LIB
-#		define vtxExport
-#	else
-#		ifdef VEKTRIX_EXPORTS
-#			define vtxExport __declspec(dllexport)
-#		else
-#			define vtxExport __declspec(dllimport)
-#		endif
-#	endif
+#	define vtxExport
 #
 #	if defined _DEBUG && !defined VTX_DISABLE_MEMORY_DEBUGGING
 #		define _CRTDBG_MAP_ALLOC

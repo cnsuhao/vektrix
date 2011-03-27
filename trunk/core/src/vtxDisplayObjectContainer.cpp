@@ -38,8 +38,9 @@ THE SOFTWARE.
 namespace vtx
 {
 	//-----------------------------------------------------------------------
-	DisplayObjectContainer::DisplayObjectContainer() 
-		: mNeedBoundingBoxUpdate(false), 
+	DisplayObjectContainer::DisplayObjectContainer(const bool& auto_update_bbs) 
+		: mAutoUpdateBBs(auto_update_bbs), 
+		mNeedBoundingBoxUpdate(false), 
 		mChildListChanged(false)
 	{
 
@@ -186,9 +187,7 @@ namespace vtx
 			}
 
 			if(mParentMovie)
-			{
-				mParentMovie->destroyInstance(child);
-			}
+				mParentMovie->releaseInstance(child);
 
 			mLayers.erase(it);
 
@@ -223,7 +222,7 @@ namespace vtx
 					child_container->clearLayers();
 				}
 
-				mParentMovie->destroyInstance(child);
+				mParentMovie->releaseInstance(child);
 			}
 
 			++it;
@@ -239,37 +238,35 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	bool DisplayObjectContainer::isPointInside(const Vector2& coord)
 	{
-		LayerMap::iterator it = mLayers.begin();
-		LayerMap::iterator end = mLayers.end();
-
-		while(it != end)
+		for_each_const(it, LayerMap, mLayers)
 		{
 			if(it->second->isPointInside(coord))
-			{
 				return true;
-			}
-
-			++it;
 		}
 
 		return false;
 	}
 	//-----------------------------------------------------------------------
-	void DisplayObjectContainer::_update(const float& delta_time)
+	void DisplayObjectContainer::processEvents()
 	{
-		if(mNeedBoundingBoxUpdate)
+		InteractiveObject::processEvents();
+		//fireEvents();
+
+		for_each(it, LayerMap, mLayers)
+			it->second->processEvents();
+	}
+	//-----------------------------------------------------------------------
+	void DisplayObjectContainer::updateGraphics(const float& delta_time)
+	{
+		if(mNeedBoundingBoxUpdate && mAutoUpdateBBs)
 		{
 			BoundingBox new_bb;
 
-			LayerMap::iterator it = mLayers.begin();
-			LayerMap::iterator end = mLayers.end();
-
-			while(it != end)
+			for_each(it, LayerMap, mLayers)
 			{
 				BoundingBox bb = it->second->getBoundingBox();
 				bb.transformAffine(it->second->getMatrix());
 				new_bb.extend(bb);
-				++it;
 			}
 
 			mTransform.setBounding(new_bb);
@@ -279,26 +276,14 @@ namespace vtx
 
 		if(mTransform.doesNeedMatrixUpdate())
 		{
-			LayerMap::iterator it = mLayers.begin();
-			LayerMap::iterator end = mLayers.end();
-
-			while(it != end)
-			{
+			for_each(it, LayerMap, mLayers)
 				it->second->needMatrixUpdate();
-				++it;
-			}
 		}
 
-		InteractiveObject::_update(delta_time);
+		InteractiveObject::updateGraphics(delta_time);
 
-		LayerMap::iterator it = mLayers.begin();
-		LayerMap::iterator end = mLayers.end();
-
-		while(it != end)
-		{
-			it->second->_update(delta_time);
-			++it;
-		}
+		for_each(it, LayerMap, mLayers)
+			it->second->updateGraphics(delta_time);
 	}
 	//-----------------------------------------------------------------------
 	void DisplayObjectContainer::eventFired(const Event& evt)

@@ -29,61 +29,22 @@ THE SOFTWARE.
 #ifndef __vtxtestsUnitTestBase_H__
 #define __vtxtestsUnitTestBase_H__
 
-#include "vtxPrerequisites.h"
-
 #include "vtxtests.h"
+#include "vtxtestsOgreBase.h"
+#include "vtxtestsOISBase.h"
 
-#include "OgrePrerequisites.h"
-
-#define OIS_DYNAMIC_LIB
-#include <OIS/OIS.h>
-
-#define Get(type, name) \
-	public: const type& get##name() const \
-	{ return m##name; }
-
-#define GetPtr(type, name) \
-	public: type* get##name() const \
-	{ return m##name; }
-
-#define Set(type, name) \
-	public: void set##name(const type& val) \
-	{ m##name = val; }
-
-#define SetPtr(type, name) \
-	public: void set##name(type* val) \
-	{ m##name = val; }
-
-
-#define get(type, name) \
-	protected: type m##name; \
-	Get(type, name)
-
-#define getp(type, name) \
-	protected: type* m##name; \
-	GetPtr(type, name)
-
-#define set(type, name) \
-	protected: type m##name; \
-	Set(type, name)
-
-#define setp(type, name) \
-	protected: type* m##name; \
-	SetPtr(type, name)
-
-#define getset(type, name) \
-	protected: type m##name; \
-	Get(type, name) \
-	Set(type, name)
-
-#define getsetp(type, name) \
-	protected: type* m##name; \
-	GetPtr(type, name) \
-	SetPtr(type, name)
+// plugins
+#include "vtxas3Plugin.h"
+#include "vtxcaiPlugin.h"
+#include "vtxfreeimgPlugin.h"
+#include "vtxftPlugin.h"
+#include "vtxopPlugin.h"
+#include "vtxopenglPlugin.h"
+#include "vtxswfPlugin.h"
 
 namespace vtx { namespace tests {
 	//-----------------------------------------------------------------------
-	class UnitTestHost
+	class UnitTestHost : public OgreBase, public OISBase
 	{
 	public:
 		UnitTestHost();
@@ -92,37 +53,31 @@ namespace vtx { namespace tests {
 		void runTest()
 		{
 			mActiveTest = new T(this);
-			startTesting();
+			mActiveTest->started();
+			mActiveTest->stopped();
 			delete mActiveTest;
 			mActiveTest = NULL;
 		}
 
-		void startOgre();
-		void startOIS(Ogre::RenderWindow* window);
-		void startOIS(const size_t& hwnd, const int& width, const int& height);
+		// Ogre::FrameListener
+		virtual bool frameStarted(const Ogre::FrameEvent& evt);
+		virtual bool frameEnded(const Ogre::FrameEvent& evt);
 
-		void stopOgre();
-		void stopOIS();
+		// Ogre::WindowEventListener
+		virtual void windowResized(Ogre::RenderWindow* window);
+
+		// OIS::KeyListener
+		virtual bool keyPressed(const OIS::KeyEvent& e);
+		virtual bool keyReleased(const OIS::KeyEvent& e);
+
+		// OIS::MouseListener
+		virtual bool mouseMoved(const OIS::MouseEvent& e);
+		virtual bool mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id);
+		virtual bool mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id);
 
 	protected:
-		void startTesting();
-
+		bool mStopRequested;
 		UnitTest* mActiveTest;
-
-		// Ogre
-		Ogre::Camera* mOgreCamera;
-		getp(Ogre::RenderWindow, OgreWindow);
-		getp(Ogre::Root, OgreRoot);
-		Ogre::SceneManager* mOgreScene;
-		Ogre::Viewport* mOgreViewport;
-
-		// OIS
-		OIS::InputManager* mOISInputManager;
-		getsetp(OIS::Keyboard, OISKeyboard);
-		getp(OIS::Mouse, OISMouse);
-
-		// vektrix
-		vtx::Root* mVektrixRoot;
 	};
 	//-----------------------------------------------------------------------
 }}

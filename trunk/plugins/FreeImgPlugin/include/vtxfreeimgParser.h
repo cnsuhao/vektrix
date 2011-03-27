@@ -26,8 +26,8 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __vtxcaiPngParser_H__
-#define __vtxcaiPngParser_H__
+#ifndef __vtxfreeimgParser_H__
+#define __vtxfreeimgParser_H__
 
 #include "vtxfreeimg.h"
 #include "vtxFileParser.h"

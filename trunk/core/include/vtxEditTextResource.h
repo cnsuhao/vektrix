@@ -30,6 +30,7 @@ THE SOFTWARE.
 #define __vtxEditTextResource_H__
 
 #include "vtxPrerequisites.h"
+#include "vtxColor.h"
 #include "vtxBoundingBox.h"
 #include "vtxResource.h"
 
@@ -46,6 +47,12 @@ namespace vtx
 		/** @copybrief Resource::getType */
 		const String& getType() const;
 
+		void setFontSize(const float& size);
+		const float& getFontSize() const;
+
+		void setDefaultColor(const Color& color);
+		const Color& getDefaultColor() const;
+
 		/** Set the BoundingBox for this edit text */
 		void setBoundingBox(const BoundingBox& bb);
 		/** Get the BoundingBox of this edit text */
@@ -57,6 +64,8 @@ namespace vtx
 		const WString& getInitialText();
 
 	protected:
+		float mFontSize;
+		Color mDefaultColor;
 		BoundingBox mBoundingBox;
 		WString mInitialText;
 	};

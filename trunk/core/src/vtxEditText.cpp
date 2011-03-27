@@ -58,7 +58,8 @@ namespace vtx
 	const String EditText::TYPE = "EditText";
 	//-----------------------------------------------------------------------
 	EditText::EditText() 
-		: mNeedDomUpdate(true), 
+		: DisplayObjectContainer(false), 
+		mNeedDomUpdate(true), 
 		mSelectionBeginIndex(0), 
 		mSelectionEndIndex(0), 
 		mHtmlDom(NULL), 
@@ -78,7 +79,6 @@ namespace vtx
 		if(resource->getType() == "EditText")
 		{
 			EditTextResource* text_res = static_cast<EditTextResource*>(resource);
-
 			setBoundingBox(text_res->getBoundingBox());
 		}
 
@@ -90,9 +90,9 @@ namespace vtx
 		return TYPE;
 	}
 	//-----------------------------------------------------------------------
-	void EditText::_update(const float& delta_time)
+	void EditText::updateGraphics(const float& delta_time)
 	{
-		DisplayObjectContainer::_update(delta_time);
+		DisplayObjectContainer::updateGraphics(delta_time);
 
 		if(mNeedDomUpdate)
 		{
@@ -175,19 +175,13 @@ namespace vtx
 		}
 
 		// iterate lines
-		LineList::iterator line_it = mLines.begin();
-		LineList::iterator line_end = mLines.end();
-		while(line_it != line_end)
+		for_each(it, LineList, mLines)
 		{
-			const TextLine& line = *line_it;
+			const TextLine& line = *it;
 
 			// line that contains the given point reached
 			if(line.y - line.height <= point.y && line.y >= point.y)
-			{
 				return line;
-			}
-
-			++line_it;
 		}
 
 		// no fitting line found
@@ -212,15 +206,10 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	bool EditText::isPointInside(const Vector2& coord)
 	{
-		if(coord.x >= mTransform.getWorldBounding().getMinX() && 
+		return (coord.x >= mTransform.getWorldBounding().getMinX() && 
 			coord.x <= mTransform.getWorldBounding().getMaxX() && 
 			coord.y >= mTransform.getWorldBounding().getMinY() && 
-			coord.y <= mTransform.getWorldBounding().getMaxY())
-		{
-			return true;
-		}
-
-		return false;
+			coord.y <= mTransform.getWorldBounding().getMaxY());
 	}
 	//-----------------------------------------------------------------------
 	void EditText::eventFired(const Event& evt)
@@ -228,17 +217,10 @@ namespace vtx
 		DisplayObjectContainer::eventFired(evt);
 
 		if(evt.getCategory() == KeyboardEvent::CATEGORY)
-		{
-			const KeyboardEvent& keybd_evt = static_cast<const KeyboardEvent&>(evt);
+			keyboardEvent(static_cast<const KeyboardEvent&>(evt));
 
-			keyboardEvent(keybd_evt);
-		}
 		else if(evt.getCategory() == MouseEvent::CATEGORY)
-		{
-			const MouseEvent& mouse_evt = static_cast<const MouseEvent&>(evt);
-
-			mouseEvent(mouse_evt);
-		}
+			mouseEvent(static_cast<const MouseEvent&>(evt));
 	}
 	//-----------------------------------------------------------------------
 	void EditText::_buildGraphicsFromDOM()
@@ -255,7 +237,7 @@ namespace vtx
 
 		clearLayers();
 
-		interateDomTree(mHtmlDom, mParentMovie->getFile());
+		iterateDomTree(mHtmlDom, mParentMovie->getFile());
 
 		_createStripsAndShapes();
 
@@ -367,7 +349,6 @@ namespace vtx
 			GlyphResource* glyph_res = font->getGlyphByCode(*str_it);
 			if(!glyph_res)
 			{
-				VTX_WARN("Unable to find glyph for character %d", (int)*str_it);
 				++str_it;
 				continue;
 			}
@@ -407,32 +388,24 @@ namespace vtx
 
 		// word doesn't fit into current line --> start a new one
 		if(mCurrentLine.width + elem.width > getBoundingBox().getWidth())
-		{
 			_startNewLine();
-		}
 
 		switch(elem.type)
 		{
 		case TextLineElement::ET_Word:
 			if(style.size > mCurrentLine.height)
-			{
 				mCurrentLine.height = style.size;
-			}
 			break;
 
 		case TextLineElement::ET_Image:
 			if(elem.height > mCurrentLine.height)
-			{
 				mCurrentLine.height = elem.height;
-			}
 			break;
 		}
 
 		// check if we are already at the bottom boundary of this textfield
 		if(mCurrentHeight/* + mCurrentLine.height*/ > getBoundingBox().getHeight())
-		{
 			return;
-		}
 
 		elem.x = mCurrentLine.width;
 		mCurrentLine.width += elem.width;
@@ -575,11 +548,9 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void EditText::_createStripsAndShapes()
 	{
+		// the last line has not been added yet
 		if(mCurrentLine.elements.size())
-		{
-			// the last line has not been added yet
 			_startNewLine();
-		}
 
 		// iterate lines
 		//LineList::iterator line_it = mLines.begin();
@@ -605,9 +576,7 @@ namespace vtx
 					{
 						// only store the current strip if there already were some glyphs processed
 						if(mCurrentStrip.glyphs.size())
-						{
 							mGlyphStrips.push_back(mCurrentStrip);
-						}
 
 						mCurrentStrip.glyphs.clear();
 						mCurrentStrip.x = elem.x;
@@ -638,10 +607,9 @@ namespace vtx
 									mSelectionBegin.x = elem.x;
 
 									int idx = mSelectionBegin.subSel-startIdx-1;
+
 									if(idx >= 0)
-									{
 										mSelectionBegin.x += elem.glyphs.at(idx).x_in_word;
-									}
 
 									//GlyphStrip::GlyphList::const_iterator glyph_it = elem.glyphs.begin();
 									//GlyphStrip::GlyphList::const_iterator glyph_end = elem.glyphs.end();
@@ -675,7 +643,7 @@ namespace vtx
 							addChild(mc);
 							//mc->setMatrix(Matrix(.1f, 0, 0, 0, .1f, 0));
 							mc->setMatrix(Matrix(.5f, 0, /*mCurrentStrip.x + */elem.x, 0, .5f, mCurrentStrip.y - elem.height/* * 0.9f*/));
-							mc->_update(0.0f);
+							mc->updateGraphics(0.0f);
 						}
 						break;
 
@@ -810,7 +778,7 @@ namespace vtx
 					if(i == mSelectionBegin.lineIndex)
 					{
 						_addSelectionShape(
-							getBoundingBox().getWidth()-mSelectionBegin.x, line.height, 
+							line.width-mSelectionBegin.x, line.height, 
 							mSelectionBegin.x, line.y-line.height);
 					}
 					// last line
@@ -824,7 +792,7 @@ namespace vtx
 					else
 					{
 						_addSelectionShape(
-							getBoundingBox().getWidth(), line.height, 
+							line.width, line.height, 
 							0.0f, line.y-line.height);
 					}
 

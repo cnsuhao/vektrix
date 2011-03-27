@@ -31,21 +31,7 @@ THE SOFTWARE.
 
 #include "vtxPrerequisites.h"
 
-#if VTX_OS == VTX_WIN32
-#	ifdef VTX_STATIC_LIB
-#		define vtxcurlExport
-#	else
-#		ifdef VEKTRIX_CURLPLUGIN_EXPORTS
-#			define vtxcurlExport __declspec(dllexport)
-#		else
-#			define vtxcurlExport __declspec(dllimport)
-#		endif
-#	endif
-#endif
-
-#if VTX_OS == VTX_LINUX
-#	define vtxcurlExport
-#endif
+#define vtxcurlExport
 
 typedef void CURL;
 

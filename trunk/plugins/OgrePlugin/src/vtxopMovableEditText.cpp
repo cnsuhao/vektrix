@@ -81,9 +81,9 @@ namespace vtx
 			}
 		}
 		//-----------------------------------------------------------------------
-		void OgreMovableEditText::_update(const float& delta_time)
+		void OgreMovableEditText::updateGraphics(const float& delta_time)
 		{
-			EditText::_update(delta_time);
+			EditText::updateGraphics(delta_time);
 
 			const Matrix& mat = getWorldMatrix();
 

@@ -101,8 +101,10 @@ package flash.text
 		public function set sharpness(value:Number):void {}
 		public function get styleSheet():StyleSheet { return null; }
 		public function set styleSheet(value:StyleSheet):void {}
-		public function get text():String { return ""; }
-		public function set text(value:String):void {}
+
+		public native function get text():String;// { return ""; }
+		public native function set text(value:String):void;// {}
+
 		public function get textColor():uint { return null; }
 		public function set textColor(value:uint):void {}
 		public function get textHeight():Number { return 0; }

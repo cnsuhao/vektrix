@@ -22,6 +22,7 @@ set (include_dirs
 	${ois_include_dirs}
 	${ogre_include_dirs}
 	${boost_include_dirs}
+	${directx_include_dirs}
 )
 
 # the required link libraries
@@ -29,11 +30,20 @@ set (libraries
 	vektrix
 	${ois_libraries}
 	${ogre_libraries}
+	${freetype_libraries}
+	${vtx_plugins_list}
+	${directx_libraries}
+	OpenGL32.lib
 )
 
 #-----------------------------------------------------------------------
 # BUILD SETTINGS & COMPILATION
 #-----------------------------------------------------------------------
+
+if(WIN32 AND BUILD_USE_STATIC_CRT)
+	# link statically against the MSVCRT
+	link_static_crt()
+endif()
 
 # output directory
 set (EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)

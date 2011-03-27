@@ -42,7 +42,7 @@ namespace vtx
 		typedef std::map<uint, DisplayObject*> LayerMap;
 		typedef std::map<String, DisplayObject*> NameMap;
 
-		DisplayObjectContainer();
+		DisplayObjectContainer(const bool& auto_update_bbs = true);
 		virtual ~DisplayObjectContainer();
 
 		virtual bool isDisplayObjectContainer() const;
@@ -73,14 +73,17 @@ namespace vtx
 		/** Implementation of DisplayObject::isPointInside */
 		bool isPointInside(const Vector2& coord);
 
+		virtual void processEvents();
+
 		/** @copybrief DisplayObject::_update */
-		virtual void _update(const float& delta_time = 0.0f);
+		virtual void updateGraphics(const float& delta_time = 0.0f);
 
 		// inherited from EventListener
 		virtual void eventFired(const Event& evt);
 
 	protected:
 		bool mChildListChanged;
+		bool mAutoUpdateBBs;
 		bool mNeedBoundingBoxUpdate;
 		LayerMap mLayers;
 		NameMap mNameMap;

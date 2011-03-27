@@ -43,6 +43,7 @@ namespace vtx
 		mPosition(0.0f), 
 		mFrameRate(12), 
 		mCurrentFrame(0), 
+		mPrevFrame(0), 
 		mParentMovieClip(NULL)
 	{
 
@@ -115,14 +116,16 @@ namespace vtx
 		{
 			currentFrame->execute();
 
-			if(mParentMovieClip)
+
+
+			/*if(mParentMovieClip)
 			{
 				ScriptObject* script_movieclip = mParentMovieClip->getScriptObject();
 				if(script_movieclip)
 				{
 					script_movieclip->eventFired(Event(Event::ENTER_FRAME));
 				}
-			}
+			}*/
 
 			++mCurrentFrame;
 		}
@@ -196,6 +199,13 @@ namespace vtx
 	const uint& Timeline::getCurrentFrame() const
 	{
 		return mCurrentFrame;
+	}
+	//-----------------------------------------------------------------------
+	const bool Timeline::frameChanged()
+	{
+		bool changed = mPrevFrame != mCurrentFrame;
+		mPrevFrame = mCurrentFrame;
+		return changed;
 	}
 	//-----------------------------------------------------------------------
 }

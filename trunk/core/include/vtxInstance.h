@@ -65,6 +65,8 @@ namespace vtx
 		void setName(const String& name);
 		const String& getName() const;
 
+		virtual void processEvents();
+
 		/** Set the ScriptObject that is associated with this instance */
 		virtual void setScriptObject(ScriptObject* obj);
 

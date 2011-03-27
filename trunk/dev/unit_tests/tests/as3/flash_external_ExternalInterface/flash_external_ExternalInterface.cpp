@@ -37,13 +37,9 @@ THE SOFTWARE.
 
 #include "OgreRenderWindow.h"
 
-#define TEST flash_external_ExternalInterface
-
 namespace vtx { namespace tests { namespace as3 {
 	//-----------------------------------------------------------------------
-	VTX_TEST_MEDIA_PATH(as3, flash_external_ExternalInterface);
-	//-----------------------------------------------------------------------
-	TEST::TEST(UnitTestHost* host) 
+	flash_external_ExternalInterface::flash_external_ExternalInterface(UnitTestHost* host) 
 		: UnitTest(host), 
 		mMovie(NULL)
 	{
@@ -51,13 +47,13 @@ namespace vtx { namespace tests { namespace as3 {
 		mHost->startOIS(mHost->getOgreWindow());
 	}
 	//-----------------------------------------------------------------------
-	TEST::~TEST()
+	flash_external_ExternalInterface::~flash_external_ExternalInterface()
 	{
 		mHost->stopOIS();
 		mHost->stopOgre();
 	}
 	//-----------------------------------------------------------------------
-	void TEST::started()
+	void flash_external_ExternalInterface::started()
 	{
 		// let's save some screen space, nothing is displayed anyway
 		mHost->getOgreWindow()->resize(350, 150);
@@ -71,27 +67,31 @@ namespace vtx { namespace tests { namespace as3 {
 		VTX_LOAD_PLUGIN(vektrix_OgrePlugin);
 		VTX_LOAD_PLUGIN(vektrix_SwfPlugin);
 
-		FileManager::getSingletonPtr()->addFileContainer(MEDIA_PATH);
+		FileManager::getSingletonPtr()->addFileContainer(VTX_TEST_MEDIA_PATH(as3, flash_external_ExternalInterface));
 
 		mRoot->createMovie("swf_movie", "flash_external_ExternalInterface.swf", "OgreMovableMovie", this);
+
+		mHost->startOgreRendering();
 	}
 	//-----------------------------------------------------------------------
-	void TEST::stopped()
+	void flash_external_ExternalInterface::stopped()
 	{
 		delete mRoot;
 		mRoot = NULL;
 	}
 	//-----------------------------------------------------------------------
-	bool TEST::loadingCompleted(Movie* movie)
+	bool flash_external_ExternalInterface::loadingCompleted(Movie* movie)
 	{
 		mMovie = (ogre::MovableMovie*)movie;
 		mMovie->getScriptEngine()->setCallbackListener(this);
+
+		VTX_LOG("Press \"F1\" to execute an ActionScript 3 function from C++ via the ExternalInterface classes");
 
 		// remove this listener
 		return true;
 	}
 	//-----------------------------------------------------------------------
-	ScriptParam TEST::scriptCallback(const String& callback_name, const ScriptParamList& args)
+	ScriptParam flash_external_ExternalInterface::scriptCallback(const String& callback_name, const ScriptParamList& args)
 	{
 		if(callback_name == "returnValuesToCpp")
 		{
@@ -107,16 +107,15 @@ namespace vtx { namespace tests { namespace as3 {
 		return __TIMESTAMP__;
 	}
 	//-----------------------------------------------------------------------
-	bool TEST::frameStarted(const Ogre::FrameEvent& evt)
+	bool flash_external_ExternalInterface::frameStarted(const Ogre::FrameEvent& evt)
 	{
 		mRoot->update(evt.timeSinceLastFrame);
-
 		return UnitTest::frameStarted(evt);
 	}
 	//-----------------------------------------------------------------------
-	bool TEST::keyReleased(const OIS::KeyEvent& e)
+	bool flash_external_ExternalInterface::keyReleased(const OIS::KeyEvent& e)
 	{
-		if(e.key == OIS::KC_E && mMovie)
+		if(e.key == OIS::KC_F1 && mMovie)
 		{
 			ScriptParamList args;
 			args.push_back(true);

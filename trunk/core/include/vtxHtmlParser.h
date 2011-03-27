@@ -68,6 +68,7 @@ namespace vtx
 		void font(StringMap& atts);
 		void image(StringMap& atts);
 		void paragraph(StringMap& atts);
+		void linebreak();
 	};
 	//-----------------------------------------------------------------------
 }

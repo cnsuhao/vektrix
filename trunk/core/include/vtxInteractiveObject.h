@@ -52,7 +52,7 @@ namespace vtx
 
 		virtual bool hasFocus() const { return mHasFocus; }
 
-		virtual void _update(const float& delta_time = 0.0f);
+		virtual void processEvents();
 
 		// inherited from EventListener
 		virtual void eventFired(const Event& evt);

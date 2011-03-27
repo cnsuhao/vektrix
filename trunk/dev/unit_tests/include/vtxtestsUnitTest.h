@@ -39,14 +39,11 @@ THE SOFTWARE.
 #include <OIS/OIS.h>
 
 #define VTX_TEST_MEDIA_PATH(category, name) \
-	static const vtx::String MEDIA_PATH = vtx::String("../../tests/") + #category + "/" + #name + "/media/"
+	(vtx::String("../../tests/") + #category + "/" + #name + "/media").c_str()
 
 namespace vtx { namespace tests {
 	//-----------------------------------------------------------------------
-	class UnitTest : 
-		public Ogre::FrameListener, 
-		public OIS::KeyListener, 
-		public OIS::MouseListener
+	class UnitTest
 	{
 	public:
 		UnitTest(UnitTestHost* host);
@@ -56,8 +53,11 @@ namespace vtx { namespace tests {
 		virtual void stopped() {}
 
 		// Ogre::FrameListener
-		virtual bool frameStarted(const Ogre::FrameEvent& evt);
+		virtual bool frameStarted(const Ogre::FrameEvent& evt) { return true; }
 		virtual bool frameEnded(const Ogre::FrameEvent& evt) { return true; }
+
+		// Ogre::WindowEventListener
+		virtual void windowResized(Ogre::RenderWindow* window) {}
 
 		// OIS::KeyListener
 		virtual bool keyPressed(const OIS::KeyEvent& e) { return false; }

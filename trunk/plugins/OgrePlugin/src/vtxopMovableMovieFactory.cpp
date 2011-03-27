@@ -41,6 +41,9 @@ THE SOFTWARE.
 #include "vtxInstancePool.h"
 #include "vtxShapeResource.h"
 
+// TODO: how to manage system fonts
+#include "vtxFontManager.h"
+
 namespace vtx
 {
 	namespace ogre
@@ -57,14 +60,10 @@ namespace vtx
 			TextureFactory* texture_factory = inst_mgr->textures()->getFactory("OgreTexture");
 
 			mPacker = new AtlasPacker(texture_factory);
-			mPool = new InstancePool();
 		}
 		//-----------------------------------------------------------------------
 		MovableMovieFactory::~MovableMovieFactory()
 		{
-			delete mPool;
-			mPool = NULL;
-
 			delete mPacker;
 			mPacker = NULL;
 		}
@@ -91,11 +90,6 @@ namespace vtx
 		AtlasPacker* MovableMovieFactory::getPacker() const
 		{
 			return mPacker;
-		}
-		//-----------------------------------------------------------------------
-		InstancePool* MovableMovieFactory::getInstancePool() const
-		{
-			return mPool;
 		}
 		//-----------------------------------------------------------------------
 		MovieDebugger* MovableMovieFactory::_newDebugger(Movie* movie)
@@ -146,6 +140,20 @@ namespace vtx
 				}
 
 				++font_it;
+			}
+
+			FontResource* font = FontManager::getSingletonPtr()->getFont("Times New Roman");
+			if(font)
+			{
+				const FontResource::GlyphList& glyphs = font->getGlyphList();
+				FontResource::GlyphList::const_iterator glyph_it = glyphs.begin();
+				FontResource::GlyphList::const_iterator glyph_end = glyphs.end();
+
+				while(glyph_it != glyph_end)
+				{
+					mPacker->addElement(new GlyphAtlasElement(*glyph_it));
+					++glyph_it;
+				}
 			}
 
 			mPacker->packAtlas();

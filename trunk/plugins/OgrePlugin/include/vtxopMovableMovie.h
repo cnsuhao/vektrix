@@ -49,9 +49,8 @@ namespace vtx
 
 			AtlasPacker* getPacker() const;
 
-			Instance* getInstance(Resource* resource);
-			Instance* getInstanceByType(const String& type);
-			void releaseInstance(Instance* instance);
+			virtual Instance* getInstanceByType(const String& type);
+			virtual void releaseInstance(Instance* instance);
 
 			// Ogre functions
 			const Ogre::String& getMovableType() const;
@@ -63,7 +62,6 @@ namespace vtx
 		protected:
 			Ogre::AxisAlignedBox mAAB;
 			MovableMovieFactory* mFactory;
-			//ShapeList mShapes;
 			RenderableMap mRenderables;
 		};
 	}

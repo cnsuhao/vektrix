@@ -28,6 +28,7 @@ THE SOFTWARE.
 
 #include "vtxopMovableShape.h"
 #include "vtxopMovableMovie.h"
+#include "vtxogreShapeAtlasElement.h"
 #include "vtxopTexture.h"
 
 #include "vtxAtlasNode.h"
@@ -85,6 +86,14 @@ namespace vtx
 
 			if(mPacker)
 			{
+				//if(!mPacker->containsElement((uint)resource))
+				//{
+				//	ShapeResource* shape = static_cast<ShapeResource*>(resource);
+				//	mPacker->addElement(new ShapeAtlasElement(shape));
+				//	mPacker->packAtlas();
+				//	mPacker->renderAtlas();
+				//}
+
 				AtlasPacker::PackResultList list = mPacker->getResultList();
 				AtlasPacker::PackResultList::iterator it = list.find((uint)resource);
 				if(it != list.end())
@@ -98,9 +107,9 @@ namespace vtx
 			}
 		}
 		//-----------------------------------------------------------------------
-		void OgreMovableShape::_update(const float& delta_time)
+		void OgreMovableShape::updateGraphics(const float& delta_time)
 		{
-			Shape::_update(delta_time);
+			Shape::updateGraphics(delta_time);
 
 			const Matrix& mat = getWorldMatrix();
 

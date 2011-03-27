@@ -43,6 +43,9 @@ THE SOFTWARE.
 #include "zlib.h"
 #endif
 
+#define VTX_DEBUG_SWF_TAG(type)
+//#define VTX_DEBUG_SWF_TAG(type) VTX_LOG("SwfParser: reading tag [%d] %s", type, TagNames::getTagName(type))
+
 namespace vtx { namespace swf {
 	//-----------------------------------------------------------------------
 	SwfParser::SwfParser() 
@@ -247,6 +250,8 @@ namespace vtx { namespace swf {
 
 		const uint tag_start = getReadPosition();
 
+		VTX_DEBUG_SWF_TAG(type);
+
 		switch(type)
 		{
 			// fonts
@@ -290,6 +295,10 @@ namespace vtx { namespace swf {
 
 		case TT_DefineSprite:
 			mStructureParser->handleDefineSprite();
+			break;
+
+		case TT_PlaceObject:
+			mStructureParser->handlePlaceObject(tag_start, length);
 			break;
 
 		case TT_PlaceObject2:
@@ -352,16 +361,16 @@ namespace vtx { namespace swf {
 			break;
 
 		default:
-			VTX_WARN("SWF tag type not implemented: %d", type);
+			VTX_LOG("SWF tag type not implemented: [%d] %s", type, TagNames::getTagName(type));
 			skip(length);
 			break;
 		}
 
 		const uint tag_end = tag_start + length;
-		if(getReadPosition() != tag_end)
+		if(getReadPosition() != tag_end && !mStructureParser->isParsingMovieClip())
 		{
 			// something has gone wrong
-			VTX_WARN("%d unread bytes after tag type: %d", tag_end - getReadPosition(), type);			
+			VTX_WARN("%d unread bytes after tag type: [%d] %s", tag_end - getReadPosition(), type, TagNames::getTagName(type));
 			setReadPosition(tag_end);
 		}
 	}

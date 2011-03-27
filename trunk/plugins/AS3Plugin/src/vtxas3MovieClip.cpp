@@ -46,7 +46,7 @@ namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	int MovieClip::get__currentFrame()
 	{
-		return mMovieClip->getCurrentFrame() + 1;
+		return mMovieClip->getCurrentFrame();
 	}
 	//-----------------------------------------------------------------------
 	void MovieClip::init(Instance* inst, ScriptInterface* iface)

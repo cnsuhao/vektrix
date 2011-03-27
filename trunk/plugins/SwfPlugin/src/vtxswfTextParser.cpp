@@ -83,10 +83,10 @@ namespace vtx { namespace swf {
 			{
 				text_record.color = parser->readRGBA(tag_type == TT_DefineText2);
 				glyph_strip.color = Color(
-					(float)text_record.color.red/255.0f, 
-					(float)text_record.color.green/255.0f, 
-					(float)text_record.color.blue/255.0f, 
-					(float)text_record.color.alpha/255.0f);
+					text_record.color.red/255.0f, 
+					text_record.color.green/255.0f, 
+					text_record.color.blue/255.0f, 
+					text_record.color.alpha/255.0f);
 			}
 			// has x offset
 			if(flags & 1)
@@ -175,12 +175,18 @@ namespace vtx { namespace swf {
 		{
 			// font height
 			UI16 font_size = parser->readU16();
+			edit_text->setFontSize(font_size/20.0f);
 		}
 
 		if(flags & ETF_HasTextColor)
 		{
 			// text color
 			RGBA color = parser->readRGBA(true);
+			edit_text->setDefaultColor(Color(
+				color.red/255.0f, 
+				color.green/255.0f, 
+				color.blue/255.0f, 
+				color.alpha/255.0f));
 		}
 
 		if(flags & ETF_HasMaxLength)

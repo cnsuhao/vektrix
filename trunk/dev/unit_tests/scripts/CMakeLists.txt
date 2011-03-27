@@ -27,10 +27,11 @@ set (include_dirs
 	../tests
 	../include
 	${CMAKE_SOURCE_DIR}/core/include
-	${CMAKE_SOURCE_DIR}/plugins/OgrePlugin/include
+	${vtx_plugins_include}
 	${ois_include_dirs}
 	${ogre_include_dirs}
 	${boost_include_dirs}
+	${directx_include_dirs}
 )
 
 # the required link libraries
@@ -38,14 +39,19 @@ set (libraries
 	vektrix
 	${ois_libraries}
 	${ogre_libraries}
+	${vtx_plugins_list}
+	${directx_libraries}
+	OpenGL32.lib
 )
 
 #-----------------------------------------------------------------------
 # BUILD SETTINGS & COMPILATION
 #-----------------------------------------------------------------------
 
-# output directory
-set (EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../bin)
+if(WIN32 AND BUILD_USE_STATIC_CRT)
+	# link statically against the MSVCRT
+	link_static_crt()
+endif()
 
 # set the include directories
 include_directories (${include_dirs})
@@ -66,3 +72,6 @@ set_target_properties (vektrix_UnitTests PROPERTIES PREFIX "")
 
 # link against the required libraries
 target_link_libraries (vektrix_UnitTests ${libraries})
+
+# output directory
+set_target_properties (vektrix_UnitTests PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../bin)

@@ -61,12 +61,16 @@ set (file_root_as3_classes_flash_display
 
 # AS3 classes -> flash -> events files
 set (file_root_as3_classes_flash_events
+	../as3/flash/events/ErrorEvent.as
 	../as3/flash/events/Event.as
 	../as3/flash/events/EventDispatcher.as
 	../as3/flash/events/FocusEvent.as
 	../as3/flash/events/IEventDispatcher.as
+	../as3/flash/events/IOErrorEvent.as
 	../as3/flash/events/KeyboardEvent.as
 	../as3/flash/events/MouseEvent.as
+	../as3/flash/events/ProgressEvent.as
+	../as3/flash/events/TextEvent.as
 	../as3/flash/events/TimerEvent.as
 	../include/vtxas3Event.h
 	../include/vtxas3EventDispatcher.h

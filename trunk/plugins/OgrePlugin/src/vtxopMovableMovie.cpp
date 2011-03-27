@@ -45,8 +45,6 @@ THE SOFTWARE.
 #include "vtxShape.h"
 #include "vtxShapeResource.h"
 
-//#define NO_INST_POOLING
-
 namespace vtx
 {
 	namespace ogre
@@ -69,151 +67,25 @@ namespace vtx
 			return mFactory->getPacker();
 		}
 		//-----------------------------------------------------------------------
-		Instance* MovableMovie::getInstance(Resource* resource)
+		Instance* MovableMovie::getInstanceByType(const String& type)
 		{
-			if(!resource) return NULL;
+			Instance* instance = NULL;
 
-			if(resource->getType() == Button::TYPE)
+			if(!mFactory)
 			{
-				Button* button = new Button();
-				button->_setParent(this);
-				button->initFromResource(resource);
-				return button;
-			}
-			else if(resource->getType() == MovieClip::TYPE)
-			{
-				MovieClip* movieclip = new MovieClip();
-				movieclip->_setParent(this);
-				movieclip->initFromResource(resource);
-				//std::cout << "Created object: " << resource->getID() << std::endl;
-				return movieclip;
+				VTX_WARN("MovieFactory not available");
+				return NULL;
 			}
 
-			if(resource->getType() == Shape::TYPE)
+			InstanceFactory* factory = mFactory->getFactory(type);
+			if(factory)
 			{
-				ShapeResource* shape = static_cast<ShapeResource*>(resource);
-				if(!mFactory->getPacker()->containsElement((uint)shape))
-				{
-					mFactory->getPacker()->addElement(new ShapeAtlasElement(shape));
-					mFactory->getPacker()->packAtlas();
-					mFactory->getPacker()->renderAtlas();
-				}
-			}
-
-#ifndef NO_INST_POOLING
-			Instance* instance = mFactory->getInstancePool()->pop(resource->getType());
-
-			// instance received from instance pool
-			if(instance)
-			{
+				instance = factory->createObject();
 				instance->_setParent(this);
-				instance->initFromResource(resource);
-			}
-			// no instance available, create a new one
-			else
-#else
-			Instance* instance;
-#endif
-			{
-				if(!mFactory)
-				{
-					VTX_WARN("MovieFactory not available");
-					return NULL;
-				}
-
-				InstanceFactory* factory = mFactory->getFactory(resource->getType());
-				if(factory)
-				{
-					instance = factory->createObject();
-					instance->_setParent(this);
-					instance->initFromResource(resource);
-
-					if(instance->getType() == EditText::TYPE)
-					{
-						OgreMovableEditText* edit_text = static_cast<OgreMovableEditText*>(instance);
-						//edit_text->setAtlasList(mPacker->getResultList());
-						//edit_text->setPacker(mPacker);
-						mFactory->getPacker()->addListener(edit_text);
-					}
-					if(instance->getType() == Shape::TYPE)
-					{
-						OgreMovableShape* shape = static_cast<OgreMovableShape*>(instance);
-						mFactory->getPacker()->addListener(shape);
-					}
-
-					//VTX_LOG("\"%s\": CREATED %s with id %s, using Factory %s", 
-					//	movie->getName().c_str(), inst->getType().c_str(), id.c_str(), factory->getName().c_str());
-				}
 			}
 
 			if(!instance)
-			{
-				VTX_EXCEPT("No suitable factory for the resource type \"%s\" was found, the object with the id \"%s\" can not be created!!!", 
-					resource->getType().c_str(), resource->getID().c_str());
-			}
-
-			Ogre::Renderable* renderable = NULL;
-
-			if(instance->getType() == Shape::TYPE)
-				renderable = static_cast<OgreMovableShape*>(instance);
-			else if(instance->getType() == EditText::TYPE)
-				renderable = static_cast<OgreMovableEditText*>(instance);
-			else if(instance->getType() == StaticText::TYPE)
-				renderable = static_cast<OgreMovableStaticText*>(instance);
-
-			if(renderable)
-			{
-				RenderableMap::iterator it = mRenderables.find(renderable);
-				if(it == mRenderables.end())
-				{
-					mRenderables.insert(std::make_pair(renderable, renderable));
-				}
-			}
-
-			return instance;
-		}
-		//-----------------------------------------------------------------------
-		Instance* MovableMovie::getInstanceByType(const String& type)
-		{
-			Instance* instance = mFactory->getInstancePool()->pop(type);
-
-			// instance received from instance pool
-			if(instance)
-			{
-				instance->_setParent(this);
-			}
-			// no instance available, create a new one
-			else
-			{
-				if(type == Button::TYPE)
-				{
-					Button* button = new Button();
-					button->_setParent(this);
-					return button;
-				}
-				else if(type == MovieClip::TYPE)
-				{
-					MovieClip* movieclip = new MovieClip();
-					movieclip->_setParent(this);
-					return movieclip;
-				}
-
-				if(!mFactory)
-				{
-					VTX_WARN("MovieFactory not available");
-					return NULL;
-				}
-
-				InstanceFactory* factory = mFactory->getFactory(type);
-				if(factory)
-				{
-					instance = factory->createObject();
-					instance->_setParent(this);
-
-					//VTX_LOG("\"%s\": CREATED %s with id %s, using Factory %s", 
-					//	movie->getName().c_str(), inst->getType().c_str(), id.c_str(), factory->getName().c_str());
-				}
-			}
+				instance = Movie::getInstanceByType(type);
 
 			if(!instance)
 			{
@@ -223,21 +95,17 @@ namespace vtx
 
 			Ogre::Renderable* renderable = NULL;
 
-			if(instance->getType() == Shape::TYPE)
+			if(type == Shape::TYPE)
 				renderable = static_cast<OgreMovableShape*>(instance);
-			else if(instance->getType() == EditText::TYPE)
+
+			else if(type == EditText::TYPE)
 				renderable = static_cast<OgreMovableEditText*>(instance);
-			else if(instance->getType() == StaticText::TYPE)
+
+			else if(type == StaticText::TYPE)
 				renderable = static_cast<OgreMovableStaticText*>(instance);
 
 			if(renderable)
-			{
-				RenderableMap::iterator it = mRenderables.find(renderable);
-				if(it == mRenderables.end())
-				{
-					mRenderables.insert(std::make_pair(renderable, renderable));
-				}
-			}
+				mRenderables.insert(std::make_pair(renderable, renderable));
 
 			return instance;
 		}
@@ -245,40 +113,22 @@ namespace vtx
 		void MovableMovie::releaseInstance(Instance* instance)
 		{
 			Ogre::Renderable* renderable = NULL;
+			const String& type = instance->getType();
 
-			if(instance->getType() == Shape::TYPE)
+			if(type == Shape::TYPE)
 				renderable = static_cast<OgreMovableShape*>(instance);
-			else if(instance->getType() == EditText::TYPE)
+
+			else if(type == EditText::TYPE)
 				renderable = static_cast<OgreMovableEditText*>(instance);
-			else if(instance->getType() == StaticText::TYPE)
+
+			else if(type == StaticText::TYPE)
 				renderable = static_cast<OgreMovableStaticText*>(instance);
 
 			if(renderable)
-			{
-				RenderableMap::iterator it = mRenderables.find(renderable);
-				if(it != mRenderables.end())
-				{
-					mRenderables.erase(it);
-				}
-			}
+				mRenderables.erase(renderable);
 
-			if(instance->getType() == MovieClip::TYPE || instance->getType() == Button::TYPE)
-			{
-				DisplayObjectContainer* cont = static_cast<DisplayObjectContainer*>(instance);
-				cont->clearLayers();
-
-				delete instance;
-				return;
-			}
-
-#ifndef NO_INST_POOLING
-			mFactory->getInstancePool()->push(instance);
-			instance->_setParent(NULL);
-#else
+			Movie::releaseInstance(instance);
 			delete instance;
-#endif
-
-			//vtx::Movie::releaseInstance(instance);
 		}
 		//-----------------------------------------------------------------------
 		const Ogre::String& MovableMovie::getMovableType() const
@@ -299,14 +149,8 @@ namespace vtx
 		//-----------------------------------------------------------------------
 		void MovableMovie::_updateRenderQueue(Ogre::RenderQueue* queue)
 		{
-			RenderableMap::iterator it = mRenderables.begin();
-			RenderableMap::iterator end = mRenderables.end();
-
-			while(it != end)
-			{
+			for_each(it, RenderableMap, mRenderables)
 				queue->addRenderable(it->second);
-				++it;
-			}
 		}
 		//-----------------------------------------------------------------------
 		void MovableMovie::visitRenderables(Ogre::Renderable::Visitor* visitor, bool debugRenderables)

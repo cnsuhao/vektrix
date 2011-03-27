@@ -51,13 +51,13 @@ namespace vtx
 	class vtxExport LogManager : public AutoSingleton<LogManager>
 	{
 		friend class AutoSingleton<LogManager>;
+		friend class Root;
 
 	protected:
 		LogManager();
-
-	public:
 		virtual ~LogManager();
 
+	public:
 		void logToCout(bool log_to_cout);
 
 		void exception(const char* format, ...);

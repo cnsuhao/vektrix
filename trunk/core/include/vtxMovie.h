@@ -110,16 +110,13 @@ namespace vtx
 		bool gotoTime(const float& time);
 
 		/** Request an Instance with the given id */
-		virtual Instance* getInstance(Resource* resource) = 0;
+		Instance* getInstance(Resource* resource);
 
 		/** Request an Instance with the given type */
-		virtual Instance* getInstanceByType(const String& type) = 0;
+		virtual Instance* getInstanceByType(const String& type);
 
 		/** Release a previously requested Instance */
-		virtual void releaseInstance(Instance* instance) = 0;
-
-		Instance* createInstance(Resource* resource);
-		void destroyInstance(Instance* instance);
+		virtual void releaseInstance(Instance* instance);
 
 		/** Get the ScriptEngine that is associated with this movie */
 		ScriptEngine* getScriptEngine() const;

@@ -183,7 +183,7 @@ namespace vtx
 		mParentContainer = parent;
 		mTransform.setParentContainer(parent);
 		mTransform.setBounding(getBoundingBox());
-		_update(0);
+		updateGraphics(0);
 	}
 	//-----------------------------------------------------------------------
 	DisplayObjectContainer* DisplayObject::getParentContainer() const
@@ -216,7 +216,7 @@ namespace vtx
 		mTransform.needMatrixUpdate();
 	}
 	//-----------------------------------------------------------------------
-	void DisplayObject::_update(const float& delta_time)
+	void DisplayObject::updateGraphics(const float& delta_time)
 	{
 		mTransform.update();
 

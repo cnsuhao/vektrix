@@ -128,8 +128,11 @@ namespace vtx
 		/** Inform the object that the matrix needs to be updated */
 		void needMatrixUpdate();
 
-		/** Method to update all contents of this object */
-		virtual void _update(const float& delta_time = 0.0f);
+		/** Method to update and process all events related to this object */
+		virtual void processEvents() {}
+
+		/** Method to update all graphics contents of this object */
+		virtual void updateGraphics(const float& delta_time = 0.0f);
 
 		/** Get the Transform that is associated with this object */
 		Transform& getTransform();

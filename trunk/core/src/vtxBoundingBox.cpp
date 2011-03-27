@@ -63,9 +63,8 @@ namespace vtx
 	void BoundingBox::extend(const BoundingBox& bb)
 	{
 		if(mExtent == EXTENT_NULL)
-		{
 			setExtents(bb.getMin(), bb.getMax());
-		}
+
 		else
 		{
 			mExtent = EXTENT_FINITE;
@@ -77,12 +76,26 @@ namespace vtx
 		}
 	}
 	//-----------------------------------------------------------------------
+	void BoundingBox::extend(const Vector2& vec)
+	{
+		if(mExtent == EXTENT_NULL)
+			setExtents(vec, vec);
+
+		else
+		{
+			mExtent = EXTENT_FINITE;
+			mMin.x = (vec.x < mMin.x) ? vec.x : mMin.x;
+			mMin.y = (vec.y < mMin.y) ? vec.y : mMin.y;
+
+			mMax.x = (vec.x > mMax.x) ? vec.x : mMax.x;
+			mMax.y = (vec.y > mMax.y) ? vec.y : mMax.y;
+		}
+	}
+	//-----------------------------------------------------------------------
 	void BoundingBox::transformAffine(const Matrix& m)
 	{
 		if(mExtent != EXTENT_FINITE)
-		{
 			return;
-		}
 
 		Vector2 half = getHalf();
 		Vector2 center = m.transformAffine(getCenter());

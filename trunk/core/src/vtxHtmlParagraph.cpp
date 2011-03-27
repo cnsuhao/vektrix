@@ -33,7 +33,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	HtmlParagraph::HtmlParagraph(HtmlElement* parent) 
 		: HtmlElement(HtmlElement::Paragraph, parent), 
-		align(AlignLeft)
+		align(AlignNull)
 	{
 
 	}

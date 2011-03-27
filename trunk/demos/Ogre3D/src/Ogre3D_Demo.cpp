@@ -61,7 +61,8 @@ public:
 
 	bool loadingCompleted(vtx::Movie* movie)
 	{
-		movie->getScriptEngine()->setCallbackListener(&movie_listener);
+		if(movie->getScriptEngine())
+			movie->getScriptEngine()->setCallbackListener(&movie_listener);
 
 		//movie_node->attachObject(static_cast<vtx::ogre::MovableMovie*>(movie));
 		movie->enableDebugger(true);
@@ -291,28 +292,13 @@ int main(int argc, char **argv)
 
 	Ogre::Root* ogre_root = new Ogre::Root("", "ogre.cfg", "Ogre.log");
 
-	// ogre plugins
-#if VTX_OS == VTX_WIN32
-#	ifdef _DEBUG
-		ogre_root->loadPlugin("RenderSystem_Direct3D9_d");
-		ogre_root->loadPlugin("RenderSystem_GL_d");
-#	else
-		ogre_root->loadPlugin("RenderSystem_Direct3D9");
-		ogre_root->loadPlugin("RenderSystem_GL");
-#	endif
-#endif
-
-#if VTX_OS == VTX_LINUX
-		ogre_root->loadPlugin("RenderSystem_GL");
-#endif
-
 	vtx::LogManager::getSingletonPtr()->logToCout(true);
 
 	// vektrix plugins
-	VTX_LOAD_PLUGIN(vektrix_AS3Plugin);
+	//VTX_LOAD_PLUGIN(vektrix_AS3Plugin);
 	VTX_LOAD_PLUGIN(vektrix_CairoPlugin);
-	VTX_LOAD_PLUGIN(vektrix_cURLPlugin);
-	VTX_LOAD_PLUGIN(vektrix_FreeImgPlugin);
+	//VTX_LOAD_PLUGIN(vektrix_cURLPlugin);
+	//VTX_LOAD_PLUGIN(vektrix_FreeImgPlugin);
 	VTX_LOAD_PLUGIN(vektrix_OgrePlugin);
 	VTX_LOAD_PLUGIN(vektrix_SwfPlugin);
 
@@ -422,7 +408,7 @@ int main(int argc, char **argv)
 	//movie->play();
 
 	//movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("editor_movie", "vtx.ed.Editor", "OgreMovableMovie", &movie_listener);
-	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "flash_external.swf", "OgreMovableMovie", &movie_listener);
+	movie = (vtx::ogre::MovableMovie*)vtx::Root::getSingletonPtr()->createMovie("swf_movie", "shape_test.swf", "OpenGL_Cairo_Movie", &movie_listener);
 	movie->play();
 
 	movie_node->attachObject(movie);
