@@ -33,8 +33,6 @@ THE SOFTWARE.
 
 namespace vtx { namespace tests { namespace swf {
 	//-----------------------------------------------------------------------
-	VTX_TEST_MEDIA_PATH(swf, ImageParsing);
-	//-----------------------------------------------------------------------
 	TEST::TEST(UnitTestHost* host) 
 		: UnitTest(host)
 	{

@@ -42,6 +42,7 @@ namespace vtx { namespace swf {
 
 		void handleDefineButton2();
 		void handleDefineSprite();
+		void handlePlaceObject(const uint& tag_start, const UI32& length);
 		void handlePlaceObject2();
 		void handleRemoveObject2();
 		void handleShowFrame();
@@ -51,6 +52,8 @@ namespace vtx { namespace swf {
 
 		void handleDoABC(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
 		void handleSymbolClass(const TagTypes& tag_type, const uint& tag_length, SwfParser* parser);
+
+		bool isParsingMovieClip() const;
 
 	protected:
 		SwfParser* mParser;

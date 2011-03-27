@@ -51,6 +51,9 @@ THE SOFTWARE.
 #include "vtxConfig.h"
 #include "vtxAssert.h"
 
+// some custom C++ extensions for easier coding
+#include "std_cpp_ext.h"
+
 // version
 #define VTX_VERSION_MAJOR 0
 #define VTX_VERSION_MINOR 1
@@ -59,6 +62,8 @@ THE SOFTWARE.
 #define VTX_VERSION_SUFFIX ""
 
 #define VTX_VERSION ((VTX_VERSION_MAJOR << 16) | (VTX_VERSION_MINOR << 8) | VTX_VERSION_PATCH)
+
+#define VTX_STATIC_LIB
 
 #ifdef VTX_STATIC_LIB
 #	define VTX_LOAD_PLUGIN(name) name##_startPlugin()
@@ -89,16 +94,6 @@ THE SOFTWARE.
 # define W_OK 2
 # define R_OK 4
 #endif
-
-#define for_each(var, type, container) \
-	type::iterator var = container.begin(); \
-	type::iterator var##_end = container.end(); \
-	for( ; var != var##_end; ++var)
-
-#define for_each_const(var, type, container) \
-	type::const_iterator var = container.begin(); \
-	type::const_iterator var##_end = container.end(); \
-	for( ; var != var##_end; ++var)
 
 /** The root namespace of the vektrix library */
 namespace vtx
@@ -135,6 +130,8 @@ namespace vtx
 	class FileParsingJob;
 	class FileManager;
 	class FileStream;
+	class FontManager;
+	class FontParser;
 	class FontResource;
 	class FrameEvent;
 	class GlyphResource;

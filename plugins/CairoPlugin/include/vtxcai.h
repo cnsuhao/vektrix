@@ -31,21 +31,7 @@ THE SOFTWARE.
 
 #include "vtxPrerequisites.h"
 
-#if VTX_OS == VTX_WIN32
-#	ifdef VTX_STATIC_LIB
-#		define vtxcaiExport
-#	else
-#		ifdef VEKTRIX_CAIROPLUGIN_EXPORTS
-#			define vtxcaiExport __declspec(dllexport)
-#		else
-#			define vtxcaiExport __declspec(dllimport)
-#		endif
-#	endif
-#endif
-
-#if VTX_OS == VTX_LINUX
-#	define vtxcaiExport
-#endif
+#define vtxcaiExport
 
 namespace vtx
 {

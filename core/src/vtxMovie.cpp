@@ -102,12 +102,14 @@ namespace vtx
 			//evt.stageX = 250 + rand() % 50 - 25;
 			//evt.stageY = 125 + rand() % 50 - 25;
 			//mStage->eventFired(evt);
-			Event evt(Event::RENDER);
 
 			//mMainMovieClip->eventFired(evt);
-			mStage->eventFired(evt);
 
-			mStage->_update(delta_time);
+			mStage->processEvents();
+			mStage->updateGraphics(delta_time);
+
+			Event evt(Event::RENDER);
+			mStage->eventFired(evt);
 		}
 
 		for_each(it, ListenerMap, mListeners)
@@ -146,9 +148,7 @@ namespace vtx
 	void Movie::setMouseRel(float x, float y)
 	{
 		if(!mFile)
-		{
 			return;
-		}
 
 		// clamp x
 		if(x < 0.0f) x = 0.0f;
@@ -229,24 +229,44 @@ namespace vtx
 		return mMainMovieClip->gotoTime(time);
 	}
 	//-----------------------------------------------------------------------
-	Instance* Movie::createInstance(Resource* resource)
+	Instance* Movie::getInstance(Resource* resource)
 	{
-		Instance* instance = getInstance(resource);
+		if(!resource) return NULL;
 
-		//if(mScriptEngine)
-		//{
-		//	ScriptObject* script_object = mScriptEngine->createScriptObject(instance, resource);
-		//	instance->setScriptObject(script_object);
-		//}
+		const String& type = resource->getType();
+		Instance* inst = getInstanceByType(type);
 
-		return instance;
+		if(inst)
+			inst->initFromResource(resource);
+
+		return inst;
 	}
 	//-----------------------------------------------------------------------
-	void Movie::destroyInstance(Instance* instance)
+	Instance* Movie::getInstanceByType(const String& type)
+	{
+		Instance* inst = NULL;
+
+		if(type == Button::TYPE)
+			inst = new Button();
+
+		else if(type == EditText::TYPE)
+			inst = new EditText();
+
+		else if(type == MovieClip::TYPE)
+			inst = new MovieClip();
+
+		else if(type == Shape::TYPE)
+			inst = new Shape();
+
+		if(inst)
+			inst->_setParent(this);
+
+		return inst;
+	}
+	//-----------------------------------------------------------------------
+	void Movie::releaseInstance(Instance* instance)
 	{
 		instance->setScriptObject(NULL);
-		//instance->releaseScriptObject();
-		releaseInstance(instance);
 	}
 	//-----------------------------------------------------------------------
 	ScriptEngine* Movie::getScriptEngine() const

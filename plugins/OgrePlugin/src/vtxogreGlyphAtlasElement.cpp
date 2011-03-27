@@ -51,13 +51,13 @@ namespace vtx { namespace ogre {
 	const uint GlyphAtlasElement::getPackableWidth()
 	{
 		const BoundingBox& bb = mGlyph->getBoundingBox();
-		return MathHelper::findClosestPowerOfTwo(bb.getWidth()) * 2;
+		return MathHelper::findClosestPowerOfTwo(bb.getWidth()) * 4;
 	}
 	//-----------------------------------------------------------------------
 	const uint GlyphAtlasElement::getPackableHeight()
 	{
 		const BoundingBox& bb = mGlyph->getBoundingBox();
-		return MathHelper::findClosestPowerOfTwo(bb.getHeight()) * 2;
+		return MathHelper::findClosestPowerOfTwo(bb.getHeight()) * 4;
 	}
 	//-----------------------------------------------------------------------
 	void GlyphAtlasElement::paintToNode(AtlasNode* node, Rasterizer* rasterizer)

@@ -28,6 +28,7 @@ THE SOFTWARE.
 
 #include "vtxGlyphResource.h"
 #include "vtxFontResource.h"
+#include "vtxLogManager.h"
 
 namespace vtx
 {
@@ -58,6 +59,29 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void GlyphResource::setCode(const ushort& code)
 	{
+		if(code == 65)
+		VTX_LOG("CHAR: %c %4.2f %4.2f", (char)code, mBoundingBox.getWidth(), mBoundingBox.getHeight());
+
+		//for_each(it, ShapeElementList, mShapeElements)
+		//{
+		//	ShapeElement& element = *it;
+		//	switch(element.type)
+		//	{
+		//	case ShapeElement::SID_MOVE_TO:
+		//		std::cout << "move: " << element.pos.x << " " << element.pos.y << std::endl;
+		//		break;
+
+		//	case ShapeElement::SID_CURVE_TO:
+		//		std::cout << "curve: " << element.ctrl.x << " " << element.ctrl.y << std::endl;
+		//		std::cout << "to: " << element.pos.x << " " << element.pos.y << std::endl;
+		//		break;
+
+		//	case ShapeElement::SID_LINE_TO:
+		//		std::cout << "line: " << element.pos.x << " " << element.pos.y << std::endl;
+		//		break;
+		//	}
+		//}
+
 		mCode = code;
 		mParent->_notifyGlyphCode(mCode, this);
 	}
@@ -77,8 +101,16 @@ namespace vtx
 		mAdvance = advance;
 	}
 	//-----------------------------------------------------------------------
-	void GlyphResource::addShapeElement(ShapeElement element)
+	void GlyphResource::addShapeElement(ShapeElement element, const bool& auto_extend_bb)
 	{
+		if(auto_extend_bb)
+		{
+			mBoundingBox.extend(element.pos);
+
+			if(element.type == ShapeElement::SID_CURVE_TO)
+				mBoundingBox.extend(element.ctrl);
+		}
+
 		mShapeElements.push_back(element);
 	}
 	//-----------------------------------------------------------------------

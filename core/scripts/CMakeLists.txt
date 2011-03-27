@@ -1,5 +1,7 @@
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
 
+include (build_tools)
+
 #-----------------------------------------------------------------------
 # CMAKE OPTIONS
 #-----------------------------------------------------------------------
@@ -40,6 +42,11 @@ set (libraries ${expat_libraries})
 # BUILD SETTINGS & COMPILATION
 #-----------------------------------------------------------------------
 
+if(WIN32 AND BUILD_USE_STATIC_CRT)
+	# link statically against the MSVCRT
+	link_static_crt()
+endif()
+
 # output directory
 set (LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
@@ -47,7 +54,7 @@ set (LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 include_directories (${include_dirs})
 
 # add the vektrix core library
-add_library (vektrix SHARED ${file_root})
+add_library (vektrix ${file_root})
 
 # automatically update the source-files list with folders4cmake
 auto_rebuild_src_files (vektrix)

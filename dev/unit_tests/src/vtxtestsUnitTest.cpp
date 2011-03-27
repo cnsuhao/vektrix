@@ -39,18 +39,4 @@ namespace vtx { namespace tests {
 
 	}
 	//-----------------------------------------------------------------------
-	bool UnitTest::frameStarted(const Ogre::FrameEvent& evt)
-	{
-		// default way to exit the test
-		OIS::Keyboard* kb = mHost->getOISKeyboard();
-		OIS::Mouse* ms = mHost->getOISMouse();
-
-		kb->capture();
-		ms->capture();
-
-		return !(
-			kb->isKeyDown(OIS::KC_LSHIFT) && 
-			kb->isKeyDown(OIS::KC_ESCAPE) || 
-			mHost->getOgreWindow()->isClosed());
-	}
 }}

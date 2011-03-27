@@ -47,7 +47,7 @@ namespace vtx
 			virtual void _setParent(Movie* parent);
 			virtual void initFromResource(Resource* resource);
 
-			void _update(const float& delta_time);
+			void updateGraphics(const float& delta_time);
 
 			void packed(const AtlasPacker::PackResultList& pack_result);
 

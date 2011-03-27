@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "vtxHtmlParagraph.h"
 #include "vtxHtmlText.h"
 #include "vtxFile.h"
+#include "vtxFontManager.h"
 #include "vtxLogManager.h"
 #include "vtxStringHelper.h"
 #include "vtxTextLineElement.h"
@@ -50,12 +51,21 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
-	void HtmlRenderable::interateDomTree(HtmlElement* root, File* file)
+	void HtmlRenderable::iterateDomTree(HtmlElement* root, File* file)
 	{
-		VTX_DEBUG_ASSERT(!mStyleStack.size(), "Style stacks not cleared");
-
 		mFile = file;
 		mPreviousVisualNode = NULL;
+
+		mAlignStack = AlignmentStack();
+		mStyleStack = StyleStack();
+
+		// push default values on to the stacks
+		mAlignStack.push(HtmlElement::AlignLeft);
+		StyleElement default_style;
+		default_style.font = FontManager::getSingletonPtr()->getFont("Times New Roman");
+		default_style.color = Color::BLACK;
+		default_style.size = 12;
+		mStyleStack.push(default_style);
 
 		_recursiveDomIteration(root);
 	}
@@ -63,13 +73,9 @@ namespace vtx
 	void HtmlRenderable::_recursiveDomIteration(HtmlElement* source_element)
 	{
 		if(!source_element)
-		{
 			return;
-		}
 
-		HtmlElement::ChildList::const_iterator it = source_element->children.begin();
-		HtmlElement::ChildList::const_iterator end = source_element->children.end();
-		while(it != end)
+		for_each_const(it, HtmlElement::ChildList, source_element->children)
 		{
 			switch((*it)->getType())
 			{
@@ -84,49 +90,20 @@ namespace vtx
 
 					StyleElement style;
 
+					if(mStyleStack.size())
+						style = mStyleStack.top();
+
 					if(font->face.length())
 					{
-						style.font = mFile->getFontByName(font->face);
-					}
-
-					if(!style.font)
-					{
-						if(mStyleStack.size())
-						{
-							//VTX_WARN("vtx::EditText: Unable to find font \"%s\", using previous font", font->face.c_str());
-							style.font = mStyleStack.top().font;
-						}
-						else
-						{
-							VTX_EXCEPT("TODO: implement default font ??");
-						}
+						FontResource* font_res = mFile->getFontByName(font->face);
+						style.font = font_res ? font_res : style.font;
 					}
 
 					if(font->size.length())
-					{
 						style.size = StringHelper::toFloat(font->size);
-					}
-					else if(mStyleStack.size())
-					{
-						style.size = mStyleStack.top().size;
-					}
-					else
-					{
-						VTX_EXCEPT("TODO: implement default size ??");
-					}
 
 					if(font->color.length())
-					{
 						style.color = StringHelper::colorFromHex(font->color);
-					}
-					else if(mStyleStack.size())
-					{
-						style.color = mStyleStack.top().color;
-					}
-					else
-					{
-						VTX_EXCEPT("TODO: implement default color ??");
-					}
 
 					mStyleStack.push(style);
 
@@ -138,9 +115,7 @@ namespace vtx
 					mStyleStack.pop();
 
 					if(mStyleStack.size())
-					{
 						_fontStyleChanged(mStyleStack.top());
-					}
 				}
 				break;
 
@@ -153,9 +128,7 @@ namespace vtx
 
 					// connect this image node to the previous visual node
 					if(mPreviousVisualNode)
-					{
 						mPreviousVisualNode->nextVisualNode = img;
-					}
 
 					// connect the  previous visual node to this image node
 					img->prevVisualNode = mPreviousVisualNode;
@@ -165,16 +138,12 @@ namespace vtx
 					// TODO2: if image is outside all font elements there is no style on the stack
 					// add FONT_CHANGE element
 					if(mStyleStack.size())
-					{
 						_fontStyleChanged(mStyleStack.top());
-					}
 
 					_addImage(img);
 
 					if(mStyleStack.size())
-					{
 						_fontStyleChanged(mStyleStack.top());
-					}
 				}
 				break;
 
@@ -185,8 +154,17 @@ namespace vtx
 				{
 					HtmlParagraph* par = static_cast<HtmlParagraph*>(*it);
 
-					mAlignStack.push(par->align);
+					HtmlElement::Alignment alignment = HtmlElement::AlignLeft;
 
+					if(mAlignStack.size())
+						alignment = mAlignStack.top();
+
+					if(par->align != HtmlElement::AlignNull)
+						alignment = par->align;
+
+					mAlignStack.push(alignment);
+
+					_startNewLine();
 					_addParagraph(par);
 
 					// continue recursion
@@ -203,13 +181,12 @@ namespace vtx
 				{
 					HtmlText* text = static_cast<HtmlText*>(*it);
 
-					if(!mStyleStack.size()) break;
+					if(!mStyleStack.size())
+						break;
 
 					// connect this text node to the previous visual node
 					if(mPreviousVisualNode)
-					{
 						mPreviousVisualNode->nextVisualNode = text;
-					}
 
 					// connect the  previous visual node to this text node
 					text->prevVisualNode = mPreviousVisualNode;
@@ -222,13 +199,15 @@ namespace vtx
 				}
 				break;
 
+			case HtmlElement::Linebreak:
+				_startNewLine();
+				break;
+
 			default:
 				// continue recursion
 				_recursiveDomIteration(*it);
 				break;
 			}
-
-			++it;
 		}
 	}
 	//-----------------------------------------------------------------------

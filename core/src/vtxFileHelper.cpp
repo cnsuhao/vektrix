@@ -27,9 +27,22 @@ THE SOFTWARE.
 */
 
 #include "vtxFileHelper.h"
+#include "vtxLogManager.h"
+
+#include <direct.h>
 
 namespace vtx
 {
+	//-----------------------------------------------------------------------
+	String FileHelper::getWorkingDirectory()
+	{
+		char cwd[1024];
+		if(getcwd(cwd, 1024) == cwd)
+			return cwd;
+
+		static String res("<unknown>");
+		return res;
+	}
 	//-----------------------------------------------------------------------
 	bool FileHelper::doesFileExist(String name)
 	{
@@ -38,8 +51,21 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	bool FileHelper::doesDirectoryExist(String name)
 	{
+		if(!name.length())
+			return false;
+
+		char last_char = name.at(name.length()-1);
+
+		if(last_char == '\\' || last_char == '/')
+			name = name.substr(0, name.length()-1);
+
 		struct stat buf;
-		stat(name.c_str(), &buf);
+		if(stat(name.c_str(), &buf))
+		{
+			VTX_WARN("Error \"%d\" while running stat() for \"%s\"", errno, name.c_str());
+			return false;
+		}
+
 		return (buf.st_mode & S_IFDIR) != 0;
 	}
 	//-----------------------------------------------------------------------

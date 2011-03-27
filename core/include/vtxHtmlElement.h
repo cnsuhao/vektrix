@@ -84,13 +84,15 @@ namespace vtx
 			Root, 
 			Image, 
 			Paragraph, 
+			Linebreak, 
 			Font, 
 			Text
 		};
 
 		enum Alignment
 		{
-			AlignLeft = 0, 
+			AlignNull = 0, 
+			AlignLeft, 
 			AlignRight, 
 			AlignCenter, 
 			AlignJustify

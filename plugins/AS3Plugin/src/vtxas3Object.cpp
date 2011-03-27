@@ -38,7 +38,8 @@ THE SOFTWARE.
 namespace vtx { namespace as3 {
 	//-----------------------------------------------------------------------
 	AS3Object::AS3Object(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
-		: avmplus::ScriptObject(vtable, prototype)
+		: avmplus::ScriptObject(vtable, prototype), 
+		mNativeObject(NULL)
 	{
 		if(RefCount() == 0)
 			IncrementRef();

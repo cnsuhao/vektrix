@@ -41,13 +41,27 @@ if(WIN32)
 	# try to find the boost libraries & headers from a pre-compiled package
 	find_path(boost_include_dirs	NAMES boost/version.hpp PATHS ${boost_path}/include/boost)
 	
+	if(BUILD_USE_STATIC_CRT)
+		set (boost_rel_crt "-s")
+		set (boost_dbg_crt "-s")
+	else(BUILD_USE_STATIC_CRT)
+		set (boost_rel_crt "")
+		set (boost_dbg_crt "")
+	endif(BUILD_USE_STATIC_CRT)
+	
+	set (boost_rel_lib_thread libboost_thread-${vcvers}-${boost_mt}${boost_rel_crt}-${boost__version}.lib)
+	set (boost_dbg_lib_thread libboost_thread-${vcvers}-${boost_mt}${boost_dbg_crt}gd-${boost__version}.lib)
+	
+	message (${boost_rel_lib_thread})
+	message (${boost_dbg_lib_thread})
+	
 	find_path(boost_release_library_dirs 
-		NAMES libboost_thread-${vcvers}-${boost_mt}-${boost__version}.lib 
+		NAMES ${boost_rel_lib_thread}
 		PATHS ${boost_path}/lib/Release
 	)
 	
 	find_path(boost_debug_library_dirs 
-		NAMES libboost_thread-${vcvers}-${boost_mt}-gd-${boost__version}.lib 
+		NAMES ${boost_dbg_lib_thread}
 		PATHS ${boost_path}/lib/Debug
 	)
 	

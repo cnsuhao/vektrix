@@ -80,7 +80,7 @@ package flash.events
 		//-----------------------------------------------------------------------
 		public function dispatchEvent(event:Event):Boolean
 		{
-			if(DEBUG_EVENTDISPATCHER) { trace("EventDispatcher.addEventListener(" + event + ")" ); }
+			if(DEBUG_EVENTDISPATCHER) { trace("EventDispatcher.dispatchEvent(" + event + ")" ); }
 
 			if(mTarget != null)
 			{

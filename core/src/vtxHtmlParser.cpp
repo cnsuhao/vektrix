@@ -102,6 +102,7 @@ namespace vtx
 		if(name == "img") image(atts);
 		else if(name == "font") font(atts);
 		else if(name == "p") paragraph(atts);
+		else if(name == "br") linebreak();
 
 		mPrevElementWasText = false;
 	}
@@ -123,9 +124,7 @@ namespace vtx
 		mPrevElementWasText = false;
 
 		if(mElementStack.size())
-		{
 			mElementStack.pop();
-		}
 	}
 	//-----------------------------------------------------------------------
 	void HtmlParser::elementData(String text)
@@ -157,10 +156,11 @@ namespace vtx
 
 		// "align" property
 		const String& align = atts["align"];
-		if(align == "left") img->align = HtmlElement::AlignLeft;
-		else if(align == "right") img->align = HtmlElement::AlignRight;
-		else if(align == "center") img->align = HtmlElement::AlignCenter;
-		else if(align == "justify") img->align = HtmlElement::AlignJustify;
+		img->align = 
+			(align == "right") ? HtmlElement::AlignRight : 
+			(align == "center") ? HtmlElement::AlignCenter : 
+			(align == "justify") ? HtmlElement::AlignJustify : 
+			HtmlElement::AlignLeft;
 
 		// "width" property
 		img->width = StringHelper::toFloat(atts["width"]);
@@ -193,16 +193,23 @@ namespace vtx
 
 		// "align" property
 		const String& align = atts["align"];
-		if(align == "left") paragraph->align = HtmlElement::AlignLeft;
-		else if(align == "right") paragraph->align = HtmlElement::AlignRight;
-		else if(align == "center") paragraph->align = HtmlElement::AlignCenter;
-		else if(align == "justify") paragraph->align = HtmlElement::AlignJustify;
+		paragraph->align = 
+			(align == "right") ? HtmlElement::AlignRight : 
+			(align == "center") ? HtmlElement::AlignCenter : 
+			(align == "justify") ? HtmlElement::AlignJustify : 
+			HtmlElement::AlignLeft;
 
 		// "class" property
 		paragraph->css_class = atts["class"];
 
 		mElementStack.top()->addChild(paragraph);
 		mElementStack.push(paragraph);
+	}
+	//-----------------------------------------------------------------------
+	void HtmlParser::linebreak()
+	{
+		HtmlElement* linebreak = new HtmlElement(HtmlElement::Linebreak, mElementStack.top());
+		mElementStack.top()->addChild(linebreak);
 	}
 	//-----------------------------------------------------------------------
 }

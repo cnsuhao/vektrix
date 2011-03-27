@@ -29,9 +29,11 @@ THE SOFTWARE.
 #include "vtxMovieClip.h"
 
 #include "vtxBoundingBox.h"
+#include "vtxEvent.h"
 #include "vtxFile.h"
 #include "vtxMovie.h"
 #include "vtxMovieClipResource.h"
+#include "vtxScriptObject.h"
 #include "vtxTimeline.h"
 
 namespace vtx
@@ -39,10 +41,9 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	const String MovieClip::TYPE = "MovieClip";
 	//-----------------------------------------------------------------------
-	MovieClip::MovieClip() 
-		: mTimeline(NULL)
+	MovieClip::MovieClip()
 	{
-
+		mTimeline = new Timeline;
 	}
 	//-----------------------------------------------------------------------
 	MovieClip::~MovieClip()
@@ -73,25 +74,19 @@ namespace vtx
 	void MovieClip::play()
 	{
 		if(mTimeline)
-		{
 			mTimeline->play();
-		}
 	}
 	//-----------------------------------------------------------------------
 	void MovieClip::stop()
 	{
 		if(mTimeline)
-		{
 			mTimeline->stop();
-		}
 	}
 	//-----------------------------------------------------------------------
 	bool MovieClip::gotoFrame(uint frame)
 	{
 		if(mTimeline)
-		{
 			return mTimeline->gotoFrame(frame);
-		}
 
 		return false;
 	}
@@ -99,9 +94,7 @@ namespace vtx
 	bool MovieClip::gotoTime(const float& time)
 	{
 		if(mTimeline)
-		{
 			return mTimeline->gotoTime(time);
-		}
 
 		return false;
 	}
@@ -109,21 +102,25 @@ namespace vtx
 	uint MovieClip::getCurrentFrame() const
 	{
 		if(mTimeline)
-		{
 			return mTimeline->getCurrentFrame();
-		}
 
 		return 0;
 	}
 	//-----------------------------------------------------------------------
-	void MovieClip::_update(const float& delta_time)
+	void MovieClip::processEvents()
 	{
-		DisplayObjectContainer::_update(delta_time);
+		DisplayObjectContainer::processEvents();
+
+		if(mTimeline && mTimeline->frameChanged() && mScriptObject)
+			mScriptObject->eventFired(Event(Event::ENTER_FRAME));
+	}
+	//-----------------------------------------------------------------------
+	void MovieClip::updateGraphics(const float& delta_time)
+	{
+		DisplayObjectContainer::updateGraphics(delta_time);
 
 		if(mTimeline)
-		{
 			mTimeline->addTime(delta_time);
-		}
 	}
 	//-----------------------------------------------------------------------
 }

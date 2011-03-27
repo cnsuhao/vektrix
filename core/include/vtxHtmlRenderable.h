@@ -56,24 +56,17 @@ namespace vtx
 		virtual ~HtmlRenderable();
 
 	protected:
-		void interateDomTree(HtmlElement* root, File* file);
+		void iterateDomTree(HtmlElement* root, File* file);
 
 		// inline for best performance
 		inline const StyleElement& getCurrentStyle() const
 		{
 			if(mStyleStack.size())
-			{
 				return mStyleStack.top();
-			}
 
 			static StyleElement empty;
 			return empty;
 		}
-
-		//inline bool hasStyle() const
-		//{
-		//	return mStyleStack.size() != 0;
-		//}
 
 	private:
 		File* mFile;
@@ -88,6 +81,7 @@ namespace vtx
 		virtual void _addImage(HtmlImage* image) = 0;
 		virtual void _addParagraph(HtmlParagraph* paragraph) = 0;
 		virtual void _addText(HtmlText* text) = 0;
+		virtual void _startNewLine() = 0;
 
 		/** Recursive method to iterate over the HTML DOM tree */
 		void _recursiveDomIteration(HtmlElement* source_element);

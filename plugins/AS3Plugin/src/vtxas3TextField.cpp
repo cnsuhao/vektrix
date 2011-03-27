@@ -43,13 +43,17 @@ namespace vtx { namespace as3 {
 	{
 		InteractiveObject::ctor();
 
-		if(!getEngine()->getQueuedInstance())
+		Instance* queued = getEngine()->getQueuedInstance();
+
+		if(!queued)
 		{
 			Movie* parent = getParentMovie();
-			EditText* text = static_cast<EditText*>(parent->getInstanceByType(EditText::TYPE));
+			mEditText = static_cast<EditText*>(parent->getInstanceByType(EditText::TYPE));
 			ScriptInterface* iface = new ScriptInterface(this);
-			text->setScriptObject(iface);
+			mEditText->setScriptObject(iface);
 		}
+		else
+			mEditText = static_cast<EditText*>(queued);
 	}
 	//-----------------------------------------------------------------------
 	const String& TextField::getMappedVektrixType() const
@@ -61,9 +65,7 @@ namespace vtx { namespace as3 {
 	avmplus::Stringp TextField::get_htmlText()
 	{
 		if(mEditText)
-		{
 			return CSP_CORE->toScriptPtr(mEditText->getHtmlText());
-		}
 
 		return CSP_CORE->toScriptPtr("");
 	}
@@ -71,27 +73,31 @@ namespace vtx { namespace as3 {
 	void TextField::set_htmlText(avmplus::Stringp htmlText)
 	{
 		if(mEditText)
-		{
 			mEditText->setHtmlText(CSP_CORE->toUTFString(htmlText));
-		}
 	}
 	//-----------------------------------------------------------------------
 	int TextField::getLineIndexAtPoint(double x, double y)
 	{
 		if(mEditText)
-		{
 			return mEditText->getLineAtPoint(Vector2((float)x, (float)y)).index;
-		}
 
 		return -1;
+	}
+	//-----------------------------------------------------------------------
+	avmplus::Stringp TextField::get_text()
+	{
+		return 0;
+	}
+	//-----------------------------------------------------------------------
+	void TextField::set_text(avmplus::Stringp text)
+	{
+		VTX_LOG("EditText::setText %ls", CSP_CORE->toUTFString(text).c_str());
 	}
 	//-----------------------------------------------------------------------
 	void TextField::setSelection(int beginIndex, int endIndex)
 	{
 		if(mEditText)
-		{
 			mEditText->setSelection(beginIndex, endIndex);
-		}
 	}
 	//-----------------------------------------------------------------------
 	void TextField::setNativeObject(Instance* inst)

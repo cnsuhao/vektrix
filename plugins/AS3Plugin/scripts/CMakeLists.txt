@@ -75,6 +75,11 @@ endif(PLUGINS_AS3_use_runtime_debugger)
 # BUILD SETTINGS & COMPILATION
 #-----------------------------------------------------------------------
 
+if(WIN32 AND BUILD_USE_STATIC_CRT)
+	# link statically against the MSVCRT
+	link_static_crt()
+endif()
+
 # output directory
 set (LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
@@ -85,7 +90,7 @@ include_directories (${include_dirs})
 link_libraries (${libraries})
 
 # add the plugin library
-add_library (vektrix_AS3Plugin SHARED ${file_root})
+add_library (vektrix_AS3Plugin ${file_root})
 
 # automatically update the source-files list with folders4cmake
 auto_rebuild_src_files (vektrix_AS3Plugin)

@@ -25,13 +25,36 @@ if(WIN32)
 	# try to find the ogre libraries & headers from a pre-compiled package
 	find_path(ogre_include_dirs	NAMES ogre.h PATHS ${ogre_path}/include/ogre)
 	
-	find_library(ogre_lib	NAMES OgreMain		PATHS ${ogre_path}/lib/Release)
-	find_library(ogre_lib_d	NAMES OgreMain_d	PATHS ${ogre_path}/lib/Debug)
+	if(BUILD_USE_STATIC_CRT)
+		find_path(ogre_d3d9_dirs	NAMES OgreD3D9Plugin.h PATHS ${ogre_path}/include/ogre/RenderSystems/Direct3D9/include)
+		find_path(ogre_opengl_dirs	NAMES OgreGLPlugin.h PATHS ${ogre_path}/include/ogre/RenderSystems/GL/include)
+		
+		set (ogre_include_dirs ${ogre_include_dirs} ${ogre_d3d9_dirs} ${ogre_opengl_dirs})
+
+		find_library(ogre_lib	NAMES OgreMainStatic	PATHS ${ogre_path}/lib/Release)
+		find_library(ogre_lib_d	NAMES OgreMainStatic_d	PATHS ${ogre_path}/lib/Debug)
+
+		find_library(ogre_d3d9_rs_lib	NAMES RenderSystem_Direct3D9Static		PATHS ${ogre_path}/lib/Release)
+		find_library(ogre_d3d9_rs_lib_d	NAMES RenderSystem_Direct3D9Static_d	PATHS ${ogre_path}/lib/Debug)
+
+		find_library(ogre_opengl_rs_lib		NAMES RenderSystem_GLStatic		PATHS ${ogre_path}/lib/Release)
+		find_library(ogre_opengl_rs_lib_d	NAMES RenderSystem_GLStatic_d	PATHS ${ogre_path}/lib/Debug)
+		
+		find_path(ogre_res_path OgreWin32Resources.res PATHS ${ogre_path}/res)
+		set (ogre_win32_res ${ogre_res_path}/OgreWin32Resources.res)
+	else(BUILD_USE_STATIC_CRT)
+		find_library(ogre_lib	NAMES OgreMain		PATHS ${ogre_path}/lib/Release)
+		find_library(ogre_lib_d	NAMES OgreMain_d	PATHS ${ogre_path}/lib/Debug)
+	endif(BUILD_USE_STATIC_CRT)
 	
 	if(ogre_lib AND ogre_lib_d)
 		set (ogre_libraries
 			debug ${ogre_lib_d}
+			debug ${ogre_d3d9_rs_lib_d}
+			debug ${ogre_opengl_rs_lib_d}
 			optimized ${ogre_lib}
+			optimized ${ogre_d3d9_rs_lib}
+			optimized ${ogre_opengl_rs_lib}
 		)
 	endif(ogre_lib AND ogre_lib_d)
 

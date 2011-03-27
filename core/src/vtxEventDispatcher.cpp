@@ -59,9 +59,7 @@ namespace vtx
 	void EventDispatcher::dispatchEvent(const Event& evt)
 	{
 		for_each(it, ListenerMap, mListeners)
-		{
 			it->first->eventFired(evt);
-		}
 	}
 	//-----------------------------------------------------------------------
 }

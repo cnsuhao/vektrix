@@ -49,6 +49,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	LogManager::~LogManager()
 	{
+		mLogFile.flush();
 		mLogFile.close();
 	}
 	//-----------------------------------------------------------------------
@@ -60,6 +61,8 @@ namespace vtx
 	void LogManager::exception(const char* format, ...)
 	{
 		VTX_LOCK_MUTEX(mLogMutex);
+
+		VTX_DEBUG_ASSERT(mLogFile.is_open(), "Log file is in closed state!");
 
 		va_list argptr;
 		va_start(argptr, format);
@@ -86,6 +89,8 @@ namespace vtx
 	{
 		VTX_LOCK_MUTEX(mLogMutex);
 
+		VTX_DEBUG_ASSERT(mLogFile.is_open(), "Log file is in closed state!");
+
 		va_list argptr;
 		va_start(argptr, format);
 		vsprintf(mMessageBuffer, format, argptr);
@@ -102,6 +107,8 @@ namespace vtx
 	void LogManager::log(const char* format, ...)
 	{
 		VTX_LOCK_MUTEX(mLogMutex);
+
+		VTX_DEBUG_ASSERT(mLogFile.is_open(), "Log file is in closed state!");
 
 		va_list argptr;
 		va_start(argptr, format);

@@ -40,6 +40,11 @@ namespace vtx
 	public:
 		float r, g, b, a;
 
+		static const Color BLACK;
+		static const Color RED;
+		static const Color GREEN;
+		static const Color BLUE;
+
 		Color(float red = 1.0f, float green = 1.0f, float blue = 1.0f, float alpha = 1.0f);
 	};
 	//-----------------------------------------------------------------------

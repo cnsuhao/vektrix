@@ -32,7 +32,8 @@ namespace vtx
 {
 	//-----------------------------------------------------------------------
 	EditTextResource::EditTextResource(const String& id) 
-		: Resource(id)
+		: Resource(id), 
+		mFontSize(12)
 	{
 
 	}
@@ -46,6 +47,26 @@ namespace vtx
 	{
 		static String type = "EditText";
 		return type;
+	}
+	//-----------------------------------------------------------------------
+	void EditTextResource::setFontSize(const float& size)
+	{
+		mFontSize = size;
+	}
+	//-----------------------------------------------------------------------
+	const float& EditTextResource::getFontSize() const
+	{
+		return mFontSize;
+	}
+	//-----------------------------------------------------------------------
+	void EditTextResource::setDefaultColor(const Color& color)
+	{
+		mDefaultColor = color;
+	}
+	//-----------------------------------------------------------------------
+	const Color& EditTextResource::getDefaultColor() const
+	{
+		return mDefaultColor;
 	}
 	//-----------------------------------------------------------------------
 	void EditTextResource::setBoundingBox(const BoundingBox& bb)

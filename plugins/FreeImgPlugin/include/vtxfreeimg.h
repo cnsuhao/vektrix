@@ -31,21 +31,7 @@ THE SOFTWARE.
 
 #include "vtxPrerequisites.h"
 
-#if VTX_OS == VTX_WIN32
-#	ifdef VTX_STATIC_LIB
-#		define vtxfreeimgExport
-#	else
-#		ifdef VEKTRIX_FREEIMGPLUGIN_EXPORTS
-#			define vtxfreeimgExport __declspec(dllexport)
-#		else
-#			define vtxfreeimgExport __declspec(dllimport)
-#		endif
-#	endif
-#endif
-
-#if VTX_OS == VTX_LINUX
-#	define vtxfreeimgExport
-#endif
+#define vtxfreeimgExport
 
 namespace vtx { namespace freeimg {
 	//-----------------------------------------------------------------------

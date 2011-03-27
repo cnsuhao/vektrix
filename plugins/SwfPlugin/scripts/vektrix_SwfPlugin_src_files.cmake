@@ -16,6 +16,7 @@ set (file_root_parser
 	../include/vtxswfParserTypes.h
 	../src/vtxswfDataReader.cpp
 	../src/vtxswfParser.cpp
+	../src/vtxswfParserTypes.cpp
 )
 
 # Plugin files

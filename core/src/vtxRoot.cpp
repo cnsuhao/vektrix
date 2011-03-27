@@ -29,7 +29,9 @@ THE SOFTWARE.
 #include "vtxRoot.h"
 
 #include "vtxDynLib.h"
+#include "vtxFileHelper.h"
 #include "vtxFileManager.h"
+#include "vtxFontManager.h"
 #include "vtxInstanceManager.h"
 #include "vtxLogManager.h"
 #include "vtxMovieFactory.h"
@@ -46,16 +48,17 @@ namespace vtx
 	template<> Root* Singleton<Root>::sInstance = 0;
 	//-----------------------------------------------------------------------
 	Root::Root() 
-		: FactoryManager<MovieFactory>("Movie"), 
-		mFileManager(NULL)
+		: FactoryManager<MovieFactory>("Movie")
 	{
 		VTX_LOG("<< vektrix %s started >>", StringHelper::versionString(VTX_VERSION).c_str());
 		VTX_LOG("<< Codename: %s >>", VTX_VERSION_NAME);
+		VTX_LOG("<< Working Directory: %s >>", FileHelper::getWorkingDirectory().c_str());
 
 		new RasterizerManager();
 		new InstanceManager();
 
 		mFileManager = new FileManager();
+		mFontManager = new FontManager();
 
 #if VTX_THREADING_LIB != VTX_THREADING_NONE
 		mMainJobQueue = new ThreadJobQueue();
@@ -91,6 +94,7 @@ namespace vtx
 		delete mMainJobQueue;
 #endif
 
+		delete mFontManager;
 		delete mFileManager;
 
 		delete InstanceManager::getSingletonPtr();

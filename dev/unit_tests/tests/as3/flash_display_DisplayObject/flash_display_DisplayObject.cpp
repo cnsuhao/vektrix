@@ -29,29 +29,25 @@ THE SOFTWARE.
 #include "flash_display_DisplayObject.h"
 #include "vtxtestsUnitTestHost.h"
 
-#define TEST flash_display_DisplayObject
-
 namespace vtx { namespace tests { namespace as3 {
 	//-----------------------------------------------------------------------
-	VTX_TEST_MEDIA_PATH(as3, flash_display_DisplayObject);
-	//-----------------------------------------------------------------------
-	TEST::TEST(UnitTestHost* host) 
+	flash_display_DisplayObject::flash_display_DisplayObject(UnitTestHost* host) 
 		: UnitTest(host)
 	{
 
 	}
 	//-----------------------------------------------------------------------
-	TEST::~TEST()
+	flash_display_DisplayObject::~flash_display_DisplayObject()
 	{
 
 	}
 	//-----------------------------------------------------------------------
-	void TEST::started()
+	void flash_display_DisplayObject::started()
 	{
 
 	}
 	//-----------------------------------------------------------------------
-	void TEST::stopped()
+	void flash_display_DisplayObject::stopped()
 	{
 
 	}

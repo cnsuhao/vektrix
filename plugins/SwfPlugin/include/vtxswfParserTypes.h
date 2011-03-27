@@ -29,6 +29,8 @@ THE SOFTWARE.
 #ifndef __vtxswfParserTypes_H__
 #define __vtxswfParserTypes_H__
 
+#include "vtxswf.h"
+
 namespace vtx { namespace swf {
 	//-----------------------------------------------------------------------
 	// unsigned types
@@ -41,31 +43,40 @@ namespace vtx { namespace swf {
 	typedef signed short	SI16;
 	typedef signed			SBits;
 	//-----------------------------------------------------------------------
+	class TagNames
+	{
+	public:
+		static const char* getTagName(const uint& tag_type);
+
+	protected:
+		static const char* mNames[];
+	};
+	//-----------------------------------------------------------------------
 	enum TagTypes
 	{
 		TT_End = 0, 
 		TT_ShowFrame = 1, 
 		TT_DefineShape = 2, 
-		TT_PlaceObject = 4,
-		TT_DefineBits = 6,
+		TT_PlaceObject = 4, 
+		TT_DefineBits = 6, 
 		TT_DefineButton = 7, 
-		TT_JPEGTables = 8,
+		TT_JPEGTables = 8, 
 		TT_SetBackgroundColor = 9, 
 		TT_DefineFont = 10, 
 		TT_DefineText = 11, 
 		TT_DefineBitsLossless = 20, 
-		TT_DefineBitsJPEG2 = 21,
+		TT_DefineBitsJPEG2 = 21, 
 		TT_DefineShape2 = 22, 
 		TT_PlaceObject2 = 26, 
 		TT_RemoveObject2 = 28, 
 		TT_DefineShape3 = 32, 
 		TT_DefineText2 = 33, 
 		TT_DefineButton2 = 34, 
-		TT_DefineBitsJPEG3 = 35,
+		TT_DefineBitsJPEG3 = 35, 
 		TT_DefineBitsLossless2 = 36, 
 		TT_DefineEditText = 37, 
 		TT_DefineSprite = 39, 
-		TT_FrameLabel = 43,
+		TT_FrameLabel = 43, 
 		TT_FileAttributes = 69, 
 		TT_DefineFont3 = 75, 
 		TT_SymbolClass = 76, 
@@ -73,7 +84,7 @@ namespace vtx { namespace swf {
 		TT_DefineScalingGrid = 78, 
 		TT_DoABC = 82, 
 		TT_DefineShape4 = 83, 
-		TT_DefineSceneAndFrameLabelData = 86,
+		TT_DefineSceneAndFrameLabelData = 86, 
 		TT_DefineBitsJPEG4 = 90
 	};
 	//-----------------------------------------------------------------------
@@ -286,6 +297,7 @@ namespace vtx { namespace swf {
 	class SHAPEELEMENT
 	{
 	public:
+		int i;
 		SBits x, y, cx, cy;
 		int fill0, fill1, line;
 		ShapeElementType type;

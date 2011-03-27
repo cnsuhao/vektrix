@@ -55,7 +55,7 @@ package flash.display
 		//-----------------------------------------------------------------------
 		public function get currentFrame():int
 		{
-			if(DEBUG_MOVIECLIP) { trace("MovieClip.get_currentFrame()"); }
+			if(DEBUG_MOVIECLIP) { trace("MovieClip.get_currentFrame() = " + _currentFrame); }
 			return _currentFrame;
 		}
 		//-----------------------------------------------------------------------
@@ -119,21 +119,28 @@ package flash.display
 		///-----------------------------------------------------------------------
 		/// CLASS METHODS
 		///-----------------------------------------------------------------------
-		public function addFrameScript(frame_index:int, script_function:Function):void
+		public function addFrameScript(... arguments):void
 		{
-			if(DEBUG_MOVIECLIP) { trace("MovieClip.addFrameScript(" + frame_index + ", " + script_function + ")"); }
-			mFrameScripts[frame_index] = script_function;
+			for(var i:int=0; i<arguments.length; i+=2)
+			{
+				var frame_index:int = arguments[i];
+				var script_function:Function = arguments[i+1];
+
+				if(DEBUG_MOVIECLIP) { trace("MovieClip.addFrameScript(" + frame_index + ", " + script_function + ")"); }
+
+				mFrameScripts[frame_index] = script_function;
+			}
 		}
 		//-----------------------------------------------------------------------
 		override public function dispatchEvent(event:Event):Boolean
 		{
 			if(event.type == Event.ENTER_FRAME)
 			{
-				var frame_script:Function = mFrameScripts[currentFrame-1];
+				var frame_script:Function = mFrameScripts[currentFrame - 1];
 				if(frame_script != null)
 				{
+					if(DEBUG_MOVIECLIP) trace("MovieClip.callFrameScript(" + currentFrame + ")");
 					frame_script();
-					//frame_script.call(frame_script);
 				}
 			}
 

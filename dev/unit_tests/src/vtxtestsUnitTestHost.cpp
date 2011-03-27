@@ -35,134 +35,91 @@ THE SOFTWARE.
 namespace vtx { namespace tests {
 	//-----------------------------------------------------------------------
 	UnitTestHost::UnitTestHost() 
-		: mOgreRoot(NULL), 
-		mOISInputManager(NULL), 
-		mVektrixRoot(NULL)
+		: mStopRequested(false)
 	{
 
 	}
-//-----------------------------------------------------------------------
-	void UnitTestHost::startTesting()
+	//-----------------------------------------------------------------------
+	bool UnitTestHost::frameStarted(const Ogre::FrameEvent& evt)
 	{
-		mActiveTest->started();
+		if(mStopRequested)
+			return false;
 
-		// register Ogre listeners
-		if(mOgreRoot)
-			mOgreRoot->addFrameListener(mActiveTest);
+		if(!OgreBase::frameStarted(evt))
+			return false;
 
-		// register OIS listeners
-		if(mOISInputManager)
+		if(mOISKeyboard && mOISMouse)
 		{
-			mOISKeyboard->setEventCallback(mActiveTest);
-			mOISMouse->setEventCallback(mActiveTest);
+			mOISKeyboard->capture();
+			mOISMouse->capture();
 		}
 
-		// start Ogre rendering
-		if(mOgreRoot)
-			mOgreRoot->startRendering();
-
-		mActiveTest->stopped();
+		return mActiveTest->frameStarted(evt);
 	}
 	//-----------------------------------------------------------------------
-	void UnitTestHost::startOgre()
+	bool UnitTestHost::frameEnded(const Ogre::FrameEvent& evt)
 	{
-		// disable ogre cout logging
-		(new Ogre::LogManager())->createLog("ogre.log", true, false, false);
+		if(!mActiveTest->frameEnded(evt))
+			return false;
 
-		mOgreRoot = new Ogre::Root("", "ogre.cfg", "ogre.log");
-
-		// ogre plugins
-#if VTX_OS == VTX_WIN32
-#	ifdef _DEBUG
-		mOgreRoot->loadPlugin("RenderSystem_Direct3D9_d");
-		mOgreRoot->loadPlugin("RenderSystem_GL_d");
-#	else
-		mOgreRoot->loadPlugin("RenderSystem_Direct3D9");
-		mOgreRoot->loadPlugin("RenderSystem_GL");
-#	endif
-#endif
-
-#if VTX_OS == VTX_LINUX
-		mOgreRoot->loadPlugin("RenderSystem_GL");
-#endif
-
-		// load settings from ogre.cfg
-		if(!mOgreRoot->restoreConfig() && !mOgreRoot->showConfigDialog())
-			delete mOgreRoot;
-
-		// override floating point mode
-		Ogre::RenderSystem* render_system = mOgreRoot->getRenderSystem();
-		if(render_system->getName() == "Direct3D9 Rendering Subsystem")
-			render_system->setConfigOption("Floating-point mode", "Consistent");
-
-		mOgreWindow = mOgreRoot->initialise(true, "vektrix unit test - press SHIFT + ESC to exit");
-
-		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-
-		mOgreScene = mOgreRoot->createSceneManager(Ogre::ST_GENERIC);
-
-		mOgreCamera = mOgreScene->createCamera("MainCamera");
-		mOgreCamera->setAutoAspectRatio(true);
-		mOgreCamera->setNearClipDistance(1);
-
-		mOgreViewport = mOgreWindow->addViewport(mOgreCamera);
-		mOgreViewport->setBackgroundColour(Ogre::ColourValue(0.4f, 0.4f, 0.4f));
+		return OgreBase::frameEnded(evt);
 	}
 	//-----------------------------------------------------------------------
-	void UnitTestHost::startOIS(Ogre::RenderWindow* window)
+	void UnitTestHost::windowResized(Ogre::RenderWindow* window)
 	{
-		size_t hwnd = 0;
-		window->getCustomAttribute("WINDOW", &hwnd);
+		mActiveTest->windowResized(window);
 
-		startOIS(hwnd, window->getWidth(), window->getHeight());
+		if(mOISMouse)
+		{
+			const OIS::MouseState& ms = mOISMouse->getMouseState();
+			ms.width = window->getWidth();
+			ms.height = window->getHeight();
+		}
+
+		OgreBase::windowResized(window);
 	}
 	//-----------------------------------------------------------------------
-	void UnitTestHost::startOIS(const size_t& hwnd, const int& width, const int& height)
+	bool UnitTestHost::keyPressed(const OIS::KeyEvent& e)
 	{
-		OIS::ParamList pl;
-		std::ostringstream windowHndStr;
+		if(mOISKeyboard->isKeyDown(OIS::KC_LSHIFT) && mOISKeyboard->isKeyDown(OIS::KC_ESCAPE))
+			mStopRequested = true;
 
-		windowHndStr << hwnd;
-		pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
+		if(mActiveTest->keyPressed(e))
+			return true;
 
-#if defined OIS_WIN32_PLATFORM
-		pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND" )));
-		pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
-		pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
-		pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
-#elif defined OIS_LINUX_PLATFORM
-		pl.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
-		pl.insert(std::make_pair(std::string("x11_mouse_hide"), std::string("false")));
-		pl.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
-		pl.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
-#endif
-
-		// setup the manager, keyboard and mouse to handle input
-		mOISInputManager = OIS::InputManager::createInputSystem(pl);
-		mOISKeyboard = static_cast<OIS::Keyboard*>(mOISInputManager->createInputObject(OIS::OISKeyboard, true));
-		mOISMouse = static_cast<OIS::Mouse*>(mOISInputManager->createInputObject(OIS::OISMouse, true));
-
-		// tell OIS about the window's dimensions
-		const OIS::MouseState &ms = mOISMouse->getMouseState();
-		ms.width = width;
-		ms.height = height;
+		return OISBase::keyPressed(e);
 	}
 	//-----------------------------------------------------------------------
-	void UnitTestHost::stopOgre()
+	bool UnitTestHost::keyReleased(const OIS::KeyEvent& e)
 	{
-		delete mOgreRoot;
-		mOgreRoot = NULL;
+		if(mActiveTest->keyReleased(e))
+			return true;
+
+		return OISBase::keyReleased(e);
 	}
 	//-----------------------------------------------------------------------
-	void UnitTestHost::stopOIS()
+	bool UnitTestHost::mouseMoved(const OIS::MouseEvent& e)
 	{
-		mOISInputManager->destroyInputObject(mOISMouse);
-		mOISInputManager->destroyInputObject(mOISKeyboard);
-		OIS::InputManager::destroyInputSystem(mOISInputManager);
+		if(mActiveTest->mouseMoved(e))
+			return true;
 
-		mOISMouse = NULL;
-		mOISKeyboard = NULL;
-		mOISInputManager = NULL;
+		return OISBase::mouseMoved(e);
+	}
+	//-----------------------------------------------------------------------
+	bool UnitTestHost::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
+	{
+		if(mActiveTest->mousePressed(e, id))
+			return true;
+
+		return OISBase::mousePressed(e, id);
+	}
+	//-----------------------------------------------------------------------
+	bool UnitTestHost::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
+	{
+		if(mActiveTest->mouseReleased(e, id))
+			return true;
+
+		return OISBase::mouseReleased(e, id);
 	}
 	//-----------------------------------------------------------------------
 }}

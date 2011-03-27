@@ -58,7 +58,7 @@ namespace vtx
 		const String& getType() const;
 
 		/** @copybrief DisplayObject::_update */
-		virtual void _update(const float& delta_time = 0.0f);
+		virtual void updateGraphics(const float& delta_time = 0.0f);
 
 		/** Set the plain text for this textfield */
 		void setText(const WString& text);
@@ -119,7 +119,7 @@ namespace vtx
 		void _buildGraphicsFromDOM();
 
 		/** Inform textfield implementations that they need to update their graphics */
-		virtual void _updateGraphics() = 0;
+		virtual void _updateGraphics() {}
 
 		void _addFont(HtmlFont* font);
 

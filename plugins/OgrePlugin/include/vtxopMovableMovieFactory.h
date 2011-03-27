@@ -51,11 +51,9 @@ namespace vtx
 			void destroyObject(Movie* instance);
 
 			AtlasPacker* getPacker() const;
-			InstancePool* getInstancePool() const;
 
 		protected:
 			AtlasPacker* mPacker;
-			InstancePool* mPool;
 
 			MovieDebugger* _newDebugger(Movie* movie);
 

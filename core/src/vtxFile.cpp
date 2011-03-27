@@ -33,6 +33,7 @@ THE SOFTWARE.
 #include "vtxFileEvent.h"
 #include "vtxFileManager.h"
 #include "vtxFileStream.h"
+#include "vtxFontManager.h"
 #include "vtxFontResource.h"
 #include "vtxImageResource.h"
 #include "vtxLogManager.h"
@@ -117,7 +118,7 @@ namespace vtx
 		return mFilename;
 	}
 	//-----------------------------------------------------------------------
-	void File::setHeader(FileHeader header)
+	void File::setHeader(const FileHeader& header)
 	{
 		mHeader = header;
 	}
@@ -171,13 +172,8 @@ namespace vtx
 
 		FileEvent evt(FileEvent::RESOURCE_ADDED, res);
 
-		ListenerMap::iterator listener_it = mListeners.begin();
-		ListenerMap::iterator listener_end = mListeners.end();
-		while(listener_it != listener_end)
-		{
-			listener_it->second->eventFired(evt);
-			++listener_it;
-		}
+		for_each(it, ListenerMap, mListeners)
+			it->second->eventFired(evt);
 
 #ifdef _DEBUG
 		//VTX_LOG("\"%s\": Added resource with id \"%s\" of type \"%s\"", 
@@ -195,15 +191,14 @@ namespace vtx
 			if(requested_type.length())
 			{
 				if(it->second->getType() == requested_type)
-				{
 					return it->second;
-				}
 			}
 			else
-			{
 				return it->second;
-			}
 		}
+
+		if(requested_type == "Font")
+			return FontManager::getSingletonPtr()->getFont(id);
 
 		return NULL;
 	}
@@ -228,12 +223,11 @@ namespace vtx
 	FontResource* File::getFontByName(const String& font_name)
 	{
 		FontMap::iterator it = mFonts.find(font_name);
-		if(it != mFonts.end())
-		{
-			return it->second;
-		}
 
-		return NULL;
+		if(it != mFonts.end() && it->second->getGlyphList().size())
+			return it->second;
+
+		return FontManager::getSingletonPtr()->getFont(font_name);
 	}
 	//-----------------------------------------------------------------------
 	bool File::addListener(EventListener* listener)
@@ -264,26 +258,16 @@ namespace vtx
 	{
 		FileEvent evt(FileEvent::LOADING_COMPLETED, this);
 
-		ListenerMap::iterator listener_it = mListeners.begin();
-		ListenerMap::iterator listener_end = mListeners.end();
-		while(listener_it != listener_end)
-		{
-			listener_it->second->eventFired(evt);
-			++listener_it;
-		}
+		for_each(it, ListenerMap, mListeners)
+			it->second->eventFired(evt);
 	}
 	//-----------------------------------------------------------------------
 	void File::_loadingFailed()
 	{
 		FileEvent evt(FileEvent::LOADING_FAILED, this);
 
-		ListenerMap::iterator listener_it = mListeners.begin();
-		ListenerMap::iterator listener_end = mListeners.end();
-		while(listener_it != listener_end)
-		{
-			listener_it->second->eventFired(evt);
-			++listener_it;
-		}
+		for_each(it, ListenerMap, mListeners)
+			it->second->eventFired(evt);
 	}
 	//-----------------------------------------------------------------------
 }

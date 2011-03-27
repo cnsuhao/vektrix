@@ -28,16 +28,20 @@ THE SOFTWARE.
 
 #include "vtxColor.h"
 
-namespace vtx
+__namespace(vtx)
+//-----------------------------------------------------------------------
+const Color Color::BLACK =	Color(0, 0, 0);
+const Color Color::RED =	Color(1, 0, 0);
+const Color Color::GREEN =	Color(0, 1, 0);
+const Color Color::BLUE =	Color(0, 0, 1);
+//-----------------------------------------------------------------------
+Color::Color(float red, float green, float blue, float alpha) 
+: r(red), 
+g(green), 
+b(blue), 
+a(alpha)
 {
-	//-----------------------------------------------------------------------
-	Color::Color(float red, float green, float blue, float alpha) 
-		: r(red), 
-		g(green), 
-		b(blue), 
-		a(alpha)
-	{
 
-	}
-	//-----------------------------------------------------------------------
+}
+//-----------------------------------------------------------------------
 }

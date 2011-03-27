@@ -303,6 +303,7 @@ namespace vtx { namespace swf {
 		int fillstyle0 = 0;
 		int fillstyle1 = 0;
 		int linestyle = 0;
+		int elem_index = 0;
 
 		while(true)
 		{
@@ -339,6 +340,7 @@ namespace vtx { namespace swf {
 					}
 
 					SHAPEELEMENT se;
+					se.i = elem_index++;
 					se.type = SET_LINE;
 					se.x = x;
 					se.y = y;
@@ -365,6 +367,7 @@ namespace vtx { namespace swf {
 					y += readSBits(num_bits); // delta y
 
 					SHAPEELEMENT se;
+					se.i = elem_index++;
 					se.type = SET_BEZIER;
 					se.x = x;
 					se.y = y;
@@ -396,6 +399,7 @@ namespace vtx { namespace swf {
 					y = readSBits(num_move_bits);
 
 					SHAPEELEMENT se;
+					se.i = elem_index++;
 					se.type = SET_MOVE;
 					se.x = x;
 					se.y = y;

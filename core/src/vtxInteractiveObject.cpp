@@ -51,9 +51,9 @@ namespace vtx
 
 	}
 	//-----------------------------------------------------------------------
-	void InteractiveObject::_update(const float& delta_time)
+	void InteractiveObject::processEvents()
 	{
-		DisplayObject::_update(delta_time);
+		DisplayObject::processEvents();
 
 		if(isPointInside(getParent()->getMouseAbs()))
 		{
@@ -63,9 +63,7 @@ namespace vtx
 				eventFired(evt);
 
 				if(mScriptObject)
-				{
 					mScriptObject->eventFired(evt);
-				}
 
 				changeMouseState(MS_IN_UP);
 			}
@@ -78,9 +76,7 @@ namespace vtx
 				eventFired(evt);
 
 				if(mScriptObject)
-				{
 					mScriptObject->eventFired(evt);
-				}
 
 				changeMouseState(MS_OUT_UP);
 			}
@@ -141,17 +137,13 @@ namespace vtx
 				mHasFocus = false;
 
 				if(mScriptObject)
-				{
 					mScriptObject->eventFired(evt);
-				}
 			}
 		}
 		else
 		{
 			if(mScriptObject)
-			{
 				mScriptObject->eventFired(evt);
-			}
 		}
 	}
 	//-----------------------------------------------------------------------

@@ -49,12 +49,12 @@ namespace vtx { namespace ogre {
 	//-----------------------------------------------------------------------
 	const uint ShapeAtlasElement::getPackableWidth()
 	{
-		return mShape->getMaximumWidth_PoT();
+		return mShape->getMaximumWidth_PoT() * 4;
 	}
 	//-----------------------------------------------------------------------
 	const uint ShapeAtlasElement::getPackableHeight()
 	{
-		return mShape->getMaximumHeight_PoT();
+		return mShape->getMaximumHeight_PoT() * 4;
 	}
 	//-----------------------------------------------------------------------
 	void ShapeAtlasElement::paintToNode(AtlasNode* node, Rasterizer* rasterizer)

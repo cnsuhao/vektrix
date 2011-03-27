@@ -166,7 +166,7 @@ namespace vtx
 		// not loaded yet ---> load it
 		VTX_LOG("Trying to load file '%s'...", filename.c_str());
 
-		String file_extension = StringHelper::getFileExtension(filename);
+		const String file_extension = StringHelper::getFileExtension(filename);
 
 		FileParserFactory* factory = getParserFactory(file_extension);
 

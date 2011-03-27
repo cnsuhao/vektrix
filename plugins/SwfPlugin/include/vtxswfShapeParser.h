@@ -43,6 +43,7 @@ namespace vtx { namespace swf {
 		void handleDefineShape(const TagTypes& tag_type, SwfParser* parser);
 
 	protected:
+		UI16 mShapeId;
 		SHAPE mFlashShape;
 		FillstyleMap mFillstyles; // only the USED! fillstyles
 		LinestyleMap mLinestyles; // only the USED! linestyles

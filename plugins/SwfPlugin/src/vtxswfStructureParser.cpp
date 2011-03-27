@@ -108,7 +108,8 @@ namespace vtx { namespace swf {
 				cx.mul_red/256.0f, cx.mul_green/256.0f, cx.mul_blue/256.0f, cx.mul_alpha/256.0f, 
 				cx.add_red/256.0f, cx.add_green/256.0f, cx.add_blue/256.0f, cx.add_alpha/256.0f);
 
-			btn_state->addEvent(new CreateObjectEvent(mParser->getCurrentFile()->getResource(id), layer-1, matrix, cxform));
+			Resource* res = mParser->getCurrentFile()->getResource(id);
+			btn_state->addEvent(new CreateObjectEvent(res, layer-1, matrix, cxform));
 
 			if(state & 1) button->setState(btn_state, ButtonResource::SID_UP);
 			if(state & 2) button->setState(btn_state, ButtonResource::SID_OVER);
@@ -131,6 +132,20 @@ namespace vtx { namespace swf {
 		mMovieClipKeyframe = new Keyframe;
 
 		mCurrKeyframe = mMovieClipKeyframe;
+	}
+	//-----------------------------------------------------------------------
+	void StructureParser::handlePlaceObject(const uint& tag_start, const UI32& length)
+	{
+		UI16 character = mParser->readU16();
+		UI16 depth = mParser->readU16();
+
+		MATRIX m = mParser->readMatrix();
+		Matrix matrix = Matrix(
+			m.sx/65536.0f, m.cx/65536.0f, m.tx/20.0f, 
+			m.cy/65536.0f, m.sy/65536.0f, m.ty/20.0f);
+
+		if(mParser->getReadPosition() - tag_start - length)
+			mParser->readCxForm();
 	}
 	//-----------------------------------------------------------------------
 	void StructureParser::handlePlaceObject2()
@@ -227,12 +242,14 @@ namespace vtx { namespace swf {
 		{
 			// move
 			mCurrKeyframe->addEvent(new MoveObjectEvent(depth, matrix, cxform));
+			VTX_WARN("Move Object %d", depth);
 		}
 		else if(flags & POF_HasCharacter)
 		{
 			// place
 			String id = StringHelper::toString(character);
-			mCurrKeyframe->addEvent(new CreateObjectEvent(mParser->getCurrentFile()->getResource(id), depth, matrix, cxform, name));
+			Resource* res = mParser->getCurrentFile()->getResource(id);
+			mCurrKeyframe->addEvent(new CreateObjectEvent(res, depth, matrix, cxform, name));
 			VTX_WARN("Create Object %s", id.c_str());
 		}
 	}
@@ -375,6 +392,11 @@ namespace vtx { namespace swf {
 				}
 			}
 		}
+	}
+	//-----------------------------------------------------------------------
+	bool StructureParser::isParsingMovieClip() const
+	{
+		return (mCurrentMovieClip != NULL);
 	}
 	//-----------------------------------------------------------------------
 }}

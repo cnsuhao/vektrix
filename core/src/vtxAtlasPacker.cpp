@@ -102,14 +102,14 @@ namespace vtx
 		std::sort(mElements.rbegin(), mElements.rend(), sortElement);
 
 		if(!mTextures.size())
-		{
 			mTextures.push_back(mTextureFactory->createObject(mSize, mSize));
-		}
 
 		AtlasElementList::iterator elem_it = mElements.begin();
 		AtlasElementList::iterator elem_end = mElements.end();
 		while(elem_it != elem_end)
 		{
+			bool packed = false;
+
 			AtlasTextureList::iterator tex_it = mTextures.begin();
 			AtlasTextureList::iterator tex_end = mTextures.end();
 			while(tex_it != tex_end)
@@ -120,6 +120,7 @@ namespace vtx
 					mResult.insert(std::make_pair((*elem_it)->getPackID(), PackResult(*tex_it, node)));
 					// element was successfully packed, 
 					// advance to the next element
+					packed = true;
 					++elem_it;
 					break;
 				}
@@ -127,6 +128,14 @@ namespace vtx
 				++tex_it;
 
 			} // while(textures)
+
+			if(!packed)
+			{
+				mTextures.push_back(mTextureFactory->createObject(mSize, mSize));
+
+				VTX_WARN("TODO: implement texture atlas extension, texture atlas is full");
+				//++elem_it;
+			}
 
 			// TODO: implement code that handles full textures
 
@@ -143,44 +152,30 @@ namespace vtx
 		VTX_LOG("Texture atlas packed containing %d pixels (%s)", 
 			packed_size, StringHelper::formatByteUnit(packed_size * 4).c_str());
 
-		ListenerMap::iterator listener_it = mListeners.begin();
-		ListenerMap::iterator listener_end = mListeners.end();
-		while(listener_it != listener_end)
-		{
-			listener_it->second->packed(mResult);
-			++listener_it;
-		}
+		for_each(it, ListenerMap, mListeners)
+			it->second->packed(mResult);
 
 		return mResult;
 	}
 	//-----------------------------------------------------------------------
 	void AtlasPacker::renderAtlas()
 	{
-		AtlasTextureList::iterator it = mTextures.begin();
-		for( ; it != mTextures.end(); ++it)
-		{
+		for_each(it, AtlasTextureList, mTextures)
 			(*it)->renderAllShapes();
-		}
 	}
 	//-----------------------------------------------------------------------
 	void AtlasPacker::clearAtlas()
 	{
 		mResult.clear();
 
-		AtlasTextureList::iterator it = mTextures.begin();
-		for( ; it != mTextures.end(); ++it)
-		{
+		for_each(it, AtlasTextureList, mTextures)
 			(*it)->clear();
-		}
 	}
 	//-----------------------------------------------------------------------
 	void AtlasPacker::destroyAtlas()
 	{
-		AtlasTextureList::iterator it = mTextures.begin();
-		for( ; it != mTextures.end(); ++it)
-		{
+		for_each(it, AtlasTextureList, mTextures)
 			delete *it;
-		}
 
 		mTextures.clear();
 	}
@@ -192,26 +187,12 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	bool AtlasPacker::addListener(Listener* listener)
 	{
-		ListenerMap::iterator it = mListeners.find(listener);
-		if(it == mListeners.end())
-		{
-			mListeners.insert(std::make_pair(listener, listener));
-			return true;
-		}
-
-		return false;
+		return mListeners.insert(std::make_pair(listener, listener)).second;
 	}
 	//-----------------------------------------------------------------------
 	bool AtlasPacker::removeListener(Listener* listener)
 	{
-		ListenerMap::iterator it = mListeners.find(listener);
-		if(it != mListeners.end())
-		{
-			mListeners.erase(it);
-			return true;
-		}
-
-		return false;
+		return mListeners.erase(listener) != 0;
 	}
 	//-----------------------------------------------------------------------
 }

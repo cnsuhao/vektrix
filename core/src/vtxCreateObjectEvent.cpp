@@ -62,7 +62,7 @@ namespace vtx
 	//-----------------------------------------------------------------------
 	void CreateObjectEvent::execute()
 	{
-		Instance* instance = mObjectContainer->getParent()->createInstance(mResource);
+		Instance* instance = mObjectContainer->getParent()->getInstance(mResource);
 
 		//if(!instance/* // TODO: || !instance->isDisplayable()*/)
 		//{
